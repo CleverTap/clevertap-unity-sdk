@@ -502,7 +502,7 @@ namespace CleverTap {
     public static void RecordEvent(string eventName) {
     }
         
-    public static void RecordEvent(string eventName, Dictionary<string, string> properties) {
+    public static void RecordEvent(string eventName, Dictionary<string, object> properties) {
     }
 
     public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>>items) {
@@ -520,7 +520,15 @@ namespace CleverTap {
         return -1;
     }
 
+    public static JSONClass EventGetDetail(string eventName) {
+        return new JSONClass();
+    }
+
     public static JSONClass UserGetEventHistory() {
+        return new JSONClass();
+    }
+
+    public static JSONClass SessionGetUTMDetails() {
         return new JSONClass();
     }
 
