@@ -78,6 +78,7 @@ public class CleverTapUnity: MonoBehaviour {
         
         // set a scalar user profile property
         Dictionary<string, string> props = new Dictionary<string, string> ();
+
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         props.Add("RegistrationSource", "Android");
         #endif
@@ -97,7 +98,7 @@ public class CleverTapUnity: MonoBehaviour {
         stringList.Add("two");
 
         #if (UNITY_IPHONE && !UNITY_EDITOR)
-        CleverTapBinding.ProfileSetMultiValuesForKey("multiIOS", stringList, stringList.Count());
+        CleverTapBinding.ProfileSetMultiValuesForKey("multiIOS", stringList);
         #endif
 
         #if (UNITY_ANDROID && !UNITY_EDITOR)
@@ -108,13 +109,12 @@ public class CleverTapUnity: MonoBehaviour {
         stringList1.Add("three");
         stringList1.Add("four");
 
-
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         CleverTapBinding.ProfileAddMultiValuesForKey("multiAndroid", stringList1);
         #endif
 
         #if (UNITY_IPHONE && !UNITY_EDITOR)
-        CleverTapBinding.ProfileAddMultiValuesForKey("multiIOS", stringList1, stringList1.Count());
+        CleverTapBinding.ProfileAddMultiValuesForKey("multiIOS", stringList1);
         #endif
 
         List<string> stringList2 = new List<string>();
@@ -127,7 +127,7 @@ public class CleverTapUnity: MonoBehaviour {
         #endif
 
         #if (UNITY_IPHONE && !UNITY_EDITOR)
-		CleverTapBinding.ProfileRemoveMultiValuesForKey("multiIOS", stringList2, stringList2.Count());
+		CleverTapBinding.ProfileRemoveMultiValuesForKey("multiIOS", stringList2, stringList2);
         CleverTapBinding.ProfileAddMultiValueForKey("multiIOS", "five");
         CleverTapBinding.ProfileRemoveMultiValueForKey("multiIOS", "four");
         #endif

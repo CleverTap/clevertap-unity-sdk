@@ -146,16 +146,16 @@ namespace CleverTap {
         CleverTap_profileRemoveValueForKey(key);
     }
 
-    public static void ProfileSetMultiValuesForKey(string key, List<string> array, int size) {
-        CleverTap_profileSetMultiValuesForKey(key, array.ToArray(), size);
+    public static void ProfileSetMultiValuesForKey(string key, List<string> values) {
+        CleverTap_profileSetMultiValuesForKey(key, values.ToArray(), values.Count());
     }
 
-    public static void ProfileAddMultiValuesForKey(string key, List<string> array, int size) {
-        CleverTap_profileAddMultiValuesForKey(key, array.ToArray(), size);
+    public static void ProfileAddMultiValuesForKey(string key, List<string> values) {
+        CleverTap_profileAddMultiValuesForKey(key, values.ToArray(), values.Count());
     }
 
-    public static void ProfileRemoveMultiValuesForKey(string key, List<string> array, int size) {
-        CleverTap_profileRemoveMultiValuesForKey(key, array.ToArray(), size);
+    public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
+        CleverTap_profileRemoveMultiValuesForKey(key, values.ToArray(), values.Count);
     }
 
     public static void ProfileAddMultiValueForKey(string key, string val) {
@@ -484,13 +484,13 @@ namespace CleverTap {
     public static void ProfileRemoveValueForKey(string key) {
     }
 
-    public static void ProfileSetMultiValuesForKey(string key, List<string> array, int size) {
+    public static void ProfileSetMultiValuesForKey(string key, List<string> array) {
     }
 
-    public static void ProfileAddMultiValuesForKey(string key, List<string> array, int size) {
+    public static void ProfileAddMultiValuesForKey(string key, List<string> array) {
     }
 
-    public static void ProfileRemoveMultiValuesForKey(string key, List<string> array, int size) {
+    public static void ProfileRemoveMultiValuesForKey(string key, List<string> array) {
     }
 
     public static void ProfileAddMultiValueForKey(string key, string val) {
