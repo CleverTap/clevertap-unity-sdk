@@ -4,14 +4,14 @@
 
 2. Create an empty game object (GameObject -> Create Empty) and rename it `CleverTapUnity`. Add `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` as a component of the `CleverTapUnity GameObject`.
     
-    ![alt text](example/images/unity_gameobj.png  "unity game object")
+    ![alt text](example/images/unity_gameobj.jpg  "unity game object")
 
 3. Edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` to add your calls to CleverTap SDK.  See usage examples in [example/CleverTapUnity.cs](example/CleverTapUnity.cs).  For more information check out our [documentation](http://support.clevertap.com "CleverTap Technical Documentation").
 
 ### iOS Specific:
 - Edit `Assets/Editor/CleverTapPostBuildProcessor.cs` in your Unity project to include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html), and add your deep link url scheme, if applicable.
 
-    ![alt text](example/images/ct_settings_ios.png  "example CleverTap settings")
+    ![alt text](example/images/ct_settings_ios.jpg  "example CleverTap settings")
 
 - If you want to enable Push Notifications, be sure to add the Push Notifications capability to your Xcode project.  
 
