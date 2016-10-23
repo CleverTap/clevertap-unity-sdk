@@ -78,6 +78,7 @@ public class CleverTapUnity: MonoBehaviour {
         
         // set a scalar user profile property
         Dictionary<string, string> props = new Dictionary<string, string> ();
+
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         props.Add("RegistrationSource", "Android");
         #endif
@@ -107,7 +108,6 @@ public class CleverTapUnity: MonoBehaviour {
         List<string> stringList1 = new List<string>();
         stringList1.Add("three");
         stringList1.Add("four");
-
 
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         CleverTapBinding.ProfileAddMultiValuesForKey("multiAndroid", stringList1);
