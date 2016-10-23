@@ -147,11 +147,11 @@ namespace CleverTap {
     }
 
     public static void ProfileSetMultiValuesForKey(string key, List<string> values) {
-        CleverTap_profileSetMultiValuesForKey(key, values.ToArray(), values.Count());
+        CleverTap_profileSetMultiValuesForKey(key, values.ToArray(), values.Count);
     }
 
     public static void ProfileAddMultiValuesForKey(string key, List<string> values) {
-        CleverTap_profileAddMultiValuesForKey(key, values.ToArray(), values.Count());
+        CleverTap_profileAddMultiValuesForKey(key, values.ToArray(), values.Count);
     }
 
     public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
@@ -354,16 +354,16 @@ namespace CleverTap {
         CleverTap.Call("profileRemoveValueForKey", key);
     }
     
-    public static void ProfileSetMultiValuesForKey(string key, List<string> array) {
-        CleverTap.Call("profileSetMultiValuesForKey", key, array.ToArray());
+    public static void ProfileSetMultiValuesForKey(string key, List<string> values) {
+        CleverTap.Call("profileSetMultiValuesForKey", key, values.ToArray());
     }
 
-    public static void ProfileAddMultiValuesForKey(string key, List<string> array) {
-        CleverTap.Call("profileAddMultiValuesForKey", key, array.ToArray());	
+    public static void ProfileAddMultiValuesForKey(string key, List<string> values) {
+        CleverTap.Call("profileAddMultiValuesForKey", key, values.ToArray());	
     }
     
-    public static void ProfileRemoveMultiValuesForKey(string key, List<string> array) {
-        CleverTap.Call("profileRemoveMultiValuesForKey", key, array.ToArray());
+    public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
+        CleverTap.Call("profileRemoveMultiValuesForKey", key, values.ToArray());
     }
     
     public static void ProfileAddMultiValueForKey(string key, string val) {
@@ -484,13 +484,13 @@ namespace CleverTap {
     public static void ProfileRemoveValueForKey(string key) {
     }
 
-    public static void ProfileSetMultiValuesForKey(string key, List<string> array) {
+    public static void ProfileSetMultiValuesForKey(string key, List<string> values) {
     }
 
-    public static void ProfileAddMultiValuesForKey(string key, List<string> array) {
+    public static void ProfileAddMultiValuesForKey(string key, List<string> values) {
     }
 
-    public static void ProfileRemoveMultiValuesForKey(string key, List<string> array) {
+    public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
     }
 
     public static void ProfileAddMultiValueForKey(string key, string val) {
