@@ -127,7 +127,7 @@ public class CleverTapUnity: MonoBehaviour {
         #endif
 
         #if (UNITY_IPHONE && !UNITY_EDITOR)
-		CleverTapBinding.ProfileRemoveMultiValuesForKey("multiIOS", stringList2);
+        CleverTapBinding.ProfileRemoveMultiValuesForKey("multiIOS", stringList2);
         CleverTapBinding.ProfileAddMultiValueForKey("multiIOS", "five");
         CleverTapBinding.ProfileRemoveMultiValueForKey("multiIOS", "four");
         #endif

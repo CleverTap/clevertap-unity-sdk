@@ -8,6 +8,8 @@
 
 3. Edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` to add your calls to CleverTap SDK.  See usage examples in [example/CleverTapUnity.cs](example/CleverTapUnity.cs).  For more information check out our [documentation](http://support.clevertap.com "CleverTap Technical Documentation").
 
+4. Select the CleverTapUnity game object you created in the Hierarchy pane and add your CleverTap settings inside the Inspector window. You must include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html).
+
 ### iOS Specific:
 - Edit `Assets/Editor/CleverTapPostBuildProcessor.cs` in your Unity project to include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html), and add your deep link url scheme, if applicable.
 
@@ -20,10 +22,6 @@
 - Build and run your iOS project.
 
 ### Android Specific:
-- Select the CleverTapUnity game object you created in the Hierarchy pane and add your CleverTap settings inside the Inspector window. You must include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html).
-
-    ![alt text](example/images/ct_settings_android.jpg  "example CleverTap settings")
-
 - Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, GCM Sender ID and Deep Link url scheme (if applicable): 
 
     ```
