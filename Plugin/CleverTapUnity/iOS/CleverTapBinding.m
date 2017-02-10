@@ -122,6 +122,10 @@ char* clevertap_cStringCopy(const char* string) {
     return res;
 }
 
+void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
+    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) andToken:clevertap_stringToNSString(token)];
+}
+
 void CleverTap_registerPush() {
     [CleverTapUnityManager registerPush];
 }

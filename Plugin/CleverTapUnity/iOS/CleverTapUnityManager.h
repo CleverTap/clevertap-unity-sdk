@@ -9,6 +9,7 @@
 
 + (CleverTapUnityManager *)sharedInstance;
 
++ (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token;
 + (void)setDebugLevel:(int)level;
 + (void)enablePersonalization;
 + (void)disablePersonalization;

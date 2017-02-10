@@ -18,6 +18,9 @@ namespace CleverTap {
     }
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_launchWithCredentials(string accountID, string token);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_onUserLogin(string properties);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -107,6 +110,10 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern int CleverTap_userGetPreviousVisitTime();
 
+    public static void LaunchWithCredentials(string accountID, string token) {
+        CleverTap_launchWithCredentials(accountID, token);
+    }
+        
     public static void OnUserLogin(Dictionary<string, string> properties) {
         var propertiesString = Json.Serialize(properties);
         CleverTap_onUserLogin(propertiesString);
@@ -457,6 +464,9 @@ namespace CleverTap {
         Debug.Log("Start: no-op CleverTap binding for non iOS/Android.");
     }
 
+    public static void LaunchWithCredentials(string accountID, string token) {
+    }
+        
     public static void OnUserLogin(Dictionary<string, string> properties) {
     }
 

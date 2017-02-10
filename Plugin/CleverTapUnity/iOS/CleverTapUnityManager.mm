@@ -242,6 +242,11 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
 
 #pragma mark Admin
 
++ (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token {
+    [CleverTap changeCredentialsWithAccountID:accountID andToken:token];
+    [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];
+}
+
 + (void)setDebugLevel:(int)level {
     [CleverTap setDebugLevel:level];
 }
