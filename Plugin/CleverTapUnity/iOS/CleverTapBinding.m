@@ -126,6 +126,10 @@ void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) andToken:clevertap_stringToNSString(token)];
 }
 
+void CleverTap_setApplicationIconBadgeNumber(int num) {
+    [CleverTapUnityManager setApplicationIconBadgeNumber:num];
+}
+
 void CleverTap_registerPush() {
     [CleverTapUnityManager registerPush];
 }

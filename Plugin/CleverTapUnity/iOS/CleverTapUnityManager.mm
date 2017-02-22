@@ -247,6 +247,10 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
     [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];
 }
 
++ (void)setApplicationIconBadgeNumber:(int)num {
+    [UIApplication sharedApplication].applicationIconBadgeNumber = num;
+}
+
 + (void)setDebugLevel:(int)level {
     [CleverTap setDebugLevel:level];
 }

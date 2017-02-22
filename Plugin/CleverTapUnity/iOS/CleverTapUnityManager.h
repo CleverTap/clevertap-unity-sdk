@@ -15,6 +15,7 @@
 + (void)disablePersonalization;
 + (void)setLocation:(CLLocationCoordinate2D)location;
 + (void)registerPush;
++ (void)setApplicationIconBadgeNumber:(int)num;
 
 - (void)onUserLogin:(NSDictionary *)properties;
 - (void)profilePush:(NSDictionary *)properties;

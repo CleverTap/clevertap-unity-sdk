@@ -10,7 +10,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
-    public const string Version = "1.0.0";
+    public const string Version = "1.0.2";
 
 #if UNITY_IOS
     void Start() {
@@ -67,6 +67,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_registerPush();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setApplicationIconBadgeNumber(int num);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setDebugLevel(int level);
@@ -256,6 +259,10 @@ namespace CleverTap {
         CleverTap_registerPush();
     }
 
+    public static void SetApplicationIconBadgeNumber(int num) {
+        CleverTap_setApplicationIconBadgeNumber(num);
+    }
+        
     public static void SetDebugLevel(int level) {
         CleverTap_setDebugLevel(level);
     }
@@ -567,6 +574,9 @@ namespace CleverTap {
     public static void RegisterPush() {
     }
 
+    public static void SetApplicationIconBadgeNumber(int num) {
+    }
+        
     public static void SetDebugLevel(int level) {
     }
 
