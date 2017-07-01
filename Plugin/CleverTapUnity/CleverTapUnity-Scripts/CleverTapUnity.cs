@@ -36,6 +36,7 @@ public class CleverTapUnity: MonoBehaviour {
         #if (UNITY_IPHONE && !UNITY_EDITOR)
         // register for push notifications
         CleverTap.CleverTapBinding.RegisterPush();
+        CleverTap.CleverTapBinding.RecordScreenView("TestScreen");
         // set to 0 to remove icon badge
         CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
         #endif
@@ -80,6 +81,7 @@ public class CleverTapUnity: MonoBehaviour {
         
         // set a scalar user profile property
         Dictionary<string, string> props = new Dictionary<string, string> ();
+
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         props.Add("RegistrationSource", "Android");
         #endif
@@ -109,7 +111,6 @@ public class CleverTapUnity: MonoBehaviour {
         List<string> stringList1 = new List<string>();
         stringList1.Add("three");
         stringList1.Add("four");
-
 
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         CleverTapBinding.ProfileAddMultiValuesForKey("multiAndroid", stringList1);

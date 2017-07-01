@@ -36,6 +36,7 @@ public class CleverTapUnity: MonoBehaviour {
         #if (UNITY_IPHONE && !UNITY_EDITOR)
         // register for push notifications
         CleverTap.CleverTapBinding.RegisterPush();
+        CleverTap.CleverTapBinding.RecordScreenView("TestScreen");
         // set to 0 to remove icon badge
         CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
         #endif

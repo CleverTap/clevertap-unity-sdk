@@ -151,6 +151,10 @@ void CleverTap_setLocation(double lat, double lon) {
     [CleverTapUnityManager setLocation:coord];
 }
 
+void CleverTap_recordScreenView(const char* screenName) {
+    [[CleverTapUnityManager sharedInstance] recordScreenView:clevertap_stringToNSString(screenName)];
+}
+
 void CleverTap_recordEvent(const char* eventName, const char* properties) {
     NSMutableDictionary *eventProperties = clevertap_dictFromJsonString(properties);
     [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName) withProps:eventProperties];

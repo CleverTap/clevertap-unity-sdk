@@ -31,6 +31,7 @@
 - (NSString*)profileGetCleverTapID;
 - (NSString*)profileGetCleverTapAttributionIdentifier;
 
+- (void)recordScreenView:(NSString *)screenName;
 - (void)recordEvent:(NSString *)event;
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties;
 - (void)recordChargedEventWithDetails:(NSDictionary *)chargeDetails andItems:(NSArray *)items;

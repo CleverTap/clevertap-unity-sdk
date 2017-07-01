@@ -93,6 +93,13 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
 
 #pragma mark User Action Events API
 
+- (void)recordScreenView:(NSString *)screenName {
+    if (!screenName) {
+        return;
+    }
+    [clevertap recordScreenView:screenName];
+}
+
 - (void)recordEvent:(NSString *)event {
     [clevertap recordEvent:event];
 }

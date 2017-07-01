@@ -58,6 +58,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_profileRemoveMultiValueForKey(string key, string val);
+    
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordScreenView(string screenName);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordEvent(string eventName, string properties);
@@ -176,6 +179,10 @@ namespace CleverTap {
         CleverTap_profileRemoveMultiValueForKey(key, val);
     }
 
+    public static void RecordScreenView(string screenName) {
+        CleverTap_recordScreenView(screenName);
+    }
+    
     public static void RecordEvent(string eventName) {
         CleverTap_recordEvent(eventName, null);
     }
@@ -388,6 +395,10 @@ namespace CleverTap {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
     }
     
+    public static void RecordScreenView(string screenName) {
+        CleverTap.Call("recordScreenView", screenName);
+    }
+
     public static void RecordEvent(string eventName) {
         CleverTap.Call("recordEvent", eventName, null);
     }
@@ -515,7 +526,10 @@ namespace CleverTap {
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
     }
-
+    
+    public static void RecordScreenView(string screenName) {
+    }
+	
     public static void RecordEvent(string eventName) {
     }
         
