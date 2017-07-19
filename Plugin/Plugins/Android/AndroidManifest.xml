@@ -52,7 +52,7 @@
 
     <meta-data
             android:name="GCM_SENDER_ID"
-            android:value="id:YOUR_GCM_SENDER_ID"/>
+            android:value="id:YOUR_FCM_SENDER_ID"/>
 
     <receiver
         android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -82,7 +82,7 @@
 
   </application>
 
-  <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23" />
+  <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="25" />
   <uses-feature android:glEsVersion="0x00020000" />
 
   <uses-feature android:name="android.hardware.touchscreen" android:required="false" />

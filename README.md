@@ -1,6 +1,8 @@
 ## Unity iOS/Android plugin for the CleverTap SDK
 
-1. Copy `Plugin/CleverTapUnity`, `Plugin/Editor` and `Plugin/Plugins/Android` (or copy the files in `Plugin/Plugins/Android` to your existing `Assets/Plugins/Android` directory) into the Assets directory of your Unity Project.
+###Installation
+
+1.  Import the CleverTapUnityPlugin.unitypackage into your Unity Project (`Assets` > `Import Package` > `Custom Package`) or manually Copy `Plugin/CleverTapUnity`, `Plugin/PlayServicesResolver` and `Plugin/Plugins/Android` (or copy the files in `Plugin/Plugins/Android` to your existing `Assets/Plugins/Android` directory) into the Assets directory of your Unity Project.
 
 2. Create an empty game object (GameObject -> Create Empty) and rename it `CleverTapUnity`. Add `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` as a component of the `CleverTapUnity GameObject`.
     
@@ -11,10 +13,6 @@
 4. Edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` to add your calls to CleverTap SDK.  See usage examples in [example/CleverTapUnity.cs](example/CleverTapUnity.cs).  For more information check out our [documentation](https://support.clevertap.com/docs.html "CleverTap Technical Documentation").
 
 ### iOS Specific:
-- Edit `Assets/Editor/CleverTapPostBuildProcessor.cs` in your Unity project to include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html), and add your deep link url scheme, if applicable.
-
-    ![alt text](example/images/ct_settings_ios.jpg  "example CleverTap settings")
-
 - If you want to enable Push Notifications, be sure to add the Push Notifications capability to your Xcode project.  
 
     ![alt text](example/images/push_entitle.jpg  "push notifications capability")
@@ -22,7 +20,9 @@
 - Build and run your iOS project.
 
 ### Android Specific:
-- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, GCM Sender ID and Deep Link url scheme (if applicable): 
+- Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
+
+- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, FCM Sender ID and Deep Link url scheme (if applicable): 
 
     ```
     <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="YOUR_BUNDLE_IDENTIFIER" android:versionName="1.0" android:versionCode="1" android:installLocation="preferExternal"> <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
@@ -50,7 +50,7 @@
     ```
     <meta-data
         android:name="GCM_SENDER_ID"
-        android:value="id:YOUR_GCM_SENDER_ID"/>
+        android:value="id:YOUR_FCM_SENDER_ID"/>
     ```
 
     ```

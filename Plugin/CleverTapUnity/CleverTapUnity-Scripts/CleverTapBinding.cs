@@ -10,7 +10,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
-    public const string Version = "1.0.2";
+    public const string Version = "1.0.4";
 
 #if UNITY_IOS
     void Start() {

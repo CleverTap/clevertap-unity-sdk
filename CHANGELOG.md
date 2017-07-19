@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.0.4 *(18 July, 2017)*
+-------------------------------------------
+*add unitypackage*
+*remove library aars in favor of PlayServicesResolver*
+
 Version 1.0.3 *(30 June, 2017)*
 -------------------------------------------
 *(Supports CleverTap 3.1.4)*

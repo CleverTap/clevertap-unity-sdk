@@ -10,14 +10,19 @@ using CleverTap.Utilities;
 
 public class CleverTapUnity: MonoBehaviour {
 
-    public String CLEVERTAP_ACCOUNT_ID = "Your CleverTap Account ID";
-    public String CLEVERTAP_ACCOUNT_TOKEN = "Your CleverTap Account Token";
+    public String CLEVERTAP_ACCOUNT_ID = "YOUR_CLEVERTAP_ACCOUNT_ID";
+    public String CLEVERTAP_ACCOUNT_TOKEN = "YOUR_CLEVERTAP_ACCOUNT_TOKEN";
     public int CLEVERTAP_DEBUG_LEVEL = 0;
     public bool CLEVERTAP_ENABLE_PERSONALIZATION = true;
 
     void Awake(){
         #if (UNITY_IPHONE && !UNITY_EDITOR)
         DontDestroyOnLoad(gameObject);
+        CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
+        CleverTapBinding.LaunchWithCredentials(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+        if (CLEVERTAP_ENABLE_PERSONALIZATION) {
+            CleverTapBinding.EnablePersonalization();
+        }
         #endif
 
         #if (UNITY_ANDROID && !UNITY_EDITOR)
