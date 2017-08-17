@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.0.5 *(17 August, 2017)*
+-------------------------------------------
+*expose iOS pushInstallReferrerSource api to unity*
+
 Version 1.0.4 *(18 July, 2017)*
 -------------------------------------------
 *add unitypackage*

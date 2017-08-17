@@ -337,3 +337,8 @@ int CleverTap_userGetScreenCount() {
 int CleverTap_userGetPreviousVisitTime() {
     return [[CleverTapUnityManager sharedInstance] userGetPreviousVisitTime];
 }
+
+void CleverTap_pushInstallReferrerSource(const char* source, const char* medium, const char* campaign) {
+    [[CleverTapUnityManager sharedInstance] pushInstallReferrerSource:clevertap_stringToNSString(source) medium:clevertap_stringToNSString(medium) campaign:clevertap_stringToNSString(campaign)];
+}
+

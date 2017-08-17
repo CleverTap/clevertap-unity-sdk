@@ -58,7 +58,7 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_profileRemoveMultiValueForKey(string key, string val);
-    
+
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordScreenView(string screenName);
 
@@ -115,6 +115,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern int CleverTap_userGetPreviousVisitTime();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_pushInstallReferrerSource(string source, string medium, string campaign);
 
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
@@ -186,7 +189,7 @@ namespace CleverTap {
     public static void RecordEvent(string eventName) {
         CleverTap_recordEvent(eventName, null);
     }
-        
+
     public static void RecordEvent(string eventName, Dictionary<string, object> properties) {
         var propertiesString = Json.Serialize(properties);
         CleverTap_recordEvent(eventName, propertiesString);
@@ -286,6 +289,10 @@ namespace CleverTap {
         CleverTap_setLocation(lat, lon);
     }
         
+    public static void PushInstallReferrerSource(string source, string medium, string campaign) {
+        CleverTap_pushInstallReferrerSource(source, medium, campaign);
+    }
+
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
     private static AndroidJavaObject clevertap;
@@ -474,6 +481,14 @@ namespace CleverTap {
     public static int UserGetPreviousVisitTime() {
         return CleverTap.Call<int>("userGetPreviousVisitTime");
     }
+
+    public static void SetApplicationIconBadgeNumber(int num) {
+        // no-op for Android
+    }
+
+    public static void PushInstallReferrerSource(string source, string medium, string campaign) {
+        // no-op for Android
+    }
     
 #else
 
@@ -597,6 +612,8 @@ namespace CleverTap {
     public static void SetLocation(double lat, double lon) {
     }
 
+    public static void PushInstallReferrerSource(string source, string medium, string campaign) {
+    }
 #endif
   }
 }
