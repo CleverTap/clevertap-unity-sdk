@@ -44,8 +44,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static CleverTapAPI clevertap = null;
 
-    private static void changeCredentials(final String accountID, final String accountToken) {
-        CleverTapAPI.changeCredentials(accountID, accountToken);
+    private static void changeCredentials(final String accountID, final String accountToken, final String region) {
+        CleverTapAPI.changeCredentials(accountID, accountToken, region);
     }
 
     static void handleIntent(Intent intent) {
@@ -96,8 +96,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public static void initialize(final String accountID, final String accountToken, final Activity activity) {
+        initialize(accountID, accountToken, null, activity);
+    }
+
+    public static void initialize(final String accountID, final String accountToken, final String region, final Activity activity) {
         try {
-            changeCredentials(accountID, accountToken);
+            changeCredentials(accountID, accountToken, region);
             ActivityLifecycleCallback.register(activity.getApplication());
             CleverTapAPI.setAppForeground(true);
             getInstance(activity.getApplicationContext());

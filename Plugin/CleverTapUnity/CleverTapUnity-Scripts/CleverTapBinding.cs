@@ -10,7 +10,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
-    public const string Version = "1.0.4";
+    public const string Version = "1.0.6";
 
 #if UNITY_IOS
     void Start() {
@@ -19,6 +19,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_launchWithCredentials(string accountID, string token);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_launchWithCredentialsForRegion(string accountID, string token, string region);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_onUserLogin(string properties);
@@ -121,6 +124,10 @@ namespace CleverTap {
 
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
+    }
+        
+    public static void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
+        CleverTap_launchWithCredentialsForRegion(accountID, token, region);
     }
         
     public static void OnUserLogin(Dictionary<string, string> properties) {
@@ -342,6 +349,10 @@ namespace CleverTap {
         CleverTapAPI.CallStatic("initialize", accountID, accountToken, unityCurrentActivity);
     }
     
+    public static void Initialize(string accountID, string accountToken, string region) {
+        CleverTapAPI.CallStatic("initialize", accountID, accountToken, region, unityCurrentActivity);
+    }
+    
     public static void EnablePersonalization() {
         CleverTap.Call("enablePersonalization");
     }
@@ -497,7 +508,7 @@ namespace CleverTap {
         Debug.Log("Start: no-op CleverTap binding for non iOS/Android.");
     }
 
-    public static void LaunchWithCredentials(string accountID, string token) {
+    public static void LaunchWithCredentials(string accountID, string token, string region) {
     }
         
     public static void OnUserLogin(Dictionary<string, string> properties) {

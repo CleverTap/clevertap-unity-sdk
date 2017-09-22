@@ -126,6 +126,10 @@ void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) andToken:clevertap_stringToNSString(token)];
 }
 
+void CleverTap_launchWithCredentialsForRegion(const char* accountID, const char* token, const char* region) {
+    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) region:clevertap_stringToNSString(region)];
+}
+
 void CleverTap_setApplicationIconBadgeNumber(int num) {
     [CleverTapUnityManager setApplicationIconBadgeNumber:num];
 }
@@ -341,4 +345,3 @@ int CleverTap_userGetPreviousVisitTime() {
 void CleverTap_pushInstallReferrerSource(const char* source, const char* medium, const char* campaign) {
     [[CleverTapUnityManager sharedInstance] pushInstallReferrerSource:clevertap_stringToNSString(source) medium:clevertap_stringToNSString(medium) campaign:clevertap_stringToNSString(campaign)];
 }
-

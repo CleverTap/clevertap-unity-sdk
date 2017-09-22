@@ -16,6 +16,7 @@ public static class CleverTapPostBuildProcessor
 
 	private static string CLEVERTAP_ACCOUNT_ID = "";
 	private static string CLEVERTAP_ACCOUNT_TOKEN = "";
+	private static string CLEVERTAP_ACCOUNT_REGION = "";
 	private static bool CLEVERTAP_ENABLE_PERSONALIZATION = true;
 
 	private static string rn = "\n";
@@ -87,6 +88,7 @@ public static class CleverTapPostBuildProcessor
 			// write CleverTapAccountID and CleverTapToken
 			rootDict.SetString("CleverTapAccountID", CLEVERTAP_ACCOUNT_ID);
 			rootDict.SetString("CleverTapToken", CLEVERTAP_ACCOUNT_TOKEN);
+			rootDict.SetString("CleverTapRegion", CLEVERTAP_ACCOUNT_REGION);
 
 			// Write to file
 			File.WriteAllText(plistPath, plist.WriteToString());

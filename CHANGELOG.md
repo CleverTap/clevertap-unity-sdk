@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.0.6 *(21 September 2017)*
+-------------------------------------------
+*(Supports CleverTap 3.1.5/3.1.6)*
+
 Version 1.0.5 *(17 August, 2017)*
 -------------------------------------------
 *expose iOS pushInstallReferrerSource api to unity*

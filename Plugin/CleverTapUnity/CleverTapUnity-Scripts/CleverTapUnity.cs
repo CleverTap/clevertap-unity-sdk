@@ -12,6 +12,7 @@ public class CleverTapUnity: MonoBehaviour {
 
     public String CLEVERTAP_ACCOUNT_ID = "YOUR_CLEVERTAP_ACCOUNT_ID";
     public String CLEVERTAP_ACCOUNT_TOKEN = "YOUR_CLEVERTAP_ACCOUNT_TOKEN";
+    public String CLEVERTAP_ACCOUNT_REGION = "";
     public int CLEVERTAP_DEBUG_LEVEL = 0;
     public bool CLEVERTAP_ENABLE_PERSONALIZATION = true;
 
@@ -19,7 +20,7 @@ public class CleverTapUnity: MonoBehaviour {
         #if (UNITY_IPHONE && !UNITY_EDITOR)
         DontDestroyOnLoad(gameObject);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
-        CleverTapBinding.LaunchWithCredentials(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+        CleverTapBinding.LaunchWithCredentialsForRegion(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_ACCOUNT_REGION);
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();
         }
@@ -28,7 +29,7 @@ public class CleverTapUnity: MonoBehaviour {
         #if (UNITY_ANDROID && !UNITY_EDITOR)
         DontDestroyOnLoad(gameObject);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
-        CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+        CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_ACCOUNT_REGION);
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();
         }
