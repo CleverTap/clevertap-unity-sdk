@@ -352,6 +352,31 @@ namespace CleverTap {
     public static void Initialize(string accountID, string accountToken, string region) {
         CleverTapAPI.CallStatic("initialize", accountID, accountToken, region, unityCurrentActivity);
     }
+
+    public static void createNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge);
+    }
+
+    public static void createNotificationChannelwithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
+    }
+
+    public static void createNotificationChannelGroup(string groupId, string groupName){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("createNotificationChannelGroup",context,groupId,groupName);
+    }
+
+    public static void deleteNotificationChannel(string channelId){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("deleteNotificationChannel",context,channelId);
+    }
+
+    public static void deleteNotificationChannelGroup(string groupId){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("deleteNotificationChannelGroup",context,groupId);
+    }
     
     public static void EnablePersonalization() {
         CleverTap.Call("enablePersonalization");

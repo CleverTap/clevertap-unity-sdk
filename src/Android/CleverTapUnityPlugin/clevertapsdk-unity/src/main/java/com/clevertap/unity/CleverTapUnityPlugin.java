@@ -133,6 +133,46 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    public static void createNotificationChannel(String channelId,String channelName, String channelDescription, int importance, boolean showBadge){
+        try{
+            clevertap.createNotificationChannel(activity.getApplicationContext(),channelId,channelName,channelDescription,importance,showBadge);
+        }catch(Throwable t){
+            Log.e(LOG_TAG,"Error creating Notification Channel",t);
+        }
+    }
+
+    public static void createNotificationChannelwithGroup(String channelId,String channelName, String channelDescription, int importance, String groupId, boolean showBadge){
+        try{
+            clevertap.createNotificationChannel(activity.getApplicationContext(),channelId,channelName,channelDescription,importance,groupId,showBadge);
+        }catch(Throwable t){
+            Log.e(LOG_TAG,"Error creating Notification Channel with groupId", t);
+        }
+    }
+
+    public static void createNotificationChannelGroup(String groupId, String groupName){
+        try{
+            clevertap.createNotificationChannelGroup(activity.getApplicationContext(),groupId,groupName);
+        }catch (Throwable t) {
+            Log.e(LOG_TAG,"Error creating Notification Channel Group",t);
+        }
+    }
+
+    public static void deleteNotificationChannel(String channelId){
+        try{
+            clevertap.deleteNotificationChannel(activity.getApplicationContext(),channelId);
+        }catch(Throwable t){
+            Log.e(LOG_TAG, "Error deleting Notification Channel",t);
+        }
+    }
+
+    public static void deleteNotificationChannelGroup(String groupId){
+        try{
+            clevertap.deleteNotificationChannelGroup(activity.getApplicationContext(),groupId);
+        }catch(Throwable t){
+            Log.e(LOG_TAG,"Error deleting Notification Channel Group", t);
+        }
+    }
+
     public void enablePersonalization() {
         try {
             clevertap.enablePersonalization();
