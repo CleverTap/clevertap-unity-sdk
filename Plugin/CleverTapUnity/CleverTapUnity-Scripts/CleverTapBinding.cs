@@ -358,9 +358,19 @@ namespace CleverTap {
         CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge);
     }
 
-    public static void createNotificationChannelwithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
+    public static void createNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge,sound);
+    }
+
+    public static void createNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
+    }
+
+    public static void createNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
+        AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+        CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
     }
 
     public static void createNotificationChannelGroup(string groupId, string groupName){
@@ -376,6 +386,14 @@ namespace CleverTap {
     public static void deleteNotificationChannelGroup(string groupId){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("deleteNotificationChannelGroup",context,groupId);
+    }
+
+    public static setOptOut(bool value){
+        CleverTap.Call("setOptOut",value);
+    }
+
+    public static enableDeviceNetworkInfoReporting(bool value){
+        CleverTap.Call("enableDeviceNetworkInfoReporting",value);
     }
     
     public static void EnablePersonalization() {

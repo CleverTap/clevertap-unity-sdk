@@ -141,9 +141,25 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public static void createNotificationChannelwithGroup(Context context, String channelId,String channelName, String channelDescription, int importance, String groupId, boolean showBadge){
+    public static void createNotificationChannelWithSound(Context context, String channelId,String channelName, String channelDescription, int importance, boolean showBadge, String sound){
+        try{
+            clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,showBadge,sound);
+        }catch(Throwable t){
+            Log.e(LOG_TAG,"Error creating Notification Channel",t);
+        }
+    }
+
+    public static void createNotificationChannelWithGroup(Context context, String channelId,String channelName, String channelDescription, int importance, String groupId, boolean showBadge){
         try{
             clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,groupId,showBadge);
+        }catch(Throwable t){
+            Log.e(LOG_TAG,"Error creating Notification Channel with groupId", t);
+        }
+    }
+
+    public static void createNotificationChannelWithGroupAndSound(Context context, String channelId,String channelName, String channelDescription, int importance, String groupId, boolean showBadge, String sound){
+        try{
+            clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error creating Notification Channel with groupId", t);
         }
@@ -170,6 +186,22 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             clevertap.deleteNotificationChannelGroup(context,groupId);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error deleting Notification Channel Group", t);
+        }
+    }
+
+    public void setOptOut(boolean value){
+        try {
+            clevertap.setOptOut(value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "setOptOut error", t);
+        }
+    }
+
+    public void enableDeviceNetworkInfoReporting(boolean value){
+        try {
+            clevertap.enableDeviceNetworkInfoReporting(value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "enableDeviceNetworkInfoReporting error", t);
         }
     }
 
