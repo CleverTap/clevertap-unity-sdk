@@ -138,6 +138,14 @@ void CleverTap_registerPush() {
     [CleverTapUnityManager registerPush];
 }
 
+void CleverTap_setOptOut(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] setOptOut:enabled];
+}
+
+void CleverTap_enableDeviceNetworkInfoReporting(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] enableDeviceNetworkInfoReporting:enabled];
+}
+
 void CleverTap_setDebugLevel(int level) {
     [CleverTapUnityManager setDebugLevel:level];
 }

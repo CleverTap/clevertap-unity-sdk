@@ -35,6 +35,15 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
     return sharedInstance;
 }
 
+#pragma mark Opt-out API
+
+- (void)setOptOut:(BOOL)enabled{
+    [clevertap setOptOut:enabled];
+}
+- (void)enableDeviceNetworkInfoReporting:(BOOL)enabled{
+    [clevertap enableDeviceNetworkInfoReporting:enabled];
+}
+
 #pragma mark Profile/Event/Session APIs
 
 #pragma mark Profile API
