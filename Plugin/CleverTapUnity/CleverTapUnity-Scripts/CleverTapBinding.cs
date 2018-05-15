@@ -72,6 +72,12 @@ namespace CleverTap {
     private static extern void CleverTap_recordChargedEventWithDetailsAndItems(string details, string items);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setOptOut(bool enabled);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_enableDeviceNetworkInfoReporting(bool enabled);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_registerPush();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -298,6 +304,14 @@ namespace CleverTap {
         
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
         CleverTap_pushInstallReferrerSource(source, medium, campaign);
+    }
+
+    public static void SetOptOut(bool enabled) {
+        CleverTap_setOptOut(enabled);
+    }
+
+    public static void EnableDeviceNetworkInfoReporting(bool enabled) {
+        CleverTap_enableDeviceNetworkInfoReporting(enabled);
     }
 
 #elif UNITY_ANDROID
