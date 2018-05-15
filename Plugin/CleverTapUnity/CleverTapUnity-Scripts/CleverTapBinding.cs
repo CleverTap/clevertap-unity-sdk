@@ -682,6 +682,33 @@ namespace CleverTap {
 
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
     }
+
+    public static enableDeviceNetworkInfoReporting(bool value){
+    }
+
+    public static setOptOut(bool value){
+    }
+
+    public static void createNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
+    }
+
+    public static void createNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
+    }
+
+    public static void createNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
+    }
+
+    public static void createNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
+    }
+
+    public static void createNotificationChannelGroup(string groupId, string groupName){
+    }
+
+    public static void deleteNotificationChannel(string channelId){
+    }
+
+    public static void deleteNotificationChannelGroup(string groupId){
+    }
 #endif
   }
 }
