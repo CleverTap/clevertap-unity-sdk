@@ -402,11 +402,11 @@ namespace CleverTap {
         CleverTapAPI.CallStatic("deleteNotificationChannelGroup",context,groupId);
     }
 
-    public static setOptOut(bool value){
+    public static void setOptOut(bool value){
         CleverTap.Call("setOptOut",value);
     }
 
-    public static enableDeviceNetworkInfoReporting(bool value){
+    public static void enableDeviceNetworkInfoReporting(bool value){
         CleverTap.Call("enableDeviceNetworkInfoReporting",value);
     }
     
@@ -683,10 +683,10 @@ namespace CleverTap {
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
     }
 
-    public static enableDeviceNetworkInfoReporting(bool value){
+    public static void enableDeviceNetworkInfoReporting(bool value){
     }
 
-    public static setOptOut(bool value){
+    public static void setOptOut(bool value){
     }
 
     public static void createNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
