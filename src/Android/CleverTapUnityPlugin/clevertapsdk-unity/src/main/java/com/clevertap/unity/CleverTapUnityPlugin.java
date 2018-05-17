@@ -328,7 +328,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public void recordScreenView(final String screenName) {
-        //Log.i(LOG_TAG, "recordScreenView is not supported for Android");
         try{
             clevertap.recordScreen(screenName);
         }catch (Throwable t){

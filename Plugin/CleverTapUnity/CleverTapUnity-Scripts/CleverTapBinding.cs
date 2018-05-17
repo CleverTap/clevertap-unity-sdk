@@ -10,7 +10,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
-    public const string Version = "1.0.6";
+    public const string Version = "1.1.0";
 
 #if UNITY_IOS
     void Start() {
@@ -367,46 +367,46 @@ namespace CleverTap {
         CleverTapAPI.CallStatic("initialize", accountID, accountToken, region, unityCurrentActivity);
     }
 
-    public static void createNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
+    public static void CreateNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge);
     }
 
-    public static void createNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
+    public static void CreateNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge,sound);
     }
 
-    public static void createNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
+    public static void CreateNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
     }
 
-    public static void createNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
+    public static void CreateNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
     }
 
-    public static void createNotificationChannelGroup(string groupId, string groupName){
+    public static void CreateNotificationChannelGroup(string groupId, string groupName){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannelGroup",context,groupId,groupName);
     }
 
-    public static void deleteNotificationChannel(string channelId){
+    public static void DeleteNotificationChannel(string channelId){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("deleteNotificationChannel",context,channelId);
     }
 
-    public static void deleteNotificationChannelGroup(string groupId){
+    public static void DeleteNotificationChannelGroup(string groupId){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("deleteNotificationChannelGroup",context,groupId);
     }
 
-    public static void setOptOut(bool value){
+    public static void SetOptOut(bool value){
         CleverTap.Call("setOptOut",value);
     }
 
-    public static void enableDeviceNetworkInfoReporting(bool value){
+    public static void EnableDeviceNetworkInfoReporting(bool value){
         CleverTap.Call("enableDeviceNetworkInfoReporting",value);
     }
     
@@ -683,31 +683,31 @@ namespace CleverTap {
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
     }
 
-    public static void enableDeviceNetworkInfoReporting(bool value){
+    public static void EnableDeviceNetworkInfoReporting(bool value){
     }
 
-    public static void setOptOut(bool value){
+    public static void SetOptOut(bool value){
     }
 
-    public static void createNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
+    public static void CreateNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
     }
 
-    public static void createNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
+    public static void CreateNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
     }
 
-    public static void createNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
+    public static void CreateNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
     }
 
-    public static void createNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
+    public static void CreateNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
     }
 
-    public static void createNotificationChannelGroup(string groupId, string groupName){
+    public static void CreateNotificationChannelGroup(string groupId, string groupName){
     }
 
-    public static void deleteNotificationChannel(string channelId){
+    public static void DeleteNotificationChannel(string channelId){
     }
 
-    public static void deleteNotificationChannelGroup(string groupId){
+    public static void DeleteNotificationChannelGroup(string groupId){
     }
 #endif
   }

@@ -132,6 +132,9 @@ public class CleverTapUnity: MonoBehaviour {
         CleverTapBinding.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
         CleverTapBinding.ProfileAddMultiValueForKey("multiAndroid", "five");
         CleverTapBinding.ProfileRemoveMultiValueForKey("multiAndroid", "four");
+        CleverTapBinding.SetOptOut(false);
+        CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
+        CleverTapBinding.CreateNotificationChannel("YourChannelID","YourChannelName","YourChannelDescription",3,true);
         #endif
 
         #if (UNITY_IPHONE && !UNITY_EDITOR)
