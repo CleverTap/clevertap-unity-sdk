@@ -20,6 +20,10 @@ public class CleverTapUnity: MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
         CleverTapBinding.LaunchWithCredentials(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+        // set to true to stop sending events to CleverTap
+        CleverTapBinding.SetOptOut(true);
+        // set to true to enable Device Network information to be sent to CleverTap
+        CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();
         }
