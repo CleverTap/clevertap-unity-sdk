@@ -105,7 +105,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             ActivityLifecycleCallback.register(activity.getApplication());
             CleverTapAPI.setAppForeground(true);
             getInstance(activity.getApplicationContext());
-            clevertap.activityResumed(activity);
+            CleverTapAPI.onActivityResumed(activity);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "initialize error", t);
         }
@@ -125,7 +125,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private CleverTapUnityPlugin(final Context context) {
         try {
-            clevertap = CleverTapAPI.getInstance(context);
+            clevertap = CleverTapAPI.getDefaultInstance(context);
             clevertap.setInAppNotificationListener(this);
             clevertap.setSyncListener(this);
         } catch (Throwable t) {

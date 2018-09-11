@@ -413,6 +413,10 @@ namespace CleverTap {
         CleverTap.Call("setOptOut",value);
     }
 
+    public static void SetOffline(bool value){
+        CleverTap.Call("setOffline",value);
+    }
+
     public static void EnableDeviceNetworkInfoReporting(bool value){
         CleverTap.Call("enableDeviceNetworkInfoReporting",value);
     }
@@ -694,6 +698,9 @@ namespace CleverTap {
     }
 
     public static void SetOptOut(bool value){
+    }
+
+    public static void SetOffline(bool value){
     }
 
     public static void CreateNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
