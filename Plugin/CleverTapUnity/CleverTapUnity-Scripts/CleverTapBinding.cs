@@ -72,6 +72,9 @@ namespace CleverTap {
     private static extern void CleverTap_recordChargedEventWithDetailsAndItems(string details, string items);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setOffline(bool enabled);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setOptOut(bool enabled);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
