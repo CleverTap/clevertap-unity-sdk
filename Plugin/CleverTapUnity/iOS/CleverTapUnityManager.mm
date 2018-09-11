@@ -35,6 +35,12 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
     return sharedInstance;
 }
 
+#pragma mark Offline API
+
+- (void)setOffline:(BOOL)enabled{
+    [clevertap setOffline:enabled];
+}
+
 #pragma mark Opt-out API
 
 - (void)setOptOut:(BOOL)enabled{

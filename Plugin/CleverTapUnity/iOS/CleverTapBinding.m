@@ -138,6 +138,10 @@ void CleverTap_registerPush() {
     [CleverTapUnityManager registerPush];
 }
 
+void CleverTap_setOffline(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] setOffline:enabled];
+}
+
 void CleverTap_setOptOut(const BOOL enabled) {
     [[CleverTapUnityManager sharedInstance] setOptOut:enabled];
 }

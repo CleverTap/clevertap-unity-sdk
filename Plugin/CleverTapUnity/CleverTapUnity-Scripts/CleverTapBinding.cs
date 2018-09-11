@@ -306,6 +306,10 @@ namespace CleverTap {
         CleverTap_pushInstallReferrerSource(source, medium, campaign);
     }
 
+    public static void SetOffline(bool enabled) {
+        CleverTap_setOffline(enabled);
+    }
+
     public static void SetOptOut(bool enabled) {
         CleverTap_setOptOut(enabled);
     }

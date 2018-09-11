@@ -18,6 +18,7 @@
 + (void)registerPush;
 + (void)setApplicationIconBadgeNumber:(int)num;
 
+- (void)setOffline:(BOOL)enabled;
 - (void)setOptOut:(BOOL)enabled;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
 - (void)onUserLogin:(NSDictionary *)properties;
