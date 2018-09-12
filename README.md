@@ -17,13 +17,13 @@
 
     ![alt text](example/images/push_entitle.jpg  "push notifications capability")
 
-- Build and run your iOS project.
-
 - Also, Add a Run Script to your build phases, put it after your step to embed frameworks, set it to use `/bin/sh` and enter the following script:
 
   ![alt text](example/images/ct_script_ios.jpg  "run script")
 
 Check out the [script](https://github.com/CleverTap/clevertap-unity-sdk/blob/1.1.2/Plugin/CleverTapUnity/iOS/strip.sh).
+
+- Build and run your iOS project.
 
 ### Android Specific:
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
