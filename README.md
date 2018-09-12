@@ -21,7 +21,7 @@
 
   ![alt text](example/images/ct_script_ios.jpg  "run script")
 
-Check out the [script](https://github.com/CleverTap/clevertap-unity-sdk/blob/1.1.2/Plugin/CleverTapUnity/iOS/strip.sh).
+Check out the [script](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh).
 
 - Build and run your iOS project.
 
