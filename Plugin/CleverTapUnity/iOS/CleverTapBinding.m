@@ -173,7 +173,11 @@ void CleverTap_recordScreenView(const char* screenName) {
 
 void CleverTap_recordEvent(const char* eventName, const char* properties) {
     NSMutableDictionary *eventProperties = clevertap_dictFromJsonString(properties);
-    [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName) withProps:eventProperties];
+    if (eventProperties == nil || eventProperties == NULL) {
+        [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName)];
+    }else {
+        [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName) withProps:eventProperties];
+    }
 }
 
 void CleverTap_recordChargedEventWithDetailsAndItems(const char* chargeDetails, const char* items) {
