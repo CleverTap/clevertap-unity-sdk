@@ -17,11 +17,11 @@
 
     ![alt text](example/images/push_entitle.jpg  "push notifications capability")
 
-- Also, Add a Run Script to your build phases, put it after your step to embed frameworks, set it to use `/bin/sh` and enter the following script:
+- Add a run script to your build phases, In Xcode, go to your Targets, under your app’s name, select Build Phases after   embed frameworks, add a run script phase and set it to use `/bin/sh` and the [script found here](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh):
 
   ![alt text](example/images/ct_script_ios.jpg  "run script")
-
-Check out the [script](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh).
+  
+ The script will look through your built application’s `Frameworks` folder and strip out the unnecessary simulator architectures from the CleverTakSDK.framework prior to archiving/submitting the app store.
 
 - Build and run your iOS project.
 
