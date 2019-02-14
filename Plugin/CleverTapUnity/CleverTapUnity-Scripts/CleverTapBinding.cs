@@ -568,6 +568,22 @@ namespace CleverTap {
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
         // no-op for Android
     }
+
+    public static void InitializeInbox(){
+        CleverTap.Call("initializeInbox");
+    }
+
+    public static void ShowAppInbox(string styleConfig){
+         CleverTap.Call("showAppInbox", styleConfig);
+    }
+
+    public static int GetInboxMessageCount(){
+        return CleverTap.Call<int>("getInboxMessageCount");
+    }
+
+    public static int GetInboxMessageUnreadCount(){
+        return CleverTap.Call<int>("getInboxMessageUnreadCount");
+    }
     
 #else
 

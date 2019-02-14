@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 28
     }
 
     buildTypes {
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    provided files('libs/classes.jar')
-    provided files("libs/android-support-v4.jar")
-    compile 'com.clevertap.android:clevertap-android-sdk:3.3.2'
+    compileOnly files('libs/classes.jar')
+    compileOnly files("libs/android-support-v4.jar")
+    implementation 'com.clevertap.android:clevertap-android-sdk:3.4.2'
 }

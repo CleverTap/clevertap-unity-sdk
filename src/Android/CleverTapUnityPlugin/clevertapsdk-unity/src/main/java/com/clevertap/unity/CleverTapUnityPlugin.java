@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
+import com.clevertap.android.sdk.CTInboxListener;
+import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.EventDetail;
 import com.clevertap.android.sdk.InAppNotificationListener;
@@ -29,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener {
+public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener, CTInboxListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -39,10 +41,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_DEEP_LINK_CALLBACK = "CleverTapDeepLinkCallback";
     private static final String CLEVERTAP_PUSH_OPENED_CALLBACK = "CleverTapPushOpenedCallback";
     private static final String CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK = "CleverTapInAppNotificationDismissedCallback";
+    private static final String CLEVERTAP_INBOX_DID_INITIALIZE = "CleverTapInboxDidInitializeCallback";
+    private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
 
     private static CleverTapUnityPlugin instance = null;
 
-    private static CleverTapAPI clevertap = null;
+    private CleverTapAPI clevertap = null;
 
     private static void changeCredentials(final String accountID, final String accountToken, final String region) {
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
@@ -50,6 +54,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     static void handleIntent(Intent intent) {
         if (intent == null) return;
+        if (intent.getAction() == null) return;
 
         if (intent.getAction().equals(Intent.ACTION_VIEW)) {
             Uri data = intent.getData();
@@ -59,7 +64,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
         else {
             Bundle extras = intent.getExtras();
-            Boolean isPushNotification = (extras != null && extras.get("wzrk_pn") != null);
+            boolean isPushNotification = (extras != null && extras.get("wzrk_pn") != null);
             if (isPushNotification) {
                 JSONObject data = new JSONObject();
 
@@ -128,6 +133,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             clevertap = CleverTapAPI.getDefaultInstance(context);
             clevertap.setInAppNotificationListener(this);
             clevertap.setSyncListener(this);
+            clevertap.setCTNotificationInboxListener(this);
         } catch (Throwable t) {
            Log.e(LOG_TAG, "initialization error", t);
         }
@@ -135,7 +141,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void createNotificationChannel(Context context, String channelId,String channelName, String channelDescription, int importance, boolean showBadge){
         try{
-            clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,showBadge);
+            CleverTapAPI.createNotificationChannel(context,channelId,channelName,channelDescription,importance,showBadge);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error creating Notification Channel",t);
         }
@@ -143,7 +149,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void createNotificationChannelWithSound(Context context, String channelId,String channelName, String channelDescription, int importance, boolean showBadge, String sound){
         try{
-            clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,showBadge,sound);
+            CleverTapAPI.createNotificationChannel(context,channelId,channelName,channelDescription,importance,showBadge,sound);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error creating Notification Channel",t);
         }
@@ -151,7 +157,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void createNotificationChannelWithGroup(Context context, String channelId,String channelName, String channelDescription, int importance, String groupId, boolean showBadge){
         try{
-            clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,groupId,showBadge);
+            CleverTapAPI.createNotificationChannel(context,channelId,channelName,channelDescription,importance,groupId,showBadge);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error creating Notification Channel with groupId", t);
         }
@@ -159,7 +165,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void createNotificationChannelWithGroupAndSound(Context context, String channelId,String channelName, String channelDescription, int importance, String groupId, boolean showBadge, String sound){
         try{
-            clevertap.createNotificationChannel(context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
+            CleverTapAPI.createNotificationChannel(context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error creating Notification Channel with groupId", t);
         }
@@ -167,7 +173,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void createNotificationChannelGroup(Context context, String groupId, String groupName){
         try{
-            clevertap.createNotificationChannelGroup(context,groupId,groupName);
+            CleverTapAPI.createNotificationChannelGroup(context,groupId,groupName);
         }catch (Throwable t) {
             Log.e(LOG_TAG,"Error creating Notification Channel Group",t);
         }
@@ -175,7 +181,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void deleteNotificationChannel(Context context, String channelId){
         try{
-            clevertap.deleteNotificationChannel(context,channelId);
+            CleverTapAPI.deleteNotificationChannel(context,channelId);
         }catch(Throwable t){
             Log.e(LOG_TAG, "Error deleting Notification Channel",t);
         }
@@ -183,7 +189,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void deleteNotificationChannelGroup(Context context, String groupId){
         try{
-            clevertap.deleteNotificationChannelGroup(context,groupId);
+            CleverTapAPI.deleteNotificationChannelGroup(context,groupId);
         }catch(Throwable t){
             Log.e(LOG_TAG,"Error deleting Notification Channel Group", t);
         }
@@ -244,7 +250,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public void profilePush(final String jsonString) {
         try {
             Map<String, Object> profile = toMap(new JSONObject(jsonString));
-            clevertap.profile.push(profile);
+            clevertap.pushProfile(profile);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profilePush error", t);
         }
@@ -252,7 +258,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profilePushFacebookUser(final String jsonString) {
         try {
-            clevertap.profile.pushFacebookUser(new JSONObject(jsonString));
+            clevertap.pushFacebookUser(new JSONObject(jsonString));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profilePushFacebookUser error", t);
         }
@@ -261,7 +267,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public String profileGet(final String key) {
         try {
             String val = null;
-            Object _val = clevertap.profile.getProperty(key);
+            Object _val = clevertap.getProperty(key);
             if (_val != null) {
                 val = _val.toString();
             }
@@ -292,20 +298,20 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public void profileRemoveValueForKey(final String key) {
-        clevertap.profile.removeValueForKey(key);
+        clevertap.removeValueForKey(key);
     }
 
     public void profileAddMultiValueForKey(final String key, final String val) {
-        clevertap.profile.addMultiValueForKey(key, val);
+        clevertap.addMultiValueForKey(key, val);
     }
 
     public void profileRemoveMultiValueForKey(final String key, final String val) {
-        clevertap.profile.removeMultiValueForKey(key, val);
+        clevertap.removeMultiValueForKey(key, val);
     }
 
     public void profileSetMultiValuesForKey(final String key, final String[] values) {
         try {
-            clevertap.profile.setMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
+            clevertap.setMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileSetMultiValuesForKey error", t);
         }
@@ -313,7 +319,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profileAddMultiValuesForKey(final String key, final String[] values) {
         try {
-            clevertap.profile.addMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
+            clevertap.addMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileAddMultiValuesForKey error", t);
         }
@@ -321,7 +327,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profileRemoveMultiValuesForKey(final String key, final String[] values) {
         try {
-            clevertap.profile.removeMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
+            clevertap.removeMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileRemoveMultiValuesForKey error", t);
         }
@@ -345,7 +351,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             try {
                 JSONObject _props = new JSONObject(propertiesJsonString);
                 Map<String, Object> props = toMap(_props);
-                clevertap.event.push(eventName, props);
+                clevertap.pushEvent(eventName, props);
             } catch (Throwable t) {
                 Log.e(LOG_TAG, "recordEvent error", t);
             }
@@ -357,7 +363,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             JSONObject details = new JSONObject(detailsJSON);
             JSONArray items = new JSONArray(itemsJSON);
-            clevertap.event.push("Charged", toMap(details), toArrayListOfStringObjectMaps(items));
+            clevertap.pushChargedEvent(toMap(details), toArrayListOfStringObjectMaps(items));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "recordChargedEventWithDetailsAndItems error", t);
         }
@@ -377,7 +383,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public String eventGetDetail(final String event) {
         try {
-            EventDetail details = clevertap.event.getDetails(event);
+            EventDetail details = clevertap.getDetails(event);
             return eventDetailsToJSON(details).toString();
         } catch (Throwable t) {
             Log.e(LOG_TAG, "eventGetDetail error", t);
@@ -387,7 +393,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public String userGetEventHistory() {
         try {
-            Map<String, EventDetail> history = clevertap.event.getHistory();
+            Map<String, EventDetail> history = clevertap.getHistory();
             return eventHistoryToJSON(history).toString();
         } catch (Throwable t) {
             Log.e(LOG_TAG, "userGetEventHistory error", t);
@@ -397,7 +403,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public String sessionGetUTMDetails() {
         try {
-            UTMDetail details = clevertap.session.getUTMDetails();
+            UTMDetail details = clevertap.getUTMDetails();
             return utmDetailsToJSON(details).toString();
         } catch (Throwable t) {
             Log.e(LOG_TAG, "sessionGetUTMDetails error", t);
@@ -406,19 +412,41 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public int sessionGetTimeElapsed() {
-        return clevertap.session.getTimeElapsed();
+        return clevertap.getTimeElapsed();
     }
 
     public int userGetTotalVisits() {
-        return clevertap.session.getTotalVisits();
+        return clevertap.getTotalVisits();
     }
 
     public int userGetScreenCount() {
-        return clevertap.session.getScreenCount();
+        return clevertap.getScreenCount();
     }
 
     public int userGetPreviousVisitTime() {
-        return clevertap.session.getPreviousVisitTime();
+        return clevertap.getPreviousVisitTime();
+    }
+
+    //Notification Inbox
+    public void initializeInbox(){
+        clevertap.initializeInbox();
+    }
+
+    public int getInboxMessageCount(){
+        return clevertap.getInboxMessageCount();
+    }
+
+    public int getInboxMessageUnreadCount(){
+        return clevertap.getInboxMessageCount();
+    }
+
+    public void showAppInbox(final String jsonString){
+        try {
+            CTInboxStyleConfig styleConfig = toStyleConfig(new JSONObject(jsonString));
+            clevertap.showAppInbox(styleConfig);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "JSON Exception in converting style config", e);
+        }
     }
 
     // InAppNotificationListener
@@ -460,6 +488,17 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
         final String json = "{CleverTapID:"+ CleverTapID +"}";
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_INITIALIZED_CALLBACK, json);
+    }
+
+    //Inbox Listeners
+    public void inboxDidInitialize(){
+        final String json = "{CleverTap App Inbox Initialized}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_DID_INITIALIZE, json);
+    }
+
+    public void inboxMessagesDidUpdate(){
+        final String json = "{CleverTap App Inbox Messages Updated}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
     }
 
     /*******************
@@ -538,5 +577,45 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
 
         return json;
+    }
+
+    private static CTInboxStyleConfig toStyleConfig(JSONObject object) throws JSONException{
+        CTInboxStyleConfig styleConfig = new CTInboxStyleConfig();
+        if(object.has("navBarColor")){
+            styleConfig.setNavBarColor(object.getString("navBarColor"));
+        }
+        if(object.has("navBarTitle")){
+            styleConfig.setNavBarTitle(object.getString("navBarTitle"));
+        }
+        if(object.has("navBarTitleColor")){
+            styleConfig.setNavBarTitleColor(object.getString("navBarTitleColor"));
+        }
+        if(object.has("inboxBackgroundColor")){
+            styleConfig.setInboxBackgroundColor(object.getString("inboxBackgroundColor"));
+        }
+        if(object.has("backButtonColor")){
+            styleConfig.setBackButtonColor(object.getString("backButtonColor"));
+        }
+        if(object.has("selectedTabColor")){
+            styleConfig.setSelectedTabColor(object.getString("selectedTabColor"));
+        }
+        if(object.has("unselectedTabColor")){
+            styleConfig.setUnselectedTabColor(object.getString("unselectedTabColor"));
+        }
+        if(object.has("selectedTabIndicatorColor")){
+            styleConfig.setSelectedTabIndicatorColor(object.getString("selectedTabIndicatorColor"));
+        }
+        if(object.has("tabBackgroundColor")){
+            styleConfig.setTabBackgroundColor(object.getString("tabBackgroundColor"));
+        }
+        if(object.has("tabs")){
+            JSONArray tabsArray = object.getJSONArray("tabs");
+            ArrayList tabs = new ArrayList();
+            for(int i=0;i<tabsArray.length();i++){
+                tabs.add(tabsArray.getString(i));
+            }
+            styleConfig.setTabs(tabs);
+        }
+        return styleConfig;
     }
 }
