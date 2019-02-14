@@ -111,4 +111,15 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapInAppNotificationDismissedCallback(string message) {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
+
+    //returns callback for InitializeInbox
+    void CleverTapInboxDidInitializeCallback(){
+        Debug.Log("unity received inbox initialized");
+    }
+
+    void CleverTapInboxMessagedDidUpdateCallback(){
+        Debug.Log("unity received inbox messages updated");
+    }
+
+
 }

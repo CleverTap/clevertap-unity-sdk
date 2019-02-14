@@ -131,9 +131,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private CleverTapUnityPlugin(final Context context) {
         try {
             clevertap = CleverTapAPI.getDefaultInstance(context);
-            clevertap.setInAppNotificationListener(this);
-            clevertap.setSyncListener(this);
-            clevertap.setCTNotificationInboxListener(this);
+            if (clevertap != null) {
+                clevertap.setInAppNotificationListener(this);
+                clevertap.setSyncListener(this);
+                clevertap.setCTNotificationInboxListener(this);
+            }
         } catch (Throwable t) {
            Log.e(LOG_TAG, "initialization error", t);
         }

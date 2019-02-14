@@ -739,6 +739,20 @@ namespace CleverTap {
 
     public static void DeleteNotificationChannelGroup(string groupId){
     }
+
+    public static void InitializeInbox(){
+    }
+
+    public static void ShowAppInbox(string styleConfig){
+    }
+
+    public static int GetInboxMessageCount(){
+        return -1;
+    }
+
+    public static int GetInboxMessageUnreadCount(){
+        return -1;
+    }
 #endif
   }
 }
