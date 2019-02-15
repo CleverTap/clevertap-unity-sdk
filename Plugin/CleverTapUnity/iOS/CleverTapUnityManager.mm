@@ -1,5 +1,6 @@
 #import "CleverTapUnityManager.h"
 #import <CleverTapSDK/CleverTap.h>
+#import <CleverTapSDK/CleverTap+Inbox.h>
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
@@ -12,6 +13,8 @@ static NSString * kCleverTapDeepLinkCallback = @"CleverTapDeepLinkCallback";
 static NSString * kCleverTapPushReceivedCallback = @"CleverTapPushReceivedCallback";
 static NSString * kCleverTapPushOpenedCallback = @"CleverTapPushOpenedCallback";
 static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAppNotificationDismissedCallback";
+static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
+static NSString * kCleverTapInboxMessagedDidUpdateCallback = @"CleverTapInboxMessagedDidUpdateCallback";
 
 @interface CleverTapUnityManager () <CleverTapInAppNotificationDelegate> {
 }
@@ -361,5 +364,97 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
     
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
+
+#pragma mark inbox handling
+
+- (void)initializeInbox {
+    [clevertap initializeInboxWithCallback:^(BOOL success) {
+        NSLog(@"Inbox initialized %d", success);
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxDidInitializeCallback withMessage:[NSString stringWithFormat:@"%@", success? @"YES": @"NO"]];
+        [self inboxMessagesDidUpdate];
+    }];
+}
+
+- (void)inboxMessagesDidUpdate {
+    [clevertap registerInboxUpdatedBlock:^{
+        NSLog(@"Inbox Messages updated");
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxMessagedDidUpdateCallback withMessage:@"inbox updated."];
+    }];
+}
+
+- (int)getInboxMessageUnreadCount {
+    return (int)[clevertap getInboxMessageUnreadCount];
+}
+
+- (int)getInboxMessageCount {
+     return (int)[clevertap getInboxMessageCount];
+}
+
+- (void)showAppInbox:(NSDictionary *)styleConfig {
+    CleverTapInboxViewController *inboxController = [clevertap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:nil];
+    if (inboxController) {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:inboxController];
+        [UnityGetGLViewController() presentViewController:navigationController animated:YES completion:nil];
+    }
+}
+
+- (CleverTapInboxStyleConfig*)_dictToInboxStyleConfig: (NSDictionary *)dict {
+    CleverTapInboxStyleConfig *_config = [CleverTapInboxStyleConfig new];
+    NSString *title = [dict valueForKey:@"navBarTitle"];
+    if (title) {
+        _config.title = title;
+    }
+    NSArray *messageTags = [dict valueForKey:@"tabs"];
+    if (messageTags) {
+        _config.messageTags = messageTags;
+    }
+    NSString *backgroundColor = [dict valueForKey:@"inboxBackgroundColor"];
+    if (backgroundColor) {
+        _config.backgroundColor = [self ct_colorWithHexString:backgroundColor alpha:1.0];
+    }
+    NSString *navigationBarTintColor = [dict valueForKey:@"navBarColor"];
+    if (navigationBarTintColor) {
+        _config.navigationBarTintColor = [self ct_colorWithHexString:navigationBarTintColor alpha:1.0];
+    }
+    NSString *navigationTintColor = [dict valueForKey:@"navBarTitleColor"];
+    if (navigationTintColor) {
+        _config.navigationTintColor = [self ct_colorWithHexString:navigationTintColor alpha:1.0];
+    }
+    NSString *tabBackgroundColor = [dict valueForKey:@"tabBackgroundColor"];
+    if (tabBackgroundColor) {
+        _config.tabBackgroundColor = [self ct_colorWithHexString:tabBackgroundColor alpha:1.0];
+    }
+    NSString *tabSelectedBgColor = [dict valueForKey:@"tabSelectedBgColor"];
+    if (tabSelectedBgColor) {
+        _config.tabSelectedBgColor = [self ct_colorWithHexString:tabSelectedBgColor alpha:1.0];
+    }
+    NSString *tabSelectedTextColor = [dict valueForKey:@"tabSelectedTextColor"];
+    if (tabSelectedTextColor) {
+        _config.tabSelectedTextColor = [self ct_colorWithHexString:tabSelectedTextColor alpha:1.0];
+    }
+    NSString *tabUnSelectedTextColor = [dict valueForKey:@"tabUnSelectedTextColor"];
+    if (tabUnSelectedTextColor) {
+        _config.tabUnSelectedTextColor = [self ct_colorWithHexString:tabUnSelectedTextColor alpha:1.0];
+    }
+    return _config;
+}
+
+- (UIColor *)ct_colorWithHexString:(NSString *)string alpha:(CGFloat)alpha{
+    if (![string isKindOfClass:[NSString class]] || [string length] == 0) {
+        return [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
+    }
+    unsigned int hexint = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:string];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet
+                                       characterSetWithCharactersInString:@"#"]];
+    [scanner scanHexInt:&hexint];
+    UIColor *color =
+    [UIColor colorWithRed:((CGFloat) ((hexint & 0xFF0000) >> 16))/255
+                    green:((CGFloat) ((hexint & 0xFF00) >> 8))/255
+                     blue:((CGFloat) (hexint & 0xFF))/255
+                    alpha:alpha];
+    return color;
+}
+
 
 @end

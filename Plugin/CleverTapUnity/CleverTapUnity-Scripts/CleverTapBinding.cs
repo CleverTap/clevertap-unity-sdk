@@ -131,6 +131,18 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_pushInstallReferrerSource(string source, string medium, string campaign);
 
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_showAppInbox(string styleConfig);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern int CleverTap_getInboxMessageCount();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern int CleverTap_getInboxMessageUnreadCount();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern int CleverTap_initializeInbox();
+
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
     }
@@ -319,6 +331,23 @@ namespace CleverTap {
 
     public static void EnableDeviceNetworkInfoReporting(bool enabled) {
         CleverTap_enableDeviceNetworkInfoReporting(enabled);
+    }
+
+    public static void InitializeInbox() {
+        CleverTap_initializeInbox();
+    }
+
+    public static void ShowAppInbox(Dictionary<string, object> styleConfig) {
+        var styleConfigString = Json.Serialize(styleConfig);
+        CleverTap_showAppInbox(styleConfigString);
+    }
+
+    public static int GetInboxMessageCount() {
+        return CleverTap_getInboxMessageCount();
+    }
+
+    public static int GetInboxMessageUnreadCount() {
+        return CleverTap_getInboxMessageUnreadCount();
     }
 
 #elif UNITY_ANDROID
@@ -568,6 +597,22 @@ namespace CleverTap {
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
         // no-op for Android
     }
+
+    public static void InitializeInbox(){
+        CleverTap.Call("initializeInbox");
+    }
+
+    public static void ShowAppInbox(string styleConfig){
+         CleverTap.Call("showAppInbox", styleConfig);
+    }
+
+    public static int GetInboxMessageCount(){
+        return CleverTap.Call<int>("getInboxMessageCount");
+    }
+
+    public static int GetInboxMessageUnreadCount(){
+        return CleverTap.Call<int>("getInboxMessageUnreadCount");
+    }
     
 #else
 
@@ -722,6 +767,20 @@ namespace CleverTap {
     }
 
     public static void DeleteNotificationChannelGroup(string groupId){
+    }
+
+    public static void InitializeInbox(){
+    }
+
+    public static void ShowAppInbox(string styleConfig){
+    }
+
+    public static int GetInboxMessageCount(){
+        return -1;
+    }
+
+    public static int GetInboxMessageUnreadCount(){
+        return -1;
     }
 #endif
   }
