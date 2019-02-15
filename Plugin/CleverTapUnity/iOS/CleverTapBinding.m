@@ -361,3 +361,21 @@ int CleverTap_userGetPreviousVisitTime() {
 void CleverTap_pushInstallReferrerSource(const char* source, const char* medium, const char* campaign) {
     [[CleverTapUnityManager sharedInstance] pushInstallReferrerSource:clevertap_stringToNSString(source) medium:clevertap_stringToNSString(medium) campaign:clevertap_stringToNSString(campaign)];
 }
+
+int CleverTap_getInboxMessageUnreadCount() {
+    return [[CleverTapUnityManager sharedInstance] getInboxMessageUnreadCount];
+}
+
+int CleverTap_getInboxMessageCount() {
+    return [[CleverTapUnityManager sharedInstance] getInboxMessageCount];
+}
+
+void CleverTap_initializeInbox() {
+    [[CleverTapUnityManager sharedInstance] initializeInbox];
+}
+
+void CleverTap_showAppInbox(const char* styleConfig) {
+    NSMutableDictionary *styleConfigDict = clevertap_dictFromJsonString(styleConfig);
+    [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
+}
+

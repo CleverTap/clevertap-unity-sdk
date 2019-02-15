@@ -61,4 +61,9 @@
                            medium:(NSString *)medium
                          campaign:(NSString *)campaign;
 
+- (void)initializeInbox;
+- (void)showAppInbox:(NSDictionary *)styleConfig;
+- (int)getInboxMessageUnreadCount;
+- (int)getInboxMessageCount;
+
 @end
