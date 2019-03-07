@@ -71,7 +71,7 @@
     -->  
     ```
 
-- For FCM, add the comment out the above GCM code from `AndroidManifest.xml` file and add the following - 
+- For FCM, comment out the above GCM code from `AndroidManifest.xml` file and add the following - 
 
     ```
         <service
@@ -89,6 +89,6 @@
         </service>
     ```
 
-- Add your `google-service.json` file to the root of the project 
+- Add your `google-services.json` file to the root of the project 
 
 - Build your app or Android project as usual.
