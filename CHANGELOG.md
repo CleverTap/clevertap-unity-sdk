@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.2.1 *(08 March 2019)*
+-------------------------------------------
+* Update Play Services Resolver to support FCM in Android
+
 Version 1.2.0 *(15 February 2019)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.4.2

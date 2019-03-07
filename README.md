@@ -28,7 +28,7 @@
 ### Android Specific:
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
-- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, FCM Sender ID and Deep Link url scheme (if applicable): 
+- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, GCM Sender ID and Deep Link url scheme (if applicable): 
 
     ```
     <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="YOUR_BUNDLE_IDENTIFIER" android:versionName="1.0" android:versionCode="1" android:installLocation="preferExternal"> <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
@@ -70,5 +70,25 @@
         </intent-filter>
     -->  
     ```
+
+- For FCM, add the comment out the above GCM code from `AndroidManifest.xml` file and add the following - 
+
+    ```
+        <service
+            android:name="com.clevertap.android.sdk.FcmTokenListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.clevertap.android.sdk.FcmMessageListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+    ```
+
+- Add your `google-service.json` file to the root of the project 
 
 - Build your app or Android project as usual.
