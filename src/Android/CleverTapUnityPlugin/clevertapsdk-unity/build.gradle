@@ -23,5 +23,5 @@ repositories {
 dependencies {
     compileOnly files('libs/classes.jar')
     compileOnly files("libs/android-support-v4.jar")
-    implementation 'com.clevertap.android:clevertap-android-sdk:3.4.2'
+    implementation 'com.clevertap.android:clevertap-android-sdk:3.5.1'
 }

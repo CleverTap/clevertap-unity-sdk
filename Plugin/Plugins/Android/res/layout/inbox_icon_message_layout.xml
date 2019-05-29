@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <LinearLayout
-        android:id="@+id/body_relative_layout"
+        android:id="@+id/body_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -19,9 +19,11 @@
             android:layout_width="68dp"
             android:layout_height="68dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter" />
         <LinearLayout
@@ -34,14 +36,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:maxLines="1"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="Title"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp" />
+                android:layout_marginRight="20dp" />
             <TextView
                 android:id="@+id/messageText"
                 android:layout_width="match_parent"
@@ -49,15 +51,17 @@
                 android:text="Message"
                 android:maxLines="3"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/media_layout"
         android:layout_width="match_parent"
-        android:layout_below="@id/body_relative_layout"
+        android:layout_below="@id/body_linear_layout"
         android:layout_height="wrap_content">
         <com.clevertap.android.sdk.RectangleImageView
             android:id="@+id/media_image"
@@ -107,7 +111,7 @@
             android:id="@+id/read_circle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/read_circle"
+            android:src="@drawable/ct_read_circle"
             android:layout_gravity="center"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp" />

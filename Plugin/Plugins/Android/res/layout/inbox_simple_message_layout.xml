@@ -43,8 +43,8 @@
                     android:visibility="visible"/>
             </FrameLayout>
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/body_relative_layout"
+        <LinearLayout
+            android:id="@+id/body_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -55,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:maxLines="1"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
@@ -69,8 +70,10 @@
                 android:text="Message"
                 android:maxLines="3"
                 android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
                 android:textColor="@android:color/darker_gray"
                 android:layout_below="@+id/messageTitle"/>
             <LinearLayout
@@ -95,7 +98,7 @@
                     android:id="@+id/read_circle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/read_circle"
+                    android:src="@drawable/ct_read_circle"
                     android:layout_gravity="center"
                     android:layout_marginRight="20dp"
                     android:layout_marginEnd="20dp" />
@@ -105,7 +108,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/timestamp_linear_layout"
                 android:background="@android:color/darker_gray"/>
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/cta_linear_layout"
