@@ -348,7 +348,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         if (eventName == null) return;
 
         if (propertiesJsonString == null) {
-            clevertap.event.push(eventName);
+            clevertap.pushEvent(eventName);
         } else {
             try {
                 JSONObject _props = new JSONObject(propertiesJsonString);
@@ -372,15 +372,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public int eventGetFirstTime(final String event) {
-        return clevertap.event.getFirstTime(event);
+        return clevertap.getFirstTime(event);
     }
 
     public int eventGetLastTime(final String event) {
-        return clevertap.event.getLastTime(event);
+        return clevertap.getLastTime(event);
     }
 
     public int eventGetOccurrences(final String event) {
-        return clevertap.event.getCount(event);
+        return clevertap.getCount(event);
     }
 
     public String eventGetDetail(final String event) {
@@ -619,5 +619,106 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             styleConfig.setTabs(tabs);
         }
         return styleConfig;
+    }
+
+    public static void setUIEditorConnectionEnabled(boolean enabled) {
+        CleverTapAPI.setUIEditorConnectionEnabled(enabled);
+    }
+
+    public void registerBooleanVariable(String name) {
+        clevertap.registerBooleanVariable(name);
+    }
+
+    public void registerDoubleVariable(String name) {
+        clevertap.registerDoubleVariable(name);
+    }
+
+    public void registerIntegerVariable(String name) {
+        clevertap.registerIntegerVariable(name);
+    }
+
+    public void registerStringVariable(String name) {
+        clevertap.registerStringVariable(name);
+    }
+
+    public void registerListOfBooleanVariable(String name) {
+        clevertap.registerListOfBooleanVariable(name);
+    }
+
+    public void registerListOfDoubleVariable(String name) {
+        clevertap.registerListOfDoubleVariable(name);
+    }
+
+    public void registerListOfIntegerVariable(String name) {
+        clevertap.registerListOfIntegerVariable(name);
+    }
+
+    public void registerListOfStringVariable(String name) {
+        clevertap.registerListOfStringVariable(name);
+    }
+
+    public void registerMapOfBooleanVariable(String name) {
+        clevertap.registerMapOfBooleanVariable(name);
+    }
+
+    public void registerMapOfDoubleVariable(String name) {
+        clevertap.registerMapOfDoubleVariable(name);
+    }
+
+    public void registerMapOfIntegerVariable(String name) {
+        clevertap.registerMapOfIntegerVariable(name);
+    }
+
+    public void registerMapOfStringVariable(String name) {
+        clevertap.registerMapOfStringVariable(name);
+    }
+
+    public Boolean getBooleanVariable(String name, Boolean defaultValue) {
+        return clevertap.getBooleanVariable(name, defaultValue);
+    }
+
+    public Double getDoubleVariable(String name, Double defaultValue) {
+        return clevertap.getDoubleVariable(name, defaultValue);
+    }
+
+    public Integer getIntegerVariable(String name, Integer defaultValue) {
+        return clevertap.getIntegerVariable(name, defaultValue);
+    }
+
+    public String getStringVariable(String name, String defaultValue) {
+        return clevertap.getStringVariable(name, defaultValue);
+    }
+
+    public List<Boolean> getListOfBooleanVariable(String name, List<Boolean> defaultValue) {
+        return clevertap.getListOfBooleanVariable(name, defaultValue);
+
+    }
+
+    public List<Double> getListOfDoubleVariable(String name, List<Double> defaultValue) {
+        return clevertap.getListOfDoubleVariable(name, defaultValue);
+    }
+
+    public List<Integer> getListOfIntegerVariable(String name, List<Integer> defaultValue) {
+        return clevertap.getListOfIntegerVariable(name, defaultValue);
+    }
+
+    public List<String> getListOfStringVariable(String name, List<String> defaultValue) {
+        return clevertap.getListOfStringVariable(name, defaultValue);
+    }
+
+    public Map<String, Boolean> getMapOfBooleanVariable(String name, Map<String, Boolean> defaultValue) {
+        return clevertap.getMapOfBooleanVariable(name, defaultValue);
+    }
+
+    public Map<String, Double> getMapOfDoubleVariable(String name, Map<String, Double> defaultValue) {
+        return clevertap.getMapOfDoubleVariable(name, defaultValue);
+    }
+
+    public Map<String, Integer> getMapOfIntegerVariable(String name, Map<String, Integer> defaultValue) {
+        return clevertap.getMapOfIntegerVariable(name, defaultValue);
+    }
+
+    public Map<String, String> getMapOfStringVariable(String name, Map<String, String> defaultValue) {
+        return clevertap.getMapOfStringVariable(name, defaultValue);
     }
 }

@@ -36,10 +36,10 @@ public class CleverTapUnity: MonoBehaviour {
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();
         }
-	//CleverTapBinding.CreateNotificationChannel("YourChannelId","Your Channel Name", "Your Channel Description", 5, true);
+	CleverTapBinding.CreateNotificationChannel("YourChannelId","Your Channel Name", "Your Channel Description", 5, true);
 	//CleverTapBinding.CreateNotificationChannelWithSound("YourChannelId","Your Channel Name", "Your Channel Description", 5, true, "Your raw sound file");
-	CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");
-	CleverTapBinding.CreateNotificationChannelWithGroup("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true);
+//	CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");
+//	CleverTapBinding.CreateNotificationChannelWithGroup("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true);
 	//CleverTapBinding.CreateNotificationChannelWithGroupAndSound("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true,"Your raw sound file");
 	//CleverTapBinding.DeleteNotificationChannel("YourChannelId");
 	//CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
