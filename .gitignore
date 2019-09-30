@@ -73,4 +73,3 @@ proguard/
 .idea/
 build/
 src/Android/CleverTapUnityPlugin/.gradle/
-src/Android/CleverTapUnityPlugin/.gradle/4.10.1/javaCompile/jarAnalysis.bin
