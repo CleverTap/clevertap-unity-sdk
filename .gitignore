@@ -72,4 +72,5 @@ proguard/
 *.iws
 .idea/
 build/
-src/Android/CleverTapUnityPlugin/.gradle/
+.gradle/*
+src/Android/CleverTapUnityPlugin/.gradle/*

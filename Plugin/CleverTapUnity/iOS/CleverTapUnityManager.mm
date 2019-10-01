@@ -14,7 +14,7 @@ static NSString * kCleverTapPushReceivedCallback = @"CleverTapPushReceivedCallba
 static NSString * kCleverTapPushOpenedCallback = @"CleverTapPushOpenedCallback";
 static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAppNotificationDismissedCallback";
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
-static NSString * kCleverTapInboxMessagedDidUpdateCallback = @"CleverTapInboxMessagedDidUpdateCallback";
+static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
 
 @interface CleverTapUnityManager () <CleverTapInAppNotificationDelegate> {
 }
@@ -378,7 +378,7 @@ static NSString * kCleverTapInboxMessagedDidUpdateCallback = @"CleverTapInboxMes
 - (void)inboxMessagesDidUpdate {
     [clevertap registerInboxUpdatedBlock:^{
         NSLog(@"Inbox Messages updated");
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxMessagedDidUpdateCallback withMessage:@"inbox updated."];
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxMessagesDidUpdateCallback withMessage:@"inbox updated."];
     }];
 }
 

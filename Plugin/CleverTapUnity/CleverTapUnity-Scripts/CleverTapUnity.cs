@@ -117,9 +117,12 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inbox initialized");
     }
 
-    void CleverTapInboxMessagedDidUpdateCallback(){
+    void CleverTapInboxMessagesDidUpdateCallback(){
         Debug.Log("unity received inbox messages updated");
     }
 
+    void CleverTapExperimentMessagesDidUpdateCallback(){
+        Debug.Log("unity received experiemnt messages updated");
+    }
 
 }

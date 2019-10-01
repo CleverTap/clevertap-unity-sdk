@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
+import com.clevertap.android.sdk.CTExperimentsListener;
 import com.clevertap.android.sdk.CTInboxListener;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -31,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener, CTInboxListener {
+public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener, CTInboxListener, CTExperimentsListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -43,6 +44,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK = "CleverTapInAppNotificationDismissedCallback";
     private static final String CLEVERTAP_INBOX_DID_INITIALIZE = "CleverTapInboxDidInitializeCallback";
     private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
+    private static final String CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE = "CleverTapExperimentMessagesDidUpdateCallback";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -135,6 +137,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setInAppNotificationListener(this);
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
+                clevertap.setCTExperimentsListener(this);
             }
         } catch (Throwable t) {
            Log.e(LOG_TAG, "initialization error", t);
@@ -503,6 +506,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
     }
 
+    public void CTExperimentsUpdated() {
+        final String json = "{CleverTap App Experiment Messages Updated}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE, json);
+    }
+
     /*******************
      * Helpers
      ******************/
@@ -623,6 +631,10 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public static void setUIEditorConnectionEnabled(boolean enabled) {
         CleverTapAPI.setUIEditorConnectionEnabled(enabled);
+    }
+
+    public void setLibrary(String library) {
+        clevertap.setLibrary(library);
     }
 
     public void registerBooleanVariable(String name) {
