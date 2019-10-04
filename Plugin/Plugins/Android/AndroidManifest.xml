@@ -100,6 +100,14 @@
             android:name="FCM_SENDER_ID"
             android:value="id:YOUR_FCM_SENDER_ID" />
 
+        <meta-data
+            android:name="CLEVERTAP_ACCOUNT_ID"
+            android:value="Your CleverTap Account ID"/>
+
+        <meta-data
+            android:name="CLEVERTAP_TOKEN"
+            android:value="Your CleverTap Account Token"/>
+
     </application>
 
 </manifest>

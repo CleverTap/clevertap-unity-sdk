@@ -37,12 +37,16 @@ public class CleverTapUnity: MonoBehaviour {
             CleverTapBinding.EnablePersonalization();
         }
 	CleverTapBinding.CreateNotificationChannel("YourChannelId","Your Channel Name", "Your Channel Description", 5, true);
+
 	//CleverTapBinding.CreateNotificationChannelWithSound("YourChannelId","Your Channel Name", "Your Channel Description", 5, true, "Your raw sound file");
-//	CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");
-//	CleverTapBinding.CreateNotificationChannelWithGroup("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true);
+    //CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");
+    //CleverTapBinding.CreateNotificationChannelWithGroup("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true);
 	//CleverTapBinding.CreateNotificationChannelWithGroupAndSound("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true,"Your raw sound file");
 	//CleverTapBinding.DeleteNotificationChannel("YourChannelId");
 	//CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
+
+	//registering Dynamic Variables
+	CleverTapBinding.registerBooleanVariable("booleanVar");
         #endif
     }
     
@@ -276,5 +280,12 @@ public class CleverTapUnity: MonoBehaviour {
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message) {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns the custom data associated with an dynamic variable updates
+    void CleverTapExperimentMessagesDidUpdateCallback(){
+        Debug.Log("unity received experiemnt messages updated");
+        bool boolVar = CleverTapBinding.getBooleanVariable("booleanVar", false);
+        Debug.Log("Bool-" + boolVar);
     }
 }
