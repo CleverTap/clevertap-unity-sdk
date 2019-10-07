@@ -503,19 +503,19 @@ namespace CleverTap {
     }
 
     public static List<bool> getListOfBooleanVariable(string name, List<bool> defaultValue){
-        return CleverTap_getMapOfBooleanVariable(name, defaultValue);
+        return CleverTap_getListOfBooleanVariable(name, defaultValue);
     }
 
     public static List<string> getListOfStringVariable(string name, List<string> defaultValue){
-        return CleverTap_getMapOfStringVariable(name, defaultValue);
+        return CleverTap_getListOfStringVariable(name, defaultValue);
     }
 
     public static List<double> getListOfDoubleVariable(string name, List<double> defaultValue){
-        return CleverTap_getMapOfDoubleVariable(name, defaultValue);
+        return CleverTap_getListOfDoubleVariable(name, defaultValue);
     }
 
     public static List<int> getListOfIntegerVariable(string name, List<int> defaultValue){
-        return CleverTap_getMapOfIntegerVariable(name, defaultValue);
+        return CleverTap_getListOfIntegerVariable(name, defaultValue);
     }
 
 #elif UNITY_ANDROID
