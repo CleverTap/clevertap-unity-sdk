@@ -379,3 +379,105 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+void CleverTap_setUIEditorConnectionEnabled(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] setUIEditorConnectionEnabled:enabled];
+}
+
+void CleverTap_registerStringVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerStringVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerBooleanVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerBooleanVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerIntegerVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerIntegerVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerDoubleVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerDoubleVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerMapOfStringVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerMapOfStringVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerMapOfBooleanVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerMapOfBooleanVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerMapOfIntegerVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerMapOfIntegerVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerMapOfDoubleVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerMapOfDoubleVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerListOfStringVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerListOfStringVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerListOfBooleanVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerListOfBooleanVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerListOfIntegerVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerListOfIntegerVariable:clevertap_stringToNSString(name)];
+}
+
+void CleverTap_registerListOfDoubleVariable(const char* name) {
+   [[CleverTapUnityManager sharedInstance] registerListOfDoubleVariable:clevertap_stringToNSString(name)];
+}
+
+BOOL CleverTap_getBooleanVariable(const char* name, const BOOL defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getBooleanVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSString* CleverTap_getStringVariable(const char* name, const char* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getStringVariable:clevertap_stringToNSString(name) defaultValue:clevertap_stringToNSString(defaultValue)];
+}
+
+int CleverTap_getIntegerVariable(const char* name, const int defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getIntegerVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+double CleverTap_getDoubleVariable(const char* name, const double defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getDoubleVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSDictionary* CleverTap_getMapOfBooleanVariable(const char* name, NSDictionary* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getMapOfBooleanVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSDictionary* CleverTap_getMapOfStringVariable(const char* name, NSDictionary* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getMapOfStringVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSDictionary* CleverTap_getMapOfIntegerVariable(const char* name, NSDictionary* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getMapOfIntegerVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSDictionary* CleverTap_getMapOfDoubleVariable(const char* name, NSDictionary* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getMapOfDoubleVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSArray* CleverTap_getListOfBooleanVariable(const char* name, NSArray* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getListOfBooleanVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSArray* CleverTap_getListOfStringVariable(const char* name, NSArray* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getListOfStringVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSArray* CleverTap_getListMapOfIntegerVariable(const char* name, NSArray* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getListOfIntegerVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+NSArray* CleverTap_getListOfDoubleVariable(const char* name, NSArray* defaultValue) {
+   return [[CleverTapUnityManager sharedInstance] getListOfDoubleVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
+}
+
+
+

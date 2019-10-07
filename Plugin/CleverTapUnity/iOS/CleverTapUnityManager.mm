@@ -1,6 +1,7 @@
 #import "CleverTapUnityManager.h"
 #import <CleverTapSDK/CleverTap.h>
 #import <CleverTapSDK/CleverTap+Inbox.h>
+#import <CleverTapSDK/CleverTap+ABTesting.h>
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
@@ -458,6 +459,81 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 
 #pragma mark screenAB Handling
 
+- (void)setUIEditorConnectionEnabled:(BOOL)enabled {
+    [CleverTap setUIEditorConnectionEnabled:enabled];
+}
+- (void)registerStringVariable:(NSString *)name {
+    [clevertap registerStringVariableWithName:name];
+}
+- (void)registerIntegerVariable:(NSString *)name {
+    [clevertap registerIntegerVariableWithName:name];
+}
+- (void)registerDoubleVariable:(NSString *)name {
+    [clevertap registerDoubleVariableWithName:name];
+}
+- (void)registerBooleanVariable:(NSString *)name {
+    [clevertap registerBoolVariableWithName:name];
+}
+- (void)registerMapOfStringVariable:(NSString *)name {
+    [clevertap registerDictionaryOfStringVariableWithName:name];
+}
+- (void)registerMapOfIntegerVariable:(NSString *)name {
+    [clevertap registerDictionaryOfIntegerVariableWithName:name];
+}
+- (void)registerMapOfDoubleVariable:(NSString *)name {
+    [clevertap registerDictionaryOfDoubleVariableWithName:name];
+}
+- (void)registerMapOfBooleanVariable:(NSString *)name {
+    [clevertap registerDictionaryOfBoolVariableWithName:name];
+}
+- (void)registerListOfStringVariable:(NSString *)name {
+    [clevertap registerArrayOfStringVariableWithName:name];
+}
+- (void)registerListOfDoubleVariable:(NSString *)name {
+    [clevertap registerArrayOfDoubleVariableWithName:name];
+}
+- (void)registerListOfIntegerVariable:(NSString *)name {
+    [clevertap registerArrayOfIntegerVariableWithName:name];
+}
+- (void)registerListOfBooleanVariable:(NSString *)name {
+    [clevertap registerArrayOfBoolVariableWithName:name];
+}
 
+- (BOOL)getBooleanVariable:(NSString *)name defaultValue:(BOOL)defaultValue {
+    return [clevertap getBoolVariableWithName:name defaultValue:defaultValue];
+}
+- (double)getDoubleVariable:(NSString *)name defaultValue:(double)defaultValue {
+    return [clevertap getDoubleVariableWithName:name defaultValue:defaultValue];
+}
+- (int)getIntegerVariable:(NSString *)name defaultValue:(int)defaultValue {
+    return [clevertap getIntegerVariableWithName:name defaultValue:defaultValue];
+}
+- (NSString *)getStringVariable:(NSString *)name defaultValue:(NSString *)defaultValue {
+    return [clevertap getStringVariableWithName:name defaultValue:defaultValue];
+}
+- (NSArray *)getListOfBooleanVariable:(NSString *)name defaultValue:(NSArray *)defaultValue {
+    return [clevertap getArrayOfBoolVariableWithName:name defaultValue:defaultValue];
+}
+- (NSArray *)getListOfDoubleVariable:(NSString *)name defaultValue:(NSArray *)defaultValue {
+    return [clevertap getArrayOfDoubleVariableWithName:name defaultValue:defaultValue];
+}
+- (NSArray *)getListOfIntegerVariable:(NSString *)name defaultValue:(NSArray *)defaultValue {
+    return [clevertap getArrayOfIntegerVariableWithName:name defaultValue:defaultValue];
+}
+- (NSArray *)getListOfStringVariable:(NSString *)name defaultValue:(NSArray *)defaultValue {
+    return [clevertap getArrayOfStringVariableWithName:name defaultValue:defaultValue];
+}
+- (NSDictionary *)getMapOfBooleanVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue {
+    return [clevertap getDictionaryOfBoolVariableWithName:name defaultValue:defaultValue];
+}
+- (NSDictionary *)getMapOfDoubleVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue {
+    return [clevertap getDictionaryOfDoubleVariableWithName:name defaultValue:defaultValue];
+}
+- (NSDictionary *)getMapOfIntegerVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue {
+    return [clevertap getDictionaryOfIntegerVariableWithName:name defaultValue:defaultValue];
+}
+- (NSDictionary *)getMapOfStringVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue {
+    return [clevertap getDictionaryOfStringVariableWithName:name defaultValue:defaultValue];
+}
 
 @end
