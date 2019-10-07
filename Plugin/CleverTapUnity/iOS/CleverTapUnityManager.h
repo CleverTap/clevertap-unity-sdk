@@ -66,4 +66,20 @@
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
 
+- (void)registerStringVariable:(NSString *)name;
+- (void)registerIntegerVariable:(NSString *)name;
+- (void)registerDoubleVariable:(NSString *)name;
+- (void)registerBooleanVariable:(NSString *)name;
+- (void)registerMapOfStringVariable:(NSString *)name;
+- (void)registerMapOfIntegerVariable:(NSString *)name;
+- (void)registerMapOfDoubleVariable:(NSString *)name;
+- (void)registerMapOfBooleanVariable:(NSString *)name;
+- (void)registerListOfBooleanVariable:(NSString *)name;
+- (void)registerListOfDoubleVariable:(NSString *)name;
+- (void)registerListOfStringVariable:(NSString *)name;
+- (void)registerListOfIntegerVariable:(NSString *)name;
+
+- (NSString *)get
+
+
 @end

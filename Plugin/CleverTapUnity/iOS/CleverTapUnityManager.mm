@@ -456,5 +456,8 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return color;
 }
 
+#pragma mark screenAB Handling
+
+
 
 @end
