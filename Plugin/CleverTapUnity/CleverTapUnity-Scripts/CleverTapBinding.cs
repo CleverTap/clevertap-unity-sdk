@@ -1051,6 +1051,92 @@ namespace CleverTap {
     public static int GetInboxMessageUnreadCount(){
         return -1;
     }
+    public static void setUIEditorConnectionEnabled(bool enabled){
+    }
+
+    public static void registerBooleanVariable(string name){
+    }
+
+    public static void registerDoubleVariable(string name){
+    }
+
+    public static void registerIntegerVariable(string name){
+    }
+
+    public static void registerStringVariable(string name){
+    }
+
+    public static void registerListOfBooleanVariable(string name){
+    }
+
+    public static void registerListOfDoubleVariable(string name){
+    }
+
+    public static void registerListOfIntegerVariable(string name){
+    }
+
+    public static void registerListOfStringVariable(string name){
+    }
+
+    public static void registerMapOfBooleanVariable(string name){
+    }
+
+    public static void registerMapOfDoubleVariable(string name){
+    }
+
+    public static void registerMapOfIntegerVariable(string name){
+    }
+
+    public static void registerMapOfStringVariable(string name){
+    }
+
+    public static bool getBooleanVariable(string name, bool defaultValue){
+        return defaultValue;
+    }
+
+    public static double getDoubleVariable(string name, double defaultValue){
+        return defaultValue;
+    }
+
+    public static int getIntegerVariable(string name, int defaultValue){
+        return defaultValue;
+    }
+
+    public static string getStringVariable(string name, string defaultValue){
+        return defaultValue;
+    }
+
+    public static List<bool> getListOfBooleanVariable(string name, List<bool> defaultValue){
+        return defaultValue;
+    }
+
+    public static List<double> getListOfDoubleVariable(string name, List<double> defaultValue){
+        return defaultValue;
+    }
+
+    public static List<int> getListOfIntegerVariable(string name, List<int> defaultValue){
+        return defaultValue;
+    }
+
+    public static List<string> getListOfStringVariable(string name, List<string> defaultValue){
+        return defaultValue;
+    }
+
+    public static Dictionary<string, bool> getMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
+        return defaultValue;
+    }
+
+    public static Dictionary<string, double> getMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
+        return defaultValue;
+    }
+
+    public static Dictionary<string, int> getMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
+        return defaultValue;
+    }
+
+    public static Dictionary<string, string> getMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
+        return defaultValue;
+    }
 #endif
     }
 }
