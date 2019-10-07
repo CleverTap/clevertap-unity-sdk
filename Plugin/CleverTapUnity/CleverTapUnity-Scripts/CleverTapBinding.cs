@@ -552,8 +552,9 @@ namespace CleverTap {
         get {
             if (clevertap == null) {
                 AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+                //set the UI editor flag before getting the Clevertap instance, defaults to false.
+                CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true);
                 clevertap = CleverTapAPI.CallStatic<AndroidJavaObject>("getInstance", context);
-                clevertap.Call("setLibrary","unity");
             }
             return clevertap;
         }

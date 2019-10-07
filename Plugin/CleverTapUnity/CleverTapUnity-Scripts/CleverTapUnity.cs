@@ -122,7 +122,7 @@ public class CleverTapUnity: MonoBehaviour {
     }
 
     void CleverTapExperimentMessagesDidUpdateCallback(){
-        Debug.Log("unity received experiemnt messages updated");
+        Debug.Log("unity received experiment messages updated");
     }
 
 }
