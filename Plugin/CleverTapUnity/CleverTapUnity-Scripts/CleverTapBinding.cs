@@ -144,6 +144,9 @@ namespace CleverTap {
     private static extern int CleverTap_initializeInbox();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
+
+   [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_registerStringVariable(string name);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -192,28 +195,28 @@ namespace CleverTap {
     private static extern bool CleverTap_getBooleanVariable(string name, bool defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getMapOfBooleanVariable(string name, Dictionary defaultValue);
+    private static extern Dictionary<string, bool> CleverTap_getMapOfBooleanVariable(string name, Dictionary <string, bool> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getMapOfStringVariable(string name, Dictionary defaultValue);
+    private static extern Dictionary<string, string> CleverTap_getMapOfStringVariable(string name, Dictionary<string, string> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getMapOfIntegerVariable(string name, Dictionary defaultValue);
+    private static extern Dictionary<string, int> CleverTap_getMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getMapOfDoubleVariable(string name, Dictionary defaultValue);
+    private static extern Dictionary<string, double> CleverTap_getMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getListOfBooleanVariable(string name, List defaultValue);
+    private static extern List<bool> CleverTap_getListOfBooleanVariable(string name, List<bool> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getListOfStringVariable(string name, List defaultValue);
+    private static extern List<string> CleverTap_getListOfStringVariable(string name, List<string> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getListOfIntegerVariable(string name, List defaultValue);
+    private static extern List<int> CleverTap_getListOfIntegerVariable(string name, List<int> defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern  CleverTap_getListOfDoubleVariable(string name, List defaultValue);
+    private static extern List<double> CleverTap_getListOfDoubleVariable(string name, List<double> defaultValue);
 
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
@@ -422,99 +425,103 @@ namespace CleverTap {
         return CleverTap_getInboxMessageUnreadCount();
     }
 
-    public static void registerStringVariable(string name) {
+    public static void SetUIEditorConnectionEnabled(bool enabled) {
+            CleverTap_setUIEditorConnectionEnabled(enabled);
+    }
+
+    public static void RegisterStringVariable(string name) {
         CleverTap_registerStringVariable(name);
     }
 
-    public static void registerBooleanVariable(string name) {
+    public static void RegisterBooleanVariable(string name) {
         CleverTap_registerBooleanVariable(name);
     }
 
-    public static void registerIntegerVariable(string name) {
+    public static void RegisterIntegerVariable(string name) {
         CleverTap_registerIntegerVariable(name);
     }
 
-    public static void registerDoubleVariable(string name) {
+    public static void RegisterDoubleVariable(string name) {
         CleverTap_registerDoubleVariable(name);
     }
 
-    public static void registerMapOfStringVariable(string name) {
+    public static void RegisterMapOfStringVariable(string name) {
         CleverTap_registerMapOfStringVariable(name);
     }
 
-    public static void registerMapOfBooleanVariable(string name) {
-        CleverTap_registerMapofBooleanVariable(name);
+    public static void RegisterMapOfBooleanVariable(string name) {
+        CleverTap_registerMapOfBooleanVariable(name);
     }
 
-    public static void registerMapOfIntegerVariable(string name) {
+    public static void RegisterMapOfIntegerVariable(string name) {
         CleverTap_registerMapOfIntegerVariable(name);
     }
 
-    public static void registerMapOfDoubleVariable(string name) {
+    public static void RegisterMapOfDoubleVariable(string name) {
         CleverTap_registerMapOfDoubleVariable(name);
     }
 
-    public static void registerListOfStringVariable(string name) {
+    public static void RegisterListOfStringVariable(string name) {
         CleverTap_registerListOfStringVariable(name);
     }
 
-    public static void registerListOfBooleanVariable(string name) {
-        CleverTap_registerListofBooleanVariable(name, null);
+    public static void RegisterListOfBooleanVariable(string name) {
+        CleverTap_registerListOfBooleanVariable(name);
     }
 
-    public static void registerListOfIntegerVariable(string name) {
+    public static void RegisterListOfIntegerVariable(string name) {
         CleverTap_registerListOfIntegerVariable(name);
     }
 
-    public static void registerListOfDoubleVariable(string name) {
+    public static void RegisterListOfDoubleVariable(string name) {
         CleverTap_registerListOfDoubleVariable(name);
     }
 
-    public static bool getBooleanVariable(string name, bool defaultValue) {
+    public static bool GetBooleanVariable(string name, bool defaultValue) {
         return CleverTap_getBooleanVariable(name, defaultValue);
     }
 
-    public static string getStringVariable(string name, string defaultValue) {
+    public static string GetStringVariable(string name, string defaultValue) {
         return CleverTap_getStringVariable(name, defaultValue);
     }
 
-    public static int getIntegerVariable(string name, int defaultValue) {
+    public static int GetIntegerVariable(string name, int defaultValue) {
         return CleverTap_getIntegerVariable(name, defaultValue);
     }
 
-    public static double getDoubleVariable(string name, double defaultValue) {
+    public static double GetDoubleVariable(string name, double defaultValue) {
         return CleverTap_getDoubleVariable(name, defaultValue);
     }
 
-    public static Dictionary<string, bool> getMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
+    public static Dictionary<string, bool> GetMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
         return CleverTap_getMapOfBooleanVariable(name, defaultValue);
     }
 
-    public static Dictionary<string, string> getMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
+    public static Dictionary<string, string> GetMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
         return CleverTap_getMapOfStringVariable(name, defaultValue);
     }
 
-    public static Dictionary<string, double> getMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
+    public static Dictionary<string, double> GetMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
         return CleverTap_getMapOfDoubleVariable(name, defaultValue);
     }
 
-    public static Dictionary<string, int> getMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
+    public static Dictionary<string, int> GetMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
         return CleverTap_getMapOfIntegerVariable(name, defaultValue);
     }
 
-    public static List<bool> getListOfBooleanVariable(string name, List<bool> defaultValue){
+    public static List<bool> GetListOfBooleanVariable(string name, List<bool> defaultValue){
         return CleverTap_getListOfBooleanVariable(name, defaultValue);
     }
 
-    public static List<string> getListOfStringVariable(string name, List<string> defaultValue){
+    public static List<string> GetListOfStringVariable(string name, List<string> defaultValue){
         return CleverTap_getListOfStringVariable(name, defaultValue);
     }
 
-    public static List<double> getListOfDoubleVariable(string name, List<double> defaultValue){
+    public static List<double> GetListOfDoubleVariable(string name, List<double> defaultValue){
         return CleverTap_getListOfDoubleVariable(name, defaultValue);
     }
 
-    public static List<int> getListOfIntegerVariable(string name, List<int> defaultValue){
+    public static List<int> GetListOfIntegerVariable(string name, List<int> defaultValue){
         return CleverTap_getListOfIntegerVariable(name, defaultValue);
     }
 
@@ -784,103 +791,103 @@ namespace CleverTap {
         return CleverTap.Call<int>("getInboxMessageUnreadCount");
     }
 
-    public static void setUIEditorConnectionEnabled(bool enabled){
+    public static void SetUIEditorConnectionEnabled(bool enabled){
         CleverTap.CallStatic("setUIEditorConnectionEnabled", enabled);
     }
 
-    public static void registerBooleanVariable(string name){
+    public static void RegisterBooleanVariable(string name){
         CleverTap.Call("registerBooleanVariable", name);
     }
 
-    public static void registerDoubleVariable(string name){
+    public static void RegisterDoubleVariable(string name){
             CleverTap.Call("registerDoubleVariable", name);
     }
 
-    public static void registerIntegerVariable(string name){
+    public static void RegisterIntegerVariable(string name){
             CleverTap.Call("registerIntegerVariable", name);
     }
 
-    public static void registerStringVariable(string name){
+    public static void RegisterStringVariable(string name){
         CleverTap.Call("registerStringVariable", name);
     }
 
-    public static void registerListOfBooleanVariable(string name){
+    public static void RegisterListOfBooleanVariable(string name){
         CleverTap.Call("registerListOfBooleanVariable", name);
     }
 
-    public static void registerListOfDoubleVariable(string name){
+    public static void RegisterListOfDoubleVariable(string name){
         CleverTap.Call("registerListOfDoubleVariable", name);
     }
 
-    public static void registerListOfIntegerVariable(string name){
+    public static void RegisterListOfIntegerVariable(string name){
         CleverTap.Call("registerListOfIntegerVariable", name);
     }
 
-    public static void registerListOfStringVariable(string name){
+    public static void RegisterListOfStringVariable(string name){
         CleverTap.Call("registerListOfStringVariable", name);
     }
 
-    public static void registerMapOfBooleanVariable(string name){
+    public static void RegisterMapOfBooleanVariable(string name){
         CleverTap.Call("registerMapOfBooleanVariable", name);
     }
 
-    public static void registerMapOfDoubleVariable(string name){
+    public static void RegisterMapOfDoubleVariable(string name){
         CleverTap.Call("registerMapOfDoubleVariable", name);
     }
 
-    public static void registerMapOfIntegerVariable(string name){
+    public static void RegisterMapOfIntegerVariable(string name){
         CleverTap.Call("registerMapOfIntegerVariable", name);
     }
 
-    public static void registerMapOfStringVariable(string name){
+    public static void RegisterMapOfStringVariable(string name){
         CleverTap.Call("registerMapOfStringVariable", name);
     }
 
-    public static bool getBooleanVariable(string name, bool defaultValue){
+    public static bool GetBooleanVariable(string name, bool defaultValue){
         return CleverTap.Call<bool>("getBooleanVariable", name, defaultValue);
     }
 
-    public static double getDoubleVariable(string name, double defaultValue){
+    public static double GetDoubleVariable(string name, double defaultValue){
         return CleverTap.Call<double>("getDoubleVariable", name, defaultValue);
     }
 
-    public static int getIntegerVariable(string name, int defaultValue){
+    public static int GetIntegerVariable(string name, int defaultValue){
         return CleverTap.Call<int>("getIntegerVariable", name, defaultValue);
     }
 
-    public static string getStringVariable(string name, string defaultValue){
+    public static string GetStringVariable(string name, string defaultValue){
         return CleverTap.Call<string>("getStringVariable", name, defaultValue);
     }
 
-    public static List<bool> getListOfBooleanVariable(string name, List<bool> defaultValue){
+    public static List<bool> GetListOfBooleanVariable(string name, List<bool> defaultValue){
         return CleverTap.Call<List<bool>>("getListOfBooleanVariable", name, defaultValue);
     }
 
-    public static List<double> getListOfDoubleVariable(string name, List<double> defaultValue){
+    public static List<double> GetListOfDoubleVariable(string name, List<double> defaultValue){
         return CleverTap.Call<List<double>>("getListOfDoubleVariable", name, defaultValue);
     }
 
-    public static List<int> getListOfIntegerVariable(string name, List<int> defaultValue){
+    public static List<int> GetListOfIntegerVariable(string name, List<int> defaultValue){
         return CleverTap.Call<List<int>>("getListOfIntegerVariable", name, defaultValue);
     }
 
-    public static List<string> getListOfStringVariable(string name, List<string> defaultValue){
+    public static List<string> GetListOfStringVariable(string name, List<string> defaultValue){
         return CleverTap.Call<List<string>>("getListOfStringVariable", name, defaultValue);
     }
 
-    public static Dictionary<string, bool> getMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
+    public static Dictionary<string, bool> GetMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
         return CleverTap.Call<Dictionary<string, bool>>("getMapOfBooleanVariable", name, defaultValue);
     }
 
-    public static Dictionary<string, double> getMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
+    public static Dictionary<string, double> GetMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
         return CleverTap.Call<Dictionary<string, double>>("getMapOfDoubleVariable", name, defaultValue);
     }
 
-    public static Dictionary<string, int> getMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
+    public static Dictionary<string, int> GetMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
         return CleverTap.Call<Dictionary<string, int>>("getMapOfIntegerVariable", name, defaultValue);
     }
 
-    public static Dictionary<string, string> getMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
+    public static Dictionary<string, string> GetMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
         return CleverTap.Call<Dictionary<string, string>>("getMapOfStringVariable", name, defaultValue);
     }
 #else
@@ -1051,90 +1058,90 @@ namespace CleverTap {
     public static int GetInboxMessageUnreadCount(){
         return -1;
     }
-    public static void setUIEditorConnectionEnabled(bool enabled){
+    public static void SetUIEditorConnectionEnabled(bool enabled){
     }
 
-    public static void registerBooleanVariable(string name){
+    public static void RegisterBooleanVariable(string name){
     }
 
-    public static void registerDoubleVariable(string name){
+    public static void RegisterDoubleVariable(string name){
     }
 
-    public static void registerIntegerVariable(string name){
+    public static void RegisterIntegerVariable(string name){
     }
 
-    public static void registerStringVariable(string name){
+    public static void RegisterStringVariable(string name){
     }
 
-    public static void registerListOfBooleanVariable(string name){
+    public static void RegisterListOfBooleanVariable(string name){
     }
 
-    public static void registerListOfDoubleVariable(string name){
+    public static void RegisterListOfDoubleVariable(string name){
     }
 
-    public static void registerListOfIntegerVariable(string name){
+    public static void RegisterListOfIntegerVariable(string name){
     }
 
-    public static void registerListOfStringVariable(string name){
+    public static void RegisterListOfStringVariable(string name){
     }
 
-    public static void registerMapOfBooleanVariable(string name){
+    public static void RegisterMapOfBooleanVariable(string name){
     }
 
-    public static void registerMapOfDoubleVariable(string name){
+    public static void RegisterMapOfDoubleVariable(string name){
     }
 
-    public static void registerMapOfIntegerVariable(string name){
+    public static void RegisterMapOfIntegerVariable(string name){
     }
 
-    public static void registerMapOfStringVariable(string name){
+    public static void RegisterMapOfStringVariable(string name){
     }
 
-    public static bool getBooleanVariable(string name, bool defaultValue){
+    public static bool GetBooleanVariable(string name, bool defaultValue){
         return defaultValue;
     }
 
-    public static double getDoubleVariable(string name, double defaultValue){
+    public static double GetDoubleVariable(string name, double defaultValue){
         return defaultValue;
     }
 
-    public static int getIntegerVariable(string name, int defaultValue){
+    public static int GetIntegerVariable(string name, int defaultValue){
         return defaultValue;
     }
 
-    public static string getStringVariable(string name, string defaultValue){
+    public static string GetStringVariable(string name, string defaultValue){
         return defaultValue;
     }
 
-    public static List<bool> getListOfBooleanVariable(string name, List<bool> defaultValue){
+    public static List<bool> GetListOfBooleanVariable(string name, List<bool> defaultValue){
         return defaultValue;
     }
 
-    public static List<double> getListOfDoubleVariable(string name, List<double> defaultValue){
+    public static List<double> GetListOfDoubleVariable(string name, List<double> defaultValue){
         return defaultValue;
     }
 
-    public static List<int> getListOfIntegerVariable(string name, List<int> defaultValue){
+    public static List<int> GetListOfIntegerVariable(string name, List<int> defaultValue){
         return defaultValue;
     }
 
-    public static List<string> getListOfStringVariable(string name, List<string> defaultValue){
+    public static List<string> GetListOfStringVariable(string name, List<string> defaultValue){
         return defaultValue;
     }
 
-    public static Dictionary<string, bool> getMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
+    public static Dictionary<string, bool> GetMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
         return defaultValue;
     }
 
-    public static Dictionary<string, double> getMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
+    public static Dictionary<string, double> GetMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
         return defaultValue;
     }
 
-    public static Dictionary<string, int> getMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
+    public static Dictionary<string, int> GetMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
         return defaultValue;
     }
 
-    public static Dictionary<string, string> getMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
+    public static Dictionary<string, string> GetMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
         return defaultValue;
     }
 #endif
