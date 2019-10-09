@@ -195,28 +195,28 @@ namespace CleverTap {
     private static extern bool CleverTap_getBooleanVariable(string name, bool defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern Dictionary<string, bool> CleverTap_getMapOfBooleanVariable(string name, Dictionary <string, bool> defaultValue);
+    private static extern string CleverTap_getMapOfBooleanVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern Dictionary<string, string> CleverTap_getMapOfStringVariable(string name, Dictionary<string, string> defaultValue);
+    private static extern string CleverTap_getMapOfStringVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern Dictionary<string, int> CleverTap_getMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue);
+    private static extern string CleverTap_getMapOfIntegerVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern Dictionary<string, double> CleverTap_getMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue);
+    private static extern string CleverTap_getMapOfDoubleVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern List<bool> CleverTap_getListOfBooleanVariable(string name, List<bool> defaultValue);
+    private static extern string CleverTap_getListOfBooleanVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern List<string> CleverTap_getListOfStringVariable(string name, List<string> defaultValue);
+    private static extern string CleverTap_getListOfStringVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern List<int> CleverTap_getListOfIntegerVariable(string name, List<int> defaultValue);
+    private static extern string CleverTap_getListOfIntegerVariable(string name, string defaultValue);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern List<double> CleverTap_getListOfDoubleVariable(string name, List<double> defaultValue);
+    private static extern string CleverTap_getListOfDoubleVariable(string name, string defaultValue);
 
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
@@ -493,36 +493,108 @@ namespace CleverTap {
         return CleverTap_getDoubleVariable(name, defaultValue);
     }
 
-    public static Dictionary<string, bool> GetMapOfBooleanVariable(string name, Dictionary<string, bool> defaultValue){
-        return CleverTap_getMapOfBooleanVariable(name, defaultValue);
+    public static JSONClass GetMapOfBooleanVariable(string name, Dictionary<string, object> defaultValue) {
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getMapOfBooleanVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
-    public static Dictionary<string, string> GetMapOfStringVariable(string name, Dictionary<string, string> defaultValue){
-        return CleverTap_getMapOfStringVariable(name, defaultValue);
+    public static JSONClass GetMapOfStringVariable(string name, Dictionary<string, object> defaultValue) {
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getMapOfStringVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
-    public static Dictionary<string, double> GetMapOfDoubleVariable(string name, Dictionary<string, double> defaultValue){
-        return CleverTap_getMapOfDoubleVariable(name, defaultValue);
+    public static JSONClass GetMapOfDoubleVariable(string name, Dictionary<string, object> defaultValue) {
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getMapOfDoubleVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
-    public static Dictionary<string, int> GetMapOfIntegerVariable(string name, Dictionary<string, int> defaultValue){
-        return CleverTap_getMapOfIntegerVariable(name, defaultValue);
+    public static JSONClass GetMapOfIntegerVariable(string name, Dictionary<string, object> defaultValue) {
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getMapOfIntegerVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse user json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
-    public static List<bool> GetListOfBooleanVariable(string name, List<bool> defaultValue){
-        return CleverTap_getListOfBooleanVariable(name, defaultValue);
+    public static JSONClass GetListOfBooleanVariable(string name, List<bool> defaultValue){
+       var defaultValueString = Json.Serialize(defaultValue);
+       string jsonString = CleverTap_getListOfBooleanVariable(name, defaultValueString);
+       JSONClass json;
+       try {
+           json = (JSONClass)JSON.Parse(jsonString);
+       } catch {
+           Debug.Log("Unable to parse user json");
+           json = new JSONClass();
+       }
+       return json;
     }
 
-    public static List<string> GetListOfStringVariable(string name, List<string> defaultValue){
-        return CleverTap_getListOfStringVariable(name, defaultValue);
+    public static JSONClass GetListOfStringVariable(string name, List<string> defaultValue){
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getListOfStringVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse user json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
-    public static List<double> GetListOfDoubleVariable(string name, List<double> defaultValue){
-        return CleverTap_getListOfDoubleVariable(name, defaultValue);
+    public static JSONClass GetListOfDoubleVariable(string name, List<double> defaultValue){
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getListOfDoubleVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse user json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
-    public static List<int> GetListOfIntegerVariable(string name, List<int> defaultValue){
-        return CleverTap_getListOfIntegerVariable(name, defaultValue);
+    public static JSONClass GetListOfIntegerVariable(string name, List<int> defaultValue){
+        var defaultValueString = Json.Serialize(defaultValue);
+        string jsonString = CleverTap_getListOfIntegerVariable(name, defaultValueString);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse user json");
+            json = new JSONClass();
+        }
+        return json;
     }
 
 #elif UNITY_ANDROID

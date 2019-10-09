@@ -32,6 +32,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
         [sharedInstance registerListeners];
         
         clevertap = [CleverTap sharedInstance];
+        [clevertap setLibrary:@"Unity"];
         
         [clevertap setInAppNotificationDelegate:sharedInstance];
     }
