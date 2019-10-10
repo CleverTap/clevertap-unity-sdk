@@ -545,54 +545,54 @@ namespace CleverTap {
         return json;
     }
 
-    public static JSONClass GetListOfBooleanVariable(string name, List<bool> defaultValue){
+    public static JSONArray GetListOfBooleanVariable(string name, List<bool> defaultValue){
        var defaultValueString = Json.Serialize(defaultValue);
        string jsonString = CleverTap_getListOfBooleanVariable(name, defaultValueString);
-       JSONClass json;
+       JSONArray json;
        try {
-           json = (JSONClass)JSON.Parse(jsonString);
+           json = (JSONArray)JSON.Parse(jsonString);
        } catch {
            Debug.Log("Unable to parse user json");
-           json = new JSONClass();
+           json = new JSONArray();
        }
        return json;
     }
 
-    public static JSONClass GetListOfStringVariable(string name, List<string> defaultValue){
+    public static JSONArray GetListOfStringVariable(string name, List<string> defaultValue){
         var defaultValueString = Json.Serialize(defaultValue);
         string jsonString = CleverTap_getListOfStringVariable(name, defaultValueString);
-        JSONClass json;
+        JSONArray json;
         try {
-            json = (JSONClass)JSON.Parse(jsonString);
+            json = (JSONArray)JSON.Parse(jsonString);
         } catch {
             Debug.Log("Unable to parse user json");
-            json = new JSONClass();
+            json = new JSONArray();
         }
         return json;
     }
 
-    public static JSONClass GetListOfDoubleVariable(string name, List<double> defaultValue){
+    public static JSONArray GetListOfDoubleVariable(string name, List<double> defaultValue){
         var defaultValueString = Json.Serialize(defaultValue);
         string jsonString = CleverTap_getListOfDoubleVariable(name, defaultValueString);
-        JSONClass json;
+        JSONArray json;
         try {
-            json = (JSONClass)JSON.Parse(jsonString);
+            json = (JSONArray)JSON.Parse(jsonString);
         } catch {
             Debug.Log("Unable to parse user json");
-            json = new JSONClass();
+            json = new JSONArray();
         }
         return json;
     }
 
-    public static JSONClass GetListOfIntegerVariable(string name, List<int> defaultValue){
+    public static JSONArray GetListOfIntegerVariable(string name, List<int> defaultValue){
         var defaultValueString = Json.Serialize(defaultValue);
         string jsonString = CleverTap_getListOfIntegerVariable(name, defaultValueString);
-        JSONClass json;
+        JSONArray json;
         try {
-            json = (JSONClass)JSON.Parse(jsonString);
+            json = (JSONArray)JSON.Parse(jsonString);
         } catch {
             Debug.Log("Unable to parse user json");
-            json = new JSONClass();
+            json = new JSONArray();
         }
         return json;
     }
