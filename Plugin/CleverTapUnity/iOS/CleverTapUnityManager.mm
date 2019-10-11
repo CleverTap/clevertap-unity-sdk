@@ -274,7 +274,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 }
 
 + (void)launchWithAccountID:(NSString*)accountID token:(NSString *)token region:(NSString *)region {
-    [CleverTap changeCredentialsWithAccountID:accountID token:token region:region];
+    [CleverTap setCredentialsWithAccountID:accountID token:token region:region];
     [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];
 }
 
