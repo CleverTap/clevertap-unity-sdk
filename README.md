@@ -28,35 +28,23 @@
 ### Android Specific:
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
-- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, GCM Sender ID and Deep Link url scheme (if applicable): 
+- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, FCM Sender ID, CleverTap Account Id, CleverTap Token and Deep Link url scheme (if applicable): 
 
     ```
     <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="YOUR_BUNDLE_IDENTIFIER" android:versionName="1.0" android:versionCode="1" android:installLocation="preferExternal"> <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
-    ```  
-
     ```
-    <permission android:protectionLevel="signature" android:name="YOUR_BUNDLE_IDENTIFIER.permission.C2D_MESSAGE" />
-    <uses-permission android:name="YOUR_BUNDLE_IDENTIFIER.permission.C2D_MESSAGE" />
-    ```  
-
-    ```
-    <receiver
-        android:name="com.google.android.gms.gcm.GcmReceiver"
-        android:exported="true"
-        android:permission="com.google.android.c2dm.permission.SEND" >
-        <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-            <category android:name="YOUR_BUNDLE_IDENTIFIER" />
-        </intent-filter>
-    </receiver>
-
-    ```
-
     ```
     <meta-data
         android:name="GCM_SENDER_ID"
         android:value="id:YOUR_FCM_SENDER_ID"/>
+    
+    <meta-data
+        android:name="CLEVERTAP_ACCOUNT_ID"
+        android:value="Your CleverTap Account ID"/>
+        
+    <meta-data
+        android:name="CLEVERTAP_TOKEN"
+        android:value="Your CleverTap Account Token"/>
     ```
 
     ```
@@ -71,7 +59,7 @@
     -->  
     ```
 
-- For FCM, comment out the above GCM code from `AndroidManifest.xml` file and add the following - 
+- Add the following in the `AndroidManifest.xml` file  - 
 
     ```
         <service
@@ -89,6 +77,23 @@
         </service>
     ```
 
-- Add your `google-services.json` file to the root of the project 
+- Add your `google-services.json` file to the Assets folder of the project.
 
+- To enable A/B UI editor, edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapBinding.cs` and `CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true)` call just before getting the clevertap instance.
+
+```
+public static AndroidJavaObject CleverTap {
+        get {
+            if (clevertap == null) {
+                AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
+                
+                //set the UI editor flag before getting the Clevertap instance, defaults to false.
+                CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true);
+                
+                clevertap = CleverTapAPI.CallStatic<AndroidJavaObject>("getInstance", context);
+            }
+            return clevertap;
+        }
+    }
+```
 - Build your app or Android project as usual.
