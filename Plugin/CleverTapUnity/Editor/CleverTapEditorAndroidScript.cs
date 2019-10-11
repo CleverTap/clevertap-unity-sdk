@@ -12,7 +12,7 @@ public class CleverTapEditorAndroidScript : AssetPostprocessor {
 	public static object svcSupport;
 
 	private static readonly string PluginName = "CleverTapUnity";
-	private static readonly string PLAY_SERVICES_VERSION = "16.0.1";
+	private static readonly string PLAY_SERVICES_VERSION = "16.1.0";
 	private static readonly string ANDROID_SUPPORT_VERSION = "28.0.0";
 	
 	static CleverTapEditorAndroidScript()

@@ -47,6 +47,9 @@ public class CleverTapUnity: MonoBehaviour {
 
 	//registering Dynamic Variables
 	CleverTapBinding.registerBooleanVariable("booleanVar");
+	CleverTapBinding.registerDoubleVariable("doubleVar");
+    CleverTapBinding.registerListOfDoubleVariable("listdouble");
+    CleverTapBinding.registerMapOfDoubleVariable("mapDouble");
         #endif
     }
     
@@ -282,10 +285,27 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
+    //returns callback for InitializeInbox
+    void CleverTapInboxDidInitializeCallback(){
+            Debug.Log("unity received inbox initialized");
+    }
+
+    void CleverTapInboxMessagesDidUpdateCallback(){
+            Debug.Log("unity received inbox messages updated");
+    }
+
     // returns the custom data associated with an dynamic variable updates
     void CleverTapExperimentMessagesDidUpdateCallback(){
         Debug.Log("unity received experiemnt messages updated");
+
         bool boolVar = CleverTapBinding.getBooleanVariable("booleanVar", false);
+        double doubleVar = CleverTapBinding.getDoubleVariable("doubleVar", 1.5);
+        List<double> listDouble = CleverTapBinding.getListOfDoubleVariable("listdouble", null);
+        Dictionary<string, double> mapDouble = CleverTapBinding.getMapOfDoubleVariable("mapDouble", null);
+
         Debug.Log("Bool-" + boolVar);
+        Debug.Log("doubleVar-" + doubleVar);
+        Debug.Log("listDouble-" + listDouble);
+        Debug.Log("mapDouble-" + mapDouble);
     }
 }
