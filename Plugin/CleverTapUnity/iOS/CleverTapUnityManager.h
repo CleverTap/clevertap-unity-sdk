@@ -66,4 +66,33 @@
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
 
+- (void)setUIEditorConnectionEnabled:(BOOL)enabled;
+- (void)registerStringVariable:(NSString *)name;
+- (void)registerIntegerVariable:(NSString *)name;
+- (void)registerDoubleVariable:(NSString *)name;
+- (void)registerBooleanVariable:(NSString *)name;
+- (void)registerMapOfStringVariable:(NSString *)name;
+- (void)registerMapOfIntegerVariable:(NSString *)name;
+- (void)registerMapOfDoubleVariable:(NSString *)name;
+- (void)registerMapOfBooleanVariable:(NSString *)name;
+- (void)registerListOfBooleanVariable:(NSString *)name;
+- (void)registerListOfDoubleVariable:(NSString *)name;
+- (void)registerListOfStringVariable:(NSString *)name;
+- (void)registerListOfIntegerVariable:(NSString *)name;
+
+- (BOOL)getBooleanVariable:(NSString *)name defaultValue:(BOOL)defaultValue;
+- (double)getDoubleVariable:(NSString *)name defaultValue:(double)defaultValue;
+- (int)getIntegerVariable:(NSString *)name defaultValue:(int)defaultValue;
+- (NSString *)getStringVariable:(NSString *)name defaultValue:(NSString *)defaultValue;
+
+- (NSArray *)getListOfBooleanVariable:(NSString *)name defaultValue:(NSArray *)defaultValue;
+- (NSArray *)getListOfDoubleVariable:(NSString *)name defaultValue:(NSArray *)defaultValue;
+- (NSArray *)getListOfIntegerVariable:(NSString *)name defaultValue:(NSArray *)defaultValue;
+- (NSArray *)getListOfStringVariable:(NSString *)name defaultValue:(NSArray *)defaultValue;
+
+- (NSDictionary *)getMapOfBooleanVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue;
+- (NSDictionary *)getMapOfDoubleVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue;
+- (NSDictionary *)getMapOfIntegerVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue;
+- (NSDictionary *)getMapOfStringVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue;
+
 @end
