@@ -844,7 +844,7 @@ namespace CleverTap {
     }
 
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
-        // no-op for Android
+        CleverTap.Call("pushInstallReferrer",source, medium, campaign);
     }
 
     public static void InitializeInbox(){
