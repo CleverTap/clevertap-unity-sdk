@@ -26,6 +26,10 @@
 - Build and run your iOS project.
 
 ### Android Specific:
+- Go to `File` > `Build Settings` > `Android` > `Player Settings` > `Publishing Settings` > `Build`, ensure the `Custom Gradle Template` option is checked.
+
+- Go to `Assets` > `Play Services Resolver` > `Android Resolver` > `Settings`. Ensure `Use Jetifier` & `Patch mainTemplate.gradle` options are checked.
+
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
 - Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, FCM Sender ID, CleverTap Account Id, CleverTap Token and Deep Link url scheme (if applicable): 
