@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 2.0.0 *(30 Oct 2019)*
+-------------------------------------------
+* Update Play Services Resolver to support Androidx dependencies
+
 Version 1.2.3 *(11 Oct 2019)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.6.0
