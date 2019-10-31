@@ -1,5 +1,7 @@
 ## Unity iOS/Android plugin for the CleverTap SDK
 
+### NOTE: If you are using any AndroidX dependencies in your project, refer [v2.0.0](https://github.com/CleverTap/clevertap-unity-sdk/releases/tag/2.0.0)
+
 ### Install
 
 1.  Import the CleverTapUnityPlugin.unitypackage into your Unity Project (`Assets` > `Import Package` > `Custom Package`) or manually Copy `Plugin/CleverTapUnity`, `Plugin/PlayServicesResolver` and `Plugin/Plugins/Android` (or copy the files in `Plugin/Plugins/Android` to your existing `Assets/Plugins/Android` directory) into the Assets directory of your Unity Project.

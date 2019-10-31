@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.2.4 *(31 Oct 2019)*
+-------------------------------------------
+* Exposed method to pass custom install referrer parameters in Android
+
 Version 1.2.3 *(11 Oct 2019)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.6.0

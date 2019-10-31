@@ -843,4 +843,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
         return defaultValue;
     }
+
+    public void pushInstallReferrer(String source, String medium, String campaign) {
+        try {
+            clevertap.pushInstallReferrer(source, medium, campaign);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "pushInstallReferrer error", e);
+        }
+    }
 }
