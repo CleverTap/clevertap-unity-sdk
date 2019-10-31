@@ -31,6 +31,8 @@ public class CleverTapUnity : MonoBehaviour{
 
 #if (UNITY_ANDROID && !UNITY_EDITOR)
         DontDestroyOnLoad(gameObject);
+        //set the UI editor flag before getting the Clevertap instance, defaults to false.
+        CleverTapBinding.SetUIEditorConnectionEnabled(true);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
         CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
