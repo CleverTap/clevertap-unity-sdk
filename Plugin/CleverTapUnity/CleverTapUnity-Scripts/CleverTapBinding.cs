@@ -10,7 +10,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
-    public const string Version = "1.1.2";
+    public const string Version = "1.2.5";
 
 #if UNITY_IOS
     void Start() {
@@ -600,7 +600,7 @@ namespace CleverTap {
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
     private static AndroidJavaObject clevertap;
-	private static AndroidJavaObject CleverTapClass;
+    private static AndroidJavaObject CleverTapClass;
 
     void Start() {
         Debug.Log("Start: CleverTap binding for Android.");
@@ -618,14 +618,14 @@ namespace CleverTap {
         }
     }
 
-	public static AndroidJavaObject CleverTapAPI {
+    public static AndroidJavaObject CleverTapAPI {
         get {
             if (CleverTapClass == null) {
                 CleverTapClass = new AndroidJavaClass("com.clevertap.unity.CleverTapUnityPlugin");
             }
             return CleverTapClass;
         }
-	}
+    }
 
     public static AndroidJavaObject CleverTap {
         get {

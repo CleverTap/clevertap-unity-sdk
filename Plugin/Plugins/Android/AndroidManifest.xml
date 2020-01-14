@@ -35,7 +35,6 @@
         android:required="false" />
 
     <application
-        android:banner="@drawable/app_banner"
         android:debuggable="true"
         android:icon="@drawable/app_icon"
         android:isGame="true"
@@ -82,14 +81,14 @@
         <receiver
             android:name="com.clevertap.android.sdk.CTPushNotificationReceiver"
             android:enabled="true"
-            android:exported="false"/>
-            
+            android:exported="false" />
+
         <service android:name="com.clevertap.android.sdk.FcmTokenListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        
+
         <service android:name="com.clevertap.android.sdk.FcmMessageListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -102,11 +101,11 @@
 
         <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="Your CleverTap Account ID"/>
+            android:value="Your CleverTap Account ID" />
 
         <meta-data
             android:name="CLEVERTAP_TOKEN"
-            android:value="Your CleverTap Account Token"/>
+            android:value="Your CleverTap Account Token" />
 
     </application>
 

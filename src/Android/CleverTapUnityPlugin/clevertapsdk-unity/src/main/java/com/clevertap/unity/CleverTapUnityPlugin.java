@@ -7,6 +7,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
@@ -132,6 +133,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap = CleverTapAPI.getDefaultInstance(context);
             if (clevertap != null) {
+                Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
                 clevertap.setInAppNotificationListener(this);
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
@@ -446,8 +448,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void showAppInbox(final String jsonString) {
         try {
-            CTInboxStyleConfig styleConfig = toStyleConfig(new JSONObject(jsonString));
-            clevertap.showAppInbox(styleConfig);
+            if (!TextUtils.isEmpty(jsonString)) {
+                CTInboxStyleConfig styleConfig = toStyleConfig(new JSONObject(jsonString));
+                clevertap.showAppInbox(styleConfig);
+            } else {
+                clevertap.showAppInbox();
+            }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON Exception in converting style config", e);
         }
@@ -465,7 +471,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
         JSONObject extras = var1 != null ? new JSONObject(var1) : new JSONObject();
         String _json = "{extras:" + extras.toString() + ",";
-
+`   `
         JSONObject actionExtras = var2 != null ? new JSONObject(var2) : new JSONObject();
         _json += "actionExtras:" + actionExtras.toString() + "}";
 
@@ -629,6 +635,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public static void setUIEditorConnectionEnabled(boolean enabled) {
+        Log.d(LOG_TAG, "setUIEditorConnectionEnabled-" + enabled);
         CleverTapAPI.setUIEditorConnectionEnabled(enabled);
     }
 
