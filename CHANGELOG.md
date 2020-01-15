@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.2.5 *(15 Jan 2020)*
+-------------------------------------------
+* Bug fixes and performance improvement
+
 Version 1.2.4 *(31 Oct 2019)*
 -------------------------------------------
 * Exposed method to pass custom install referrer parameters in Android
