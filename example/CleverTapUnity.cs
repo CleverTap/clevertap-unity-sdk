@@ -8,14 +8,16 @@ using System.Runtime.InteropServices;
 using CleverTap;
 using CleverTap.Utilities;
 
-public class CleverTapUnity : MonoBehaviour{
+public class CleverTapUnity : MonoBehaviour
+{
 
     public String CLEVERTAP_ACCOUNT_ID = "YOUR_CLEVERTAP_ACCOUNT_ID";
     public String CLEVERTAP_ACCOUNT_TOKEN = "YOUR_CLEVERTAP_ACCOUNT_TOKEN";
     public int CLEVERTAP_DEBUG_LEVEL = 0;
     public bool CLEVERTAP_ENABLE_PERSONALIZATION = true;
 
-    void Awake(){
+    void Awake()
+    {
 #if (UNITY_IPHONE && !UNITY_EDITOR)
         DontDestroyOnLoad(gameObject);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
@@ -47,11 +49,18 @@ public class CleverTapUnity : MonoBehaviour{
 	//CleverTapBinding.DeleteNotificationChannel("YourChannelId");
 	//CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
 
+
+    //app inbox
+    CleverTapBinding.InitializeInbox();
+        Debug.Log("InboxInit started");
 	//registering Dynamic Variables
 	CleverTapBinding.RegisterBooleanVariable("booleanVar");
 	CleverTapBinding.RegisterDoubleVariable("doubleVar");
     CleverTapBinding.RegisterListOfDoubleVariable("listdouble");
     CleverTapBinding.RegisterMapOfDoubleVariable("mapDouble");
+    CleverTapBinding.RecordEvent("Test Unity Event");
+        //Invoke("LaunchInbox",30.0f);
+
 #endif
     }
 
@@ -60,7 +69,7 @@ public class CleverTapUnity : MonoBehaviour{
     void Start()
     {
 #if (UNITY_IPHONE && !UNITY_EDITOR)
-        // register for push notifications
+        // register for push notificationssetUIEditorConnectionEnabled
         CleverTap.CleverTapBinding.RegisterPush();
         CleverTap.CleverTapBinding.RecordScreenView("TestScreen");
         // set to 0 to remove icon badge
@@ -303,6 +312,10 @@ public class CleverTapUnity : MonoBehaviour{
         }
     }
 
+    void LaunchInbox()
+    {
+        CleverTapBinding.ShowAppInbox("");
+    }
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message)
     {
@@ -312,6 +325,7 @@ public class CleverTapUnity : MonoBehaviour{
     //returns callback for InitializeInbox
     void CleverTapInboxDidInitializeCallback()
     {
+        CleverTapBinding.ShowAppInbox("");
         Debug.Log("unity received inbox initialized");
     }
 
