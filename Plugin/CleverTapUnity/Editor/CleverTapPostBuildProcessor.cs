@@ -111,12 +111,17 @@ public static class CleverTapPostBuildProcessor
 		Position[] positionsInMethod = new Position[]{Position.End, Position.Begin, Position.End, Position.End, Position.Begin};
 		InsertCodeIntoClass (filepath, methodSignatures, valuesToAppend, positionsInMethod);
 
+		string[] methodSignaturesRegPush = { SIGNATURE_DID_FINISH_LAUNCH };
 		if (CLEVERTAP_ENABLE_PERSONALIZATION) {
-			string[] methodSignaturesRegPush = {SIGNATURE_DID_FINISH_LAUNCH};
-            string[] valuesToAppendRegPush = {CODE_ENABLE_PERSONALIZATION, CODE_ADD_USER_NOTIFICATION_FRAMEWORK};
+            string[] valuesToAppendRegPush = {CODE_ENABLE_PERSONALIZATION};
 			Position[] positionsInMethodRegPush = new Position[]{Position.Begin};
 			InsertCodeIntoClass (filepath, methodSignaturesRegPush, valuesToAppendRegPush, positionsInMethodRegPush);
 		}
+
+		string[] valuesToAppendUserNotifications = {CODE_ADD_USER_NOTIFICATION_FRAMEWORK};
+		Position[] positionsInMethodRegUserNotifications = new Position[] { Position.Begin };
+		InsertCodeIntoClass(filepath, methodSignaturesRegPush, valuesToAppendUserNotifications, positionsInMethodRegUserNotifications);
+
 	}
 
 	private static void InsertCodeIntoClass(string filepath, string[] methodSignatures, string[] valuesToAppend, Position[]positionsInMethod) {
