@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using UnityEditor;
 
@@ -22,7 +22,10 @@ public static class CleverTapPostBuildProcessor
 	private static string rn = "\n";
 
 	private static string CODE_LIB_IMPORT = 
-		"#import \"CleverTapUnityManager.h\"" + rn;
+	"#import \"CleverTapUnityManager.h\"" + rn;
+
+	private static string CODE_USER_NOTIFICATIONS_IMPORT =
+	"#import <UserNotifications/UserNotifications.h>" + rn;
 
 	private static string PATH_CONTROLLER = "/Classes/UnityAppController.mm";
 
@@ -51,6 +54,8 @@ public static class CleverTapPostBuildProcessor
 		"    [[CleverTapUnityManager sharedInstance] registerApplication:application didReceiveRemoteNotification:userInfo];" + rn ;
 	private static string CODE_ENABLE_PERSONALIZATION = rn + 
 		"    [CleverTapUnityManager enablePersonalization];" + rn ;
+	private static string CODE_ADD_USER_NOTIFICATION_FRAMEWORK = rn +
+		"    [UNUserNotificationCenter currentNotificationCenter].delegate = (id <UNUserNotificationCenterDelegate>)self;" + rn ;
 
 	private enum Position { Begin, End };
 
@@ -71,6 +76,7 @@ public static class CleverTapPostBuildProcessor
 			proj.AddFrameworkToProject(projectTarget, "CoreTelephony.framework", false);
 			proj.AddFrameworkToProject(projectTarget, "CoreLocation.framework", false);
 			proj.AddFrameworkToProject(projectTarget, "Security.framework", false);
+            proj.AddFrameworkToProject(projectTarget, "UserNotifications.framework", false);
 
             // Add linker flags
             proj.AddBuildProperty(projectTarget, "OTHER_LDFLAGS", "-ObjC");
@@ -105,12 +111,17 @@ public static class CleverTapPostBuildProcessor
 		Position[] positionsInMethod = new Position[]{Position.End, Position.Begin, Position.End, Position.End, Position.Begin};
 		InsertCodeIntoClass (filepath, methodSignatures, valuesToAppend, positionsInMethod);
 
+		string[] methodSignaturesRegPush = { SIGNATURE_DID_FINISH_LAUNCH };
 		if (CLEVERTAP_ENABLE_PERSONALIZATION) {
-			string[] methodSignaturesRegPush = {SIGNATURE_DID_FINISH_LAUNCH};
-			string[] valuesToAppendRegPush = {CODE_ENABLE_PERSONALIZATION};
+            string[] valuesToAppendRegPush = {CODE_ENABLE_PERSONALIZATION};
 			Position[] positionsInMethodRegPush = new Position[]{Position.Begin};
 			InsertCodeIntoClass (filepath, methodSignaturesRegPush, valuesToAppendRegPush, positionsInMethodRegPush);
 		}
+
+		string[] valuesToAppendUserNotifications = {CODE_ADD_USER_NOTIFICATION_FRAMEWORK};
+		Position[] positionsInMethodRegUserNotifications = new Position[] { Position.Begin };
+		InsertCodeIntoClass(filepath, methodSignaturesRegPush, valuesToAppendUserNotifications, positionsInMethodRegUserNotifications);
+
 	}
 
 	private static void InsertCodeIntoClass(string filepath, string[] methodSignatures, string[] valuesToAppend, Position[]positionsInMethod) {
@@ -135,8 +146,15 @@ public static class CleverTapPostBuildProcessor
 		int foundIndex = -1;
 
 		newContents.Add (CODE_LIB_IMPORT);
-		foreach(string line in fileLines) {
-			if (line.Trim().Contains(CODE_LIB_IMPORT.Trim())){
+		newContents.Add (CODE_USER_NOTIFICATIONS_IMPORT);
+
+		foreach (string line in fileLines) {
+			if (line.Trim().Contains(CODE_USER_NOTIFICATIONS_IMPORT.Trim())){
+				continue;
+			}
+
+			if (line.Trim().Contains(CODE_LIB_IMPORT.Trim()))
+			{
 				continue;
 			}
 
