@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.2.6 *(20 Feb 2020)*
+-------------------------------------------
+* Bug fixes
+
 Version 1.2.5 *(15 Jan 2020)*
 -------------------------------------------
 * Bug fixes and performance improvement
