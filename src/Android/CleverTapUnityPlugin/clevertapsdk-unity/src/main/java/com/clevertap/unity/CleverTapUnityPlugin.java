@@ -471,7 +471,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
         JSONObject extras = var1 != null ? new JSONObject(var1) : new JSONObject();
         String _json = "{extras:" + extras.toString() + ",";
-`   `
+
         JSONObject actionExtras = var2 != null ? new JSONObject(var2) : new JSONObject();
         _json += "actionExtras:" + actionExtras.toString() + "}";
 
