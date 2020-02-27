@@ -3,5 +3,6 @@
         <androidPackage spec="com.google.android.gms:play-services-base:16.1.0" />
         <androidPackage spec="com.android.support:support-v4:28.0.0" />
         <androidPackage spec="com.android.support:design:28.0.0" />
+        <androidPackage spec="com.android.installreferrer:installreferrer:1.0" />
     </androidPackages>
 </dependencies>
