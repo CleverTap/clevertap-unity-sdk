@@ -41,13 +41,13 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return sharedInstance;
 }
 
-#pragma mark Offline API
+#pragma mark - Offline API
 
 - (void)setOffline:(BOOL)enabled{
     [clevertap setOffline:enabled];
 }
 
-#pragma mark Opt-out API
+#pragma mark - Opt-out API
 
 - (void)setOptOut:(BOOL)enabled{
     [clevertap setOptOut:enabled];
@@ -56,9 +56,9 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     [clevertap enableDeviceNetworkInfoReporting:enabled];
 }
 
-#pragma mark Profile/Event/Session APIs
+#pragma mark - Profile/Event/Session APIs
 
-#pragma mark Profile API
+#pragma mark - Profile API
 
 - (void)onUserLogin:(NSDictionary *)properties {
     [clevertap onUserLogin:properties];
@@ -112,7 +112,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return [clevertap profileGetCleverTapAttributionIdentifier];
 }
 
-#pragma mark User Action Events API
+#pragma mark - User Action Events API
 
 - (void)recordScreenView:(NSString *)screenName {
     if (!screenName) {
@@ -158,7 +158,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 }
 
 
-#pragma mark Session API
+#pragma mark - Session API
 
 - (NSTimeInterval)sessionGetTimeElapsed {
     return [clevertap sessionGetTimeElapsed];
@@ -180,7 +180,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return [clevertap userGetPreviousVisitTime];
 }
 
-# pragma mark Notifications
+#pragma mark - Notifications
 
 + (void)registerPush {
     UIApplication *application = [UIApplication sharedApplication];
@@ -252,14 +252,14 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 }
 
 
-#pragma mark DeepLink handling
+#pragma mark - DeepLink handling
 
 - (void)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
     
     [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapDeepLinkCallback withMessage:[url absoluteString]];
 }
 
-#pragma mark Referrer Tracking
+#pragma mark - Referrer Tracking
 
 - (void)pushInstallReferrerSource:(NSString *)source
                            medium:(NSString *)medium
@@ -268,7 +268,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     [clevertap pushInstallReferrerSource:source medium:medium campaign:campaign];
 }
 
-#pragma mark Admin
+#pragma mark - Admin
 
 + (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token {
     [self launchWithAccountID:accountID token:token region:nil];
@@ -303,7 +303,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     [CleverTap setLocation:location];
 }
 
-# pragma mark CleverTapInAppNotificationDelegate
+#pragma mark - CleverTapInAppNotificationDelegate
 
 - (void)inAppNotificationDismissedWithExtras:(NSDictionary *)extras andActionExtras:(NSDictionary *)actionExtras {
     
@@ -366,7 +366,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     }
 }
 
-#pragma mark private helpers
+#pragma mark - private helpers
 
 -(void)callUnityObject:(NSString *)objectName forMethod:(NSString *)method withMessage:(NSString *)message {
     UnitySendMessage([objectName UTF8String], [method UTF8String], [message UTF8String]);
@@ -383,7 +383,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
-#pragma mark inbox handling
+#pragma mark - inbox handling
 
 - (void)initializeInbox {
     [clevertap initializeInboxWithCallback:^(BOOL success) {
@@ -474,7 +474,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return color;
 }
 
-#pragma mark screenAB Handling
+#pragma mark - screenAB Handling
 
 - (void)setUIEditorConnectionEnabled:(BOOL)enabled {
     [CleverTap setUIEditorConnectionEnabled:enabled];
