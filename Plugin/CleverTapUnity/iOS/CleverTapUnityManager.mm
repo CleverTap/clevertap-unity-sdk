@@ -303,7 +303,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     [CleverTap setLocation:location];
 }
 
-#pragma mark - CleverTapInAppNotificationDelegate
+#pragma mark - InApp Notification Delegates
 
 - (void)inAppNotificationDismissedWithExtras:(NSDictionary *)extras andActionExtras:(NSDictionary *)actionExtras {
     
