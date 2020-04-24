@@ -57,7 +57,6 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     [clevertap enableDeviceNetworkInfoReporting:enabled];
 }
 
-#pragma mark - Profile/Event/Session APIs
 
 #pragma mark - Profile API
 
@@ -253,12 +252,13 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 }
 
 
-#pragma mark - DeepLink handling
+#pragma mark - DeepLink Handling
 
 - (void)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
     
     [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapDeepLinkCallback withMessage:[url absoluteString]];
 }
+
 
 #pragma mark - Referrer Tracking
 
@@ -268,6 +268,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     
     [clevertap pushInstallReferrerSource:source medium:medium campaign:campaign];
 }
+
 
 #pragma mark - Admin
 
@@ -303,6 +304,35 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 + (void)setLocation:(CLLocationCoordinate2D)location {
     [CleverTap setLocation:location];
 }
+
+
+#pragma mark - CleverTapSyncDelegate/Listener
+
+- (void)registerListeners {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveCleverTapProfileDidChangeNotification:)
+                                                 name:CleverTapProfileDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveCleverTapProfileDidInitializeNotification:)
+                                                 name:CleverTapProfileDidInitializeNotification object:nil];
+}
+
+- (void)didReceiveCleverTapProfileDidInitializeNotification:(NSNotification*)notification {
+    NSString *jsonString = [self dictToJson:notification.userInfo];
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileInitializedCallback withMessage:jsonString];
+    }
+}
+
+
+- (void)didReceiveCleverTapProfileDidChangeNotification:(NSNotification*)notification {
+    NSString *jsonString = [self dictToJson:notification.userInfo];
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileUpdatesCallback withMessage:jsonString];
+    }
+}
+
 
 #pragma mark - InApp Notification Delegates
 
@@ -340,51 +370,10 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     }
 }
 
-#pragma mark - CleverTapSyncDelegate/Listener
-
-- (void)registerListeners {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveCleverTapProfileDidChangeNotification:)
-                                                 name:CleverTapProfileDidChangeNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveCleverTapProfileDidInitializeNotification:)
-                                                 name:CleverTapProfileDidInitializeNotification object:nil];
-}
-
-- (void)didReceiveCleverTapProfileDidInitializeNotification:(NSNotification*)notification {
-    NSString *jsonString = [self dictToJson:notification.userInfo];
-    if (jsonString != nil) {
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileInitializedCallback withMessage:jsonString];
-    }
-}
+#pragma mark - Native Display
 
 
-- (void)didReceiveCleverTapProfileDidChangeNotification:(NSNotification*)notification {
-    NSString *jsonString = [self dictToJson:notification.userInfo];
-    if (jsonString != nil) {
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileUpdatesCallback withMessage:jsonString];
-    }
-}
-
-#pragma mark - private helpers
-
--(void)callUnityObject:(NSString *)objectName forMethod:(NSString *)method withMessage:(NSString *)message {
-    UnitySendMessage([objectName UTF8String], [method UTF8String], [message UTF8String]);
-}
-
--(NSString *)dictToJson:(NSDictionary *)dict {
-    NSError *err;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&err];
-    
-    if(err != nil) {
-        return nil;
-    }
-    
-    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-}
-
-#pragma mark - inbox handling
+#pragma mark - Inbox Handling
 
 - (void)initializeInbox {
     [clevertap initializeInboxWithCallback:^(BOOL success) {
@@ -475,7 +464,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return color;
 }
 
-#pragma mark - screenAB Handling
+#pragma mark - ScreenAB Handling
 
 - (void)setUIEditorConnectionEnabled:(BOOL)enabled {
     [CleverTap setUIEditorConnectionEnabled:enabled];
@@ -552,6 +541,24 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 }
 - (NSDictionary *)getMapOfStringVariable:(NSString *)name defaultValue:(NSDictionary *)defaultValue {
     return [clevertap getDictionaryOfStringVariableWithName:name defaultValue:defaultValue];
+}
+
+
+#pragma mark - Private Helpers
+
+- (void)callUnityObject:(NSString *)objectName forMethod:(NSString *)method withMessage:(NSString *)message {
+    UnitySendMessage([objectName UTF8String], [method UTF8String], [message UTF8String]);
+}
+
+- (NSString *)dictToJson:(NSDictionary *)dict {
+    NSError *err;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&err];
+    
+    if(err != nil) {
+        return nil;
+    }
+    
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
 @end
