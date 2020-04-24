@@ -14,6 +14,7 @@ static NSString * kCleverTapDeepLinkCallback = @"CleverTapDeepLinkCallback";
 static NSString * kCleverTapPushReceivedCallback = @"CleverTapPushReceivedCallback";
 static NSString * kCleverTapPushOpenedCallback = @"CleverTapPushOpenedCallback";
 static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAppNotificationDismissedCallback";
+static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNotificationButtonTapped";
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
 
@@ -323,7 +324,22 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     }
 }
 
-# pragma mark CleverTapSyncDelegate/Listener
+- (void)inAppNotificationButtonTappedWithCustomExtras:(NSDictionary *)customExtras {
+    
+    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
+    
+    if (customExtras != nil) {
+        jsonDict[@"customExtras"] = customExtras;
+    }
+    
+    NSString *jsonString = [self dictToJson:jsonDict];
+    
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInAppNotificationButtonTapped withMessage:jsonString];
+    }
+}
+
+#pragma mark - CleverTapSyncDelegate/Listener
 
 - (void)registerListeners {
     [[NSNotificationCenter defaultCenter] addObserver:self
