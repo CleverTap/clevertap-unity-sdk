@@ -3,6 +3,7 @@
 #import <CleverTapSDK/CleverTap+Inbox.h>
 #import <CleverTapSDK/CleverTap+ABTesting.h>
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
+#import <CleverTapSDK/CleverTap+DisplayUnit.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
 static CleverTap *clevertap;
