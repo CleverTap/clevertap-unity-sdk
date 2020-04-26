@@ -6,6 +6,7 @@
 #import <CleverTapSDK/CleverTap+DisplayUnit.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
+
 static CleverTap *clevertap;
 
 static NSString * kCleverTapGameObjectName = @"CleverTapUnity";
@@ -18,9 +19,9 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
 static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNotificationButtonTapped";
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
+static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 
-@interface CleverTapUnityManager () <CleverTapInAppNotificationDelegate> {
-}
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate >
 
 @end
 
@@ -37,6 +38,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
         [clevertap setLibrary:@"Unity"];
         
         [clevertap setInAppNotificationDelegate:sharedInstance];
+        [clevertap setDisplayUnitDelegate:sharedInstance];
     }
     
     return sharedInstance;
@@ -58,7 +60,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 }
 
 
-#pragma mark - Profile API
+#pragma mark - User Profile
 
 - (void)onUserLogin:(NSDictionary *)properties {
     [clevertap onUserLogin:properties];
@@ -112,7 +114,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return [clevertap profileGetCleverTapAttributionIdentifier];
 }
 
-#pragma mark - User Action Events API
+#pragma mark - User Action Events
 
 - (void)recordScreenView:(NSString *)screenName {
     if (!screenName) {
@@ -180,7 +182,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return [clevertap userGetPreviousVisitTime];
 }
 
-#pragma mark - Notifications
+#pragma mark - Push Notifications
 
 + (void)registerPush {
     UIApplication *application = [UIApplication sharedApplication];
@@ -370,7 +372,23 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     }
 }
 
+
 #pragma mark - Native Display
+
+- (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
+    
+    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
+    
+    if (displayUnits != nil) {
+        jsonDict[@"displayUnits"] = displayUnits
+    }
+    
+    NSString *jsonString = [self dictToJson:jsonDict];
+    
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapNativeDisplayUnitsUpdated withMessage:jsonString];
+    }
+}
 
 
 #pragma mark - Inbox Handling

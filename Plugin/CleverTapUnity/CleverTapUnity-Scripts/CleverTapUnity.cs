@@ -114,10 +114,10 @@ public class CleverTapUnity: MonoBehaviour {
 
     // returns when an in-app notification is dismissed by a call to action with custom extras
     void CleverTapInAppNotificationButtonTapped(string message) {
-        Debug.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL");
+        Debug.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
-    //returns callback for InitializeInbox
+    // returns callback for InitializeInbox
     void CleverTapInboxDidInitializeCallback(){
         Debug.Log("unity received inbox initialized");
     }
@@ -128,6 +128,11 @@ public class CleverTapUnity: MonoBehaviour {
 
     void CleverTapExperimentMessagesDidUpdateCallback(){
         Debug.Log("unity received experiment messages updated");
+    }
+
+    // returns native display units data
+    void CleverTapNativeDisplayUnitsUpdated(string message) {
+        Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
 }
