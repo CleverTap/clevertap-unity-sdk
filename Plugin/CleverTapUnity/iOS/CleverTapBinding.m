@@ -283,6 +283,10 @@ void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] recordInboxNotificationViewedEventForID:clevertap_stringToNSString(messageId)];
 }
 
+void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] recordInboxNotificationClickedEventForID:clevertap_stringToNSString(messageId)];
+}
+
 
 #pragma mark - Native Display
 

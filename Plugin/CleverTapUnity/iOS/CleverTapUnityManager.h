@@ -90,6 +90,7 @@
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;
+- (void)recordInboxNotificationClickedEventForID:(NSString *)messageId;
 
 
 #pragma mark - Native Display

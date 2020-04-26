@@ -472,6 +472,10 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     [clevertap recordInboxNotificationViewedEventForID:messageId];
 }
 
+- (void)recordInboxNotificationClickedEventForID:(NSString *)messageId {
+    [clevertap recordInboxNotificationClickedEventForID:messageId];
+}
+
 - (void)messageDidSelect:(CleverTapInboxMessage *)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
     
     NSDictionary *messageJSON = message.json;

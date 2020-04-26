@@ -148,6 +148,9 @@ namespace CleverTap {
     private static extern void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern string CleverTap_getAllDisplayUnits();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -440,6 +443,10 @@ namespace CleverTap {
 
     public static void RecordInboxNotificationViewedEventForID(string messageId) {
         CleverTap_recordInboxNotificationViewedEventForID(messageId);
+    }
+
+    public static void RecordInboxNotificationClickedEventForID(string messageId) {
+        CleverTap_recordInboxNotificationClickedEventForID(messageId);
     }
 
     public static JSONArray GetAllDisplayUnits() {
