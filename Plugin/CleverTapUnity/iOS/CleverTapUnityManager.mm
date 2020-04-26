@@ -20,6 +20,7 @@ static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNoti
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
 static NSString * kCleverTapInboxMessageDidSelect = @"CleverTapInboxMessageDidSelect";
+static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate >
@@ -482,6 +483,21 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     
     if (jsonString != nil) {
         [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxMessageDidSelect withMessage:jsonString];
+    }
+}
+
+- (void)messageButtonTappedWithCustomExtras:(NSDictionary *)customExtras {
+    
+    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
+    
+    if (customExtras != nil) {
+        jsonDict[@"customExtras"] = customExtras;
+    }
+    
+    NSString *jsonString = [self dictToJson:jsonDict];
+    
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxCustomExtrasButtonSelect withMessage:jsonString];
     }
 }
 
