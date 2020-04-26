@@ -44,8 +44,8 @@
 - (void)profilePushGraphUser:(NSDictionary *)fbGraphUser;
 - (void)profilePushGooglePlusUser:(NSDictionary *)googleUser;
 - (id)profileGet:(NSString *)propertyName;
-- (NSString*)profileGetCleverTapID;
-- (NSString*)profileGetCleverTapAttributionIdentifier;
+- (NSString *)profileGetCleverTapID;
+- (NSString *)profileGetCleverTapAttributionIdentifier;
 
 
 #pragma mark - User Action Events
