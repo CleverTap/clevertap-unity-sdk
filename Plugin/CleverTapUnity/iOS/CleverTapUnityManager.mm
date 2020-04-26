@@ -374,37 +374,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 }
 
 
-#pragma mark - Native Display
-
-- (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
-    
-    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
-    
-    if (displayUnits != nil) {
-        jsonDict[@"displayUnits"] = displayUnits
-    }
-    
-    NSString *jsonString = [self dictToJson:jsonDict];
-    
-    if (jsonString != nil) {
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapNativeDisplayUnitsUpdated withMessage:jsonString];
-    }
-}
-
-- (NSArray *)getAllDisplayUnits {
-    [clevertap getAllDisplayUnits];
-}
-
-- (void)recordDisplayUnitViewedEventForID:(NSString *)unitID {
-    [clevertap recordDisplayUnitViewedEventForID:unitID];
-}
-
-- (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
-    [clevertap recordDisplayUnitClickedEventForID:unitID];
-}
-
-
-#pragma mark - Inbox Handling
+#pragma mark - App Inbox
 
 - (void)initializeInbox {
     [clevertap initializeInboxWithCallback:^(BOOL success) {
@@ -494,6 +464,37 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
                     alpha:alpha];
     return color;
 }
+
+
+#pragma mark - Native Display
+
+- (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
+    
+    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
+    
+    if (displayUnits != nil) {
+        jsonDict[@"displayUnits"] = displayUnits
+    }
+    
+    NSString *jsonString = [self dictToJson:jsonDict];
+    
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapNativeDisplayUnitsUpdated withMessage:jsonString];
+    }
+}
+
+- (NSArray *)getAllDisplayUnits {
+    [clevertap getAllDisplayUnits];
+}
+
+- (void)recordDisplayUnitViewedEventForID:(NSString *)unitID {
+    [clevertap recordDisplayUnitViewedEventForID:unitID];
+}
+
+- (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
+    [clevertap recordDisplayUnitClickedEventForID:unitID];
+}
+
 
 #pragma mark - AB Testing
 
