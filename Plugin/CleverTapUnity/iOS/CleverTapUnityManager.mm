@@ -464,7 +464,7 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
     return color;
 }
 
-#pragma mark - ScreenAB Handling
+#pragma mark - AB Testing
 
 - (void)setUIEditorConnectionEnabled:(BOOL)enabled {
     [CleverTap setUIEditorConnectionEnabled:enabled];

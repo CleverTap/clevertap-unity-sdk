@@ -2,8 +2,9 @@
 #import <CoreLocation/CoreLocation.h>
 
 #import <CleverTapSDK/CleverTap.h>
-#import <CleverTapSDK/CleverTapEventDetail.h>
 #import <CleverTapSDK/CleverTapUTMDetail.h>
+#import <CleverTapSDK/CleverTapEventDetail.h>
+
 
 @interface CleverTapUnityManager : NSObject
 
@@ -18,9 +19,20 @@
 + (void)registerPush;
 + (void)setApplicationIconBadgeNumber:(int)num;
 
+
+#pragma mark - Offline API
+
 - (void)setOffline:(BOOL)enabled;
+
+
+#pragma mark - Opt-out API
+
 - (void)setOptOut:(BOOL)enabled;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
+
+
+#pragma mark - User Profile
+
 - (void)onUserLogin:(NSDictionary *)properties;
 - (void)profilePush:(NSDictionary *)properties;
 - (void)profileRemoveValueForKey:(NSString *)key;
@@ -35,6 +47,9 @@
 - (NSString*)profileGetCleverTapID;
 - (NSString*)profileGetCleverTapAttributionIdentifier;
 
+
+#pragma mark - User Action Events
+
 - (void)recordScreenView:(NSString *)screenName;
 - (void)recordEvent:(NSString *)event;
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties;
@@ -46,11 +61,17 @@
 - (NSDictionary *)userGetEventHistory;
 - (CleverTapEventDetail *)eventGetDetail:(NSString *)event;
 
+
+#pragma mark - User Session
+
 - (NSTimeInterval)sessionGetTimeElapsed;
 - (CleverTapUTMDetail *)sessionGetUTMDetails;
 - (int)userGetTotalVisits;
 - (int)userGetScreenCount;
 - (NSTimeInterval)userGetPreviousVisitTime;
+
+
+#pragma mark - Push Notifications
 
 - (void)setPushToken:(NSData *)pushToken;
 - (void)setPushTokenAsString:(NSString *)pushTokenString;
@@ -61,10 +82,20 @@
                            medium:(NSString *)medium
                          campaign:(NSString *)campaign;
 
+
+#pragma mark - App Inbox
+
 - (void)initializeInbox;
 - (void)showAppInbox:(NSDictionary *)styleConfig;
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
+
+
+#pragma mark - Native Display
+
+
+
+#pragma mark - AB Testing
 
 - (void)setUIEditorConnectionEnabled:(BOOL)enabled;
 - (void)registerStringVariable:(NSString *)name;
