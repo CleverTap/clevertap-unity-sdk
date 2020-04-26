@@ -145,6 +145,9 @@ namespace CleverTap {
     private static extern int CleverTap_initializeInbox();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getAllDisplayUnits();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
 
    [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -426,6 +429,19 @@ namespace CleverTap {
         return CleverTap_getInboxMessageUnreadCount();
     }
 
+    public static JSONArray GetAllDisplayUnits() {
+        string jsonString = CleverTap_getAllDisplayUnits();
+        JSONArray json;
+        try
+        {
+            json = (JSONArray)JSON.parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse native display units json");  
+            json = new JSONArray();
+        }
+        return json;
+    }
+
     public static void SetUIEditorConnectionEnabled(bool enabled) {
             CleverTap_setUIEditorConnectionEnabled(enabled);
     }
@@ -597,7 +613,6 @@ namespace CleverTap {
         }
         return json;
     }
-
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
     private static AndroidJavaObject clevertap;

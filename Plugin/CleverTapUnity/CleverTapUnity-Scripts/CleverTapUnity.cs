@@ -134,5 +134,4 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapNativeDisplayUnitsUpdated(string message) {
         Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
-
 }

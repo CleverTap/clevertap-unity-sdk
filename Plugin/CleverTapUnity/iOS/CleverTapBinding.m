@@ -409,7 +409,15 @@ void CleverTap_showAppInbox(const char* styleConfig) {
 
 #pragma mark - Native Display
 
-
+char* CleverTap_getAllDisplayUnits() {
+ 
+    id ret = [[CleverTapUnityManager sharedInstance] getAllDisplayUnits];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
 
 
 #pragma mark - AB Testing

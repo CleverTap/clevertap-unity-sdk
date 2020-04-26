@@ -390,6 +390,10 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }
 }
 
+- (NSArray *)getAllDisplayUnits {
+    [clevertap getAllDisplayUnits];
+}
+
 
 #pragma mark - Inbox Handling
 
