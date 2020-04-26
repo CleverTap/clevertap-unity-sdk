@@ -279,6 +279,10 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] recordInboxNotificationViewedEventForID:clevertap_stringToNSString(messageId)];
+}
+
 
 #pragma mark - Native Display
 

@@ -409,7 +409,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }
 }
 
-- (CleverTapInboxStyleConfig*)_dictToInboxStyleConfig: (NSDictionary *)dict {
+- (CleverTapInboxStyleConfig *)_dictToInboxStyleConfig: (NSDictionary *)dict {
     CleverTapInboxStyleConfig *_config = [CleverTapInboxStyleConfig new];
     NSString *title = [dict valueForKey:@"navBarTitle"];
     if (title) {
@@ -465,6 +465,11 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
                      blue:((CGFloat) (hexint & 0xFF))/255
                     alpha:alpha];
     return color;
+}
+
+- (void)recordInboxNotificationViewedEventForID:(NSString *)messageId {
+    
+    [clevertap recordInboxNotificationViewedEventForID:messageId];
 }
 
 - (void)messageDidSelect:(CleverTapInboxMessage *)message atIndex:(int)index withButtonIndex:(int)buttonIndex {

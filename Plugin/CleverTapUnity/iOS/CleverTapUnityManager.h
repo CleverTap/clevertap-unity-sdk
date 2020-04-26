@@ -89,6 +89,7 @@
 - (void)showAppInbox:(NSDictionary *)styleConfig;
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
+- (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;
 
 
 #pragma mark - Native Display
