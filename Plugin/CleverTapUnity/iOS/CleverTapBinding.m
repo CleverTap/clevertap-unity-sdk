@@ -296,6 +296,10 @@ void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID) {
     [[CleverTapUnityManager sharedInstance] recordDisplayUnitViewedEventForID:clevertap_stringToNSString(unitID)];
 }
 
+void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID) {
+    [[CleverTapUnityManager sharedInstance] recordDisplayUnitClickedEventForID:clevertap_stringToNSString(unitID)];
+}
+
 
 #pragma mark - AB Testing
 

@@ -399,6 +399,10 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     [clevertap recordDisplayUnitViewedEventForID:unitID];
 }
 
+- (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
+    [clevertap recordDisplayUnitClickedEventForID:unitID];
+}
+
 
 #pragma mark - Inbox Handling
 

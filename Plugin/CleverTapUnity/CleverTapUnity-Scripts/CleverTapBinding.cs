@@ -149,6 +149,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID);
     
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
@@ -447,6 +450,10 @@ namespace CleverTap {
 
     public static void RecordDisplayUnitViewedEventForID(string unitID) {
         CleverTap_recordDisplayUnitViewedEventForID(unitID);
+    }
+
+    public static void RecordDisplayUnitClickedEventForID(string unitID) {
+        CleverTap_recordDisplayUnitClickedEventForID(unitID);
     }
 
     public static void SetUIEditorConnectionEnabled(bool enabled) {

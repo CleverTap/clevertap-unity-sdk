@@ -95,6 +95,7 @@
 
 - (NSArray *)getAllDisplayUnits;
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
+- (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
 
 
 #pragma mark - AB Testing
