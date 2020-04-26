@@ -94,6 +94,7 @@
 #pragma mark - Native Display
 
 - (NSArray *)getAllDisplayUnits;
+- (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
 
 
 #pragma mark - AB Testing

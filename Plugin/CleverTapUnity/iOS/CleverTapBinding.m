@@ -292,6 +292,10 @@ char* CleverTap_getAllDisplayUnits() {
     return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
+void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID) {
+    [[CleverTapUnityManager sharedInstance] recordDisplayUnitViewedEventForID:clevertap_stringToNSString(unitID)];
+}
+
 
 #pragma mark - AB Testing
 
