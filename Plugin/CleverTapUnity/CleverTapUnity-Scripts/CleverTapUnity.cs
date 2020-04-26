@@ -134,4 +134,14 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapNativeDisplayUnitsUpdated(string message) {
         Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
+
+    // returns when an app inbox message is clicked (tapped or call to action pressed)
+    void CleverTapInboxMessageDidSelect(string message) {
+        Debug.Log("unity received inbox message did select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns on the click of app inbox message with a map of custom Key-Value pairs
+    void CleverTapInboxCustomExtrasButtonSelect(string message) {
+        Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
 }
