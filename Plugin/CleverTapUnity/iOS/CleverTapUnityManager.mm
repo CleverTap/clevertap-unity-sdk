@@ -44,6 +44,71 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     return sharedInstance;
 }
 
+
+#pragma mark - Admin
+
++ (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token {
+    [self launchWithAccountID:accountID token:token region:nil];
+}
+
++ (void)launchWithAccountID:(NSString*)accountID token:(NSString *)token region:(NSString *)region {
+    [CleverTap setCredentialsWithAccountID:accountID token:token region:region];
+    [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];
+}
+
++ (void)setApplicationIconBadgeNumber:(int)num {
+    [UIApplication sharedApplication].applicationIconBadgeNumber = num;
+}
+
++ (void)setDebugLevel:(int)level {
+    [CleverTap setDebugLevel:level];
+}
+
+- (void)setSyncDelegate:(id <CleverTapSyncDelegate>)delegate {
+    [clevertap setSyncDelegate:delegate];
+}
+
++ (void)enablePersonalization {
+    [CleverTap enablePersonalization];
+}
+
++ (void)disablePersonalization {
+    [CleverTap disablePersonalization];
+}
+
++ (void)setLocation:(CLLocationCoordinate2D)location {
+    [CleverTap setLocation:location];
+}
+
+
+#pragma mark - CleverTapSyncDelegate/Listener
+
+- (void)registerListeners {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveCleverTapProfileDidChangeNotification:)
+                                                 name:CleverTapProfileDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveCleverTapProfileDidInitializeNotification:)
+                                                 name:CleverTapProfileDidInitializeNotification object:nil];
+}
+
+- (void)didReceiveCleverTapProfileDidInitializeNotification:(NSNotification*)notification {
+    NSString *jsonString = [self dictToJson:notification.userInfo];
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileInitializedCallback withMessage:jsonString];
+    }
+}
+
+
+- (void)didReceiveCleverTapProfileDidChangeNotification:(NSNotification*)notification {
+    NSString *jsonString = [self dictToJson:notification.userInfo];
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileUpdatesCallback withMessage:jsonString];
+    }
+}
+
+
 #pragma mark - Offline API
 
 - (void)setOffline:(BOOL)enabled{
@@ -269,70 +334,6 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
                          campaign:(NSString *)campaign {
     
     [clevertap pushInstallReferrerSource:source medium:medium campaign:campaign];
-}
-
-
-#pragma mark - Admin
-
-+ (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token {
-    [self launchWithAccountID:accountID token:token region:nil];
-}
-
-+ (void)launchWithAccountID:(NSString*)accountID token:(NSString *)token region:(NSString *)region {
-    [CleverTap setCredentialsWithAccountID:accountID token:token region:region];
-    [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];
-}
-
-+ (void)setApplicationIconBadgeNumber:(int)num {
-    [UIApplication sharedApplication].applicationIconBadgeNumber = num;
-}
-
-+ (void)setDebugLevel:(int)level {
-    [CleverTap setDebugLevel:level];
-}
-
-- (void)setSyncDelegate:(id <CleverTapSyncDelegate>)delegate {
-    [clevertap setSyncDelegate:delegate];
-}
-
-+ (void)enablePersonalization {
-    [CleverTap enablePersonalization];
-}
-
-+ (void)disablePersonalization {
-    [CleverTap disablePersonalization];
-}
-
-+ (void)setLocation:(CLLocationCoordinate2D)location {
-    [CleverTap setLocation:location];
-}
-
-
-#pragma mark - CleverTapSyncDelegate/Listener
-
-- (void)registerListeners {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveCleverTapProfileDidChangeNotification:)
-                                                 name:CleverTapProfileDidChangeNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveCleverTapProfileDidInitializeNotification:)
-                                                 name:CleverTapProfileDidInitializeNotification object:nil];
-}
-
-- (void)didReceiveCleverTapProfileDidInitializeNotification:(NSNotification*)notification {
-    NSString *jsonString = [self dictToJson:notification.userInfo];
-    if (jsonString != nil) {
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileInitializedCallback withMessage:jsonString];
-    }
-}
-
-
-- (void)didReceiveCleverTapProfileDidChangeNotification:(NSNotification*)notification {
-    NSString *jsonString = [self dictToJson:notification.userInfo];
-    if (jsonString != nil) {
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapGameObjectProfileUpdatesCallback withMessage:jsonString];
-    }
 }
 
 
