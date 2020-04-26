@@ -134,4 +134,9 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapNativeDisplayUnitsUpdated(string message) {
         Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
+
+    // returns when an app inbox message is clicked (tapped or call to action pressed)
+    void CleverTapInboxMessageDidSelect(string message) {
+        Debug.Log("unity received inbox message did select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
 }

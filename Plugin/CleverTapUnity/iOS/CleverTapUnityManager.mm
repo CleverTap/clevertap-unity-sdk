@@ -19,9 +19,10 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
 static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNotificationButtonTapped";
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
+static NSString * kCleverTapInboxMessageDidSelect = @"CleverTapInboxMessageDidSelect";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 
-@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate >
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate >
 
 @end
 
@@ -400,7 +401,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 }
 
 - (void)showAppInbox:(NSDictionary *)styleConfig {
-    CleverTapInboxViewController *inboxController = [clevertap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:nil];
+    CleverTapInboxViewController *inboxController = [clevertap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:self];
     if (inboxController) {
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:inboxController];
         [UnityGetGLViewController() presentViewController:navigationController animated:YES completion:nil];
@@ -448,7 +449,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     return _config;
 }
 
-- (UIColor *)ct_colorWithHexString:(NSString *)string alpha:(CGFloat)alpha{
+- (UIColor *)ct_colorWithHexString:(NSString *)string alpha:(CGFloat)alpha {
     if (![string isKindOfClass:[NSString class]] || [string length] == 0) {
         return [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
     }
@@ -463,6 +464,25 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
                      blue:((CGFloat) (hexint & 0xFF))/255
                     alpha:alpha];
     return color;
+}
+
+- (void)messageDidSelect:(CleverTapInboxMessage *)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
+    
+    NSDictionary *messageJSON = message.json;
+    
+    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
+    
+    if (messageJSON != nil) {
+        jsonDict[@"message"] = messageJSON;
+        jsonDict[@"index"] = @(index);
+        jsonDict[@"buttonIndex"] = @(buttonIndex);
+    }
+    
+    NSString *jsonString = [self dictToJson:jsonDict];
+    
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxMessageDidSelect withMessage:jsonString];
+    }
 }
 
 
