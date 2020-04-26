@@ -445,6 +445,10 @@ namespace CleverTap {
         return json;
     }
 
+    public static void RecordDisplayUnitViewedEventForID(string unitID) {
+        CleverTap_recordDisplayUnitViewedEventForID(unitID);
+    }
+
     public static void SetUIEditorConnectionEnabled(bool enabled) {
             CleverTap_setUIEditorConnectionEnabled(enabled);
     }
