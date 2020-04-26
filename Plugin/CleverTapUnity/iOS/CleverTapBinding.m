@@ -1,126 +1,5 @@
 #import "CleverTapUnityManager.h"
 
-NSString* clevertap_stringToNSString(const char* str) {
-    return str != NULL ? [NSString stringWithUTF8String:str] : [NSString stringWithUTF8String:""];
-}
-
-NSString* clevertap_toJsonString(id val) {
-    NSString *jsonString;
-    
-    if (val == nil) {
-        return nil;
-    }
-    
-    if ([val isKindOfClass:[NSArray class]] || [val isKindOfClass:[NSDictionary class]]) {
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:val options:NSJSONWritingPrettyPrinted error:&error];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        if (error != nil) {
-            jsonString = nil;
-        }
-    } else {
-        jsonString = [NSString stringWithFormat:@"%@", val];
-    }
-    
-    return jsonString;
-}
-
-NSMutableArray* clevertap_NSArrayFromArray(const char* array[], int size) {
-    
-    NSMutableArray *values = [NSMutableArray arrayWithCapacity:size];
-    for (int i = 0; i < size; i ++) {
-        NSString *value = clevertap_stringToNSString(array[i]);
-        [values addObject:value];
-    }
-    
-    return values;
-}
-
-NSMutableDictionary* clevertap_dictFromJsonString(const char* jsonString) {
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
-    
-    if (jsonString != NULL && jsonString != nil) {
-        NSError *jsonError;
-        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
-        dict = [NSJSONSerialization JSONObjectWithData:objectData
-                                               options:NSJSONReadingMutableContainers
-                                                 error:&jsonError];
-    }
-    
-    return dict;
-}
-
-NSMutableArray* clevertap_NSArrayFromJsonString(const char* jsonString) {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
-    
-    if (jsonString != NULL && jsonString != nil) {
-        NSError *jsonError;
-        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
-        arr = [NSJSONSerialization JSONObjectWithData:objectData
-                                              options:NSJSONReadingMutableContainers
-                                                error:&jsonError];
-    }
-    
-    return arr;
-}
-
-NSMutableDictionary* clevertap_eventDetailToDict(CleverTapEventDetail* detail) {
-    
-    NSMutableDictionary *_dict = [NSMutableDictionary new];
-    
-    if(detail) {
-        if(detail.eventName) {
-            [_dict setObject:detail.eventName forKey:@"eventName"];
-        }
-        
-        if(detail.firstTime){
-            [_dict setObject:@(detail.firstTime) forKey:@"firstTime"];
-        }
-        
-        if(detail.lastTime){
-            [_dict setObject:@(detail.lastTime) forKey:@"lastTime"];
-        }
-        
-        if(detail.count){
-            [_dict setObject:@(detail.count) forKey:@"count"];
-        }
-    }
-    
-    return _dict;
-}
-
-NSMutableDictionary* clevertap_utmDetailToDict(CleverTapUTMDetail* detail) {
-    
-    NSMutableDictionary *_dict = [NSMutableDictionary new];
-    
-    if(detail) {
-        if(detail.source) {
-            [_dict setObject:detail.source forKey:@"source"];
-        }
-        
-        if(detail.medium) {
-            [_dict setObject:detail.medium forKey:@"medium"];
-        }
-        
-        if(detail.campaign) {
-            [_dict setObject:detail.campaign forKey:@"campaign"];
-        }
-    }
-    
-    return _dict;
-}
-
-char* clevertap_cStringCopy(const char* string) {
-    if (string == NULL)
-        return NULL;
-    
-    char* res = (char*)malloc(strlen(string) + 1);
-    strcpy(res, string);
-    
-    return res;
-}
 
 void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) andToken:clevertap_stringToNSString(token)];
@@ -128,26 +7,6 @@ void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
 
 void CleverTap_launchWithCredentialsForRegion(const char* accountID, const char* token, const char* region) {
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) region:clevertap_stringToNSString(region)];
-}
-
-void CleverTap_setApplicationIconBadgeNumber(int num) {
-    [CleverTapUnityManager setApplicationIconBadgeNumber:num];
-}
-
-void CleverTap_registerPush() {
-    [CleverTapUnityManager registerPush];
-}
-
-void CleverTap_setOffline(const BOOL enabled) {
-    [[CleverTapUnityManager sharedInstance] setOffline:enabled];
-}
-
-void CleverTap_setOptOut(const BOOL enabled) {
-    [[CleverTapUnityManager sharedInstance] setOptOut:enabled];
-}
-
-void CleverTap_enableDeviceNetworkInfoReporting(const BOOL enabled) {
-    [[CleverTapUnityManager sharedInstance] enableDeviceNetworkInfoReporting:enabled];
 }
 
 void CleverTap_setDebugLevel(int level) {
@@ -167,24 +26,34 @@ void CleverTap_setLocation(double lat, double lon) {
     [CleverTapUnityManager setLocation:coord];
 }
 
-void CleverTap_recordScreenView(const char* screenName) {
-    [[CleverTapUnityManager sharedInstance] recordScreenView:clevertap_stringToNSString(screenName)];
+void CleverTap_registerPush() {
+    [CleverTapUnityManager registerPush];
 }
 
-void CleverTap_recordEvent(const char* eventName, const char* properties) {
-    NSMutableDictionary *eventProperties = clevertap_dictFromJsonString(properties);
-    if (eventProperties == nil || eventProperties == NULL) {
-        [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName)];
-    }else {
-        [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName) withProps:eventProperties];
-    }
+void CleverTap_setApplicationIconBadgeNumber(int num) {
+    [CleverTapUnityManager setApplicationIconBadgeNumber:num];
 }
 
-void CleverTap_recordChargedEventWithDetailsAndItems(const char* chargeDetails, const char* items) {
-    NSDictionary *details = clevertap_dictFromJsonString(chargeDetails);
-    NSArray *_items = clevertap_NSArrayFromJsonString(items);
-    [[CleverTapUnityManager sharedInstance] recordChargedEventWithDetails:details andItems:_items];
+
+#pragma mark - Offline API
+
+void CleverTap_setOffline(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] setOffline:enabled];
 }
+
+
+#pragma mark - Opt-out API
+
+void CleverTap_setOptOut(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] setOptOut:enabled];
+}
+
+void CleverTap_enableDeviceNetworkInfoReporting(const BOOL enabled) {
+    [[CleverTapUnityManager sharedInstance] enableDeviceNetworkInfoReporting:enabled];
+}
+
+
+#pragma mark - User Profile
 
 void CleverTap_onUserLogin(const char* properties) {
     NSMutableDictionary *profileProperties = clevertap_dictFromJsonString(properties);
@@ -284,6 +153,28 @@ void CleverTap_profileRemoveMultiValueForKey(const char* key, const char* value)
     [[CleverTapUnityManager sharedInstance] profileRemoveMultiValue:clevertap_stringToNSString(value) forKey:clevertap_stringToNSString(key)];
 }
 
+
+#pragma mark - User Action Events
+
+void CleverTap_recordScreenView(const char* screenName) {
+    [[CleverTapUnityManager sharedInstance] recordScreenView:clevertap_stringToNSString(screenName)];
+}
+
+void CleverTap_recordEvent(const char* eventName, const char* properties) {
+    NSMutableDictionary *eventProperties = clevertap_dictFromJsonString(properties);
+    if (eventProperties == nil || eventProperties == NULL) {
+        [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName)];
+    }else {
+        [[CleverTapUnityManager sharedInstance] recordEvent:clevertap_stringToNSString(eventName) withProps:eventProperties];
+    }
+}
+
+void CleverTap_recordChargedEventWithDetailsAndItems(const char* chargeDetails, const char* items) {
+    NSDictionary *details = clevertap_dictFromJsonString(chargeDetails);
+    NSArray *_items = clevertap_NSArrayFromJsonString(items);
+    [[CleverTapUnityManager sharedInstance] recordChargedEventWithDetails:details andItems:_items];
+}
+
 int CleverTap_eventGetFirstTime(const char* eventName) {
     return [[CleverTapUnityManager sharedInstance] eventGetFirstTime:clevertap_stringToNSString(eventName)];
 }
@@ -313,6 +204,9 @@ char* CleverTap_userGetEventHistory() {
     
     return clevertap_cStringCopy([jsonString UTF8String]);
 }
+
+
+#pragma mark - User Session
 
 char* CleverTap_sessionGetUTMDetails() {
     CleverTapUTMDetail *detail = [[CleverTapUnityManager sharedInstance] sessionGetUTMDetails];
@@ -358,9 +252,15 @@ int CleverTap_userGetPreviousVisitTime() {
     return [[CleverTapUnityManager sharedInstance] userGetPreviousVisitTime];
 }
 
+
+#pragma mark - Push Notifications
+
 void CleverTap_pushInstallReferrerSource(const char* source, const char* medium, const char* campaign) {
     [[CleverTapUnityManager sharedInstance] pushInstallReferrerSource:clevertap_stringToNSString(source) medium:clevertap_stringToNSString(medium) campaign:clevertap_stringToNSString(campaign)];
 }
+
+
+#pragma mark - App Inbox
 
 int CleverTap_getInboxMessageUnreadCount() {
     return [[CleverTapUnityManager sharedInstance] getInboxMessageUnreadCount];
@@ -378,6 +278,30 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     NSMutableDictionary *styleConfigDict = clevertap_dictFromJsonString(styleConfig);
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
+
+
+#pragma mark - Native Display
+
+char* CleverTap_getAllDisplayUnits() {
+ 
+    id ret = [[CleverTapUnityManager sharedInstance] getAllDisplayUnits];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID) {
+    [[CleverTapUnityManager sharedInstance] recordDisplayUnitViewedEventForID:clevertap_stringToNSString(unitID)];
+}
+
+void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID) {
+    [[CleverTapUnityManager sharedInstance] recordDisplayUnitClickedEventForID:clevertap_stringToNSString(unitID)];
+}
+
+
+#pragma mark - AB Testing
 
 void CleverTap_setUIEditorConnectionEnabled(const BOOL enabled) {
     [[CleverTapUnityManager sharedInstance] setUIEditorConnectionEnabled:enabled];
@@ -533,4 +457,126 @@ char* CleverTap_getListOfDoubleVariable(const char* name, const char* defaultVal
 }
 
 
+#pragma mark - Utils
 
+NSString* clevertap_stringToNSString(const char* str) {
+    return str != NULL ? [NSString stringWithUTF8String:str] : [NSString stringWithUTF8String:""];
+}
+
+NSString* clevertap_toJsonString(id val) {
+    NSString *jsonString;
+    
+    if (val == nil) {
+        return nil;
+    }
+    
+    if ([val isKindOfClass:[NSArray class]] || [val isKindOfClass:[NSDictionary class]]) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:val options:NSJSONWritingPrettyPrinted error:&error];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        if (error != nil) {
+            jsonString = nil;
+        }
+    } else {
+        jsonString = [NSString stringWithFormat:@"%@", val];
+    }
+    
+    return jsonString;
+}
+
+NSMutableArray* clevertap_NSArrayFromArray(const char* array[], int size) {
+    
+    NSMutableArray *values = [NSMutableArray arrayWithCapacity:size];
+    for (int i = 0; i < size; i ++) {
+        NSString *value = clevertap_stringToNSString(array[i]);
+        [values addObject:value];
+    }
+    
+    return values;
+}
+
+NSMutableDictionary* clevertap_dictFromJsonString(const char* jsonString) {
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    if (jsonString != NULL && jsonString != nil) {
+        NSError *jsonError;
+        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
+        dict = [NSJSONSerialization JSONObjectWithData:objectData
+                                               options:NSJSONReadingMutableContainers
+                                                 error:&jsonError];
+    }
+    
+    return dict;
+}
+
+NSMutableArray* clevertap_NSArrayFromJsonString(const char* jsonString) {
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+    
+    if (jsonString != NULL && jsonString != nil) {
+        NSError *jsonError;
+        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
+        arr = [NSJSONSerialization JSONObjectWithData:objectData
+                                              options:NSJSONReadingMutableContainers
+                                                error:&jsonError];
+    }
+    
+    return arr;
+}
+
+NSMutableDictionary* clevertap_eventDetailToDict(CleverTapEventDetail* detail) {
+    
+    NSMutableDictionary *_dict = [NSMutableDictionary new];
+    
+    if(detail) {
+        if(detail.eventName) {
+            [_dict setObject:detail.eventName forKey:@"eventName"];
+        }
+        
+        if(detail.firstTime){
+            [_dict setObject:@(detail.firstTime) forKey:@"firstTime"];
+        }
+        
+        if(detail.lastTime){
+            [_dict setObject:@(detail.lastTime) forKey:@"lastTime"];
+        }
+        
+        if(detail.count){
+            [_dict setObject:@(detail.count) forKey:@"count"];
+        }
+    }
+    
+    return _dict;
+}
+
+NSMutableDictionary* clevertap_utmDetailToDict(CleverTapUTMDetail* detail) {
+    
+    NSMutableDictionary *_dict = [NSMutableDictionary new];
+    
+    if(detail) {
+        if(detail.source) {
+            [_dict setObject:detail.source forKey:@"source"];
+        }
+        
+        if(detail.medium) {
+            [_dict setObject:detail.medium forKey:@"medium"];
+        }
+        
+        if(detail.campaign) {
+            [_dict setObject:detail.campaign forKey:@"campaign"];
+        }
+    }
+    
+    return _dict;
+}
+
+char* clevertap_cStringCopy(const char* string) {
+    if (string == NULL)
+        return NULL;
+    
+    char* res = (char*)malloc(strlen(string) + 1);
+    strcpy(res, string);
+    
+    return res;
+}

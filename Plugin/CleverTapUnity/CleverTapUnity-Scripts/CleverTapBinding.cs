@@ -10,6 +10,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
+      
     public const string Version = "1.2.5";
 
 #if UNITY_IOS
@@ -143,6 +144,15 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern int CleverTap_initializeInbox();
 
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getAllDisplayUnits();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID);
+    
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
 
@@ -425,6 +435,27 @@ namespace CleverTap {
         return CleverTap_getInboxMessageUnreadCount();
     }
 
+    public static JSONArray GetAllDisplayUnits() {
+        string jsonString = CleverTap_getAllDisplayUnits();
+        JSONArray json;
+        try
+        {
+            json = (JSONArray)JSON.parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse native display units json");  
+            json = new JSONArray();
+        }
+        return json;
+    }
+
+    public static void RecordDisplayUnitViewedEventForID(string unitID) {
+        CleverTap_recordDisplayUnitViewedEventForID(unitID);
+    }
+
+    public static void RecordDisplayUnitClickedEventForID(string unitID) {
+        CleverTap_recordDisplayUnitClickedEventForID(unitID);
+    }
+
     public static void SetUIEditorConnectionEnabled(bool enabled) {
             CleverTap_setUIEditorConnectionEnabled(enabled);
     }
@@ -596,7 +627,6 @@ namespace CleverTap {
         }
         return json;
     }
-
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
     private static AndroidJavaObject clevertap;
