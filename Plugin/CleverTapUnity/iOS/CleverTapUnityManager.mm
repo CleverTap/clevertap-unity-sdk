@@ -467,6 +467,10 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     return color;
 }
 
+- (void)markReadInboxMessageForID:(NSString *)messageId {
+    [clevertap markReadInboxMessageForID:messageId];
+}
+
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId {
     
     [clevertap recordInboxNotificationViewedEventForID:messageId];
