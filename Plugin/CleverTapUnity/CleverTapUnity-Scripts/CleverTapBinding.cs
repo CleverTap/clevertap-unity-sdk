@@ -466,8 +466,7 @@ namespace CleverTap {
     public static JSONArray GetAllDisplayUnits() {
         string jsonString = CleverTap_getAllDisplayUnits();
         JSONArray json;
-        try
-        {
+        try {
             json = (JSONArray)JSON.parse(jsonString);
         } catch {
             Debug.Log("Unable to parse native display units json");  
