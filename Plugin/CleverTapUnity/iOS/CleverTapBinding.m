@@ -297,6 +297,15 @@ char* CleverTap_getUnreadInboxMessages() {
     return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
+char* CleverTap_getInboxMessageForId(const char* messageId) {
+    id ret = [[CleverTapUnityManager sharedInstance] getInboxMessageForId:clevertap_stringToNSString(messageId)];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
 void CleverTap_deleteInboxMessageForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] deleteInboxMessageForID:clevertap_stringToNSString(messageId)];
 }
