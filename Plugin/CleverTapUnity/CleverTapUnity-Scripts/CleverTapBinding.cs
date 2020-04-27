@@ -145,6 +145,9 @@ namespace CleverTap {
     private static extern int CleverTap_initializeInbox();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_deleteInboxMessageForID(const char* messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_markReadInboxMessageForID(const char* messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -442,6 +445,10 @@ namespace CleverTap {
 
     public static int GetInboxMessageUnreadCount() {
         return CleverTap_getInboxMessageUnreadCount();
+    }
+
+    public static void DeleteInboxMessageForID(string messageId) {
+        CleverTap_deleteInboxMessageForID(messageId);   
     }
 
     public static void MarkReadInboxMessageForID(string messageId) {

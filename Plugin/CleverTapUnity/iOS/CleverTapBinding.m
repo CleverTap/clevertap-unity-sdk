@@ -279,6 +279,10 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+void CleverTap_deleteInboxMessageForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] deleteInboxMessageForID:clevertap_stringToNSString(messageId)];
+}
+
 void CleverTap_markReadInboxMessageForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] markReadInboxMessageForID:clevertap_stringToNSString(messageId)];
 }
