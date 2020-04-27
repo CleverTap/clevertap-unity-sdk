@@ -520,7 +520,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 
 
 #pragma mark - Native Display
-
+//TODO: verify if any error in return types of display units
 - (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
     
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];
@@ -536,6 +536,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }
 }
 
+//TODO: verify if any error in return types of display units
 - (NSArray *)getAllDisplayUnits {
     return [clevertap getAllDisplayUnits];
 }
