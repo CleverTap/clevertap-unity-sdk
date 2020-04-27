@@ -169,6 +169,9 @@ namespace CleverTap {
     private static extern string CleverTap_getAllDisplayUnits();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getDisplayUnitForID(const char* unitID);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -516,6 +519,18 @@ namespace CleverTap {
         } catch {
             Debug.Log("Unable to parse native display units json");  
             json = new JSONArray();
+        }
+        return json;
+    }
+
+    public static JSONClass GetDisplayUnitForID(string unitID) {
+        string jsonString = CleverTap_getDisplayUnitForID(unitID);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+            Debug.Debug.LogError("Unable to parse native display unit json");
+            json = new JSONClass();
         }
         return json;
     }

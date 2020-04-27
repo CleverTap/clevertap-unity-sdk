@@ -101,6 +101,7 @@
 #pragma mark - Native Display
 
 - (NSArray *)getAllDisplayUnits;
+- (NSDictionary *)getDisplayUnitForID:(NSString *)unitID;
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
 

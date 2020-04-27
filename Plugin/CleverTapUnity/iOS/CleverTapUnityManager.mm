@@ -600,6 +600,13 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     return jsonArray;
 }
 
+- (NSDictionary *)getDisplayUnitForID:(NSString *)unitID {
+    
+    CleverTapDisplayUnit *unit = [clevertap getDisplayUnitForID:unitID];
+    
+    return unit.json;
+}
+
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID {
     [clevertap recordDisplayUnitViewedEventForID:unitID];
 }

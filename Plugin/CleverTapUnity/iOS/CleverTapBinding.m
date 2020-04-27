@@ -335,6 +335,15 @@ char* CleverTap_getAllDisplayUnits() {
     return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
+char* CleverTap_getDisplayUnitForID(const char* unitID) {
+    id ret = [[CleverTapUnityManager sharedInstance] getDisplayUnitForID:clevertap_stringToNSString(unitID)];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
 void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID) {
     [[CleverTapUnityManager sharedInstance] recordDisplayUnitViewedEventForID:clevertap_stringToNSString(unitID)];
 }
