@@ -279,12 +279,64 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+char* CleverTap_getAllInboxMessages() {
+    id ret = [[CleverTapUnityManager sharedInstance] getAllInboxMessages];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+char* CleverTap_getUnreadInboxMessages() {
+    id ret = [[CleverTapUnityManager sharedInstance] getUnreadInboxMessages];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+char* CleverTap_getInboxMessageForId(const char* messageId) {
+    id ret = [[CleverTapUnityManager sharedInstance] getInboxMessageForId:clevertap_stringToNSString(messageId)];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+void CleverTap_deleteInboxMessageForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] deleteInboxMessageForID:clevertap_stringToNSString(messageId)];
+}
+
+void CleverTap_markReadInboxMessageForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] markReadInboxMessageForID:clevertap_stringToNSString(messageId)];
+}
+
+void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] recordInboxNotificationViewedEventForID:clevertap_stringToNSString(messageId)];
+}
+
+void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId) {
+    [[CleverTapUnityManager sharedInstance] recordInboxNotificationClickedEventForID:clevertap_stringToNSString(messageId)];
+}
+
 
 #pragma mark - Native Display
 
 char* CleverTap_getAllDisplayUnits() {
  
     id ret = [[CleverTapUnityManager sharedInstance] getAllDisplayUnits];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+char* CleverTap_getDisplayUnitForID(const char* unitID) {
+    id ret = [[CleverTapUnityManager sharedInstance] getDisplayUnitForID:clevertap_stringToNSString(unitID)];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
         return NULL;

@@ -393,14 +393,6 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }];
 }
 
-- (int)getInboxMessageUnreadCount {
-    return (int)[clevertap getInboxMessageUnreadCount];
-}
-
-- (int)getInboxMessageCount {
-     return (int)[clevertap getInboxMessageCount];
-}
-
 - (void)showAppInbox:(NSDictionary *)styleConfig {
     CleverTapInboxViewController *inboxController = [clevertap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:self];
     if (inboxController) {
@@ -409,7 +401,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }
 }
 
-- (CleverTapInboxStyleConfig*)_dictToInboxStyleConfig: (NSDictionary *)dict {
+- (CleverTapInboxStyleConfig *)_dictToInboxStyleConfig: (NSDictionary *)dict {
     CleverTapInboxStyleConfig *_config = [CleverTapInboxStyleConfig new];
     NSString *title = [dict valueForKey:@"navBarTitle"];
     if (title) {
@@ -467,6 +459,70 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     return color;
 }
 
+- (int)getInboxMessageUnreadCount {
+    return (int)[clevertap getInboxMessageUnreadCount];
+}
+
+- (int)getInboxMessageCount {
+     return (int)[clevertap getInboxMessageCount];
+}
+
+- (NSArray *)getAllInboxMessages {
+    
+    NSArray *inboxMessages = [clevertap getAllInboxMessages];
+    
+    NSMutableArray <NSDictionary *> *jsonArray = [NSMutableArray new];
+    
+    for (id object in inboxMessages) {
+        if ([object isKindOfClass:[CleverTapInboxMessage class]]) {
+            CleverTapInboxMessage *message = object;
+            [jsonArray addObject:message.json];
+        }
+    }
+    
+    return jsonArray;
+}
+
+- (NSArray *)getUnreadInboxMessages {
+    
+    NSArray *inboxMessages = [clevertap getUnreadInboxMessages];
+    
+    NSMutableArray <NSDictionary *> *jsonArray = [NSMutableArray new];
+    
+    for (id object in inboxMessages) {
+        if ([object isKindOfClass:[CleverTapInboxMessage class]]) {
+            CleverTapInboxMessage *message = object;
+            [jsonArray addObject:message.json];
+        }
+    }
+    
+    return jsonArray;
+}
+
+- (NSDictionary *)getInboxMessageForId:(NSString *)messageId {
+    
+    CleverTapInboxMessage *message = [clevertap getInboxMessageForId:messageId];
+    
+    return message.json;
+}
+
+- (void)deleteInboxMessageForID:(NSString *)messageId {
+    [clevertap deleteInboxMessageForID:messageId];
+}
+
+- (void)markReadInboxMessageForID:(NSString *)messageId {
+    [clevertap markReadInboxMessageForID:messageId];
+}
+
+- (void)recordInboxNotificationViewedEventForID:(NSString *)messageId {
+    
+    [clevertap recordInboxNotificationViewedEventForID:messageId];
+}
+
+- (void)recordInboxNotificationClickedEventForID:(NSString *)messageId {
+    [clevertap recordInboxNotificationClickedEventForID:messageId];
+}
+
 - (void)messageDidSelect:(CleverTapInboxMessage *)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
     
     NSDictionary *messageJSON = message.json;
@@ -506,10 +562,19 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 
 - (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
     
+    NSMutableArray *jsonArray = [NSMutableArray new];
+    
+    for (id object in displayUnits) {
+        if ([object isKindOfClass:[CleverTapDisplayUnit class]]) {
+            CleverTapDisplayUnit *unit = object;
+            [jsonArray addObject:unit.json];
+        }
+    }
+    
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];
     
-    if (displayUnits != nil) {
-        jsonDict[@"displayUnits"] = displayUnits
+    if (jsonArray != nil) {
+        jsonDict[@"displayUnits"] = displayUnits;
     }
     
     NSString *jsonString = [self dictToJson:jsonDict];
@@ -520,7 +585,26 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 }
 
 - (NSArray *)getAllDisplayUnits {
-    [clevertap getAllDisplayUnits];
+    
+    NSArray *displayUnits = [clevertap getAllDisplayUnits];
+    
+    NSMutableArray <NSDictionary *> *jsonArray = [NSMutableArray new];
+    
+    for (id object in displayUnits) {
+        if ([object isKindOfClass:[CleverTapDisplayUnit class]]) {
+            CleverTapDisplayUnit *unit = object;
+            [jsonArray addObject:unit.json];
+        }
+    }
+    
+    return jsonArray;
+}
+
+- (NSDictionary *)getDisplayUnitForID:(NSString *)unitID {
+    
+    CleverTapDisplayUnit *unit = [clevertap getDisplayUnitForID:unitID];
+    
+    return unit.json;
 }
 
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID {

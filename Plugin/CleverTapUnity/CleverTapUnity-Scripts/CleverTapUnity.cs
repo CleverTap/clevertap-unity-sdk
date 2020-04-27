@@ -56,7 +56,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("unity parsed profile initialized {0}", json));
         } catch {
-            Debug.Log("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }
 
@@ -87,7 +87,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("unity parsed profile updates {0}", json));
         } catch {
-            Debug.Log("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }	
 		
@@ -103,7 +103,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("push notification data is {0}", json));
         } catch {
-            Debug.Log("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }
 
@@ -126,15 +126,6 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inbox messages updated");
     }
 
-    void CleverTapExperimentMessagesDidUpdateCallback(){
-        Debug.Log("unity received experiment messages updated");
-    }
-
-    // returns native display units data
-    void CleverTapNativeDisplayUnitsUpdated(string message) {
-        Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
     // returns when an app inbox message is clicked (tapped or call to action pressed)
     void CleverTapInboxMessageDidSelect(string message) {
         Debug.Log("unity received inbox message did select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
@@ -143,5 +134,14 @@ public class CleverTapUnity: MonoBehaviour {
     // returns on the click of app inbox message with a map of custom Key-Value pairs
     void CleverTapInboxCustomExtrasButtonSelect(string message) {
         Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns native display units data
+    void CleverTapNativeDisplayUnitsUpdated(string message) {
+        Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    void CleverTapExperimentMessagesDidUpdateCallback(){
+        Debug.Log("unity received experiment messages updated");
     }
 }

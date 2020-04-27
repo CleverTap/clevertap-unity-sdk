@@ -89,11 +89,19 @@
 - (void)showAppInbox:(NSDictionary *)styleConfig;
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
+- (NSArray *)getAllInboxMessages;
+- (NSArray *)getUnreadInboxMessages;
+- (NSDictionary *)getInboxMessageForId:(NSString *)messageId;
+- (void)deleteInboxMessageForID:(NSString *)messageId;
+- (void)markReadInboxMessageForID:(NSString *)messageId;
+- (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;
+- (void)recordInboxNotificationClickedEventForID:(NSString *)messageId;
 
 
 #pragma mark - Native Display
 
 - (NSArray *)getAllDisplayUnits;
+- (NSDictionary *)getDisplayUnitForID:(NSString *)unitID;
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
 
