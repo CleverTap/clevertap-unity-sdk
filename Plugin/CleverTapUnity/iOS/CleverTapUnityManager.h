@@ -90,6 +90,7 @@
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
 - (NSArray *)getAllInboxMessages;
+- (NSArray *)getUnreadInboxMessages;
 - (void)deleteInboxMessageForID:(NSString *)messageId;
 - (void)markReadInboxMessageForID:(NSString *)messageId;
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;

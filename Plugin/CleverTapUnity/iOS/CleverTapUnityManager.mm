@@ -483,6 +483,21 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     return jsonArray;
 }
 
+- (NSArray *)getUnreadInboxMessages {
+    
+    NSArray *inboxMessages = [clevertap getUnreadInboxMessages];
+    
+    NSMutableArray <NSDictionary *> *jsonArray = [NSMutableArray new];
+    
+    for (id object in inboxMessages) {
+        if ([object isKindOfClass:[CleverTapInboxMessage class]]) {
+            CleverTapInboxMessage *message = object;
+            [jsonArray addObject:message.json];
+        }
+    }
+    
+    return jsonArray;
+}
 
 - (void)deleteInboxMessageForID:(NSString *)messageId {
     [clevertap deleteInboxMessageForID:messageId];

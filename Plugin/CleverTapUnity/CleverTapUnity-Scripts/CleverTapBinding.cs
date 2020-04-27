@@ -148,6 +148,9 @@ namespace CleverTap {
     private static extern string CleverTap_getAllInboxMessages();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getUnreadInboxMessages();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_deleteInboxMessageForID(const char* messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -457,6 +460,18 @@ namespace CleverTap {
             json = (JSONArray)JSON.parse(jsonString);
         } catch {
             Debug.Log("Unable to parse app inbox messages json");  
+            json = new JSONArray();
+        }
+        return json;
+    }
+
+    public static JSONArray GetUnreadInboxMessages() {
+        string jsonString = CleverTap_getUnreadInboxMessages();
+        JSONArray json;
+        try {
+            json = (JSONArray)JSON.parse(jsonString);
+        } catch {
+            Debug.Log("Unable to parse unread app inbox messages json");  
             json = new JSONArray();
         }
         return json;
