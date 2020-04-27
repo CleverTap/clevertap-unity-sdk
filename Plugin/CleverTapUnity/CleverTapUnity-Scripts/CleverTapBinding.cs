@@ -356,7 +356,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user event history json");
+            Debug.LogError("Unable to parse user event history json");
             json = new JSONClass();
         }
         return json;
@@ -368,7 +368,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse session utm details json");
+            Debug.LogError("Unable to parse session utm details json");
             json = new JSONClass();
         }
         return json;
@@ -384,7 +384,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse event detail json");
+            Debug.LogError("Unable to parse event detail json");
             json = new JSONClass();
         }
         return json;
@@ -465,7 +465,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse app inbox messages json");  
+            Debug.LogError("Unable to parse app inbox messages json");  
             json = new JSONArray();
         }
         return json;
@@ -477,7 +477,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse unread app inbox messages json");  
+            Debug.LogError("Unable to parse unread app inbox messages json");  
             json = new JSONArray();
         }
         return json;
@@ -517,7 +517,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse native display units json");  
+            Debug.LogError("Unable to parse native display units json");  
             json = new JSONArray();
         }
         return json;
@@ -618,7 +618,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse json");
+            Debug.LogError("Unable to parse json");
             json = new JSONClass();
         }
         return json;
@@ -631,7 +631,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse json");
+            Debug.LogError("Unable to parse json");
             json = new JSONClass();
         }
         return json;
@@ -644,7 +644,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse json");
+            Debug.LogError("Unable to parse json");
             json = new JSONClass();
         }
         return json;
@@ -657,7 +657,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONClass();
         }
         return json;
@@ -670,7 +670,7 @@ namespace CleverTap {
        try {
            json = (JSONArray)JSON.Parse(jsonString);
        } catch {
-           Debug.Log("Unable to parse user json");
+           Debug.LogError("Unable to parse user json");
            json = new JSONArray();
        }
        return json;
@@ -683,7 +683,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONArray();
         }
         return json;
@@ -696,7 +696,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONArray();
         }
         return json;
@@ -709,7 +709,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONArray();
         }
         return json;
