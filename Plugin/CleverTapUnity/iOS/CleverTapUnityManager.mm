@@ -393,14 +393,6 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }];
 }
 
-- (int)getInboxMessageUnreadCount {
-    return (int)[clevertap getInboxMessageUnreadCount];
-}
-
-- (int)getInboxMessageCount {
-     return (int)[clevertap getInboxMessageCount];
-}
-
 - (void)showAppInbox:(NSDictionary *)styleConfig {
     CleverTapInboxViewController *inboxController = [clevertap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:self];
     if (inboxController) {
@@ -465,6 +457,14 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
                      blue:((CGFloat) (hexint & 0xFF))/255
                     alpha:alpha];
     return color;
+}
+
+- (int)getInboxMessageUnreadCount {
+    return (int)[clevertap getInboxMessageUnreadCount];
+}
+
+- (int)getInboxMessageCount {
+     return (int)[clevertap getInboxMessageCount];
 }
 
 - (void)deleteInboxMessageForID:(NSString *)messageId {
