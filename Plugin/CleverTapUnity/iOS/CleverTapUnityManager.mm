@@ -537,13 +537,22 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 
 
 #pragma mark - Native Display
-//TODO: verify if any error in return types of display units
+
 - (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
+    
+    NSMutableArray *jsonArray = [NSMutableArray new];
+    
+    for (id object in displayUnits) {
+        if ([object isKindOfClass:[CleverTapDisplayUnit class]]) {
+            CleverTapDisplayUnit *unit = object;
+            [jsonArray addObject:unit.json];
+        }
+    }
     
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];
     
-    if (displayUnits != nil) {
-        jsonDict[@"displayUnits"] = displayUnits
+    if (jsonArray != nil) {
+        jsonDict[@"displayUnits"] = displayUnits;
     }
     
     NSString *jsonString = [self dictToJson:jsonDict];
