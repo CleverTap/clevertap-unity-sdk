@@ -553,9 +553,20 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     }
 }
 
-//TODO: verify if any error in return types of display units
 - (NSArray *)getAllDisplayUnits {
-    return [clevertap getAllDisplayUnits];
+    
+    NSArray *displayUnits = [clevertap getAllDisplayUnits];
+    
+    NSMutableArray <NSDictionary *> *jsonArray = [NSMutableArray new];
+    
+    for (id object in displayUnits) {
+        if ([object isKindOfClass:[CleverTapDisplayUnit class]]) {
+            CleverTapDisplayUnit *unit = object;
+            [jsonArray addObject:unit.json];
+        }
+    }
+    
+    return jsonArray;
 }
 
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID {
