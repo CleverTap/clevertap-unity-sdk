@@ -56,7 +56,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("unity parsed profile initialized {0}", json));
         } catch {
-            Debug.Debug.LogError("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }
 
