@@ -537,7 +537,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 }
 
 - (NSArray *)getAllDisplayUnits {
-    [clevertap getAllDisplayUnits];
+    return [clevertap getAllDisplayUnits];
 }
 
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID {
