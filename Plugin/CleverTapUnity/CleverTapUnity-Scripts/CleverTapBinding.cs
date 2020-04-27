@@ -151,31 +151,31 @@ namespace CleverTap {
     private static extern string CleverTap_getUnreadInboxMessages();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern string CleverTap_getInboxMessageForId(const char* messageId);
+    private static extern string CleverTap_getInboxMessageForId(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_deleteInboxMessageForID(const char* messageId);
+    private static extern void CleverTap_deleteInboxMessageForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_markReadInboxMessageForID(const char* messageId);
+    private static extern void CleverTap_markReadInboxMessageForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId);
+    private static extern void CleverTap_recordInboxNotificationViewedEventForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId);
+    private static extern void CleverTap_recordInboxNotificationClickedEventForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern string CleverTap_getAllDisplayUnits();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern string CleverTap_getDisplayUnitForID(const char* unitID);
+    private static extern string CleverTap_getDisplayUnitForID(string unitID);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_recordDisplayUnitViewedEventForID(const char* unitID);
+    private static extern void CleverTap_recordDisplayUnitViewedEventForID(string unitID);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID);
+    private static extern void CleverTap_recordDisplayUnitClickedEventForID(string unitID);
     
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
