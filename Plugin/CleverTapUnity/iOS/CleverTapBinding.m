@@ -279,6 +279,15 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+char* CleverTap_getAllInboxMessages() {
+    id ret = [[CleverTapUnityManager sharedInstance] getAllInboxMessages];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
 void CleverTap_deleteInboxMessageForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] deleteInboxMessageForID:clevertap_stringToNSString(messageId)];
 }
