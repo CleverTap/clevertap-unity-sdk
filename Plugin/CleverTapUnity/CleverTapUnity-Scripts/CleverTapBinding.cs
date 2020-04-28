@@ -463,7 +463,7 @@ namespace CleverTap {
         string jsonString = CleverTap_getAllInboxMessages();
         JSONArray json;
         try {
-            json = (JSONArray)JSON.parse(jsonString);
+            json = (JSONArray)JSON.Parse(jsonString);
         } catch {
             Debug.LogError("Unable to parse app inbox messages json");  
             json = new JSONArray();
@@ -475,7 +475,7 @@ namespace CleverTap {
         string jsonString = CleverTap_getUnreadInboxMessages();
         JSONArray json;
         try {
-            json = (JSONArray)JSON.parse(jsonString);
+            json = (JSONArray)JSON.Parse(jsonString);
         } catch {
             Debug.LogError("Unable to parse unread app inbox messages json");  
             json = new JSONArray();
@@ -515,7 +515,7 @@ namespace CleverTap {
         string jsonString = CleverTap_getAllDisplayUnits();
         JSONArray json;
         try {
-            json = (JSONArray)JSON.parse(jsonString);
+            json = (JSONArray)JSON.Parse(jsonString);
         } catch {
             Debug.LogError("Unable to parse native display units json");  
             json = new JSONArray();
