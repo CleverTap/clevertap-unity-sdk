@@ -10,7 +10,8 @@ using CleverTap.Utilities;
 
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
-    public const string Version = "1.1.2";
+      
+    public const string Version = "1.2.5";
 
 #if UNITY_IOS
     void Start() {
@@ -143,6 +144,39 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern int CleverTap_initializeInbox();
 
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getAllInboxMessages();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getUnreadInboxMessages();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getInboxMessageForId(string messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_deleteInboxMessageForID(string messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_markReadInboxMessageForID(string messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordInboxNotificationViewedEventForID(string messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordInboxNotificationClickedEventForID(string messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getAllDisplayUnits();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getDisplayUnitForID(string unitID);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordDisplayUnitViewedEventForID(string unitID);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_recordDisplayUnitClickedEventForID(string unitID);
+    
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
 
@@ -322,7 +356,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user event history json");
+            Debug.LogError("Unable to parse user event history json");
             json = new JSONClass();
         }
         return json;
@@ -334,7 +368,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse session utm details json");
+            Debug.LogError("Unable to parse session utm details json");
             json = new JSONClass();
         }
         return json;
@@ -350,7 +384,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse event detail json");
+            Debug.LogError("Unable to parse event detail json");
             json = new JSONClass();
         }
         return json;
@@ -423,6 +457,90 @@ namespace CleverTap {
 
     public static int GetInboxMessageUnreadCount() {
         return CleverTap_getInboxMessageUnreadCount();
+    }
+
+    public static JSONArray GetAllInboxMessages() {
+        string jsonString = CleverTap_getAllInboxMessages();
+        JSONArray json;
+        try {
+            json = (JSONArray)JSON.Parse(jsonString);
+        } catch {
+            Debug.LogError("Unable to parse app inbox messages json");  
+            json = new JSONArray();
+        }
+        return json;
+    }
+
+    public static JSONArray GetUnreadInboxMessages() {
+        string jsonString = CleverTap_getUnreadInboxMessages();
+        JSONArray json;
+        try {
+            json = (JSONArray)JSON.Parse(jsonString);
+        } catch {
+            Debug.LogError("Unable to parse unread app inbox messages json");  
+            json = new JSONArray();
+        }
+        return json;
+    }
+
+    public static JSONClass GetInboxMessageForId(string messageId) {
+        string jsonString = CleverTap_getInboxMessageForId(messageId);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+                Debug.LogError("Unable to parse app inbox message json");
+                json = new JSONClass();
+        }
+        return json;
+    }
+
+    public static void DeleteInboxMessageForID(string messageId) {
+        CleverTap_deleteInboxMessageForID(messageId);   
+    }
+
+    public static void MarkReadInboxMessageForID(string messageId) {
+        CleverTap_markReadInboxMessageForID(messageId);
+    }
+
+    public static void RecordInboxNotificationViewedEventForID(string messageId) {
+        CleverTap_recordInboxNotificationViewedEventForID(messageId);
+    }
+
+    public static void RecordInboxNotificationClickedEventForID(string messageId) {
+        CleverTap_recordInboxNotificationClickedEventForID(messageId);
+    }
+
+    public static JSONArray GetAllDisplayUnits() {
+        string jsonString = CleverTap_getAllDisplayUnits();
+        JSONArray json;
+        try {
+            json = (JSONArray)JSON.Parse(jsonString);
+        } catch {
+            Debug.LogError("Unable to parse native display units json");  
+            json = new JSONArray();
+        }
+        return json;
+    }
+
+    public static JSONClass GetDisplayUnitForID(string unitID) {
+        string jsonString = CleverTap_getDisplayUnitForID(unitID);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+                Debug.LogError("Unable to parse native display unit json");
+                json = new JSONClass();
+        }
+        return json;
+    }
+
+    public static void RecordDisplayUnitViewedEventForID(string unitID) {
+        CleverTap_recordDisplayUnitViewedEventForID(unitID);
+    }
+
+    public static void RecordDisplayUnitClickedEventForID(string unitID) {
+        CleverTap_recordDisplayUnitClickedEventForID(unitID);
     }
 
     public static void SetUIEditorConnectionEnabled(bool enabled) {
@@ -500,7 +618,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse json");
+            Debug.LogError("Unable to parse json");
             json = new JSONClass();
         }
         return json;
@@ -513,7 +631,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse json");
+            Debug.LogError("Unable to parse json");
             json = new JSONClass();
         }
         return json;
@@ -526,7 +644,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse json");
+            Debug.LogError("Unable to parse json");
             json = new JSONClass();
         }
         return json;
@@ -539,7 +657,7 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONClass();
         }
         return json;
@@ -552,7 +670,7 @@ namespace CleverTap {
        try {
            json = (JSONArray)JSON.Parse(jsonString);
        } catch {
-           Debug.Log("Unable to parse user json");
+           Debug.LogError("Unable to parse user json");
            json = new JSONArray();
        }
        return json;
@@ -565,7 +683,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONArray();
         }
         return json;
@@ -578,7 +696,7 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONArray();
         }
         return json;
@@ -591,16 +709,15 @@ namespace CleverTap {
         try {
             json = (JSONArray)JSON.Parse(jsonString);
         } catch {
-            Debug.Log("Unable to parse user json");
+            Debug.LogError("Unable to parse user json");
             json = new JSONArray();
         }
         return json;
     }
-
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
     private static AndroidJavaObject clevertap;
-	private static AndroidJavaObject CleverTapClass;
+    private static AndroidJavaObject CleverTapClass;
 
     void Start() {
         Debug.Log("Start: CleverTap binding for Android.");
@@ -618,14 +735,14 @@ namespace CleverTap {
         }
     }
 
-	public static AndroidJavaObject CleverTapAPI {
+    public static AndroidJavaObject CleverTapAPI {
         get {
             if (CleverTapClass == null) {
                 CleverTapClass = new AndroidJavaClass("com.clevertap.unity.CleverTapUnityPlugin");
             }
             return CleverTapClass;
         }
-	}
+    }
 
     public static AndroidJavaObject CleverTap {
         get {
@@ -844,7 +961,7 @@ namespace CleverTap {
     }
 
     public static void PushInstallReferrerSource(string source, string medium, string campaign) {
-        // no-op for Android
+        CleverTap.Call("pushInstallReferrer",source, medium, campaign);
     }
 
     public static void InitializeInbox(){
