@@ -489,8 +489,8 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Debug.LogError("Unable to parse app inbox message json");
-            json = new JSONClass();
+                Debug.LogError("Unable to parse app inbox message json");
+                json = new JSONClass();
         }
         return json;
     }
@@ -529,8 +529,8 @@ namespace CleverTap {
         try {
             json = (JSONClass)JSON.Parse(jsonString);
         } catch {
-            Debug.Debug.LogError("Unable to parse native display unit json");
-            json = new JSONClass();
+                Debug.LogError("Unable to parse native display unit json");
+                json = new JSONClass();
         }
         return json;
     }
