@@ -1,5 +1,131 @@
 #import "CleverTapUnityManager.h"
 
+#pragma mark - Utils
+
+NSString* clevertap_stringToNSString(const char* str) {
+    return str != NULL ? [NSString stringWithUTF8String:str] : [NSString stringWithUTF8String:""];
+}
+
+NSString* clevertap_toJsonString(id val) {
+    NSString *jsonString;
+    
+    if (val == nil) {
+        return nil;
+    }
+    
+    if ([val isKindOfClass:[NSArray class]] || [val isKindOfClass:[NSDictionary class]]) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:val options:NSJSONWritingPrettyPrinted error:&error];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        if (error != nil) {
+            jsonString = nil;
+        }
+    } else {
+        jsonString = [NSString stringWithFormat:@"%@", val];
+    }
+    
+    return jsonString;
+}
+
+NSMutableArray* clevertap_NSArrayFromArray(const char* array[], int size) {
+    
+    NSMutableArray *values = [NSMutableArray arrayWithCapacity:size];
+    for (int i = 0; i < size; i ++) {
+        NSString *value = clevertap_stringToNSString(array[i]);
+        [values addObject:value];
+    }
+    
+    return values;
+}
+
+NSMutableDictionary* clevertap_dictFromJsonString(const char* jsonString) {
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    if (jsonString != NULL && jsonString != nil) {
+        NSError *jsonError;
+        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
+        dict = [NSJSONSerialization JSONObjectWithData:objectData
+                                               options:NSJSONReadingMutableContainers
+                                                 error:&jsonError];
+    }
+    
+    return dict;
+}
+
+NSMutableArray* clevertap_NSArrayFromJsonString(const char* jsonString) {
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+    
+    if (jsonString != NULL && jsonString != nil) {
+        NSError *jsonError;
+        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
+        arr = [NSJSONSerialization JSONObjectWithData:objectData
+                                              options:NSJSONReadingMutableContainers
+                                                error:&jsonError];
+    }
+    
+    return arr;
+}
+
+NSMutableDictionary* clevertap_eventDetailToDict(CleverTapEventDetail* detail) {
+    
+    NSMutableDictionary *_dict = [NSMutableDictionary new];
+    
+    if(detail) {
+        if(detail.eventName) {
+            [_dict setObject:detail.eventName forKey:@"eventName"];
+        }
+        
+        if(detail.firstTime){
+            [_dict setObject:@(detail.firstTime) forKey:@"firstTime"];
+        }
+        
+        if(detail.lastTime){
+            [_dict setObject:@(detail.lastTime) forKey:@"lastTime"];
+        }
+        
+        if(detail.count){
+            [_dict setObject:@(detail.count) forKey:@"count"];
+        }
+    }
+    
+    return _dict;
+}
+
+NSMutableDictionary* clevertap_utmDetailToDict(CleverTapUTMDetail* detail) {
+    
+    NSMutableDictionary *_dict = [NSMutableDictionary new];
+    
+    if(detail) {
+        if(detail.source) {
+            [_dict setObject:detail.source forKey:@"source"];
+        }
+        
+        if(detail.medium) {
+            [_dict setObject:detail.medium forKey:@"medium"];
+        }
+        
+        if(detail.campaign) {
+            [_dict setObject:detail.campaign forKey:@"campaign"];
+        }
+    }
+    
+    return _dict;
+}
+
+char* clevertap_cStringCopy(const char* string) {
+    if (string == NULL)
+        return NULL;
+    
+    char* res = (char*)malloc(strlen(string) + 1);
+    strcpy(res, string);
+    
+    return res;
+}
+
+
+#pragma mark - Admin
 
 void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) andToken:clevertap_stringToNSString(token)];
@@ -506,129 +632,4 @@ char* CleverTap_getListOfDoubleVariable(const char* name, const char* defaultVal
        return NULL;
    }
    return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-
-#pragma mark - Utils
-
-NSString* clevertap_stringToNSString(const char* str) {
-    return str != NULL ? [NSString stringWithUTF8String:str] : [NSString stringWithUTF8String:""];
-}
-
-NSString* clevertap_toJsonString(id val) {
-    NSString *jsonString;
-    
-    if (val == nil) {
-        return nil;
-    }
-    
-    if ([val isKindOfClass:[NSArray class]] || [val isKindOfClass:[NSDictionary class]]) {
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:val options:NSJSONWritingPrettyPrinted error:&error];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        if (error != nil) {
-            jsonString = nil;
-        }
-    } else {
-        jsonString = [NSString stringWithFormat:@"%@", val];
-    }
-    
-    return jsonString;
-}
-
-NSMutableArray* clevertap_NSArrayFromArray(const char* array[], int size) {
-    
-    NSMutableArray *values = [NSMutableArray arrayWithCapacity:size];
-    for (int i = 0; i < size; i ++) {
-        NSString *value = clevertap_stringToNSString(array[i]);
-        [values addObject:value];
-    }
-    
-    return values;
-}
-
-NSMutableDictionary* clevertap_dictFromJsonString(const char* jsonString) {
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
-    
-    if (jsonString != NULL && jsonString != nil) {
-        NSError *jsonError;
-        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
-        dict = [NSJSONSerialization JSONObjectWithData:objectData
-                                               options:NSJSONReadingMutableContainers
-                                                 error:&jsonError];
-    }
-    
-    return dict;
-}
-
-NSMutableArray* clevertap_NSArrayFromJsonString(const char* jsonString) {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
-    
-    if (jsonString != NULL && jsonString != nil) {
-        NSError *jsonError;
-        NSData *objectData = [clevertap_stringToNSString(jsonString) dataUsingEncoding:NSUTF8StringEncoding];
-        arr = [NSJSONSerialization JSONObjectWithData:objectData
-                                              options:NSJSONReadingMutableContainers
-                                                error:&jsonError];
-    }
-    
-    return arr;
-}
-
-NSMutableDictionary* clevertap_eventDetailToDict(CleverTapEventDetail* detail) {
-    
-    NSMutableDictionary *_dict = [NSMutableDictionary new];
-    
-    if(detail) {
-        if(detail.eventName) {
-            [_dict setObject:detail.eventName forKey:@"eventName"];
-        }
-        
-        if(detail.firstTime){
-            [_dict setObject:@(detail.firstTime) forKey:@"firstTime"];
-        }
-        
-        if(detail.lastTime){
-            [_dict setObject:@(detail.lastTime) forKey:@"lastTime"];
-        }
-        
-        if(detail.count){
-            [_dict setObject:@(detail.count) forKey:@"count"];
-        }
-    }
-    
-    return _dict;
-}
-
-NSMutableDictionary* clevertap_utmDetailToDict(CleverTapUTMDetail* detail) {
-    
-    NSMutableDictionary *_dict = [NSMutableDictionary new];
-    
-    if(detail) {
-        if(detail.source) {
-            [_dict setObject:detail.source forKey:@"source"];
-        }
-        
-        if(detail.medium) {
-            [_dict setObject:detail.medium forKey:@"medium"];
-        }
-        
-        if(detail.campaign) {
-            [_dict setObject:detail.campaign forKey:@"campaign"];
-        }
-    }
-    
-    return _dict;
-}
-
-char* clevertap_cStringCopy(const char* string) {
-    if (string == NULL)
-        return NULL;
-    
-    char* res = (char*)malloc(strlen(string) + 1);
-    strcpy(res, string);
-    
-    return res;
 }
