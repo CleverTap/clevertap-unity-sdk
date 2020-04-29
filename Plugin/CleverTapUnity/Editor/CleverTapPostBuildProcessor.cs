@@ -68,7 +68,11 @@ public static class CleverTapPostBuildProcessor
 			PBXProject proj = new PBXProject();
 			proj.ReadFromString(File.ReadAllText(projPath));
 
-			string targetName = PBXProject.GetUnityTargetName();
+	#if UNITY_2019_1_OR_NEWER
+			string targetName = proj.GetUnityFrameworkTargetGuid();
+	#else
+            string targetName = PBXProject.GetUnityTargetName();
+	#endif
 			string projectTarget = proj.TargetGuidByName(targetName);
 
 			// Add dependencies
