@@ -574,7 +574,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];
     
     if (jsonArray != nil) {
-        jsonDict[@"displayUnits"] = displayUnits;
+        jsonDict[@"displayUnits"] = jsonArray;
     }
     
     NSString *jsonString = [self dictToJson:jsonDict];
