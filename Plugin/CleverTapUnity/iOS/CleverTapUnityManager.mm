@@ -625,6 +625,10 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapFeatureFlagsUpdated withMessage:@"Feature Flags updated"];
 }
 
+- (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue {
+    return [[clevertap featureFlags] get:key withDefaultValue:defaultValue];
+}
+
 
 #pragma mark - AB Testing
 

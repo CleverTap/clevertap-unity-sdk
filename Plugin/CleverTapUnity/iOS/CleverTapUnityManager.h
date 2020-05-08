@@ -106,6 +106,11 @@
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
 
 
+#pragma mark - Feature Flags
+
+- (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue;
+
+
 #pragma mark - AB Testing
 
 - (void)setUIEditorConnectionEnabled:(BOOL)enabled;

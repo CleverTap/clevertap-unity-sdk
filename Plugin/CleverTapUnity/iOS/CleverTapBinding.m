@@ -479,6 +479,13 @@ void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID) {
 }
 
 
+#pragma mark - Feature Flags
+
+BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
+    return [[CleverTapUnityManager sharedInstance] get:clevertap_stringToNSString(key) withDefaultValue:defaultValue];
+}
+
+
 #pragma mark - AB Testing
 
 void CleverTap_setUIEditorConnectionEnabled(const BOOL enabled) {
