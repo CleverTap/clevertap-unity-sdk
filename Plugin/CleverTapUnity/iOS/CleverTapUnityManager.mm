@@ -4,6 +4,7 @@
 #import <CleverTapSDK/CleverTap+ABTesting.h>
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
 #import <CleverTapSDK/CleverTap+DisplayUnit.h>
+#import <CleverTapSDK/CleverTap+FeatureFlags.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
 
@@ -22,8 +23,9 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 static NSString * kCleverTapInboxMessageDidSelect = @"CleverTapInboxMessageDidSelect";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
+static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 
-@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate >
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapFeatureFlagsDelegate >
 
 @end
 
@@ -41,6 +43,7 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
         
         [clevertap setInAppNotificationDelegate:sharedInstance];
         [clevertap setDisplayUnitDelegate:sharedInstance];
+        [[clevertap featureFlags] setDelegate:sharedInstance];
     }
     
     return sharedInstance;
@@ -613,6 +616,13 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
     [clevertap recordDisplayUnitClickedEventForID:unitID];
+}
+
+
+#pragma mark - Feature Flags
+
+- (void)ctFeatureFlagsUpdated {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapFeatureFlagsUpdated withMessage:@"Feature Flags updated"];
 }
 
 

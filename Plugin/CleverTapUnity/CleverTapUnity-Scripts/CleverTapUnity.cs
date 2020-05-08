@@ -141,6 +141,11 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
+    // invoked when Product Experiences - Feature Flags are updated 
+    void CleverTapFeatureFlagsUpdated(string message) {
+        Debug.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
     void CleverTapExperimentMessagesDidUpdateCallback(){
         Debug.Log("unity received experiment messages updated");
     }
