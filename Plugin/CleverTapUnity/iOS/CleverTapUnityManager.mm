@@ -5,6 +5,7 @@
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
 #import <CleverTapSDK/CleverTap+DisplayUnit.h>
 #import <CleverTapSDK/CleverTap+FeatureFlags.h>
+#import <CleverTapSDK/CleverTap+ProductConfig.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
 
@@ -23,9 +24,12 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 static NSString * kCleverTapInboxMessageDidSelect = @"CleverTapInboxMessageDidSelect";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
+static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetched";
+static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigActivated";
+static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigInitialized";
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 
-@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapFeatureFlagsDelegate >
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate >
 
 @end
 
@@ -43,6 +47,7 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
         
         [clevertap setInAppNotificationDelegate:sharedInstance];
         [clevertap setDisplayUnitDelegate:sharedInstance];
+        [[clevertap productConfig] setDelegate:sharedInstance];
         [[clevertap featureFlags] setDelegate:sharedInstance];
     }
     
@@ -616,6 +621,21 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
 
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
     [clevertap recordDisplayUnitClickedEventForID:unitID];
+}
+
+
+#pragma mark - Product Config
+
+- (void)ctProductConfigFetched {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigFetched withMessage:@"Product Config Fetched"];
+}
+
+- (void)ctProductConfigActivated {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigActivated withMessage:@"Product Config Activated"];
+}
+
+- (void)ctProductConfigInitialized {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigInitialized withMessage:@"Product Config Initialized"];
 }
 
 
