@@ -638,6 +638,22 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigInitialized withMessage:@"Product Config Initialized"];
 }
 
+- (void)fetchProductConfig {
+    [[clevertap productConfig] fetch];
+}
+
+- (void)activateProductConfig {
+    [[clevertap productConfig] activate];
+}
+
+- (void)fetchAndActivateProductConfig {
+    [[clevertap productConfig] fetchAndActivate];
+}
+
+- (void)resetProductConfig {
+    [[clevertap productConfig] reset];
+}
+
 
 #pragma mark - Feature Flags
 

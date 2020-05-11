@@ -479,6 +479,25 @@ void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID) {
 }
 
 
+#pragma mark - Product Config
+
+void CleverTap_fetchProductConfig() {
+    [[CleverTapUnityManager sharedInstance] fetchProductConfig];
+}
+
+void CleverTap_activateProductConfig() {
+    [[CleverTapUnityManager sharedInstance] activateProductConfig];
+}
+
+void CleverTap_fetchAndActivateProductConfig() {
+    [[CleverTapUnityManager sharedInstance] fetchAndActivateProductConfig];
+}
+
+void CleverTap_resetProductConfig() {
+    [[CleverTapUnityManager sharedInstance] resetProductConfig];
+}
+
+
 #pragma mark - Feature Flags
 
 BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {

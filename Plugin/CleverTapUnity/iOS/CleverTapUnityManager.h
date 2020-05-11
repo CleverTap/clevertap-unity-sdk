@@ -106,6 +106,14 @@
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
 
 
+#pragma mark - Product Config
+
+- (void)fetchProductConfig;
+- (void)activateProductConfig;
+- (void)fetchAndActivateProductConfig;
+- (void)resetProductConfig;
+
+
 #pragma mark - Feature Flags
 
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue;

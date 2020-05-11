@@ -178,6 +178,18 @@ namespace CleverTap {
     private static extern void CleverTap_recordDisplayUnitClickedEventForID(string unitID);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_fetchProductConfig();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_activateProductConfig();
+    
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_fetchAndActivateProductConfig();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_resetProductConfig();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool CleverTap_getFeatureFlag(string key, bool defaultValue);
     
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -544,6 +556,22 @@ namespace CleverTap {
 
     public static void RecordDisplayUnitClickedEventForID(string unitID) {
         CleverTap_recordDisplayUnitClickedEventForID(unitID);
+    }
+
+    public static void FetchProductConfig() {
+        CleverTap_fetchProductConfig();
+    }
+
+    public static void ActivateProductConfig() {
+        CleverTap_activateProductConfig();
+    }
+
+    public static void FetchAndActivateProductConfig() {
+        CleverTap_fetchAndActivateProductConfig();
+    }
+
+    public static void ResetProductConfig() {
+        CleverTap_resetProductConfig();
     }
 
     public static bool GetFeatureFlag(string key, bool defaultValue) {
