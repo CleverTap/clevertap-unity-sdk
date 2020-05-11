@@ -109,6 +109,8 @@
 #pragma mark - Product Config
 
 - (void)fetchProductConfig;
+- (void)fetchProductConfigWithMinimumInterval:(NSTimeInterval)minimumInterval;
+- (void)setProductConfigMinimumFetchInterval:(NSTimeInterval)minimumFetchInterval;
 - (void)activateProductConfig;
 - (void)fetchAndActivateProductConfig;
 - (void)resetProductConfig;

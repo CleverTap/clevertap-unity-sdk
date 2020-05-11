@@ -181,6 +181,12 @@ namespace CleverTap {
     private static extern void CleverTap_fetchProductConfig();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_fetchProductConfigWithMinimumInterval(double minimumInterval);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setProductConfigMinimumFetchInterval(double minimumFetchInterval);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_activateProductConfig();
     
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -560,6 +566,14 @@ namespace CleverTap {
 
     public static void FetchProductConfig() {
         CleverTap_fetchProductConfig();
+    }
+
+    public static void FetchProductConfigWithMinimumInterval(double minimumInterval) {
+        CleverTap_fetchProductConfigWithMinimumInterval(minimumInterval);
+    }
+
+    public static void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
+        CleverTap_setProductConfigMinimumFetchInterval(minimumFetchInterval);
     }
 
     public static void ActivateProductConfig() {

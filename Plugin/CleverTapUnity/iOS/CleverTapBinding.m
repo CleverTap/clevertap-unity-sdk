@@ -485,6 +485,14 @@ void CleverTap_fetchProductConfig() {
     [[CleverTapUnityManager sharedInstance] fetchProductConfig];
 }
 
+void CleverTap_fetchProductConfigWithMinimumInterval(const double minimumInterval) {
+    [[CleverTapUnityManager sharedInstance] fetchProductConfigWithMinimumInterval:minimumInterval];
+}
+
+void CleverTap_setProductConfigMinimumFetchInterval(const double minimumFetchInterval) {
+    [[CleverTapUnityManager sharedInstance] setProductConfigMinimumFetchInterval:minimumFetchInterval];
+}
+
 void CleverTap_activateProductConfig() {
     [[CleverTapUnityManager sharedInstance] activateProductConfig];
 }

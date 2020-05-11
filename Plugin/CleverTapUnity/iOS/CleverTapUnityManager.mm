@@ -642,6 +642,14 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [[clevertap productConfig] fetch];
 }
 
+- (void)fetchProductConfigWithMinimumInterval:(NSTimeInterval)minimumInterval {
+    [[clevertap productConfig] fetchWithMinimumInterval:minimumInterval];
+}
+
+- (void)setProductConfigMinimumFetchInterval:(NSTimeInterval)minimumFetchInterval {
+    [[clevertap productConfig] setMinimumFetchInterval:minimumFetchInterval];
+}
+
 - (void)activateProductConfig {
     [[clevertap productConfig] activate];
 }
