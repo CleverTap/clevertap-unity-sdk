@@ -662,6 +662,10 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [[clevertap productConfig] setDefaults:defaults];
 }
 
+- (void)setProductConfigDefaultsFromPlistFileName:(NSString *)fileName {
+    [[clevertap productConfig] setDefaultsFromPlistFileName:fileName];
+}
+
 - (void)resetProductConfig {
     [[clevertap productConfig] reset];
 }

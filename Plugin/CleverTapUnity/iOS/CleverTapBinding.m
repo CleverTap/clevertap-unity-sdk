@@ -506,6 +506,10 @@ void CleverTap_setProductConfigDefaults(const char* defaults) {
     [[CleverTapUnityManager sharedInstance] setProductConfigDefaults:defaultsDict];
 }
 
+void CleverTap_setProductConfigDefaultsFromPlistFileName(const char* fileName) {
+    [[CleverTapUnityManager sharedInstance] setProductConfigDefaultsFromPlistFileName:clevertap_stringToNSString(fileName)];
+}
+
 void CleverTap_resetProductConfig() {
     [[CleverTapUnityManager sharedInstance] resetProductConfig];
 }
