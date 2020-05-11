@@ -113,6 +113,7 @@
 - (void)setProductConfigMinimumFetchInterval:(NSTimeInterval)minimumFetchInterval;
 - (void)activateProductConfig;
 - (void)fetchAndActivateProductConfig;
+- (void)setProductConfigDefaults:(NSDictionary *)defaults;
 - (void)resetProductConfig;
 
 

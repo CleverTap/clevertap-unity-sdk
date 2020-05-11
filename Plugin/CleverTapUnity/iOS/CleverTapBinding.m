@@ -501,6 +501,11 @@ void CleverTap_fetchAndActivateProductConfig() {
     [[CleverTapUnityManager sharedInstance] fetchAndActivateProductConfig];
 }
 
+void CleverTap_setProductConfigDefaults(const char* defaults) {
+    NSMutableDictionary *defaultsDict = clevertap_dictFromJsonString(defaults);
+    [[CleverTapUnityManager sharedInstance] setProductConfigDefaults:defaultsDict];
+}
+
 void CleverTap_resetProductConfig() {
     [[CleverTapUnityManager sharedInstance] resetProductConfig];
 }

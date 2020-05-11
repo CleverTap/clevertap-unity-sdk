@@ -193,6 +193,9 @@ namespace CleverTap {
     private static extern void CleverTap_fetchAndActivateProductConfig();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setProductConfigDefaults(string defaults);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_resetProductConfig();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -584,6 +587,11 @@ namespace CleverTap {
         CleverTap_fetchAndActivateProductConfig();
     }
 
+    public static void SetProductConfigDefaults(Dictionary<string, object> defaults) {
+        var defaultsString = Json.Serialize(defaults);
+        CleverTap_setProductConfigDefaults(defaultsString);
+    }
+    
     public static void ResetProductConfig() {
         CleverTap_resetProductConfig();
     }

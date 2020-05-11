@@ -658,6 +658,10 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [[clevertap productConfig] fetchAndActivate];
 }
 
+- (void)setProductConfigDefaults:(NSDictionary *)defaults {
+    [[clevertap productConfig] setDefaults:defaults];
+}
+
 - (void)resetProductConfig {
     [[clevertap productConfig] reset];
 }
