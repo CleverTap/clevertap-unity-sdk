@@ -669,14 +669,11 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
 - (NSDictionary *)getProductConfigValueFor:(NSString *)key {
     CleverTapConfigValue *value = [[clevertap productConfig] get:key];
     NSDictionary *jsonDict;
-    if ([value.jsonValue isKindOfClass:[NSArray class]]) {
-        jsonDict = @{ key: value.jsonValue };
-    }
-    else if ([value.jsonValue isKindOfClass:[NSDictionary class]]) {
+    if ([value.jsonValue isKindOfClass:[NSDictionary class]]) {
         jsonDict = value.jsonValue;
     }
     else {
-        NSLog(@"Unexpected data format encountered: %@", value.jsonValue);
+        jsonDict = @{ key: value.jsonValue };
     }
     
     return jsonDict;
