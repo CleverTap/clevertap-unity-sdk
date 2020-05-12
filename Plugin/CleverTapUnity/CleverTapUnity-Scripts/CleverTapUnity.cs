@@ -141,6 +141,26 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
+    // invoked when Product Experiences - Product Config are fetched 
+    void CleverTapProductConfigFetched(string message) {
+        Debug.Log("unity received product config fetched: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Product Config are activated
+    void CleverTapProductConfigActivated(string message) {
+        Debug.Log("unity received product config activated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Product Config are initialized
+    void CleverTapProductConfigInitialized(string message) {
+        Debug.Log("unity received product config initialized: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Feature Flags are updated 
+    void CleverTapFeatureFlagsUpdated(string message) {
+        Debug.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
     void CleverTapExperimentMessagesDidUpdateCallback(){
         Debug.Log("unity received experiment messages updated");
     }

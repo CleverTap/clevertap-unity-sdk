@@ -176,6 +176,39 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordDisplayUnitClickedEventForID(string unitID);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_fetchProductConfig();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_fetchProductConfigWithMinimumInterval(double minimumInterval);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setProductConfigMinimumFetchInterval(double minimumFetchInterval);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_activateProductConfig();
+    
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_fetchAndActivateProductConfig();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setProductConfigDefaults(string defaults);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_setProductConfigDefaultsFromPlistFileName(string fileName);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getProductConfigValueFor(string key);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern double CleverTap_getProductConfigLastFetchTimeStamp();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_resetProductConfig();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern bool CleverTap_getFeatureFlag(string key, bool defaultValue);
     
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_setUIEditorConnectionEnabled(bool enabled);
@@ -541,6 +574,59 @@ namespace CleverTap {
 
     public static void RecordDisplayUnitClickedEventForID(string unitID) {
         CleverTap_recordDisplayUnitClickedEventForID(unitID);
+    }
+
+    public static void FetchProductConfig() {
+        CleverTap_fetchProductConfig();
+    }
+
+    public static void FetchProductConfigWithMinimumInterval(double minimumInterval) {
+        CleverTap_fetchProductConfigWithMinimumInterval(minimumInterval);
+    }
+
+    public static void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
+        CleverTap_setProductConfigMinimumFetchInterval(minimumFetchInterval);
+    }
+
+    public static void ActivateProductConfig() {
+        CleverTap_activateProductConfig();
+    }
+
+    public static void FetchAndActivateProductConfig() {
+        CleverTap_fetchAndActivateProductConfig();
+    }
+
+    public static void SetProductConfigDefaults(Dictionary<string, object> defaults) {
+        var defaultsString = Json.Serialize(defaults);
+        CleverTap_setProductConfigDefaults(defaultsString);
+    }
+
+    public static void SetProductConfigDefaultsFromPlistFileName(string fileName) {
+        CleverTap_setProductConfigDefaultsFromPlistFileName(fileName);
+    }
+
+    public static JSONClass GetProductConfigValueFor(string key) {
+        string jsonString = CleverTap_getProductConfigValueFor(key);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+                Debug.LogError("Unable to parse product config value");
+                json = new JSONClass();
+        }
+        return json;
+    }
+
+    public static double GetProductConfigLastFetchTimeStamp() {
+        return CleverTap_getProductConfigLastFetchTimeStamp();
+    }
+    
+    public static void ResetProductConfig() {
+        CleverTap_resetProductConfig();
+    }
+
+    public static bool GetFeatureFlag(string key, bool defaultValue) {
+        return CleverTap_getFeatureFlag(key, defaultValue);
     }
 
     public static void SetUIEditorConnectionEnabled(bool enabled) {

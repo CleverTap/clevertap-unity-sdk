@@ -106,6 +106,25 @@
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
 
 
+#pragma mark - Product Config
+
+- (void)fetchProductConfig;
+- (void)fetchProductConfigWithMinimumInterval:(NSTimeInterval)minimumInterval;
+- (void)setProductConfigMinimumFetchInterval:(NSTimeInterval)minimumFetchInterval;
+- (void)activateProductConfig;
+- (void)fetchAndActivateProductConfig;
+- (void)setProductConfigDefaults:(NSDictionary *)defaults;
+- (void)setProductConfigDefaultsFromPlistFileName:(NSString *)fileName;
+- (NSDictionary *)getProductConfigValueFor:(NSString *)key;
+- (double)getProductConfigLastFetchTimeStamp;
+- (void)resetProductConfig;
+
+
+#pragma mark - Feature Flags
+
+- (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue;
+
+
 #pragma mark - AB Testing
 
 - (void)setUIEditorConnectionEnabled:(BOOL)enabled;

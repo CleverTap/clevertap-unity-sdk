@@ -479,6 +479,62 @@ void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID) {
 }
 
 
+#pragma mark - Product Config
+
+void CleverTap_fetchProductConfig() {
+    [[CleverTapUnityManager sharedInstance] fetchProductConfig];
+}
+
+void CleverTap_fetchProductConfigWithMinimumInterval(const double minimumInterval) {
+    [[CleverTapUnityManager sharedInstance] fetchProductConfigWithMinimumInterval:minimumInterval];
+}
+
+void CleverTap_setProductConfigMinimumFetchInterval(const double minimumFetchInterval) {
+    [[CleverTapUnityManager sharedInstance] setProductConfigMinimumFetchInterval:minimumFetchInterval];
+}
+
+void CleverTap_activateProductConfig() {
+    [[CleverTapUnityManager sharedInstance] activateProductConfig];
+}
+
+void CleverTap_fetchAndActivateProductConfig() {
+    [[CleverTapUnityManager sharedInstance] fetchAndActivateProductConfig];
+}
+
+void CleverTap_setProductConfigDefaults(const char* defaults) {
+    NSMutableDictionary *defaultsDict = clevertap_dictFromJsonString(defaults);
+    [[CleverTapUnityManager sharedInstance] setProductConfigDefaults:defaultsDict];
+}
+
+void CleverTap_setProductConfigDefaultsFromPlistFileName(const char* fileName) {
+    [[CleverTapUnityManager sharedInstance] setProductConfigDefaultsFromPlistFileName:clevertap_stringToNSString(fileName)];
+}
+
+char* CleverTap_getProductConfigValueFor(const char* key) {
+    id ret = [[CleverTapUnityManager sharedInstance] getProductConfigValueFor:clevertap_stringToNSString(key)];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+       return NULL;
+   }
+   return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+double CleverTap_getProductConfigLastFetchTimeStamp() {
+    return [[CleverTapUnityManager sharedInstance] getProductConfigLastFetchTimeStamp];
+}
+
+void CleverTap_resetProductConfig() {
+    [[CleverTapUnityManager sharedInstance] resetProductConfig];
+}
+
+
+#pragma mark - Feature Flags
+
+BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
+    return [[CleverTapUnityManager sharedInstance] get:clevertap_stringToNSString(key) withDefaultValue:defaultValue];
+}
+
+
 #pragma mark - AB Testing
 
 void CleverTap_setUIEditorConnectionEnabled(const BOOL enabled) {

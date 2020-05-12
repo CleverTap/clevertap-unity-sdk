@@ -4,6 +4,8 @@
 #import <CleverTapSDK/CleverTap+ABTesting.h>
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
 #import <CleverTapSDK/CleverTap+DisplayUnit.h>
+#import <CleverTapSDK/CleverTap+FeatureFlags.h>
+#import <CleverTapSDK/CleverTap+ProductConfig.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
 
@@ -22,8 +24,12 @@ static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMes
 static NSString * kCleverTapInboxMessageDidSelect = @"CleverTapInboxMessageDidSelect";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
+static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetched";
+static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigActivated";
+static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigInitialized";
+static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 
-@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate >
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate >
 
 @end
 
@@ -41,6 +47,8 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
         
         [clevertap setInAppNotificationDelegate:sharedInstance];
         [clevertap setDisplayUnitDelegate:sharedInstance];
+        [[clevertap productConfig] setDelegate:sharedInstance];
+        [[clevertap featureFlags] setDelegate:sharedInstance];
     }
     
     return sharedInstance;
@@ -613,6 +621,83 @@ static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplay
 
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
     [clevertap recordDisplayUnitClickedEventForID:unitID];
+}
+
+
+#pragma mark - Product Config
+
+- (void)ctProductConfigFetched {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigFetched withMessage:@"Product Config Fetched"];
+}
+
+- (void)ctProductConfigActivated {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigActivated withMessage:@"Product Config Activated"];
+}
+
+- (void)ctProductConfigInitialized {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapProductConfigInitialized withMessage:@"Product Config Initialized"];
+}
+
+- (void)fetchProductConfig {
+    [[clevertap productConfig] fetch];
+}
+
+- (void)fetchProductConfigWithMinimumInterval:(NSTimeInterval)minimumInterval {
+    [[clevertap productConfig] fetchWithMinimumInterval:minimumInterval];
+}
+
+- (void)setProductConfigMinimumFetchInterval:(NSTimeInterval)minimumFetchInterval {
+    [[clevertap productConfig] setMinimumFetchInterval:minimumFetchInterval];
+}
+
+- (void)activateProductConfig {
+    [[clevertap productConfig] activate];
+}
+
+- (void)fetchAndActivateProductConfig {
+    [[clevertap productConfig] fetchAndActivate];
+}
+
+- (void)setProductConfigDefaults:(NSDictionary *)defaults {
+    [[clevertap productConfig] setDefaults:defaults];
+}
+
+- (void)setProductConfigDefaultsFromPlistFileName:(NSString *)fileName {
+    [[clevertap productConfig] setDefaultsFromPlistFileName:fileName];
+}
+
+- (NSDictionary *)getProductConfigValueFor:(NSString *)key {
+    CleverTapConfigValue *value = [[clevertap productConfig] get:key];
+    NSDictionary *jsonDict;
+    if ([value.jsonValue isKindOfClass:[NSDictionary class]]) {
+        jsonDict = value.jsonValue;
+    }
+    else {
+        jsonDict = @{ key: value.jsonValue };
+    }
+    
+    return jsonDict;
+}
+
+- (double)getProductConfigLastFetchTimeStamp {
+    NSDate *date = [[clevertap productConfig] getLastFetchTimeStamp];
+    double interval = date.timeIntervalSince1970;
+    return interval;
+}
+
+- (void)resetProductConfig {
+    [[clevertap productConfig] reset];
+}
+
+
+#pragma mark - Feature Flags
+
+- (void)ctFeatureFlagsUpdated {
+    [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapFeatureFlagsUpdated withMessage:@"Feature Flags updated"];
+}
+
+- (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue {
+    return [[clevertap featureFlags] get:key withDefaultValue:defaultValue];
 }
 
 
