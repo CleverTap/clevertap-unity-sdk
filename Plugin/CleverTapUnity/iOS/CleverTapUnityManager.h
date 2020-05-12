@@ -115,6 +115,8 @@
 - (void)fetchAndActivateProductConfig;
 - (void)setProductConfigDefaults:(NSDictionary *)defaults;
 - (void)setProductConfigDefaultsFromPlistFileName:(NSString *)fileName;
+- (NSDictionary *)getProductConfigValueFor:(NSString *)key;
+- (double)getProductConfigLastFetchTimeStamp;
 - (void)resetProductConfig;
 
 

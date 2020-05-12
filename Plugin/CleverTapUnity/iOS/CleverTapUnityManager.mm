@@ -666,6 +666,28 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [[clevertap productConfig] setDefaultsFromPlistFileName:fileName];
 }
 
+- (NSDictionary *)getProductConfigValueFor:(NSString *)key {
+    CleverTapConfigValue *value = [[clevertap productConfig] get:key];
+    NSDictionary *jsonDict;
+    if ([value.jsonValue isKindOfClass:[NSArray class]]) {
+        jsonDict = @{ key: value.jsonValue };
+    }
+    else if ([value.jsonValue isKindOfClass:[NSDictionary class]]) {
+        jsonDict = value.jsonValue;
+    }
+    else {
+        NSLog(@"Unexpected data format encountered: %@", value.jsonValue);
+    }
+    
+    return jsonDict;
+}
+
+- (double)getProductConfigLastFetchTimeStamp {
+    NSDate *date = [[clevertap productConfig] getLastFetchTimeStamp];
+    double interval = date.timeIntervalSince1970;
+    return interval;
+}
+
 - (void)resetProductConfig {
     [[clevertap productConfig] reset];
 }

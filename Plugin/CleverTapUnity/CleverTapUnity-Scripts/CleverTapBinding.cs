@@ -199,6 +199,12 @@ namespace CleverTap {
     private static extern void CleverTap_setProductConfigDefaultsFromPlistFileName(string fileName);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getProductConfigValueFor(string key);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern double CleverTap_getProductConfigLastFetchTimeStamp();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_resetProductConfig();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -597,6 +603,22 @@ namespace CleverTap {
 
     public static void SetProductConfigDefaultsFromPlistFileName(string fileName) {
         CleverTap_setProductConfigDefaultsFromPlistFileName(fileName);
+    }
+
+    public static JSONClass GetProductConfigValueFor(string key) {
+        string jsonString = CleverTap_getProductConfigValueFor(key);
+        JSONClass json;
+        try {
+            json = (JSONClass)JSON.Parse(jsonString);
+        } catch {
+                Debug.LogError("Unable to parse product config value");
+                json = new JSONClass();
+        }
+        return json;
+    }
+
+    public static double GetProductConfigLastFetchTimeStamp() {
+        return CleverTap_getProductConfigLastFetchTimeStamp();
     }
     
     public static void ResetProductConfig() {

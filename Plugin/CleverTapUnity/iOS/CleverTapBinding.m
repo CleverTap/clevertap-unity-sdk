@@ -510,6 +510,19 @@ void CleverTap_setProductConfigDefaultsFromPlistFileName(const char* fileName) {
     [[CleverTapUnityManager sharedInstance] setProductConfigDefaultsFromPlistFileName:clevertap_stringToNSString(fileName)];
 }
 
+char* CleverTap_getProductConfigValueFor(const char* key) {
+    id ret = [[CleverTapUnityManager sharedInstance] getProductConfigValueFor:clevertap_stringToNSString(key)];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+       return NULL;
+   }
+   return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+double CleverTap_getProductConfigLastFetchTimeStamp() {
+    return [[CleverTapUnityManager sharedInstance] getProductConfigLastFetchTimeStamp];
+}
+
 void CleverTap_resetProductConfig() {
     [[CleverTapUnityManager sharedInstance] resetProductConfig];
 }
