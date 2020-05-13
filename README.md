@@ -26,9 +26,10 @@
 - Build and run your iOS project.
 
 ### Android Specific:
-- Go to `File` > `Build Settings` > `Android` > `Player Settings` > `Publishing Settings` > `Build`, ensure the `Custom Gradle Template` option is checked.
+- If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
 
-- Go to `Assets` > `Play Services Resolver` > `Android Resolver` > `Settings`. Ensure `Use Jetifier` & `Patch mainTemplate.gradle` options are checked.
+  Note:
+  On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
 
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
