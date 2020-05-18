@@ -21,7 +21,6 @@ static NSString * kCleverTapInAppNotificationDismissedCallback = @"CleverTapInAp
 static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNotificationButtonTapped";
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
-static NSString * kCleverTapInboxMessageDidSelect = @"CleverTapInboxMessageDidSelect";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetched";
@@ -529,25 +528,6 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
 
 - (void)recordInboxNotificationClickedEventForID:(NSString *)messageId {
     [clevertap recordInboxNotificationClickedEventForID:messageId];
-}
-
-- (void)messageDidSelect:(CleverTapInboxMessage *)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
-    
-    NSDictionary *messageJSON = message.json;
-    
-    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
-    
-    if (messageJSON != nil) {
-        jsonDict[@"message"] = messageJSON;
-        jsonDict[@"index"] = @(index);
-        jsonDict[@"buttonIndex"] = @(buttonIndex);
-    }
-    
-    NSString *jsonString = [self dictToJson:jsonDict];
-    
-    if (jsonString != nil) {
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxMessageDidSelect withMessage:jsonString];
-    }
 }
 
 - (void)messageButtonTappedWithCustomExtras:(NSDictionary *)customExtras {
