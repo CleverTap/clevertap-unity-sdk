@@ -56,7 +56,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("unity parsed profile initialized {0}", json));
         } catch {
-            Debug.Log("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }
 
@@ -87,7 +87,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("unity parsed profile updates {0}", json));
         } catch {
-            Debug.Log("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }	
 		
@@ -103,7 +103,7 @@ public class CleverTapUnity: MonoBehaviour {
             JSONClass json = (JSONClass)JSON.Parse(message);
             Debug.Log(String.Format("push notification data is {0}", json));
         } catch {
-            Debug.Log("unable to parse json");
+            Debug.LogError("unable to parse json");
         }
     }
 
@@ -112,7 +112,12 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
-    //returns callback for InitializeInbox
+    // returns when an in-app notification is dismissed by a call to action with custom extras
+    void CleverTapInAppNotificationButtonTapped(string message) {
+        Debug.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns callback for InitializeInbox
     void CleverTapInboxDidInitializeCallback(){
         Debug.Log("unity received inbox initialized");
     }
@@ -121,8 +126,37 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inbox messages updated");
     }
 
+    // returns on the click of app inbox message with a map of custom Key-Value pairs
+    void CleverTapInboxCustomExtrasButtonSelect(string message) {
+        Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns native display units data
+    void CleverTapNativeDisplayUnitsUpdated(string message) {
+        Debug.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Product Config are fetched 
+    void CleverTapProductConfigFetched(string message) {
+        Debug.Log("unity received product config fetched: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Product Config are activated
+    void CleverTapProductConfigActivated(string message) {
+        Debug.Log("unity received product config activated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Product Config are initialized
+    void CleverTapProductConfigInitialized(string message) {
+        Debug.Log("unity received product config initialized: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // invoked when Product Experiences - Feature Flags are updated 
+    void CleverTapFeatureFlagsUpdated(string message) {
+        Debug.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
     void CleverTapExperimentMessagesDidUpdateCallback(){
         Debug.Log("unity received experiment messages updated");
     }
-
 }

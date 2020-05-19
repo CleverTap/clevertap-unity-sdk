@@ -12,14 +12,22 @@ import android.util.Log;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.clevertap.android.sdk.CTExperimentsListener;
+import com.clevertap.android.sdk.CTFeatureFlagsListener;
 import com.clevertap.android.sdk.CTInboxListener;
+import com.clevertap.android.sdk.CTInboxMessage;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.EventDetail;
+import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
+import com.clevertap.android.sdk.InboxMessageButtonListener;
+import com.clevertap.android.sdk.PushType;
 import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
 
+import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
+import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
+import com.clevertap.android.sdk.product_config.CTProductConfigListener;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONArray;
@@ -33,7 +41,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener, CTInboxListener, CTExperimentsListener {
+public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
+        CTInboxListener, CTExperimentsListener, InAppNotificationButtonListener,
+        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -46,6 +56,13 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_INBOX_DID_INITIALIZE = "CleverTapInboxDidInitializeCallback";
     private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
     private static final String CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE = "CleverTapExperimentMessagesDidUpdateCallback";
+    private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapOnInboxButtonClicked";
+    private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapOnInAppButtonClicked";
+    private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapDisplayUnitsUpdated";
+    private static final String CLEVERTAP_FEATURE_FLAG_UPDATED = "CleverTapFeatureFlagsUpdated";
+    private static final String CLEVERTAP_PRODUCT_CONFIG_INITIALIZED = "CleverTapProductConfigInitialized";
+    private static final String CLEVERTAP_PRODUCT_CONFIG_FETCHED = "CleverTapProductConfigFetched";
+    private static final String CLEVERTAP_PRODUCT_CONFIG_ACTIVATED = "CleverTapProductConfigActivated";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -138,6 +155,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
                 clevertap.setCTExperimentsListener(this);
+                clevertap.setInboxMessageButtonListener(this);
+                clevertap.setInAppNotificationButtonListener(this);
+                clevertap.setDisplayUnitListener(this);
+                clevertap.setCTFeatureFlagsListener(this);
+                clevertap.setCTFeatureFlagsListener(this);
                 clevertap.setLibrary("Unity");
             }
         } catch (Throwable t) {
@@ -198,6 +220,18 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             CleverTapAPI.deleteNotificationChannelGroup(context, groupId);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error deleting Notification Channel Group", t);
+        }
+    }
+
+    public void setPushToken(String token, String type){
+        if(PushType.valueOf(type.toLowerCase()).equals(PushType.FCM)){
+            clevertap.pushFcmRegistrationId(token,true);
+        } else if(PushType.valueOf(type.toLowerCase()).equals(PushType.XPS)){
+            clevertap.pushXiaomiRegistrationId(token,true);
+        } else if(PushType.valueOf(type.toLowerCase()).equals(PushType.BPS)){
+            clevertap.pushBaiduRegistrationId(token,true);
+        } else if(PushType.valueOf(type.toLowerCase()).equals(PushType.HPS)){
+            clevertap.pushHuaweiRegistrationId(token,true);
         }
     }
 
@@ -459,179 +493,42 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    // InAppNotificationListener
-    public boolean beforeShow(Map<String, Object> var1) {
-        return true;
-    }
-
-    public void onDismissed(Map<String, Object> var1, @Nullable Map<String, Object> var2) {
-        if (var1 == null && var2 == null) {
-            return;
-        }
-
-        JSONObject extras = var1 != null ? new JSONObject(var1) : new JSONObject();
-        String _json = "{extras:" + extras.toString() + ",";
-
-        JSONObject actionExtras = var2 != null ? new JSONObject(var2) : new JSONObject();
-        _json += "actionExtras:" + actionExtras.toString() + "}";
-
-        final String json = _json;
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK, json);
-    }
-
-    // SyncListener
-    public void profileDataUpdated(JSONObject updates) {
-
-        if (updates == null) {
-            return;
-        }
-
-        final String json = "{updates:" + updates.toString() + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_UPDATES_CALLBACK, json);
-    }
-
-    public void profileDidInitialize(String CleverTapID) {
-
-        if (CleverTapID == null) {
-            return;
-        }
-
-        final String json = "{CleverTapID:" + CleverTapID + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_INITIALIZED_CALLBACK, json);
-    }
-
-    //Inbox Listeners
-    public void inboxDidInitialize() {
-        final String json = "{CleverTap App Inbox Initialized}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_DID_INITIALIZE, json);
-    }
-
-    public void inboxMessagesDidUpdate() {
-        final String json = "{CleverTap App Inbox Messages Updated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
-    }
-
-    public void CTExperimentsUpdated() {
-        final String json = "{CleverTap App Experiment Messages Updated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE, json);
-    }
-
-    /*******************
-     * Helpers
-     ******************/
-
-    private static void messageUnity(final String gameObject, final String method, final String data) {
-        UnityPlayer.UnitySendMessage(gameObject, method, data);
-    }
-
-    private static Object fromJson(Object json) throws JSONException {
-        if (json == JSONObject.NULL) {
+    public String getAllInboxMessages(){
+        try {
+            return inboxMessageListToJSONArray(clevertap.getAllInboxMessages()).toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
             return null;
-        } else if (json instanceof JSONObject) {
-            return toMap((JSONObject) json);
-        } else {
-            return json;
         }
     }
 
-    private static HashMap<String, Object> toMap(JSONObject object) throws JSONException {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        Iterator keys = object.keys();
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-            map.put(key, fromJson(object.get(key)));
+    public String getUnreadInboxMessages(){
+        try {
+            return inboxMessageListToJSONArray(clevertap.getUnreadInboxMessages()).toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
-        return map;
     }
 
-    private static ArrayList<HashMap<String, Object>> toArrayListOfStringObjectMaps(JSONArray array) throws JSONException {
-        ArrayList<HashMap<String, Object>> aList = new ArrayList<HashMap<String, Object>>();
-
-        for (int i = 0; i < array.length(); i++) {
-            aList.add(toMap((JSONObject) array.get(i)));
-        }
-
-        return aList;
+    public String getInboxMessageForId(String messageId){
+        return clevertap.getInboxMessageForId(messageId).getData().toString();
     }
 
-    private static JSONObject eventDetailsToJSON(EventDetail details) throws JSONException {
-
-        JSONObject json = new JSONObject();
-
-        if (details != null) {
-            json.put("name", details.getName());
-            json.put("firstTime", details.getFirstTime());
-            json.put("lastTime", details.getLastTime());
-            json.put("count", details.getCount());
-        }
-
-        return json;
+    public void deleteInboxMessageForId(String messageId){
+        clevertap.deleteInboxMessage(messageId);
     }
 
-    private static JSONObject utmDetailsToJSON(UTMDetail details) throws JSONException {
-
-        JSONObject json = new JSONObject();
-
-        if (details != null) {
-            json.put("campaign", details.getCampaign());
-            json.put("source", details.getSource());
-            json.put("medium", details.getMedium());
-        }
-
-        return json;
+    public void markReadInboxMessageForId(String messageId){
+        clevertap.markReadInboxMessage(messageId);
     }
 
-    private static JSONObject eventHistoryToJSON(Map<String, EventDetail> history) throws JSONException {
-
-        JSONObject json = new JSONObject();
-
-        if (history != null) {
-            for (Object key : history.keySet()) {
-                json.put(key.toString(), eventDetailsToJSON(history.get((String) key)));
-            }
-        }
-
-        return json;
+    public void pushInboxNotificationViewedEventForId(String messageId){
+        clevertap.pushInboxNotificationViewedEvent(messageId);
     }
 
-    private static CTInboxStyleConfig toStyleConfig(JSONObject object) throws JSONException {
-        CTInboxStyleConfig styleConfig = new CTInboxStyleConfig();
-        if (object.has("navBarColor")) {
-            styleConfig.setNavBarColor(object.getString("navBarColor"));
-        }
-        if (object.has("navBarTitle")) {
-            styleConfig.setNavBarTitle(object.getString("navBarTitle"));
-        }
-        if (object.has("navBarTitleColor")) {
-            styleConfig.setNavBarTitleColor(object.getString("navBarTitleColor"));
-        }
-        if (object.has("inboxBackgroundColor")) {
-            styleConfig.setInboxBackgroundColor(object.getString("inboxBackgroundColor"));
-        }
-        if (object.has("backButtonColor")) {
-            styleConfig.setBackButtonColor(object.getString("backButtonColor"));
-        }
-        if (object.has("selectedTabColor")) {
-            styleConfig.setSelectedTabColor(object.getString("selectedTabColor"));
-        }
-        if (object.has("unselectedTabColor")) {
-            styleConfig.setUnselectedTabColor(object.getString("unselectedTabColor"));
-        }
-        if (object.has("selectedTabIndicatorColor")) {
-            styleConfig.setSelectedTabIndicatorColor(object.getString("selectedTabIndicatorColor"));
-        }
-        if (object.has("tabBackgroundColor")) {
-            styleConfig.setTabBackgroundColor(object.getString("tabBackgroundColor"));
-        }
-        if (object.has("tabs")) {
-            JSONArray tabsArray = object.getJSONArray("tabs");
-            ArrayList tabs = new ArrayList();
-            for (int i = 0; i < tabsArray.length(); i++) {
-                tabs.add(tabsArray.getString(i));
-            }
-            styleConfig.setTabs(tabs);
-        }
-        return styleConfig;
+    public void pushInboxNotificationClickedEventForId(String messageId){
+        clevertap.pushInboxNotificationClickedEvent(messageId);
     }
 
     public static void setUIEditorConnectionEnabled(boolean enabled) {
@@ -857,5 +754,342 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         } catch (Exception e) {
             Log.e(LOG_TAG, "pushInstallReferrer error", e);
         }
+    }
+
+    //Native Display Units
+    public String getAllDisplayUnits(){
+        try {
+            ArrayList<CleverTapDisplayUnit> arrayList = clevertap.getAllDisplayUnits();
+            JSONArray jsonArray = new JSONArray();
+            if(arrayList != null) {
+                jsonArray = displayUnitListToJSONArray(arrayList);
+            }
+            return jsonArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getDisplayUnitForId(String unitId){
+        CleverTapDisplayUnit displayUnit = clevertap.getDisplayUnitForId(unitId);
+        JSONObject jsonObject = new JSONObject();
+        if(displayUnit != null) {
+            jsonObject = displayUnit.getJsonObject();
+        }
+        return jsonObject.toString();
+    }
+
+    public void pushDisplayUnitViewedEventForID(String unitId){
+        clevertap.pushDisplayUnitViewedEventForID(unitId);
+    }
+
+    public void pushDisplayUnitClickedEventForID(String unitId){
+        clevertap.pushDisplayUnitClickedEventForID(unitId);
+    }
+
+    //Feature Flags
+    public Boolean isFeatureFlagInitialized(){
+        return clevertap.featureFlag().isInitialized();
+    }
+
+    public void fetchFeatureFlags(){
+        clevertap.featureFlag().fetchFeatureFlags();
+    }
+
+    public Boolean getFeatureFlag(String key, Boolean defaultValue){
+        return clevertap.featureFlag().get(key,defaultValue);
+    }
+
+    //Product Config
+    public Boolean isProductConfigInitialized(){
+        return clevertap.productConfig().isInitialized();
+    }
+
+    public void setMapDefaults(HashMap<String,Object> map){
+        clevertap.productConfig().setDefaults(map);
+    }
+
+    public void fetch(){
+        clevertap.productConfig().fetch();
+    }
+
+    public void fetch(long minimumIntervalInSeconds){
+        clevertap.productConfig().fetch(minimumIntervalInSeconds);
+    }
+
+    public void fetchAndActivate(){
+        clevertap.productConfig().fetchAndActivate();
+    }
+
+    public void activate(){
+        clevertap.productConfig().activate();
+    }
+
+    public String getString(String key){
+        return clevertap.productConfig().getString(key);
+    }
+
+    public Boolean getBoolean(String key){
+        return clevertap.productConfig().getBoolean(key);
+    }
+
+    public long getLong(String key){
+        return clevertap.productConfig().getLong(key);
+    }
+
+    public Double getDouble(String key){
+        return clevertap.productConfig().getDouble(key);
+    }
+
+    public void productConfigReset(){
+        clevertap.productConfig().reset();
+    }
+
+    public long getLastFetchTimeStampInMillis(){
+        return clevertap.productConfig().getLastFetchTimeStampInMillis();
+    }
+
+    // InAppNotificationListener
+    public boolean beforeShow(Map<String, Object> var1) {
+        return true;
+    }
+
+    public void onDismissed(Map<String, Object> var1, @Nullable Map<String, Object> var2) {
+        if (var1 == null && var2 == null) {
+            return;
+        }
+
+        JSONObject extras = var1 != null ? new JSONObject(var1) : new JSONObject();
+        String _json = "{extras:" + extras.toString() + ",";
+
+        JSONObject actionExtras = var2 != null ? new JSONObject(var2) : new JSONObject();
+        _json += "actionExtras:" + actionExtras.toString() + "}";
+
+        final String json = _json;
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK, json);
+    }
+
+    // SyncListener
+    public void profileDataUpdated(JSONObject updates) {
+
+        if (updates == null) {
+            return;
+        }
+
+        final String json = "{updates:" + updates.toString() + "}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_UPDATES_CALLBACK, json);
+    }
+
+    public void profileDidInitialize(String CleverTapID) {
+
+        if (CleverTapID == null) {
+            return;
+        }
+
+        final String json = "{CleverTapID:" + CleverTapID + "}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_INITIALIZED_CALLBACK, json);
+    }
+
+    //Inbox Listeners
+    public void inboxDidInitialize() {
+        final String json = "{CleverTap App Inbox Initialized}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_DID_INITIALIZE, json);
+    }
+
+    public void inboxMessagesDidUpdate() {
+        final String json = "{CleverTap App Inbox Messages Updated}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
+    }
+
+    //Dynamic Vars Listener
+    public void CTExperimentsUpdated() {
+        final String json = "{CleverTap App Experiment Messages Updated}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE, json);
+    }
+
+    //Inbox Button Click Listener
+    public void onInboxButtonClick(HashMap<String, String> payload) {
+        JSONObject jsonObject = new JSONObject(payload);
+        final String json = "{inbox button payload:" + jsonObject.toString() + "}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
+    }
+
+    //InApp Button Click Listener
+    public void onInAppButtonClick(HashMap<String, String> payload) {
+        JSONObject jsonObject = new JSONObject(payload);
+        final String json = "{inapp button payload:" + jsonObject.toString() + "}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INAPP_BUTTON_CLICKED, json);
+    }
+
+    //Native Display Listener
+    public void onDisplayUnitsLoaded(ArrayList<CleverTapDisplayUnit> units) {
+        try {
+            JSONArray jsonArray = displayUnitListToJSONArray(units);
+            final String json = "{display units:" + jsonArray.toString() + "}";
+            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_DISPLAY_UNITS_UPDATED, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Feature Flag Listener
+    public void featureFlagsUpdated() {
+        final String json = "{CleverTap App Feature Flags Updated}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_FEATURE_FLAG_UPDATED, json);
+    }
+
+    //Product Config Listener
+    public void onInit() {
+        final String json = "{CleverTap App Product Config Initialized}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PRODUCT_CONFIG_INITIALIZED, json);
+    }
+
+    public void onFetched() {
+        final String json = "{CleverTap App Product Config Fetched}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PRODUCT_CONFIG_FETCHED, json);
+    }
+
+    public void onActivated() {
+        final String json = "{CleverTap App Product Config Activated}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PRODUCT_CONFIG_ACTIVATED, json);
+    }
+
+    /*******************
+     * Helpers
+     ******************/
+
+    private static void messageUnity(final String gameObject, final String method, final String data) {
+        UnityPlayer.UnitySendMessage(gameObject, method, data);
+    }
+
+    private static Object fromJson(Object json) throws JSONException {
+        if (json == JSONObject.NULL) {
+            return null;
+        } else if (json instanceof JSONObject) {
+            return toMap((JSONObject) json);
+        } else {
+            return json;
+        }
+    }
+
+    private static HashMap<String, Object> toMap(JSONObject object) throws JSONException {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        Iterator keys = object.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            map.put(key, fromJson(object.get(key)));
+        }
+        return map;
+    }
+
+    private static ArrayList<HashMap<String, Object>> toArrayListOfStringObjectMaps(JSONArray array) throws JSONException {
+        ArrayList<HashMap<String, Object>> aList = new ArrayList<HashMap<String, Object>>();
+
+        for (int i = 0; i < array.length(); i++) {
+            aList.add(toMap((JSONObject) array.get(i)));
+        }
+
+        return aList;
+    }
+
+    private static JSONObject eventDetailsToJSON(EventDetail details) throws JSONException {
+
+        JSONObject json = new JSONObject();
+
+        if (details != null) {
+            json.put("name", details.getName());
+            json.put("firstTime", details.getFirstTime());
+            json.put("lastTime", details.getLastTime());
+            json.put("count", details.getCount());
+        }
+
+        return json;
+    }
+
+    private static JSONObject utmDetailsToJSON(UTMDetail details) throws JSONException {
+
+        JSONObject json = new JSONObject();
+
+        if (details != null) {
+            json.put("campaign", details.getCampaign());
+            json.put("source", details.getSource());
+            json.put("medium", details.getMedium());
+        }
+
+        return json;
+    }
+
+    private static JSONObject eventHistoryToJSON(Map<String, EventDetail> history) throws JSONException {
+
+        JSONObject json = new JSONObject();
+
+        if (history != null) {
+            for (Object key : history.keySet()) {
+                json.put(key.toString(), eventDetailsToJSON(history.get((String) key)));
+            }
+        }
+
+        return json;
+    }
+
+    private static CTInboxStyleConfig toStyleConfig(JSONObject object) throws JSONException {
+        CTInboxStyleConfig styleConfig = new CTInboxStyleConfig();
+        if (object.has("navBarColor")) {
+            styleConfig.setNavBarColor(object.getString("navBarColor"));
+        }
+        if (object.has("navBarTitle")) {
+            styleConfig.setNavBarTitle(object.getString("navBarTitle"));
+        }
+        if (object.has("navBarTitleColor")) {
+            styleConfig.setNavBarTitleColor(object.getString("navBarTitleColor"));
+        }
+        if (object.has("inboxBackgroundColor")) {
+            styleConfig.setInboxBackgroundColor(object.getString("inboxBackgroundColor"));
+        }
+        if (object.has("backButtonColor")) {
+            styleConfig.setBackButtonColor(object.getString("backButtonColor"));
+        }
+        if (object.has("selectedTabColor")) {
+            styleConfig.setSelectedTabColor(object.getString("selectedTabColor"));
+        }
+        if (object.has("unselectedTabColor")) {
+            styleConfig.setUnselectedTabColor(object.getString("unselectedTabColor"));
+        }
+        if (object.has("selectedTabIndicatorColor")) {
+            styleConfig.setSelectedTabIndicatorColor(object.getString("selectedTabIndicatorColor"));
+        }
+        if (object.has("tabBackgroundColor")) {
+            styleConfig.setTabBackgroundColor(object.getString("tabBackgroundColor"));
+        }
+        if (object.has("tabs")) {
+            JSONArray tabsArray = object.getJSONArray("tabs");
+            ArrayList tabs = new ArrayList();
+            for (int i = 0; i < tabsArray.length(); i++) {
+                tabs.add(tabsArray.getString(i));
+            }
+            styleConfig.setTabs(tabs);
+        }
+        return styleConfig;
+    }
+
+    private JSONArray inboxMessageListToJSONArray(ArrayList<CTInboxMessage> messageList) throws JSONException {
+        JSONArray array = new JSONArray();
+
+        for( int i = 0; i < messageList.size(); i++){
+            array.put(messageList.get(i).getData());
+        }
+
+        return array;
+    }
+
+    private JSONArray displayUnitListToJSONArray(ArrayList<CleverTapDisplayUnit> displayUnits) throws JSONException {
+        JSONArray array = new JSONArray();
+
+        for( int i = 0; i < displayUnits.size(); i++){
+            array.put(displayUnits.get(i).getJsonObject());
+        }
+
+        return array;
     }
 }
