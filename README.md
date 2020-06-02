@@ -34,9 +34,7 @@ The script will look through your built application’s `Frameworks` folder and 
 
 #### Troubleshooting 
 
-After adding the run script to your build phases, if you are facing below error while submitting the Unity iOS app to the Appstore from the Apple:
-
-
+After adding the run script to your build phases, if App Store still reports **Unsupported Architecture. Your executable contains unsupported architecture '[x86_64, i386]** while submitting the app to the App Store.
 
 Follow the below steps to validate the archive: 
 
