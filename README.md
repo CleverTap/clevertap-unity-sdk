@@ -43,14 +43,14 @@ Follow the below steps to validate the archive:
 3. For CleverTapSDK: Run the following command:-
 ```shell
  cd Your-Application-Path/Frameworks/CleverTapUnity/ios/CleverTapSDK.framework.
- lipo -remove x86_64 CleverTapSDK -o CleverTapSDK \n
+ lipo -remove x86_64 CleverTapSDK -o CleverTapSDK
  lipo -remove i386 CleverTapSDK -o CleverTapSDK
  ```
 
 4. For SDWebImage: Run the following command:-
 ```shell
  cd  Your-Application-Path/Frameworks/CleverTapUnity/ios/SDWebImage.framework
- lipo -remove i386 SDWebImage -o SDWebImage \n
+ lipo -remove i386 SDWebImage -o SDWebImage
  lipo -remove x86_64 SDWebImage -o SDWebImage
   ```
 
