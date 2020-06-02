@@ -23,13 +23,38 @@ For more information check out our [website](https://clevertap.com "CleverTap") 
 
     ![alt text](example/images/push_entitle.jpg  "push notifications capability")
 
-- Add a run script to your build phases, In Xcode, go to your Targets, under your app’s name, select Build Phases after   embed frameworks, add a run script phase and set it to use `/bin/sh` and the [script found here](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh):
+- Add a run script to your build phases, In Xcode, go to your Targets, under your app’s name, select Build Phases after   embed frameworks, add a run script phase and set it to use `/bin/sh` and the [script found here](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh).
+
+The script will look through your built application’s `Frameworks` folder and strip out the unnecessary simulator architectures from the CleverTakSDK.framework prior to archiving/submitting the app store.
 
   ![alt text](example/images/ct_script_ios.jpg  "run script")
   
- The script will look through your built application’s `Frameworks` folder and strip out the unnecessary simulator architectures from the CleverTakSDK.framework prior to archiving/submitting the app store.
 
 - Build and run your iOS project.
+
+#### Troubleshooting 
+
+After adding the run script to your build phases, if you are facing below error while submitting the Unity iOS app to the Appstore from the Apple:
+
+
+
+Follow the below steps to validate the archive: 
+
+1. Open Terminal
+2. Navigate to **CleverTapSDK** and **SDWebImage** framework inside your Application
+3. For CleverTapSDK: Run the following command:-
+```shell
+ cd Your-Application-Path/Frameworks/CleverTapUnity/ios/CleverTapSDK.framework.
+ lipo -remove x86_64 CleverTapSDK -o CleverTapSDK \n
+ lipo -remove i386 CleverTapSDK -o CleverTapSDK
+ ```
+
+4. For SDWebImage: Run the following command:-
+```shell
+ cd  Your-Application-Path/Frameworks/CleverTapUnity/ios/SDWebImage.framework
+ lipo -remove i386 SDWebImage -o SDWebImage \n
+ lipo -remove x86_64 SDWebImage -o SDWebImage
+  ```
 
 ### Android Specific Instructions:
 - If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
