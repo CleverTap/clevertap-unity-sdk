@@ -4,7 +4,7 @@ CleverTap provides a Unity Plugin that enables app developers to track, segment,
 
 For more information check out our [website](https://clevertap.com "CleverTap") and [documentation](http://support.clevertap.com "CleverTap Technical Documentation").
 
-### NOTE: If you are using any AndroidX dependencies in your project, refer [v2.0.0](https://github.com/CleverTap/clevertap-unity-sdk/releases/tag/2.0.0)
+### NOTE: If you are using any AndroidX dependencies in your project, refer [v2.0.1](https://github.com/CleverTap/clevertap-unity-sdk/releases/tag/2.0.1)
 
 ## Installation and Setup #
 
