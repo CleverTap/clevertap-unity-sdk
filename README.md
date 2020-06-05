@@ -13,10 +13,10 @@ For more information check out our [website](https://clevertap.com "CleverTap") 
 
 2. Create an empty game object (GameObject -> Create Empty) and rename it `CleverTapUnity`. Add `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` as a component of the `CleverTapUnity GameObject`. 
 
-| NOTE:To receive the SDK callbacks the name of the game object must be  **CleverTapUnity**|
+| NOTE:To receive the SDK callbacks the name of the game object must be `CleverTapUnity` |
 | --- |
-    
-    ![alt text](example/images/unity_gameobj.jpg  "unity game object")
+
+   ![alt text](example/images/unity_gameobj.jpg  "unity game object")
 
 3. Select the `CleverTapUnity GameObject` you created in the Hierarchy pane and add your CleverTap settings inside the Inspector window. You must include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html).
 
