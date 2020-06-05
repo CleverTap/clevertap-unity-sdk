@@ -10,7 +10,7 @@ For more information check out our [website](https://clevertap.com "CleverTap") 
 
 1. Import the CleverTapUnityPlugin.unitypackage into your Unity Project (`Assets` > `Import Package` > `Custom Package`) or manually Copy `Plugin/CleverTapUnity`, `Plugin/PlayServicesResolver` and `Plugin/Plugins/Android` (or copy the files in `Plugin/Plugins/Android` to your existing `Assets/Plugins/Android` directory) into the Assets directory of your Unity Project.
 
-2. Create an empty game object (GameObject -> Create Empty) and rename it `CleverTapUnity`. Add `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` as a component of the `CleverTapUnity GameObject`.
+2. Create an empty game object (GameObject -> Create Empty) and rename it `CleverTapUnity`. Add `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` as a component of the `CleverTapUnity GameObject`. To receive the SDK callbacks the name of the game object must be  **CleverTapUnity**.
     
     ![alt text](example/images/unity_gameobj.jpg  "unity game object")
 
@@ -61,7 +61,7 @@ Follow the below steps to validate the archive:
 ### Android Specific Instructions:
 - If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
   
-  Note: 
+  **NOTE:** 
   On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
 
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
@@ -118,6 +118,8 @@ Follow the below steps to validate the archive:
 - Add your `google-services.json` file to the Assets folder of the project.
 
 - To enable A/B UI editor, edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapBinding.cs` and `CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true)` call just before getting the clevertap instance.
+
+**Code snippet for the same:**
 
 ```
 public static AndroidJavaObject CleverTap {
