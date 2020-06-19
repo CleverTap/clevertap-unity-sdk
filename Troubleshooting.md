@@ -1,6 +1,6 @@
-## Troubleshooting Guide for common integration issues in Unity iOS/Android plugin
+## Troubleshooting Guide for common integration issues in Unity plugin
 
-### Android
+### Android 
 
 **1. Not getting any callbacks for deeplink/inbox etc. in the game object?**
     
