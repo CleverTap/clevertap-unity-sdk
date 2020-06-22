@@ -40,28 +40,6 @@ The script will look through your built application’s `Frameworks` folder and 
 
 - Build and run your iOS project.
 
-#### Troubleshooting 
-
-After adding the run script to your build phases, if App Store still reports **Unsupported Architecture. Your executable contains unsupported architecture '[x86_64, i386]** while submitting the app to the App Store.
-
-Follow the below steps to validate the archive: 
-
-1. Open Terminal
-2. Navigate to **CleverTapSDK** and **SDWebImage** framework inside your Application
-3. For CleverTapSDK: Run the following command:-
-```shell
- cd Your-Application-Path/Frameworks/CleverTapUnity/ios/CleverTapSDK.framework.
- lipo -remove x86_64 CleverTapSDK -o CleverTapSDK
- lipo -remove i386 CleverTapSDK -o CleverTapSDK
- ```
-
-4. For SDWebImage: Run the following command:-
-```shell
- cd  Your-Application-Path/Frameworks/CleverTapUnity/ios/SDWebImage.framework
- lipo -remove i386 SDWebImage -o SDWebImage
- lipo -remove x86_64 SDWebImage -o SDWebImage
-  ```
-
 ### Android Specific Instructions:
 - If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
   
@@ -152,3 +130,5 @@ Check out the CleverTap Unity plugin SDK [Change Log](https://github.com/CleverT
 ## Questions? #
 
  If you have questions or concerns, you can reach out to the CleverTap support team at [support@clevertap.com](mailto:support@clevertap.com).
+ 
+**TroubleShooting Guide:** Please refer [here](https://github.com/CleverTap/clevertap-unity-sdk/blob/update_doc/Troubleshooting.md) if you are facing common integration issue.
