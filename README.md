@@ -131,4 +131,4 @@ Check out the CleverTap Unity plugin SDK [Change Log](https://github.com/CleverT
 
  If you have questions or concerns, you can reach out to the CleverTap support team at [support@clevertap.com](mailto:support@clevertap.com).
  
-**TroubleShooting Guide:** Please refer [here](https://github.com/CleverTap/clevertap-unity-sdk/blob/update_doc/Troubleshooting.md) if you are facing common integration issue.
+**TroubleShooting Guide:** Please refer [here](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Troubleshooting.md) if you are facing common integration issue.
