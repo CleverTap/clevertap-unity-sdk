@@ -104,3 +104,8 @@ public static AndroidJavaObject CleverTap {
     }
 ```
 - Build your app or Android project as usual.
+
+
+
+
+**TroubleShooting Guide:** Please refer [here](https://github.com/CleverTap/clevertap-unity-sdk/blob/update_doc/Troubleshooting.md) if you are facing common integration issue.
