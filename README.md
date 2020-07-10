@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="https://github.com/CleverTap/clevertap-unity-sdk/blob/master/example/images/clevertap-logo.png" width="300"/>
+</p>
+
 ## Unity Plugin for the CleverTap SDK
 
 CleverTap provides a Unity Plugin that enables app developers to track, segment, and engage their users.
