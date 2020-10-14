@@ -1,14 +1,18 @@
 package com.clevertap.unity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.clevertap.android.sdk.CTExperimentsListener;
@@ -21,18 +25,17 @@ import com.clevertap.android.sdk.EventDetail;
 import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
-import com.clevertap.android.sdk.PushType;
 import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
-
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
+import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -223,15 +226,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void setPushToken(String token, String type){
-        if(PushType.valueOf(type.toLowerCase()).equals(PushType.FCM)){
-            clevertap.pushFcmRegistrationId(token,true);
-        } else if(PushType.valueOf(type.toLowerCase()).equals(PushType.XPS)){
-            clevertap.pushXiaomiRegistrationId(token,true);
-        } else if(PushType.valueOf(type.toLowerCase()).equals(PushType.BPS)){
-            clevertap.pushBaiduRegistrationId(token,true);
-        } else if(PushType.valueOf(type.toLowerCase()).equals(PushType.HPS)){
-            clevertap.pushHuaweiRegistrationId(token,true);
+    public void setPushToken(String token, String type) {
+        if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.FCM)) {
+            clevertap.pushFcmRegistrationId(token, true);
+        } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.XPS)) {
+            clevertap.pushXiaomiRegistrationId(token, true);
+        } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.BPS)) {
+            clevertap.pushBaiduRegistrationId(token, true);
+        } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.HPS)) {
+            clevertap.pushHuaweiRegistrationId(token, true);
         }
     }
 
@@ -493,7 +496,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public String getAllInboxMessages(){
+    public String getAllInboxMessages() {
         try {
             return inboxMessageListToJSONArray(clevertap.getAllInboxMessages()).toString();
         } catch (JSONException e) {
@@ -502,7 +505,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public String getUnreadInboxMessages(){
+    public String getUnreadInboxMessages() {
         try {
             return inboxMessageListToJSONArray(clevertap.getUnreadInboxMessages()).toString();
         } catch (JSONException e) {
@@ -511,23 +514,23 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public String getInboxMessageForId(String messageId){
+    public String getInboxMessageForId(String messageId) {
         return clevertap.getInboxMessageForId(messageId).getData().toString();
     }
 
-    public void deleteInboxMessageForId(String messageId){
+    public void deleteInboxMessageForId(String messageId) {
         clevertap.deleteInboxMessage(messageId);
     }
 
-    public void markReadInboxMessageForId(String messageId){
+    public void markReadInboxMessageForId(String messageId) {
         clevertap.markReadInboxMessage(messageId);
     }
 
-    public void pushInboxNotificationViewedEventForId(String messageId){
+    public void pushInboxNotificationViewedEventForId(String messageId) {
         clevertap.pushInboxNotificationViewedEvent(messageId);
     }
 
-    public void pushInboxNotificationClickedEventForId(String messageId){
+    public void pushInboxNotificationClickedEventForId(String messageId) {
         clevertap.pushInboxNotificationClickedEvent(messageId);
     }
 
@@ -544,6 +547,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerBooleanVariable(String name) {
         try {
             clevertap.registerBooleanVariable(name);
@@ -552,6 +556,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerDoubleVariable(String name) {
         try {
             clevertap.registerDoubleVariable(name);
@@ -560,6 +565,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerIntegerVariable(String name) {
         try {
             clevertap.registerIntegerVariable(name);
@@ -568,6 +574,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerStringVariable(String name) {
         try {
             clevertap.registerStringVariable(name);
@@ -576,6 +583,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerListOfBooleanVariable(String name) {
         try {
             clevertap.registerListOfBooleanVariable(name);
@@ -584,6 +592,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerListOfDoubleVariable(String name) {
         try {
             clevertap.registerListOfDoubleVariable(name);
@@ -592,6 +601,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerListOfIntegerVariable(String name) {
         try {
             clevertap.registerListOfIntegerVariable(name);
@@ -600,6 +610,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerListOfStringVariable(String name) {
         try {
             clevertap.registerListOfStringVariable(name);
@@ -608,6 +619,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerMapOfBooleanVariable(String name) {
         try {
             clevertap.registerMapOfBooleanVariable(name);
@@ -616,6 +628,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerMapOfDoubleVariable(String name) {
         try {
             clevertap.registerMapOfDoubleVariable(name);
@@ -624,6 +637,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerMapOfIntegerVariable(String name) {
         try {
             clevertap.registerMapOfIntegerVariable(name);
@@ -632,6 +646,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerMapOfStringVariable(String name) {
         try {
             clevertap.registerMapOfStringVariable(name);
@@ -640,6 +655,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public boolean getBooleanVariable(String name, boolean defaultValue) {
         try {
             return clevertap.getBooleanVariable(name, defaultValue);
@@ -649,6 +665,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public double getDoubleVariable(String name, double defaultValue) {
         try {
             return clevertap.getDoubleVariable(name, defaultValue);
@@ -658,6 +675,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public int getIntegerVariable(String name, int defaultValue) {
         try {
             return clevertap.getIntegerVariable(name, defaultValue);
@@ -667,6 +685,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String getStringVariable(String name, String defaultValue) {
         try {
             return clevertap.getStringVariable(name, defaultValue);
@@ -676,6 +695,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public List<Boolean> getListOfBooleanVariable(String name, List<Boolean> defaultValue) {
         try {
             return clevertap.getListOfBooleanVariable(name, defaultValue);
@@ -685,6 +705,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public List<Double> getListOfDoubleVariable(String name, List<Double> defaultValue) {
         try {
             return clevertap.getListOfDoubleVariable(name, defaultValue);
@@ -694,6 +715,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public List<Integer> getListOfIntegerVariable(String name, List<Integer> defaultValue) {
         try {
             return clevertap.getListOfIntegerVariable(name, defaultValue);
@@ -703,6 +725,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public List<String> getListOfStringVariable(String name, List<String> defaultValue) {
         try {
             return clevertap.getListOfStringVariable(name, defaultValue);
@@ -712,6 +735,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public Map<String, Boolean> getMapOfBooleanVariable(String name, Map<String, Boolean> defaultValue) {
         try {
             return clevertap.getMapOfBooleanVariable(name, defaultValue);
@@ -721,6 +745,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public Map<String, Double> getMapOfDoubleVariable(String name, Map<String, Double> defaultValue) {
         try {
             return clevertap.getMapOfDoubleVariable(name, defaultValue);
@@ -730,6 +755,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public Map<String, Integer> getMapOfIntegerVariable(String name, Map<String, Integer> defaultValue) {
         try {
             return clevertap.getMapOfIntegerVariable(name, defaultValue);
@@ -739,6 +765,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return defaultValue;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public Map<String, String> getMapOfStringVariable(String name, Map<String, String> defaultValue) {
         try {
             return clevertap.getMapOfStringVariable(name, defaultValue);
@@ -757,11 +784,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     //Native Display Units
-    public String getAllDisplayUnits(){
+    public String getAllDisplayUnits() {
         try {
             ArrayList<CleverTapDisplayUnit> arrayList = clevertap.getAllDisplayUnits();
             JSONArray jsonArray = new JSONArray();
-            if(arrayList != null) {
+            if (arrayList != null) {
                 jsonArray = displayUnitListToJSONArray(arrayList);
             }
             return jsonArray.toString();
@@ -771,82 +798,82 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public String getDisplayUnitForId(String unitId){
+    public String getDisplayUnitForId(String unitId) {
         CleverTapDisplayUnit displayUnit = clevertap.getDisplayUnitForId(unitId);
         JSONObject jsonObject = new JSONObject();
-        if(displayUnit != null) {
+        if (displayUnit != null) {
             jsonObject = displayUnit.getJsonObject();
         }
         return jsonObject.toString();
     }
 
-    public void pushDisplayUnitViewedEventForID(String unitId){
+    public void pushDisplayUnitViewedEventForID(String unitId) {
         clevertap.pushDisplayUnitViewedEventForID(unitId);
     }
 
-    public void pushDisplayUnitClickedEventForID(String unitId){
+    public void pushDisplayUnitClickedEventForID(String unitId) {
         clevertap.pushDisplayUnitClickedEventForID(unitId);
     }
 
     //Feature Flags
-    public Boolean isFeatureFlagInitialized(){
+    public Boolean isFeatureFlagInitialized() {
         return clevertap.featureFlag().isInitialized();
     }
 
-    public void fetchFeatureFlags(){
+    public void fetchFeatureFlags() {
         clevertap.featureFlag().fetchFeatureFlags();
     }
 
-    public Boolean getFeatureFlag(String key, Boolean defaultValue){
-        return clevertap.featureFlag().get(key,defaultValue);
+    public Boolean getFeatureFlag(String key, Boolean defaultValue) {
+        return clevertap.featureFlag().get(key, defaultValue);
     }
 
     //Product Config
-    public Boolean isProductConfigInitialized(){
+    public Boolean isProductConfigInitialized() {
         return clevertap.productConfig().isInitialized();
     }
 
-    public void setMapDefaults(HashMap<String,Object> map){
+    public void setMapDefaults(HashMap<String, Object> map) {
         clevertap.productConfig().setDefaults(map);
     }
 
-    public void fetch(){
+    public void fetch() {
         clevertap.productConfig().fetch();
     }
 
-    public void fetch(long minimumIntervalInSeconds){
+    public void fetch(long minimumIntervalInSeconds) {
         clevertap.productConfig().fetch(minimumIntervalInSeconds);
     }
 
-    public void fetchAndActivate(){
+    public void fetchAndActivate() {
         clevertap.productConfig().fetchAndActivate();
     }
 
-    public void activate(){
+    public void activate() {
         clevertap.productConfig().activate();
     }
 
-    public String getString(String key){
+    public String getString(String key) {
         return clevertap.productConfig().getString(key);
     }
 
-    public Boolean getBoolean(String key){
+    public Boolean getBoolean(String key) {
         return clevertap.productConfig().getBoolean(key);
     }
 
-    public long getLong(String key){
+    public long getLong(String key) {
         return clevertap.productConfig().getLong(key);
     }
 
-    public Double getDouble(String key){
+    public Double getDouble(String key) {
         return clevertap.productConfig().getDouble(key);
     }
 
-    public void productConfigReset(){
+    public void productConfigReset() {
         clevertap.productConfig().reset();
     }
 
-    public long getLastFetchTimeStampInMillis(){
+    public long getLastFetchTimeStampInMillis() {
         return clevertap.productConfig().getLastFetchTimeStampInMillis();
     }
 
@@ -1076,7 +1103,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private JSONArray inboxMessageListToJSONArray(ArrayList<CTInboxMessage> messageList) throws JSONException {
         JSONArray array = new JSONArray();
 
-        for( int i = 0; i < messageList.size(); i++){
+        for (int i = 0; i < messageList.size(); i++) {
             array.put(messageList.get(i).getData());
         }
 
@@ -1086,7 +1113,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private JSONArray displayUnitListToJSONArray(ArrayList<CleverTapDisplayUnit> displayUnits) throws JSONException {
         JSONArray array = new JSONArray();
 
-        for( int i = 0; i < displayUnits.size(); i++){
+        for (int i = 0; i < displayUnits.size(); i++) {
             array.put(displayUnits.get(i).getJsonObject());
         }
 
