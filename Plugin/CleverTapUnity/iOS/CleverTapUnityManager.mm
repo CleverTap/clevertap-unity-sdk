@@ -446,6 +446,14 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     if (tabUnSelectedTextColor) {
         _config.tabUnSelectedTextColor = [self ct_colorWithHexString:tabUnSelectedTextColor alpha:1.0];
     }
+    NSString *noMessageTextColor = [dict valueForKey:@"noMessageTextColor"];
+    if (noMessageTextColor) {
+        _config.noMessageViewTextColor = [self ct_colorWithHexString:noMessageTextColor alpha:1.0];
+    }
+    NSString *noMessageText = [dict valueForKey:@"noMessageText"];
+    if (noMessageText) {
+        _config.noMessageViewText = noMessageText;
+    }
     return _config;
 }
 
@@ -471,7 +479,7 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
 }
 
 - (int)getInboxMessageCount {
-     return (int)[clevertap getInboxMessageCount];
+    return (int)[clevertap getInboxMessageCount];
 }
 
 - (NSArray *)getAllInboxMessages {
@@ -654,9 +662,9 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     }
     else {
         jsonDict = @{ key: value.jsonValue };
-    }
-    
-    return jsonDict;
+}
+
+return jsonDict;
 }
 
 - (double)getProductConfigLastFetchTimeStamp {
