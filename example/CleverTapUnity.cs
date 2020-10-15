@@ -16,66 +16,114 @@ public class CleverTapUnity : MonoBehaviour
     public int CLEVERTAP_DEBUG_LEVEL = 0;
     public bool CLEVERTAP_ENABLE_PERSONALIZATION = true;
 
+
     void Awake()
     {
-#if (UNITY_IPHONE && !UNITY_EDITOR)
+        OnInit();
+    }
+
+    /* --------------------------------------------------------------------------------
+     *                          INITIALISATION
+     * -------------------------------------------------------------------------------- */
+    // Put all initialization, registeration code here
+    void OnInit()
+    {
         DontDestroyOnLoad(gameObject);
+
+        //set the UI editor flag before getting the Clevertap instance, defaults to false.
+        CleverTapBinding.SetUIEditorConnectionEnabled(true);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
-        CleverTapBinding.LaunchWithCredentials(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+
+        //Add Platform Specific Init Code here
+#if (UNITY_IPHONE && !UNITY_EDITOR)
+            OniOSInit()
+#endif
+
+#if (UNITY_ANDROID && !UNITY_EDITOR)
+            OnAndroidInit()
+#endif
+
         // set to true to stop sending events to CleverTap
         CleverTapBinding.SetOptOut(true);
         // set to true to enable Device Network information to be sent to CleverTap
         CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
-        if (CLEVERTAP_ENABLE_PERSONALIZATION) {
+        if (CLEVERTAP_ENABLE_PERSONALIZATION)
+        {
             CleverTapBinding.EnablePersonalization();
         }
+
+        //app inbox
+        CleverTapBinding.InitializeInbox();
+        Debug.Log("InboxInit started");
+        //registering Dynamic Variables
+        CleverTapBinding.RegisterBooleanVariable("booleanVar");
+        CleverTapBinding.RegisterDoubleVariable("doubleVar");
+        CleverTapBinding.RegisterListOfDoubleVariable("listdouble");
+        CleverTapBinding.RegisterMapOfDoubleVariable("mapDouble");
+        CleverTapBinding.RecordEvent("Test Unity Event");
+        //Invoke("LaunchInbox",30.0f);
+
+    }
+
+    /* --------------------------------------------------------------------------------
+     *                          INITIALISATION IOS SPECIFIC
+     * -------------------------------------------------------------------------------- */
+
+    //Add iOS Platform Specific Init Code here
+    void OniOSInit()
+    {
+        CleverTapBinding.LaunchWithCredentials(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+
+        // register for push notificationssetUIEditorConnectionEnabled
+        CleverTap.CleverTapBinding.RegisterPush();
+        // set to 0 to remove icon badge
+        CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
+    }
+
+    /* --------------------------------------------------------------------------------
+     *                          INITIALISATION ANDROID SPECIFIC
+     * -------------------------------------------------------------------------------- */
+    //Add Android Platform Specific Init Code here
+    void OnAndroidInit()
+    {
+
+        CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+
+        CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
+
+        //CleverTapBinding.CreateNotificationChannelWithSound("YourChannelId","Your Channel Name", "Your Channel Description", 5, true, "Your raw sound file");
+        //CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");
+        //CleverTapBinding.CreateNotificationChannelWithGroup("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true);
+        //CleverTapBinding.CreateNotificationChannelWithGroupAndSound("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true,"Your raw sound file");
+        //CleverTapBinding.DeleteNotificationChannel("YourChannelId");
+        //CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
+
+    }
+
+
+    void Start()
+    {
+        OnStartCommon();
+
+#if (UNITY_IPHONE && !UNITY_EDITOR)
+       OniOSStart()
 #endif
 
 #if (UNITY_ANDROID && !UNITY_EDITOR)
-        DontDestroyOnLoad(gameObject);
-        //set the UI editor flag before getting the Clevertap instance, defaults to false.
-        CleverTapBinding.SetUIEditorConnectionEnabled(true);
-        CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
-        CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
-        if (CLEVERTAP_ENABLE_PERSONALIZATION) {
-            CleverTapBinding.EnablePersonalization();
-        }
-	CleverTapBinding.CreateNotificationChannel("YourChannelId","Your Channel Name", "Your Channel Description", 5, true);
-
-	//CleverTapBinding.CreateNotificationChannelWithSound("YourChannelId","Your Channel Name", "Your Channel Description", 5, true, "Your raw sound file");
-    //CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");
-    //CleverTapBinding.CreateNotificationChannelWithGroup("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true);
-	//CleverTapBinding.CreateNotificationChannelWithGroupAndSound("YourChannelId","Your Channel Name", "Your Channel Description", 5,"YourGroupId", true,"Your raw sound file");
-	//CleverTapBinding.DeleteNotificationChannel("YourChannelId");
-	//CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
-
-
-    //app inbox
-    CleverTapBinding.InitializeInbox();
-        Debug.Log("InboxInit started");
-	//registering Dynamic Variables
-	CleverTapBinding.RegisterBooleanVariable("booleanVar");
-	CleverTapBinding.RegisterDoubleVariable("doubleVar");
-    CleverTapBinding.RegisterListOfDoubleVariable("listdouble");
-    CleverTapBinding.RegisterMapOfDoubleVariable("mapDouble");
-    CleverTapBinding.RecordEvent("Test Unity Event");
-        //Invoke("LaunchInbox",30.0f);
-
+       OnAndroidStart()
 #endif
+
     }
 
     // CleverTap API usage examples
     // Just for illustration here in Start
-    void Start()
-    {
-#if (UNITY_IPHONE && !UNITY_EDITOR)
-        // register for push notificationssetUIEditorConnectionEnabled
-        CleverTap.CleverTapBinding.RegisterPush();
-        CleverTap.CleverTapBinding.RecordScreenView("TestScreen");
-        // set to 0 to remove icon badge
-        CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
-#endif
+    /* --------------------------------------------------------------------------------
+     *                          CLEVERTAP API USAGE
+     * -------------------------------------------------------------------------------- */
 
+    //Add common feature codes here
+    void OnStartCommon()
+    {
         // record special Charged event
         Dictionary<string, object> chargeDetails = new Dictionary<string, object>();
         chargeDetails.Add("Amount", 500);
@@ -111,67 +159,10 @@ public class CleverTapUnity : MonoBehaviour
 
         // reset the user profile after a login with a new Identity
         Dictionary<string, string> newProps = new Dictionary<string, string>();
+        newProps.Add("email", "test@test.com");
         newProps.Add("Identity", "123456");
         CleverTapBinding.OnUserLogin(newProps);
 
-        // set a scalar user profile property
-        Dictionary<string, string> props = new Dictionary<string, string>();
-
-#if (UNITY_ANDROID && !UNITY_EDITOR)
-        props.Add("RegistrationSource", "Android");
-#endif
-
-#if (UNITY_IPHONE && !UNITY_EDITOR)
-        props.Add("RegistrationSource", "iOS");
-#endif
-
-        CleverTapBinding.ProfilePush(props);
-
-        // remove a user profile property
-        CleverTapBinding.ProfileRemoveValueForKey("foo");
-
-        // set, add, remove user multi-value (array<string>) property
-        List<string> stringList = new List<string>();
-        stringList.Add("one");
-        stringList.Add("two");
-
-#if (UNITY_IPHONE && !UNITY_EDITOR)
-        CleverTapBinding.ProfileSetMultiValuesForKey("multiIOS", stringList);
-#endif
-
-#if (UNITY_ANDROID && !UNITY_EDITOR)
-        CleverTapBinding.ProfileSetMultiValuesForKey("multiAndroid", stringList);
-#endif
-
-        List<string> stringList1 = new List<string>();
-        stringList1.Add("three");
-        stringList1.Add("four");
-
-#if (UNITY_ANDROID && !UNITY_EDITOR)
-        CleverTapBinding.ProfileAddMultiValuesForKey("multiAndroid", stringList1);
-#endif
-
-#if (UNITY_IPHONE && !UNITY_EDITOR)
-        CleverTapBinding.ProfileAddMultiValuesForKey("multiIOS", stringList1);
-#endif
-
-        List<string> stringList2 = new List<string>();
-        stringList2.Add("two");
-
-#if (UNITY_ANDROID && !UNITY_EDITOR)
-        CleverTapBinding.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
-        CleverTapBinding.ProfileAddMultiValueForKey("multiAndroid", "five");
-        CleverTapBinding.ProfileRemoveMultiValueForKey("multiAndroid", "four");
-        CleverTapBinding.SetOptOut(false);
-        CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
-        CleverTapBinding.CreateNotificationChannel("YourChannelID","YourChannelName","YourChannelDescription",3,true);
-#endif
-
-#if (UNITY_IPHONE && !UNITY_EDITOR)
-        CleverTapBinding.ProfileRemoveMultiValuesForKey("multiIOS", stringList2);
-        CleverTapBinding.ProfileAddMultiValueForKey("multiIOS", "five");
-        CleverTapBinding.ProfileRemoveMultiValueForKey("multiIOS", "four");
-#endif
 
         // get the CleverTap unique install attributionidentifier
         string CleverTapAttributionIdentifier = CleverTapBinding.ProfileGetCleverTapAttributionIdentifier();
@@ -226,6 +217,91 @@ public class CleverTapUnity : MonoBehaviour
             }
         }
     }
+
+    /* --------------------------------------------------------------------------------
+     *                          CLEVERTAP API USAGE IOS SPECIFIC
+     * -------------------------------------------------------------------------------- */
+    // Add code for iOS only features here
+    void OniOSStart()
+    {
+        CleverTap.CleverTapBinding.RecordScreenView("TestScreen");
+
+        // set a scalar user profile property
+        Dictionary<string, string> props = new Dictionary<string, string>();
+
+        props.Add("RegistrationSource", "iOS");
+
+        CleverTapBinding.ProfilePush(props);
+
+        // remove a user profile property
+        CleverTapBinding.ProfileRemoveValueForKey("foo");
+
+        // set, add, remove user multi-value (array<string>) property
+        List<string> stringList = new List<string>();
+        stringList.Add("one");
+        stringList.Add("two");
+
+        CleverTapBinding.ProfileSetMultiValuesForKey("multiIOS", stringList);
+
+        List<string> stringList1 = new List<string>();
+        stringList1.Add("three");
+        stringList1.Add("four");
+
+        CleverTapBinding.ProfileAddMultiValuesForKey("multiIOS", stringList1);
+
+        List<string> stringList2 = new List<string>();
+        stringList2.Add("two");
+
+
+        CleverTapBinding.ProfileRemoveMultiValuesForKey("multiIOS", stringList2);
+        CleverTapBinding.ProfileAddMultiValueForKey("multiIOS", "five");
+        CleverTapBinding.ProfileRemoveMultiValueForKey("multiIOS", "four");
+
+    }
+
+
+    /* --------------------------------------------------------------------------------
+     *                          CLEVERTAP API USAGE ANDROID SPECIFIC
+     * -------------------------------------------------------------------------------- */
+    // Add code for android only features here
+    void OnAndroidStart()
+    {
+        // set a scalar user profile property
+        Dictionary<string, string> props = new Dictionary<string, string>();
+        props.Add("RegistrationSource", "Android");
+
+        CleverTapBinding.ProfilePush(props);
+
+        // remove a user profile property
+        CleverTapBinding.ProfileRemoveValueForKey("foo");
+
+        // set, add, remove user multi-value (array<string>) property
+        List<string> stringList = new List<string>();
+        stringList.Add("one");
+        stringList.Add("two");
+
+        CleverTapBinding.ProfileSetMultiValuesForKey("multiAndroid", stringList);
+
+        List<string> stringList1 = new List<string>();
+        stringList1.Add("three");
+        stringList1.Add("four");
+
+        CleverTapBinding.ProfileAddMultiValuesForKey("multiAndroid", stringList1);
+
+        List<string> stringList2 = new List<string>();
+        stringList2.Add("two");
+
+        CleverTapBinding.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
+        CleverTapBinding.ProfileAddMultiValueForKey("multiAndroid", "five");
+        CleverTapBinding.ProfileRemoveMultiValueForKey("multiAndroid", "four");
+        CleverTapBinding.SetOptOut(false);
+        CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
+    }
+
+
+    /* --------------------------------------------------------------------------------
+     *                          CLEVERTAP API CALLBACKS
+     * -------------------------------------------------------------------------------- */
 
     // handle deep link url
     void CleverTapDeepLinkCallback(string url)
