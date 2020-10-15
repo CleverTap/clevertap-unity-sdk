@@ -5,7 +5,7 @@ import android.content.Intent;
 import com.unity3d.player.UnityPlayerActivity;
 
 
-public class CleverTapOverrideActivity extends AppCompatUnityPlayerActivity {
+public class CleverTapOverrideActivity extends UnityPlayerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -855,6 +855,18 @@ namespace CleverTap {
         CleverTapAPI.CallStatic("initialize", accountID, accountToken, region, unityCurrentActivity);
     }
 
+    public static void LaunchWithCredentials(string accountID, string token, string region) {
+        //no op only supported on ios
+    }
+
+    public static void LaunchWithCredentials(string accountID, string token) {
+        //no op only supported on ios
+    }
+
+    public static void RegisterPush() {
+        //no op only supported on ios
+    }
+
     public static void CreateNotificationChannel(string channelId,string channelName, string channelDescription, int importance, bool showBadge){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
         CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge);

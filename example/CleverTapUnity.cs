@@ -36,11 +36,11 @@ public class CleverTapUnity : MonoBehaviour
 
         //Add Platform Specific Init Code here
 #if (UNITY_IPHONE && !UNITY_EDITOR)
-            OniOSInit()
+            OniOSInit();
 #endif
 
 #if (UNITY_ANDROID && !UNITY_EDITOR)
-            OnAndroidInit()
+            OnAndroidInit();
 #endif
 
         // set to true to stop sending events to CleverTap
@@ -106,11 +106,11 @@ public class CleverTapUnity : MonoBehaviour
         OnStartCommon();
 
 #if (UNITY_IPHONE && !UNITY_EDITOR)
-       OniOSStart()
+       OniOSStart();
 #endif
 
 #if (UNITY_ANDROID && !UNITY_EDITOR)
-       OnAndroidStart()
+       OnAndroidStart();
 #endif
 
     }
