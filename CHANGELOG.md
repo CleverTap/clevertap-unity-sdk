@@ -3,8 +3,8 @@ Change Log
 
 Version 2.1.0 *(16 Oct 2020)*
 -------------------------------------------
-* Updated to CleverTap iOS SDK v3.9.1
-* Updated to CleverTap Android SDK v4.0.0
+* Supports [CleverTap iOS SDK v3.9.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.9.1)
+- Supports **Major release** of [CleverTap Android SDK v4.0.0](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTCORECHANGELOG.md), which will break your existing integration. Please go through [Migration guide](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTV4CHANGES.md) for smooth integration.
 
 Version 2.0.1 *(19 May 2020)*
 -------------------------------------------
