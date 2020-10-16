@@ -11,6 +11,11 @@ Version 1.3.0 *(19 May 2020)*
 * Updated to CleverTap Android SDK v3.8.0
 * Updated to CleverTap iOS SDK v3.8.0
 
+Version 2.0.1 *(19 May 2020)*
+-------------------------------------------
+* Updated to CleverTap Android SDK v3.8.0
+* Updated to CleverTap iOS SDK v3.8.0
+
 Version 1.2.9 *(27 Feb 2020)*
 -------------------------------------------
 * Updated to CleverTap Android SDK v3.6.4
@@ -30,11 +35,6 @@ Version 1.2.5 *(15 Jan 2020)*
 Version 1.2.4 *(31 Oct 2019)*
 -------------------------------------------
 * Exposed method to pass custom install referrer parameters in Android
-
-Version 2.0.1 *(19 May 2020)*
--------------------------------------------
-* Updated to CleverTap Android SDK v3.8.0
-* Updated to CleverTap iOS SDK v3.8.0
 
 Version 2.0.0 *(30 Oct 2019)*
 -------------------------------------------
