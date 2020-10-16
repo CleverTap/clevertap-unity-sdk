@@ -1,17 +1,44 @@
 apply plugin: 'com.android.library'
 
+ext {
+
+    libraryName = 'CleverTapUnityPlugin'
+    artifact = 'clevertapsdk-unity'
+    libraryDescription = 'The CleverTap Unity SDK'
+
+    mindSdkVersionVal = 16
+    compileSdkVersionVal = 29
+    targetSdkVersionVal = compileSdkVersionVal
+    buildToolsVersionVal = "29.0.3"
+
+    libraryVersion = "2.1.0"
+}
+
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion compileSdkVersionVal
+    buildToolsVersion buildToolsVersionVal
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
+        minSdkVersion mindSdkVersionVal
+        targetSdkVersion targetSdkVersionVal
+
+        versionCode libraryVersion.replaceAll('\\.', '').toInteger()
+        versionName libraryVersion
     }
 
     buildTypes {
         release {
             minifyEnabled false
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            if (variant.getName().toLowerCase().contains('release')) {
+                outputFileName = "${artifact}-${libraryVersion}.aar"
+            } else if (variant.getName().toLowerCase().contains('debug')) {
+                outputFileName = "${artifact}-${libraryVersion}-${variant.name}.aar"
+            }
         }
     }
 }
@@ -21,8 +48,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly files('libs/classes.jar')
-    compileOnly files("libs/android-support-v4.jar")
-    implementation 'com.clevertap.android:clevertap-android-sdk:3.8.0'
-    implementation 'com.android.installreferrer:installreferrer:1.0'
+    compileOnly fileTree('libs')
+    implementation 'com.clevertap.android:clevertap-android-sdk:4.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 }
