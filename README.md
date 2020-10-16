@@ -30,6 +30,8 @@
 
   Note:
   On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
+  
+- Add latest `Play Services Resolver` package from [here](https://github.com/googlesamples/unity-jar-resolver). Ignore if it's already there in the project.
 
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
@@ -40,7 +42,7 @@
     ```
     ```
     <meta-data
-        android:name="GCM_SENDER_ID"
+        android:name="FCM_SENDER_ID"
         android:value="id:YOUR_FCM_SENDER_ID"/>
     
     <meta-data
@@ -64,22 +66,17 @@
     -->  
     ```
 
-- Add the following in the `AndroidManifest.xml` file  - 
+- Add the following in the `AndroidManifest.xml` file if not there already  - 
 
     ```
-        <service
-            android:name="com.clevertap.android.sdk.FcmTokenListenerService">
+       <service
+            android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name="com.clevertap.android.sdk.FcmMessageListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
+        
     ```
 
 - Add your `google-services.json` file to the Assets folder of the project.
