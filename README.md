@@ -49,6 +49,8 @@ The script will look through your built application’s `Frameworks` folder and 
   
 > NOTE: On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
 
+- Add latest `Play Services Resolver` package from [here](https://github.com/googlesamples/unity-jar-resolver). Ignore if it's already there in the project.
+
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
 - Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, FCM Sender ID, CleverTap Account Id, CleverTap Token and Deep Link url scheme (if applicable): 
@@ -58,7 +60,7 @@ The script will look through your built application’s `Frameworks` folder and 
     ```
     ```
     <meta-data
-        android:name="GCM_SENDER_ID"
+        android:name="FCM_SENDER_ID"
         android:value="id:YOUR_FCM_SENDER_ID"/>
     
     <meta-data
@@ -82,18 +84,12 @@ The script will look through your built application’s `Frameworks` folder and 
     -->  
     ```
 
-- Add the following in the `AndroidManifest.xml` file  - 
+- Add the following in the `AndroidManifest.xml` file, if not there already  - 
 
     ```
         <service
-            android:name="com.clevertap.android.sdk.FcmTokenListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="com.clevertap.android.sdk.FcmMessageListenerService">
+            android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
