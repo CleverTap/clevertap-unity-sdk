@@ -3,6 +3,13 @@
   <img src="https://github.com/CleverTap/clevertap-unity-sdk/blob/master/example/images/clevertap-logo.png" width="300"/>
 </p>
 
+
+# CleverTap Unity Plugin
+
+<a href="https://github.com/CleverTap/clevertap-unity-sdk/releases">
+    <img src="https://img.shields.io/github/release/CleverTap/clevertap-unity-sdk.svg" />
+</a>
+
 ## 👋 Introduction
 
 The CleverTap Unity Plugin for Mobile Customer Engagement and Analytics solutions.
