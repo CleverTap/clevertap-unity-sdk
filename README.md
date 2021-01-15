@@ -3,14 +3,13 @@
   <img src="https://github.com/CleverTap/clevertap-unity-sdk/blob/master/example/images/clevertap-logo.png" width="300"/>
 </p>
 
-## Unity Plugin for the CleverTap SDK
+## 👋 Introduction
 
-CleverTap provides a Unity Plugin that enables app developers to track, segment, and engage their users.
+The CleverTap Unity Plugin for Mobile Customer Engagement and Analytics solutions.
 
-For more information check out our [website](https://clevertap.com "CleverTap") and [documentation](http://support.clevertap.com "CleverTap Technical Documentation").
+For more information check out our [website](https://clevertap.com/ "CleverTap")  and  [documentation](https://developer.clevertap.com/docs/ "CleverTap Technical Documentation").
 
-| NOTE: If you are using any AndroidX dependencies in your project, refer [v2.0.1](https://github.com/CleverTap/clevertap-unity-sdk/releases/tag/2.0.1) |
-| --- |
+To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 ## Installation and Setup #
 
