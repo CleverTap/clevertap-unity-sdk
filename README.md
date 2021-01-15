@@ -11,7 +11,7 @@ For more information check out our [website](https://clevertap.com/ "CleverTap")
 
 To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
-## Installation and Setup #
+## 🛠 Installation and Setup #
 
 1. Import the CleverTapUnityPlugin.unitypackage into your Unity Project (`Assets` > `Import Package` > `Custom Package`) or manually Copy `Plugin/CleverTapUnity`, `Plugin/PlayServicesResolver` and `Plugin/Plugins/Android` (or copy the files in `Plugin/Plugins/Android` to your existing `Assets/Plugins/Android` directory) into the Assets directory of your Unity Project.
 
@@ -26,7 +26,7 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 4. Edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` to add your calls to CleverTap SDK.  See usage examples in [example/CleverTapUnity.cs](example/CleverTapUnity.cs).  For more information check out our [documentation](https://developer.clevertap.com/docs "CleverTap Technical Documentation").
 
-### iOS Specific Instructions:
+### 👩‍💻 iOS Specific Instructions:
 - If you want to enable Push Notifications, be sure to add the Push Notifications capability to your Xcode project.  
 
     ![alt text](example/images/push_entitle.jpg  "push notifications capability")
@@ -44,7 +44,7 @@ The script will look through your built application’s `Frameworks` folder and 
 
 - Build and run your iOS project.
 
-### Android Specific Instructions:
+### 👨‍💻 Android Specific Instructions:
 - If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
   
 > NOTE: On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
@@ -123,15 +123,15 @@ public static AndroidJavaObject CleverTap {
 ```
 - Build your app or Android project as usual.
 
-## Example Usage #
+## 💻 Example Usage #
 
 A [demo application](https://github.com/CleverTap/clevertap-unity-sdk/tree/master/example) showing the integration of our Plugin.
 
-## Changelog #
+## 🆕 Changelog #
 
 Check out the CleverTap Unity plugin SDK [Change Log](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/CHANGELOG.md) here.
 
-## Questions? #
+## ⁉️ Questions? #
 
  If you have questions or concerns, you can reach out to the CleverTap support team from the CleverTap Dashboard. 
  
