@@ -5,7 +5,7 @@
 
 
 # CleverTap Unity Plugin
-
+[![codebeat badge](https://codebeat.co/badges/f66e4e0c-4989-4caa-b0ec-ee405c30cb4d)](https://codebeat.co/projects/github-com-clevertap-clevertap-unity-sdk-master)
 <a href="https://github.com/CleverTap/clevertap-unity-sdk/releases">
     <img src="https://img.shields.io/github/release/CleverTap/clevertap-unity-sdk.svg" />
 </a>
