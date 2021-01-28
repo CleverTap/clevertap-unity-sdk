@@ -1,110 +1,110 @@
 Change Log
 ==========
 
-Version 2.1.1 *(3 February, 2020)*
+Version 2.1.1 *(29 January, 2021)*
 -------------------------------------------
 - Update iOS CleverTapPostBuildProcessor.cs to fix Project Target issue on **UNITY_2019_3_OR_NEWER**
 
-Version 2.1.0 *(16 Oct 2020)*
+Version 2.1.0 *(16 October, 2020)*
 -------------------------------------------
-* Supports [CleverTap iOS SDK v3.9.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.9.1)
+- Supports [CleverTap iOS SDK v3.9.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.9.1)
 - Supports **Major release** of [CleverTap Android SDK v4.0.0](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTCORECHANGELOG.md), which will break your existing integration. Please go through [Migration guide](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTV4CHANGES.md) for smooth integration.
 
-Version 1.3.0 *(19 May 2020)*
+Version 1.3.0 *(19 May, 2020)*
 -------------------------------------------
-* Updated to CleverTap Android SDK v3.8.0
-* Updated to CleverTap iOS SDK v3.8.0
+- Updated to CleverTap Android SDK v3.8.0
+- Updated to CleverTap iOS SDK v3.8.0
 
-Version 2.0.1 *(19 May 2020)*
+Version 2.0.1 *(19 May, 2020)*
 -------------------------------------------
-* Updated to CleverTap Android SDK v3.8.0
-* Updated to CleverTap iOS SDK v3.8.0
-* Supports Android X
+- Updated to CleverTap Android SDK v3.8.0
+- Updated to CleverTap iOS SDK v3.8.0
+- Supports Android X
 
-Version 1.2.9 *(27 Feb 2020)*
+Version 1.2.9 *(27 February, 2020)*
 -------------------------------------------
 * Updated to CleverTap Android SDK v3.6.4
 
-Version 1.2.7 *(24 Feb 2020)*
+Version 1.2.7 *(24 February, 2020)*
 -------------------------------------------
 * Updated to CleverTap Android SDK v3.6.3
 
-Version 1.2.6 *(20 Feb 2020)*
+Version 1.2.6 *(20 February, 2020)*
 -------------------------------------------
 * Bug fixes
 
-Version 1.2.5 *(15 Jan 2020)*
+Version 1.2.5 *(15 January, 2020)*
 -------------------------------------------
 * Bug fixes and performance improvement
 
-Version 1.2.4 *(31 Oct 2019)*
+Version 1.2.4 *(31 October, 2019)*
 -------------------------------------------
 * Exposed method to pass custom install referrer parameters in Android
 
-Version 2.0.0 *(30 Oct 2019)*
+Version 2.0.0 *(30 October, 2019)*
 -------------------------------------------
 * Update Play Services Resolver to support Androidx dependencies
 
-Version 1.2.3 *(11 Oct 2019)*
+Version 1.2.3 *(11 October, 2019)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.6.0
 * Update to CleverTap iOS SDK v3.7.0
 
-Version 1.2.2 *(30 May 2019)*
+Version 1.2.2 *(30 May, 2019)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.5.1
 * Update to CleverTap iOS SDK v3.5.0
 
-Version 1.2.1 *(08 March 2019)*
+Version 1.2.1 *(08 March, 2019)*
 -------------------------------------------
 * Update Play Services Resolver to support FCM in Android
 
-Version 1.2.0 *(15 February 2019)*
+Version 1.2.0 *(15 February, 2019)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.4.2
 * Update to CleverTap iOS SDK v3.4.1
 
-Version 1.1.5 *(13 November 2018)*
+Version 1.1.5 *(13 November, 2018)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.3.2
 
-Version 1.1.4 *(01 November 2018)*
+Version 1.1.4 *(01 November, 2018)*
 -------------------------------------------
 * Update to CleverTap Android SDK v3.3.1
 * Update to CleverTap iOS SDK v3.3.0
 
-Version 1.1.3 *(26 September 2018)*
+Version 1.1.3 *(26 September, 2018)*
 -------------------------------------------
 * Update to CleverTap iOS SDK v 3.2.2
 
-Version 1.1.2 *(12 September 2018)*
+Version 1.1.2 *(12 September, 2018)*
 -------------------------------------------
 * Update to CleverTap Android SDK v 3.2.0
 * Update to CleverTap iOS SDK v 3.2.0
 
-Version 1.1.1 *(22 May 2018)*
+Version 1.1.1 *(22 May, 2018)*
 -------------------------------------------
 * Update to CleverTap Android SDK v 3.1.10
 
-Version 1.1.0 *(18 May 2018)*
+Version 1.1.0 *(18 May, 2018)*
 -------------------------------------------
 * Update to CleverTap Android SDK v 3.1.9
 * Update to CleverTap iOS SDK v 3.1.7
 
-Version 1.0.9 *(15 January 2018)*
+Version 1.0.9 *(15 January, 2018)*
 -------------------------------------------
 * Update to CleverTap Android SDK v 3.1.8
 
 
-Version 1.0.8 *(13 October 2017)*
+Version 1.0.8 *(13 October, 2017)*
 -------------------------------------------
 * Update to CleverTap iOS SDK v 3.1.6
 
-Version 1.0.7 *(10 October 2017)*
+Version 1.0.7 *(10 October, 2017)*
 -------------------------------------------
 * Update to CleverTapAndroidSDK v 3.1.7
 
-Version 1.0.6 *(21 September 2017)*
+Version 1.0.6 *(21 September, 2017)*
 -------------------------------------------
 *(Supports CleverTap 3.1.5/3.1.6)*
 
