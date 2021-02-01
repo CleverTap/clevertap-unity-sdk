@@ -40,7 +40,9 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
     
 - Configure the Framework
    - In Xcode, go to your Targets, under your app’s name
-   - Under General, Navigate to Frameworks, Libraries and Embedded Content, please ensure that **CleverTapSDK** and **SDWebImage** frameworks are marked as **Embed & Sign**
+   - Under General, Navigate to Frameworks, Libraries and Embedded Content, please ensure that **CleverTapSDK** and **SDWebImage** frameworks are marked as **Embed & Sign** and **Embedded** to your project.
+   
+ ![alt text](example/images/ct_xcode12.x_framework.png  "frameworks")
 
 - Add a run script to your build phases, In Xcode, go to your Targets, under your app’s name, select Build Phases after   embed frameworks, add a run script phase and set it to use `/bin/sh` and the [script found here](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh).
 
