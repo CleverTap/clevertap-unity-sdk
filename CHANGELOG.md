@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 2.1.1 *(29 January, 2021)*
+Version 2.1.1 *(1 February, 2021)*
 -------------------------------------------
 - Update iOS CleverTapPostBuildProcessor.cs to fix Project Target issue on **UNITY_2019_3_OR_NEWER**
 - Updated to CleverTap Android SDK v4.0.2
