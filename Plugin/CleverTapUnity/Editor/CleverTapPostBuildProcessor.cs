@@ -99,7 +99,7 @@ public static class CleverTapPostBuildProcessor
 			rootDict.SetString("CleverTapAccountID", CLEVERTAP_ACCOUNT_ID);
 			rootDict.SetString("CleverTapToken", CLEVERTAP_ACCOUNT_TOKEN);
 			rootDict.SetString("CleverTapRegion", CLEVERTAP_ACCOUNT_REGION);
-			rootDict.SetString("CleverTapDisableIDFV", CLEVERTAP_DISABLE_IDFV);
+			rootDict.SetBoolean("CleverTapDisableIDFV", CLEVERTAP_DISABLE_IDFV);
 
 			// Write to file
 			File.WriteAllText(plistPath, plist.WriteToString());
