@@ -30,8 +30,6 @@ public class CleverTapUnity : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
 
-        //set the UI editor flag before getting the Clevertap instance, defaults to false.
-        CleverTapBinding.SetUIEditorConnectionEnabled(true);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 
         //Add Platform Specific Init Code here
@@ -55,11 +53,7 @@ public class CleverTapUnity : MonoBehaviour
         //app inbox
         CleverTapBinding.InitializeInbox();
         Debug.Log("InboxInit started");
-        //registering Dynamic Variables
-        CleverTapBinding.RegisterBooleanVariable("booleanVar");
-        CleverTapBinding.RegisterDoubleVariable("doubleVar");
-        CleverTapBinding.RegisterListOfDoubleVariable("listdouble");
-        CleverTapBinding.RegisterMapOfDoubleVariable("mapDouble");
+        
         CleverTapBinding.RecordEvent("Test Unity Event");
         //Invoke("LaunchInbox",30.0f);
 
@@ -74,7 +68,7 @@ public class CleverTapUnity : MonoBehaviour
     {
         CleverTapBinding.LaunchWithCredentials(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
 
-        // register for push notificationssetUIEditorConnectionEnabled
+        // register for push notifications
         CleverTap.CleverTapBinding.RegisterPush();
         // set to 0 to remove icon badge
         CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
@@ -408,21 +402,5 @@ public class CleverTapUnity : MonoBehaviour
     void CleverTapInboxMessagesDidUpdateCallback()
     {
         Debug.Log("unity received inbox messages updated");
-    }
-
-    // returns the custom data associated with an dynamic variable updates
-    void CleverTapExperimentMessagesDidUpdateCallback()
-    {
-        Debug.Log("unity received experiemnt messages updated");
-
-        bool boolVar = CleverTapBinding.GetBooleanVariable("booleanVar", false);
-        double doubleVar = CleverTapBinding.GetDoubleVariable("doubleVar", 1.5);
-        List<double> listDouble = CleverTapBinding.GetListOfDoubleVariable("listdouble", null);
-        Dictionary<string, double> mapDouble = CleverTapBinding.GetMapOfDoubleVariable("mapDouble", null);
-
-        Debug.Log("Bool-" + boolVar);
-        Debug.Log("doubleVar-" + doubleVar);
-        Debug.Log("listDouble-" + listDouble);
-        Debug.Log("mapDouble-" + mapDouble);
     }
 }
