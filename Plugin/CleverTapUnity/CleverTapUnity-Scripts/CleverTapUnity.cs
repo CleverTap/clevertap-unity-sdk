@@ -7,6 +7,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using CleverTap;
 using CleverTap.Utilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class CleverTapUnity: MonoBehaviour {
 
@@ -156,4 +159,10 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapFeatureFlagsUpdated(string message) {
         Debug.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
+
+    #if UNITY_EDITOR
+    private void OnValidate() {
+        EditorPrefs.SetBool("CLEVERTAP_DISABLE_IDFV", CLEVERTAP_DISABLE_IDFV);
+    }
+    #endif
 }
