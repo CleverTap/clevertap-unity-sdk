@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.1.2 *(14 May, 2021)*
+-------------------------------------------
+- Updated to [CleverTap iOS SDK v3.9.4](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.9.4)
+- Updated to CleverTap Android SDK v4.1.1
+
 Version 2.1.1 *(1 February, 2021)*
 -------------------------------------------
 - Update iOS CleverTapPostBuildProcessor.cs to fix Project Target issue on **UNITY_2019_3_OR_NEWER**
