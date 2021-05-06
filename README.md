@@ -107,8 +107,6 @@ The script will look through your built application’s `Frameworks` folder and 
 
 - Add your `google-services.json` file to the Assets folder of the project.
 
-- To enable A/B UI editor, edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapBinding.cs` and `CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true)` call just before getting the clevertap instance.
-
 **Code snippet for the same:**
 
 ```
@@ -116,9 +114,6 @@ public static AndroidJavaObject CleverTap {
         get {
             if (clevertap == null) {
                 AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-                
-                //set the UI editor flag before getting the Clevertap instance, defaults to false.
-                CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true);
                 
                 clevertap = CleverTapAPI.CallStatic<AndroidJavaObject>("getInstance", context);
             }

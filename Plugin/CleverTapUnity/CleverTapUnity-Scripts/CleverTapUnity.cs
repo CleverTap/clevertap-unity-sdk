@@ -7,6 +7,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using CleverTap;
 using CleverTap.Utilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class CleverTapUnity: MonoBehaviour {
 
@@ -15,6 +18,7 @@ public class CleverTapUnity: MonoBehaviour {
     public String CLEVERTAP_ACCOUNT_REGION = "";
     public int CLEVERTAP_DEBUG_LEVEL = 0;
     public bool CLEVERTAP_ENABLE_PERSONALIZATION = true;
+    public bool CLEVERTAP_DISABLE_IDFV;
 
     void Awake(){
         #if (UNITY_IPHONE && !UNITY_EDITOR)
@@ -156,7 +160,9 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
-    void CleverTapExperimentMessagesDidUpdateCallback(){
-        Debug.Log("unity received experiment messages updated");
+    #if UNITY_EDITOR
+    private void OnValidate() {
+        EditorPrefs.SetBool("CLEVERTAP_DISABLE_IDFV", CLEVERTAP_DISABLE_IDFV);
     }
+    #endif
 }

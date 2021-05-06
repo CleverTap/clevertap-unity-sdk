@@ -62,7 +62,6 @@ public static class CleverTapPostBuildProcessor
 	[PostProcessBuild(99)] 
 	public static void OnPostProcessBuild(BuildTarget target, string path)
 	{
-
 		if (target == BuildTarget.iOS) {
 			string projPath = PBXProject.GetPBXProjectPath(path);
 			PBXProject proj = new PBXProject();
@@ -98,6 +97,9 @@ public static class CleverTapPostBuildProcessor
 			rootDict.SetString("CleverTapAccountID", CLEVERTAP_ACCOUNT_ID);
 			rootDict.SetString("CleverTapToken", CLEVERTAP_ACCOUNT_TOKEN);
 			rootDict.SetString("CleverTapRegion", CLEVERTAP_ACCOUNT_REGION);
+			
+			// Write Disable IDFV Flag
+			rootDict.SetBoolean("CleverTapDisableIDFV", EditorPrefs.GetBool("CLEVERTAP_DISABLE_IDFV"));
 
 			// Write to file
 			File.WriteAllText(plistPath, plist.WriteToString());
