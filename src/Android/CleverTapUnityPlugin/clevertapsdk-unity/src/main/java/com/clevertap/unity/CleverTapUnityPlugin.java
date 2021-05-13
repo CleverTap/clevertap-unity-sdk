@@ -7,19 +7,17 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
-import com.clevertap.android.sdk.CTExperimentsListener;
 import com.clevertap.android.sdk.CTFeatureFlagsListener;
 import com.clevertap.android.sdk.CTInboxListener;
-import com.clevertap.android.sdk.CTInboxMessage;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.EventDetail;
 import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
@@ -27,6 +25,8 @@ import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
+import com.clevertap.android.sdk.events.EventDetail;
+import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.unity3d.player.UnityPlayer;
@@ -41,7 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
-        CTInboxListener, CTExperimentsListener, InAppNotificationButtonListener,
+        CTInboxListener,/* CTExperimentsListener,*/ InAppNotificationButtonListener,
         InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
@@ -175,7 +175,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setInAppNotificationListener(this);
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
-                clevertap.setCTExperimentsListener(this);
                 clevertap.setInboxMessageButtonListener(this);
                 clevertap.setInAppNotificationButtonListener(this);
                 clevertap.setDisplayUnitListener(this);
@@ -198,6 +197,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithSound(Context context, String channelId, String channelName,
             String channelDescription, int importance, boolean showBadge, String sound) {
         try {
@@ -208,6 +208,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithGroup(Context context, String channelId, String channelName,
             String channelDescription, int importance, String groupId, boolean showBadge) {
         try {
@@ -218,6 +219,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithGroupAndSound(Context context, String channelId,
             String channelName, String channelDescription, int importance, String groupId, boolean showBadge,
             String sound) {
@@ -229,6 +231,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelGroup(Context context, String groupId, String groupName) {
         try {
             CleverTapAPI.createNotificationChannelGroup(context, groupId, groupName);
@@ -237,6 +240,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void deleteNotificationChannel(Context context, String channelId) {
         try {
             CleverTapAPI.deleteNotificationChannel(context, channelId);
@@ -245,6 +249,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void deleteNotificationChannelGroup(Context context, String groupId) {
         try {
             CleverTapAPI.deleteNotificationChannelGroup(context, groupId);
@@ -325,14 +330,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Log.e(LOG_TAG, "profilePush error", t);
         }
     }
-
+/*
     public void profilePushFacebookUser(final String jsonString) {
         try {
             clevertap.pushFacebookUser(new JSONObject(jsonString));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profilePushFacebookUser error", t);
         }
-    }
+    }*/
 
     public String profileGet(final String key) {
         try {
@@ -562,11 +567,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public void pushInboxNotificationClickedEventForId(String messageId) {
         clevertap.pushInboxNotificationClickedEvent(messageId);
     }
-
+/*
     public static void setUIEditorConnectionEnabled(boolean enabled) {
         Log.d(LOG_TAG, "setUIEditorConnectionEnabled-" + enabled);
         CleverTapAPI.setUIEditorConnectionEnabled(enabled);
-    }
+    }*/
 
     public void setLibrary(String library) {
         try {
@@ -575,7 +580,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Log.e(LOG_TAG, "setLibrary error", e);
         }
     }
-
+/*
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void registerBooleanVariable(String name) {
         try {
@@ -802,7 +807,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Log.e(LOG_TAG, "getMapOfStringVariable error", e);
         }
         return defaultValue;
-    }
+    }*/
 
     public void pushInstallReferrer(String source, String medium, String campaign) {
         try {
