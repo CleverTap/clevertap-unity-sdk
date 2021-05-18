@@ -63,14 +63,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
 
-    private static final String CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE
-            = "CleverTapExperimentMessagesDidUpdateCallback";
+    private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
 
-    private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapOnInboxButtonClicked";
+    private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
 
-    private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapOnInAppButtonClicked";
-
-    private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapDisplayUnitsUpdated";
+    private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapNativeDisplayUnitsUpdated";
 
     private static final String CLEVERTAP_FEATURE_FLAG_UPDATED = "CleverTapFeatureFlagsUpdated";
 
@@ -961,12 +958,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public void inboxMessagesDidUpdate() {
         final String json = "{CleverTap App Inbox Messages Updated}";
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
-    }
-
-    //Dynamic Vars Listener
-    public void CTExperimentsUpdated() {
-        final String json = "{CleverTap App Experiment Messages Updated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE, json);
     }
 
     //Inbox Button Click Listener
