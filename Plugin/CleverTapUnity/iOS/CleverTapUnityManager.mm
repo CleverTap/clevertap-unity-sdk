@@ -142,14 +142,6 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [clevertap profilePush:properties];
 }
 
-- (void)profilePushGraphUser:(NSDictionary *)fbGraphUser {
-    [clevertap profilePushGraphUser:fbGraphUser];
-}
-
-- (void)profilePushGooglePlusUser:(NSDictionary *)googleUser {
-    [clevertap profilePushGooglePlusUser:googleUser];
-}
-
 - (id)profileGet:(NSString *)propertyName {
     return [clevertap profileGet:propertyName];
 }
