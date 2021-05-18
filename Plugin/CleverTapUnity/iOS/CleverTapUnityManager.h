@@ -25,7 +25,7 @@
 - (void)setOffline:(BOOL)enabled;
 
 
-#pragma mark - Opt-out API
+#pragma mark - Opt-out APIs
 
 - (void)setOptOut:(BOOL)enabled;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
@@ -41,8 +41,6 @@
 - (void)profileAddMultiValues:(NSArray<NSString *> *)values forKey:(NSString*)key;
 - (void)profileRemoveMultiValue:(NSString *)value forKey:(NSString *)key;
 - (void)profileRemoveMultiValues:(NSArray<NSString *> *)values forKey:(NSString*)key;
-- (void)profilePushGraphUser:(NSDictionary *)fbGraphUser;
-- (void)profilePushGooglePlusUser:(NSDictionary *)googleUser;
 - (id)profileGet:(NSString *)propertyName;
 - (NSString *)profileGetCleverTapID;
 - (NSString *)profileGetCleverTapAttributionIdentifier;
