@@ -7,7 +7,6 @@
 #import <CleverTapSDK/CleverTap+ProductConfig.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 
-
 static CleverTap *clevertap;
 
 static NSString * kCleverTapGameObjectName = @"CleverTapUnity";
@@ -661,9 +660,9 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     }
     else {
         jsonDict = @{ key: value.jsonValue };
-}
-
-return jsonDict;
+    }
+    
+    return jsonDict;
 }
 
 - (double)getProductConfigLastFetchTimeStamp {
@@ -686,6 +685,7 @@ return jsonDict;
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue {
     return [[clevertap featureFlags] get:key withDefaultValue:defaultValue];
 }
+
 
 #pragma mark - Private Helpers
 

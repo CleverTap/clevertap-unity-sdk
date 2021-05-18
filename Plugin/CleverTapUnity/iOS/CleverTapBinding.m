@@ -442,7 +442,7 @@ void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId) {
 #pragma mark - Native Display
 
 char* CleverTap_getAllDisplayUnits() {
- 
+    
     id ret = [[CleverTapUnityManager sharedInstance] getAllDisplayUnits];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
@@ -504,9 +504,9 @@ char* CleverTap_getProductConfigValueFor(const char* key) {
     id ret = [[CleverTapUnityManager sharedInstance] getProductConfigValueFor:clevertap_stringToNSString(key)];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
-       return NULL;
-   }
-   return clevertap_cStringCopy([jsonString UTF8String]);
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
 double CleverTap_getProductConfigLastFetchTimeStamp() {
