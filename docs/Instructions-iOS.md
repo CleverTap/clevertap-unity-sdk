@@ -17,3 +17,10 @@ The script will look through your built application’s `Frameworks` folder and 
   
 
 - Build and run your iOS project.
+
+
+## CleverTap Disable IDFV Usage
+
+From CleverTap Unity SDK 2.1.2 onwards, you can disable the usage of IDFV by checking `CLEVERTAP_DISABLE_IDFV` as shown below 
+
+By default, the value of `CLEVERTAP_DISABLE_IDFV` is unchecked which means CleverTap will continue to use the vendor identifier for the purpose of profile creation.
