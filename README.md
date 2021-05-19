@@ -33,7 +33,7 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 4. Edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` to add your calls to CleverTap SDK.  See usage examples in [example/CleverTapUnity.cs](example/CleverTapUnity.cs).  For more information check out our [documentation](https://developer.clevertap.com/docs "CleverTap Technical Documentation").
 
-5. For more information check out Android Specific Instructions [here](docs/Instructions-Android.md) and iOS Specific Instructions [here](docs/Instructions-iOS.md).
+5. For more details around setup check out Android Specific Instructions [here](docs/Instructions-Android.md) and iOS Specific Instructions [here](docs/Instructions-iOS.md).
 
 ## 💻 Example Usage #
 
