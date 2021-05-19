@@ -1,4 +1,4 @@
-### 👨‍💻 Android Specific Instructions:
+## 👨‍💻 Android Specific Instructions:
 - If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
   
 > NOTE: On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
