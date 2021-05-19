@@ -1,25 +1,21 @@
 package com.clevertap.unity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
-import com.clevertap.android.sdk.CTExperimentsListener;
 import com.clevertap.android.sdk.CTFeatureFlagsListener;
 import com.clevertap.android.sdk.CTInboxListener;
-import com.clevertap.android.sdk.CTInboxMessage;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.EventDetail;
 import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
@@ -27,6 +23,8 @@ import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
+import com.clevertap.android.sdk.events.EventDetail;
+import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.unity3d.player.UnityPlayer;
@@ -41,7 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
-        CTInboxListener, CTExperimentsListener, InAppNotificationButtonListener,
+        CTInboxListener, InAppNotificationButtonListener,
         InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
@@ -63,14 +61,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
 
-    private static final String CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE
-            = "CleverTapExperimentMessagesDidUpdateCallback";
+    private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
 
-    private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapOnInboxButtonClicked";
+    private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
 
-    private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapOnInAppButtonClicked";
-
-    private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapDisplayUnitsUpdated";
+    private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapNativeDisplayUnitsUpdated";
 
     private static final String CLEVERTAP_FEATURE_FLAG_UPDATED = "CleverTapFeatureFlagsUpdated";
 
@@ -175,7 +170,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setInAppNotificationListener(this);
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
-                clevertap.setCTExperimentsListener(this);
                 clevertap.setInboxMessageButtonListener(this);
                 clevertap.setInAppNotificationButtonListener(this);
                 clevertap.setDisplayUnitListener(this);
@@ -198,6 +192,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithSound(Context context, String channelId, String channelName,
             String channelDescription, int importance, boolean showBadge, String sound) {
         try {
@@ -208,6 +203,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithGroup(Context context, String channelId, String channelName,
             String channelDescription, int importance, String groupId, boolean showBadge) {
         try {
@@ -218,6 +214,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithGroupAndSound(Context context, String channelId,
             String channelName, String channelDescription, int importance, String groupId, boolean showBadge,
             String sound) {
@@ -229,6 +226,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelGroup(Context context, String groupId, String groupName) {
         try {
             CleverTapAPI.createNotificationChannelGroup(context, groupId, groupName);
@@ -237,6 +235,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void deleteNotificationChannel(Context context, String channelId) {
         try {
             CleverTapAPI.deleteNotificationChannel(context, channelId);
@@ -245,6 +244,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    @RequiresApi(api = VERSION_CODES.O)
     public static void deleteNotificationChannelGroup(Context context, String groupId) {
         try {
             CleverTapAPI.deleteNotificationChannelGroup(context, groupId);
@@ -325,14 +325,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Log.e(LOG_TAG, "profilePush error", t);
         }
     }
-
+/*
     public void profilePushFacebookUser(final String jsonString) {
         try {
             clevertap.pushFacebookUser(new JSONObject(jsonString));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profilePushFacebookUser error", t);
         }
-    }
+    }*/
 
     public String profileGet(final String key) {
         try {
@@ -563,245 +563,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         clevertap.pushInboxNotificationClickedEvent(messageId);
     }
 
-    public static void setUIEditorConnectionEnabled(boolean enabled) {
-        Log.d(LOG_TAG, "setUIEditorConnectionEnabled-" + enabled);
-        CleverTapAPI.setUIEditorConnectionEnabled(enabled);
-    }
-
     public void setLibrary(String library) {
         try {
             clevertap.setLibrary(library);
         } catch (Exception e) {
             Log.e(LOG_TAG, "setLibrary error", e);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerBooleanVariable(String name) {
-        try {
-            clevertap.registerBooleanVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getBooleanVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerDoubleVariable(String name) {
-        try {
-            clevertap.registerDoubleVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerDoubleVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerIntegerVariable(String name) {
-        try {
-            clevertap.registerIntegerVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerIntegerVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerStringVariable(String name) {
-        try {
-            clevertap.registerStringVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerStringVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerListOfBooleanVariable(String name) {
-        try {
-            clevertap.registerListOfBooleanVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerListOfBooleanVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerListOfDoubleVariable(String name) {
-        try {
-            clevertap.registerListOfDoubleVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerListOfDoubleVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerListOfIntegerVariable(String name) {
-        try {
-            clevertap.registerListOfIntegerVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerListOfIntegerVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerListOfStringVariable(String name) {
-        try {
-            clevertap.registerListOfStringVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerListOfStringVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerMapOfBooleanVariable(String name) {
-        try {
-            clevertap.registerMapOfBooleanVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerMapOfBooleanVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerMapOfDoubleVariable(String name) {
-        try {
-            clevertap.registerMapOfDoubleVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerMapOfDoubleVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerMapOfIntegerVariable(String name) {
-        try {
-            clevertap.registerMapOfIntegerVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerMapOfIntegerVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void registerMapOfStringVariable(String name) {
-        try {
-            clevertap.registerMapOfStringVariable(name);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "registerMapOfStringVariable error", e);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public boolean getBooleanVariable(String name, boolean defaultValue) {
-        try {
-            return clevertap.getBooleanVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getBooleanVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public double getDoubleVariable(String name, double defaultValue) {
-        try {
-            return clevertap.getDoubleVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getDoubleVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public int getIntegerVariable(String name, int defaultValue) {
-        try {
-            return clevertap.getIntegerVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getIntegerVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getStringVariable(String name, String defaultValue) {
-        try {
-            return clevertap.getStringVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getStringVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public List<Boolean> getListOfBooleanVariable(String name, List<Boolean> defaultValue) {
-        try {
-            return clevertap.getListOfBooleanVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getListOfBooleanVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public List<Double> getListOfDoubleVariable(String name, List<Double> defaultValue) {
-        try {
-            return clevertap.getListOfDoubleVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getListOfDoubleVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public List<Integer> getListOfIntegerVariable(String name, List<Integer> defaultValue) {
-        try {
-            return clevertap.getListOfIntegerVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getListOfIntegerVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public List<String> getListOfStringVariable(String name, List<String> defaultValue) {
-        try {
-            return clevertap.getListOfStringVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getListOfStringVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public Map<String, Boolean> getMapOfBooleanVariable(String name, Map<String, Boolean> defaultValue) {
-        try {
-            return clevertap.getMapOfBooleanVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getMapOfBooleanVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public Map<String, Double> getMapOfDoubleVariable(String name, Map<String, Double> defaultValue) {
-        try {
-            return clevertap.getMapOfDoubleVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getMapOfDoubleVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public Map<String, Integer> getMapOfIntegerVariable(String name, Map<String, Integer> defaultValue) {
-        try {
-            return clevertap.getMapOfIntegerVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getMapOfIntegerVariable error", e);
-        }
-        return defaultValue;
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public Map<String, String> getMapOfStringVariable(String name, Map<String, String> defaultValue) {
-        try {
-            return clevertap.getMapOfStringVariable(name, defaultValue);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "getMapOfStringVariable error", e);
-        }
-        return defaultValue;
     }
 
     public void pushInstallReferrer(String source, String medium, String campaign) {
@@ -958,12 +725,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
     }
 
-    //Dynamic Vars Listener
-    public void CTExperimentsUpdated() {
-        final String json = "{CleverTap App Experiment Messages Updated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_EXPERIMENT_MESSAGES_DID_UPDATE, json);
-    }
-
     //Inbox Button Click Listener
     public void onInboxButtonClick(HashMap<String, String> payload) {
         JSONObject jsonObject = new JSONObject(payload);
@@ -1090,6 +851,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return json;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static CTInboxStyleConfig toStyleConfig(JSONObject object) throws JSONException {
         CTInboxStyleConfig styleConfig = new CTInboxStyleConfig();
 
@@ -1125,6 +887,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
         if (object.has("tabBackgroundColor")) {
             styleConfig.setTabBackgroundColor(object.getString("tabBackgroundColor"));
+        }
+        if (object.has("firstTabTitle")) {
+            styleConfig.setFirstTabTitle(object.getString("firstTabTitle"));
         }
         if (object.has("tabs")) {
             JSONArray tabsArray = object.getJSONArray("tabs");

@@ -7,11 +7,11 @@ ext {
     libraryDescription = 'The CleverTap Unity SDK'
 
     mindSdkVersionVal = 16
-    compileSdkVersionVal = 29
+    compileSdkVersionVal = 30
     targetSdkVersionVal = compileSdkVersionVal
-    buildToolsVersionVal = "29.0.3"
+    buildToolsVersionVal = "30.0.3"
 
-    libraryVersion = "2.1.1"
+    libraryVersion = "2.1.2"
 }
 
 android {
@@ -49,7 +49,7 @@ repositories {
 
 dependencies {
     compileOnly fileTree('libs')
-    implementation 'com.clevertap.android:clevertap-android-sdk:4.0.2'
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.clevertap.android:clevertap-android-sdk:4.1.1'
+    implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }

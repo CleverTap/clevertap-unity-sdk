@@ -191,16 +191,6 @@ void CleverTap_profilePush(const char* properties) {
     [[CleverTapUnityManager sharedInstance] profilePush:profileProperties];
 }
 
-void CleverTap_profilePushGraphUser(const char* fbGraphUser) {
-    NSMutableDictionary *user = clevertap_dictFromJsonString(fbGraphUser);
-    [[CleverTapUnityManager sharedInstance] profilePush:user];
-}
-
-void CleverTap_profilePushGooglePlusUser(const char* googleUser) {
-    NSMutableDictionary *user = clevertap_dictFromJsonString(googleUser);
-    [[CleverTapUnityManager sharedInstance] profilePush:user];
-}
-
 char* CleverTap_profileGet(const char* key) {
     id ret = [[CleverTapUnityManager sharedInstance] profileGet:clevertap_stringToNSString(key)];
     
@@ -452,7 +442,7 @@ void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId) {
 #pragma mark - Native Display
 
 char* CleverTap_getAllDisplayUnits() {
- 
+    
     id ret = [[CleverTapUnityManager sharedInstance] getAllDisplayUnits];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
@@ -514,9 +504,9 @@ char* CleverTap_getProductConfigValueFor(const char* key) {
     id ret = [[CleverTapUnityManager sharedInstance] getProductConfigValueFor:clevertap_stringToNSString(key)];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
-       return NULL;
-   }
-   return clevertap_cStringCopy([jsonString UTF8String]);
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
 double CleverTap_getProductConfigLastFetchTimeStamp() {
@@ -532,160 +522,4 @@ void CleverTap_resetProductConfig() {
 
 BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
     return [[CleverTapUnityManager sharedInstance] get:clevertap_stringToNSString(key) withDefaultValue:defaultValue];
-}
-
-
-#pragma mark - AB Testing
-
-void CleverTap_setUIEditorConnectionEnabled(const BOOL enabled) {
-    [[CleverTapUnityManager sharedInstance] setUIEditorConnectionEnabled:enabled];
-}
-
-void CleverTap_registerStringVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerStringVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerBooleanVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerBooleanVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerIntegerVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerIntegerVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerDoubleVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerDoubleVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerMapOfStringVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerMapOfStringVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerMapOfBooleanVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerMapOfBooleanVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerMapOfIntegerVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerMapOfIntegerVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerMapOfDoubleVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerMapOfDoubleVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerListOfStringVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerListOfStringVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerListOfBooleanVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerListOfBooleanVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerListOfIntegerVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerListOfIntegerVariable:clevertap_stringToNSString(name)];
-}
-
-void CleverTap_registerListOfDoubleVariable(const char* name) {
-   [[CleverTapUnityManager sharedInstance] registerListOfDoubleVariable:clevertap_stringToNSString(name)];
-}
-
-BOOL CleverTap_getBooleanVariable(const char* name, const BOOL defaultValue) {
-   return [[CleverTapUnityManager sharedInstance] getBooleanVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
-}
-
-char* CleverTap_getStringVariable(const char* name, const char* defaultValue) {
-    NSString *ret = [[CleverTapUnityManager sharedInstance] getStringVariable:clevertap_stringToNSString(name) defaultValue:clevertap_stringToNSString(defaultValue)];
-    
-    if (ret == nil) {
-        return NULL;
-    }
-    return clevertap_cStringCopy([ret UTF8String]);
-}
-
-int CleverTap_getIntegerVariable(const char* name, const int defaultValue) {
-   return [[CleverTapUnityManager sharedInstance] getIntegerVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
-}
-
-double CleverTap_getDoubleVariable(const char* name, const double defaultValue) {
-   return [[CleverTapUnityManager sharedInstance] getDoubleVariable:clevertap_stringToNSString(name) defaultValue:defaultValue];
-}
-
-char* CleverTap_getMapOfBooleanVariable(const char* name, const char* defaultValue) {
-      NSMutableDictionary *_defaultValue = clevertap_dictFromJsonString(defaultValue);
-      id ret = [[CleverTapUnityManager sharedInstance] getMapOfBooleanVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-      NSString *jsonString = clevertap_toJsonString(ret);
-      if (jsonString == nil) {
-          return NULL;
-      }
-      return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char* CleverTap_getMapOfStringVariable(const char* name, const char* defaultValue) {
-       NSMutableDictionary *_defaultValue = clevertap_dictFromJsonString(defaultValue);
-       id ret = [[CleverTapUnityManager sharedInstance] getMapOfStringVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-       NSString *jsonString = clevertap_toJsonString(ret);
-       if (jsonString == nil) {
-           return NULL;
-       }
-       return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char*  CleverTap_getMapOfIntegerVariable(const char* name, const char* defaultValue) {
-        NSMutableDictionary *_defaultValue = clevertap_dictFromJsonString(defaultValue);
-        id ret = [[CleverTapUnityManager sharedInstance] getMapOfIntegerVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-        NSString *jsonString = clevertap_toJsonString(ret);
-        if (jsonString == nil) {
-            return NULL;
-        }
-        return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char* CleverTap_getMapOfDoubleVariable(const char* name, const char* defaultValue) {
-       NSMutableDictionary *_defaultValue = clevertap_dictFromJsonString(defaultValue);
-       id ret = [[CleverTapUnityManager sharedInstance] getMapOfDoubleVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-       NSString *jsonString = clevertap_toJsonString(ret);
-       if (jsonString == nil) {
-           return NULL;
-       }
-       return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char* CleverTap_getListOfBooleanVariable(const char* name, const char* defaultValue) {
-    NSArray *_defaultValue = clevertap_NSArrayFromJsonString(defaultValue);
-    id ret = [[CleverTapUnityManager sharedInstance] getListOfBooleanVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-    NSString *jsonString = clevertap_toJsonString(ret);
-    if (jsonString == nil) {
-        return NULL;
-    }
-    return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char* CleverTap_getListOfStringVariable(const char* name, const char* defaultValue) {
-    NSArray *_defaultValue = clevertap_NSArrayFromJsonString(defaultValue);
-     id ret = [[CleverTapUnityManager sharedInstance] getListOfStringVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-     NSString *jsonString = clevertap_toJsonString(ret);
-     if (jsonString == nil) {
-         return NULL;
-     }
-     return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char* CleverTap_getListOfIntegerVariable(const char* name, const char* defaultValue) {
-    NSArray *_defaultValue = clevertap_NSArrayFromJsonString(defaultValue);
-      id ret = [[CleverTapUnityManager sharedInstance] getListOfIntegerVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-      NSString *jsonString = clevertap_toJsonString(ret);
-      if (jsonString == nil) {
-          return NULL;
-      }
-      return clevertap_cStringCopy([jsonString UTF8String]);
-}
-
-char* CleverTap_getListOfDoubleVariable(const char* name, const char* defaultValue) {
-   NSArray *_defaultValue = clevertap_NSArrayFromJsonString(defaultValue);
-   id ret = [[CleverTapUnityManager sharedInstance] getListOfDoubleVariable:clevertap_stringToNSString(name) defaultValue:_defaultValue];
-   NSString *jsonString = clevertap_toJsonString(ret);
-   if (jsonString == nil) {
-       return NULL;
-   }
-   return clevertap_cStringCopy([jsonString UTF8String]);
 }
