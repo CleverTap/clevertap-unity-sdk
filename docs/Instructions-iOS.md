@@ -25,4 +25,4 @@ From CleverTap Unity SDK 2.1.2 onwards, you can disable the usage of IDFV by che
 
  ![alt text](/docs/ct-ios-idfv.png  "CleverTapDisableIDFV")
 
-By default, the value of `CLEVERTAP_DISABLE_IDFV` is unchecked which means CleverTap will continue to use the vendor identifier for the purpose of profile creation.
+By default, the value of `CLEVERTAP_DISABLE_IDFV` is not checked which means CleverTap will continue to use the vendor identifier for the purpose of profile creation.
