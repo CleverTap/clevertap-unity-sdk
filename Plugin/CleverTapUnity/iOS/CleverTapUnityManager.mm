@@ -404,9 +404,9 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     if (title) {
         _config.title = title;
     }
-    NSString *firstTabtitle = [dict valueForKey:@"firstTabtitle"];
-    if (firstTabtitle) {
-        _config.firstTabTitle = firstTabtitle;
+    NSString *firstTabTitle = [dict valueForKey:@"firstTabTitle"];
+    if (firstTabTitle) {
+        _config.firstTabTitle = firstTabTitle;
     }
     NSArray *messageTags = [dict valueForKey:@"tabs"];
     if (messageTags) {
