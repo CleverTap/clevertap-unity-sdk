@@ -3,7 +3,7 @@
   
 > NOTE: On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
 
-- Add latest `Play Services Resolver` package from [here](https://github.com/googlesamples/unity-jar-resolver). Ignore if it's already there in the project.
+- Add latest `Play Services Resolver` package from [here](https://github.com/googlesamples/unity-jar-resolver).
 
 - Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
 
