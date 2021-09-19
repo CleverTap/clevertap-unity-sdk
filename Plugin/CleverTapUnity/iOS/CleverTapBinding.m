@@ -191,6 +191,16 @@ void CleverTap_profilePush(const char* properties) {
     [[CleverTapUnityManager sharedInstance] profilePush:profileProperties];
 }
 
+void CleverTap_profilePushGraphUser(const char* fbGraphUser) {
+    NSMutableDictionary *user = clevertap_dictFromJsonString(fbGraphUser);
+    [[CleverTapUnityManager sharedInstance] profilePush:user];
+}
+
+void CleverTap_profilePushGooglePlusUser(const char* googleUser) {
+    NSMutableDictionary *user = clevertap_dictFromJsonString(googleUser);
+    [[CleverTapUnityManager sharedInstance] profilePush:user];
+}
+
 char* CleverTap_profileGet(const char* key) {
     id ret = [[CleverTapUnityManager sharedInstance] profileGet:clevertap_stringToNSString(key)];
     
@@ -267,6 +277,22 @@ void CleverTap_profileAddMultiValueForKey(const char* key, const char* value) {
 
 void CleverTap_profileRemoveMultiValueForKey(const char* key, const char* value) {
     [[CleverTapUnityManager sharedInstance] profileRemoveMultiValue:clevertap_stringToNSString(value) forKey:clevertap_stringToNSString(key)];
+}
+
+void CleverTap_profileIncrementDoubleValueForKey(const char* key, const double value) {
+    [[CleverTapUnityManager sharedInstance] profileIncrementValueBy:[NSNumber numberWithDouble: value] forKey:clevertap_stringToNSString(key)];
+}
+
+void CleverTap_profileIncrementIntValueForKey(const char* key, const int value) {
+    [[CleverTapUnityManager sharedInstance] profileIncrementValueBy:[NSNumber numberWithInt: value] forKey:clevertap_stringToNSString(key)];
+}
+
+void CleverTap_profileDecrementDoubleValueForKey(const char* key, const double value) {
+    [[CleverTapUnityManager sharedInstance] profileDecrementValueBy:[NSNumber numberWithDouble: value] forKey:clevertap_stringToNSString(key)];
+}
+
+void CleverTap_profileDecrementIntValueForKey(const char* key, const int value) {
+    [[CleverTapUnityManager sharedInstance] profileDecrementValueBy:[NSNumber numberWithInt: value] forKey:clevertap_stringToNSString(key)];
 }
 
 
@@ -442,7 +468,7 @@ void CleverTap_recordInboxNotificationClickedEventForID(const char* messageId) {
 #pragma mark - Native Display
 
 char* CleverTap_getAllDisplayUnits() {
-    
+ 
     id ret = [[CleverTapUnityManager sharedInstance] getAllDisplayUnits];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
@@ -504,9 +530,9 @@ char* CleverTap_getProductConfigValueFor(const char* key) {
     id ret = [[CleverTapUnityManager sharedInstance] getProductConfigValueFor:clevertap_stringToNSString(key)];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
-        return NULL;
-    }
-    return clevertap_cStringCopy([jsonString UTF8String]);
+       return NULL;
+   }
+   return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
 double CleverTap_getProductConfigLastFetchTimeStamp() {
@@ -522,4 +548,19 @@ void CleverTap_resetProductConfig() {
 
 BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
     return [[CleverTapUnityManager sharedInstance] get:clevertap_stringToNSString(key) withDefaultValue:defaultValue];
+}
+
+
+#pragma mark - Feature Flags
+
+void CleverTap_suspendInAppNotifications() {
+    [[CleverTapUnityManager sharedInstance] suspendInAppNotifications];
+}
+
+void CleverTap_discardInAppNotifications() {
+    [[CleverTapUnityManager sharedInstance] discardInAppNotifications];
+}
+
+void CleverTap_resumeInAppNotifications() {
+    [[CleverTapUnityManager sharedInstance] resumeInAppNotifications];
 }

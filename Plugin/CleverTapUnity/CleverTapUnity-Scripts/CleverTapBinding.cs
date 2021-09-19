@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.1.2";
+    public const string Version = "2.1.3";
 
 #if UNITY_IOS
     void Start() {
@@ -29,6 +29,12 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_profilePush(string properties);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profilePushGraphUser(string user);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profilePushGooglePlusUser(string user);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern string CleverTap_profileGet(string key);
@@ -57,6 +63,27 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_profileRemoveMultiValueForKey(string key, string val);
 
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileIncrementDoubleValueForKey(string key, double val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileIncrementIntValueForKey(string key, int val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileDecrementDoubleValueForKey(string key, double val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileDecrementIntValueForKey(string key, int val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_suspendInAppNotifications();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_discardInAppNotifications();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_resumeInAppNotifications();
+        
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordScreenView(string screenName);
 
@@ -222,6 +249,16 @@ namespace CleverTap {
         CleverTap_profilePush(propertiesString);
     }
 
+    public static void ProfilePushGraphUser(Dictionary<string, string> user) {
+        var userString = Json.Serialize(user);
+        CleverTap_profilePushGraphUser(userString);
+    }
+
+    public static void ProfilePushGooglePlusUser(Dictionary<string, string> user) {
+        var userString = Json.Serialize(user);
+        CleverTap_profilePushGooglePlusUser(userString);
+    }
+
     public static string ProfileGet(string key) {
         string ret = CleverTap_profileGet(key);
         return ret;
@@ -259,6 +296,34 @@ namespace CleverTap {
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap_profileRemoveMultiValueForKey(key, val);
+    }
+
+    public static void ProfileIncrementValueForKey(string key, double val) {
+        CleverTap_profileIncrementDoubleValueForKey(key, val);
+    }
+
+    public static void ProfileIncrementValueForKey(string key, int val) {
+        CleverTap_profileIncrementIntValueForKey(key, val);
+    }
+
+    public static void ProfileDecrementValueForKey(string key, double val) {
+        CleverTap_profileDecrementDoubleValueForKey(key, val);
+    }
+
+    public static void ProfileDecrementValueForKey(string key, int val) {
+        CleverTap_profileDecrementIntValueForKey(key, val);
+    }
+
+    public static void SuspendInAppNotifications() {
+        CleverTap_suspendInAppNotifications();
+    }
+
+    public static void DiscardInAppNotifications() {
+        CleverTap_discardInAppNotifications();
+    }
+
+    public static void ResumeInAppNotifications() {
+        CleverTap_resumeInAppNotifications();
     }
 
     public static void RecordScreenView(string screenName) {
@@ -547,7 +612,7 @@ namespace CleverTap {
         Debug.Log("Start: CleverTap binding for Android.");
     }
 
-    #region Properties
+        #region Properties
     public static AndroidJavaObject unityCurrentActivity {
         get {
             if (unityActivity == null) {
@@ -577,7 +642,7 @@ namespace CleverTap {
             return clevertap;
         }
     }
-    #endregion
+        #endregion
 
     public static void SetDebugLevel(int level) {
         CleverTapAPI.CallStatic("setDebugLevel", level);
@@ -670,6 +735,10 @@ namespace CleverTap {
         CleverTap.Call("profilePush", Json.Serialize(properties));
     }
 
+    public static void ProfilePushFacebookUser(Dictionary<string, string> user) {
+        CleverTap.Call("profilePushFacebookUser", Json.Serialize(user));
+    }
+
     public static string ProfileGet(string key) {
         return CleverTap.Call<string>("profileGet", key);
     }
@@ -704,6 +773,18 @@ namespace CleverTap {
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
+    }
+
+    public static void SuspendInAppNotifications() {
+        CleverTap.Call("suspendInAppNotifications");
+    }
+
+    public static void DiscardInAppNotifications() {
+        CleverTap.Call("discardInAppNotifications");
+    }
+
+    public static void ResumeInAppNotifications() {
+        CleverTap.Call("resumeInAppNotifications");
     }
 
     public static void RecordScreenView(string screenName) {
@@ -826,6 +907,12 @@ namespace CleverTap {
     public static void ProfilePush(Dictionary<string, string> properties) {
     }
 
+    public static void ProfilePushGraphUser(Dictionary<string, string> user) {
+    }
+
+    public static void ProfilePushGooglePlusUser(Dictionary<string, string> user) {
+    }
+
     public static string ProfileGet(string key) {
         return "test";
     }
@@ -854,6 +941,18 @@ namespace CleverTap {
     }
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
+    }
+
+    public static void ProfileIncrementValueForKey(string key, double val) {
+    }
+
+    public static void ProfileIncrementValueForKey(string key, int val) {
+    }
+
+    public static void ProfileDecrementValueForKey(string key, double val) {
+    }
+
+    public static void ProfileDecrementValueForKey(string key, int val) {
     }
 
     public static void RecordScreenView(string screenName) {
