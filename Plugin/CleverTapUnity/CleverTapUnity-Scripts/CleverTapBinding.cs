@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.1.3";
+    public const string Version = "2.2.0";
 
 #if UNITY_IOS
     void Start() {
@@ -29,12 +29,6 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_profilePush(string properties);
-
-    [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_profilePushGraphUser(string user);
-
-    [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_profilePushGooglePlusUser(string user);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern string CleverTap_profileGet(string key);
@@ -247,16 +241,6 @@ namespace CleverTap {
     public static void ProfilePush(Dictionary<string, string> properties) {
         var propertiesString = Json.Serialize(properties);
         CleverTap_profilePush(propertiesString);
-    }
-
-    public static void ProfilePushGraphUser(Dictionary<string, string> user) {
-        var userString = Json.Serialize(user);
-        CleverTap_profilePushGraphUser(userString);
-    }
-
-    public static void ProfilePushGooglePlusUser(Dictionary<string, string> user) {
-        var userString = Json.Serialize(user);
-        CleverTap_profilePushGooglePlusUser(userString);
     }
 
     public static string ProfileGet(string key) {
@@ -905,12 +889,6 @@ namespace CleverTap {
     }
 
     public static void ProfilePush(Dictionary<string, string> properties) {
-    }
-
-    public static void ProfilePushGraphUser(Dictionary<string, string> user) {
-    }
-
-    public static void ProfilePushGooglePlusUser(Dictionary<string, string> user) {
     }
 
     public static string ProfileGet(string key) {

@@ -191,16 +191,6 @@ void CleverTap_profilePush(const char* properties) {
     [[CleverTapUnityManager sharedInstance] profilePush:profileProperties];
 }
 
-void CleverTap_profilePushGraphUser(const char* fbGraphUser) {
-    NSMutableDictionary *user = clevertap_dictFromJsonString(fbGraphUser);
-    [[CleverTapUnityManager sharedInstance] profilePush:user];
-}
-
-void CleverTap_profilePushGooglePlusUser(const char* googleUser) {
-    NSMutableDictionary *user = clevertap_dictFromJsonString(googleUser);
-    [[CleverTapUnityManager sharedInstance] profilePush:user];
-}
-
 char* CleverTap_profileGet(const char* key) {
     id ret = [[CleverTapUnityManager sharedInstance] profileGet:clevertap_stringToNSString(key)];
     
