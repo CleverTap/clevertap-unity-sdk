@@ -719,10 +719,6 @@ namespace CleverTap {
         CleverTap.Call("profilePush", Json.Serialize(properties));
     }
 
-    public static void ProfilePushFacebookUser(Dictionary<string, string> user) {
-        CleverTap.Call("profilePushFacebookUser", Json.Serialize(user));
-    }
-
     public static string ProfileGet(string key) {
         return CleverTap.Call<string>("profileGet", key);
     }
