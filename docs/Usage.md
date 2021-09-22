@@ -190,6 +190,8 @@ void CleverTapPushOpenedCallback(string message)
 ```Dart
 CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 ```
+
 ### For more information,
- - [see included Starter Application]( https://github.com/CleverTap/clevertap-unity-sdk/blob/master/example/CleverTapUnity.cs) 
+
+ - [See included Starter Application](/example/CleverTapUnity.cs) 
 
