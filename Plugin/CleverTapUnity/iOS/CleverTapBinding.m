@@ -213,6 +213,10 @@ char* CleverTap_profileGetCleverTapID() {
     return clevertap_cStringCopy([ret UTF8String]);
 }
 
+char* CleverTap_getCleverTapID() {
+    return CleverTap_profileGetCleverTapID();
+}
+
 char* CleverTap_profileGetCleverTapAttributionIdentifier() {
     NSString *ret = [[CleverTapUnityManager sharedInstance] profileGetCleverTapAttributionIdentifier];
     
@@ -541,7 +545,7 @@ BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
 }
 
 
-#pragma mark - Feature Flags
+#pragma mark - In App Controls
 
 void CleverTap_suspendInAppNotifications() {
     [[CleverTapUnityManager sharedInstance] suspendInAppNotifications];

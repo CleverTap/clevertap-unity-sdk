@@ -77,6 +77,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_resumeInAppNotifications();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getCleverTapID();
         
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordScreenView(string screenName);
@@ -308,6 +311,11 @@ namespace CleverTap {
 
     public static void ResumeInAppNotifications() {
         CleverTap_resumeInAppNotifications();
+    }
+
+    public static string GetCleverTapID() {
+         string ret = CleverTap_getCleverTapID();
+         return ret;
     }
 
     public static void RecordScreenView(string screenName) {
@@ -927,6 +935,18 @@ namespace CleverTap {
     }
 
     public static void ProfileDecrementValueForKey(string key, int val) {
+    }
+
+    public static void SuspendInAppNotifications() {
+    }
+
+    public static void DiscardInAppNotifications() {
+    }
+
+    public static void ResumeInAppNotifications() {
+    }
+
+    public static string GetCleverTapID() {
     }
 
     public static void RecordScreenView(string screenName) {
