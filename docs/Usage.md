@@ -1,7 +1,7 @@
 # Unity Usage
 
 
-## User Properties
+## User Profiles
 
 #### Update User Profile(Push Profile)
 
@@ -42,11 +42,15 @@ CleverTapBinding.OnUserLogin(newProps);
 ```
 CleverTapBinding.SetLocation(34.147785, -118.144516);
 ```
+
+## User Events
+
 #### Record an event  
 
 ```
 
 ```
+
 #### Record Charged event
 ```
 
@@ -74,7 +78,7 @@ items.Add(item2);
 CleverTapBinding.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
 
 ```
-## In App Messages
+## In-App Notifications
 
 #### On In App Button Click
 
@@ -98,6 +102,7 @@ Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmp
 CleverTapBinding.InitializeInbox();
 Debug.Log("InboxInit started");
 ```
+
 #### Show the App Inbox
 
 ```
@@ -112,6 +117,7 @@ void LaunchInbox()
 ```
 CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 ```
+
 ## Push Notifications
 
 #### Creating Notification Channel
