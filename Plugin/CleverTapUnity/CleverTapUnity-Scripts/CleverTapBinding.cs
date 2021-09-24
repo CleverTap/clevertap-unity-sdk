@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.1.2";
+    public const string Version = "2.2.0";
 
 #if UNITY_IOS
     void Start() {
@@ -57,6 +57,30 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_profileRemoveMultiValueForKey(string key, string val);
 
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileIncrementDoubleValueForKey(string key, double val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileIncrementIntValueForKey(string key, int val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileDecrementDoubleValueForKey(string key, double val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_profileDecrementIntValueForKey(string key, int val);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_suspendInAppNotifications();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_discardInAppNotifications();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_resumeInAppNotifications();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern string CleverTap_getCleverTapID();
+        
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordScreenView(string screenName);
 
@@ -259,6 +283,39 @@ namespace CleverTap {
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap_profileRemoveMultiValueForKey(key, val);
+    }
+
+    public static void ProfileIncrementValueForKey(string key, double val) {
+        CleverTap_profileIncrementDoubleValueForKey(key, val);
+    }
+
+    public static void ProfileIncrementValueForKey(string key, int val) {
+        CleverTap_profileIncrementIntValueForKey(key, val);
+    }
+
+    public static void ProfileDecrementValueForKey(string key, double val) {
+        CleverTap_profileDecrementDoubleValueForKey(key, val);
+    }
+
+    public static void ProfileDecrementValueForKey(string key, int val) {
+        CleverTap_profileDecrementIntValueForKey(key, val);
+    }
+
+    public static void SuspendInAppNotifications() {
+        CleverTap_suspendInAppNotifications();
+    }
+
+    public static void DiscardInAppNotifications() {
+        CleverTap_discardInAppNotifications();
+    }
+
+    public static void ResumeInAppNotifications() {
+        CleverTap_resumeInAppNotifications();
+    }
+
+    public static string GetCleverTapID() {
+         string ret = CleverTap_getCleverTapID();
+         return ret;
     }
 
     public static void RecordScreenView(string screenName) {
@@ -547,7 +604,7 @@ namespace CleverTap {
         Debug.Log("Start: CleverTap binding for Android.");
     }
 
-    #region Properties
+        #region Properties
     public static AndroidJavaObject unityCurrentActivity {
         get {
             if (unityActivity == null) {
@@ -577,7 +634,7 @@ namespace CleverTap {
             return clevertap;
         }
     }
-    #endregion
+        #endregion
 
     public static void SetDebugLevel(int level) {
         CleverTapAPI.CallStatic("setDebugLevel", level);
@@ -704,6 +761,18 @@ namespace CleverTap {
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
+    }
+
+    public static void SuspendInAppNotifications() {
+        CleverTap.Call("suspendInAppNotifications");
+    }
+
+    public static void DiscardInAppNotifications() {
+        CleverTap.Call("discardInAppNotifications");
+    }
+
+    public static void ResumeInAppNotifications() {
+        CleverTap.Call("resumeInAppNotifications");
     }
 
     public static void RecordScreenView(string screenName) {
@@ -854,6 +923,30 @@ namespace CleverTap {
     }
 
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
+    }
+
+    public static void ProfileIncrementValueForKey(string key, double val) {
+    }
+
+    public static void ProfileIncrementValueForKey(string key, int val) {
+    }
+
+    public static void ProfileDecrementValueForKey(string key, double val) {
+    }
+
+    public static void ProfileDecrementValueForKey(string key, int val) {
+    }
+
+    public static void SuspendInAppNotifications() {
+    }
+
+    public static void DiscardInAppNotifications() {
+    }
+
+    public static void ResumeInAppNotifications() {
+    }
+
+    public static string GetCleverTapID() {
     }
 
     public static void RecordScreenView(string screenName) {
