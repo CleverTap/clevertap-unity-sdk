@@ -29,6 +29,16 @@ CleverTapBinding.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
 ```
 CleverTapBinding.ProfileAddMultiValueForKey("multiAndroid", "five");
 ```
+#### Increment a numerical value for a single-value profile property (if it exists)
+```
+CleverTapBinding.ProfileIncrementValueForKey("score", 10); // INTEGER PROFERTY
+CleverTapBinding.ProfileIncrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
+```
+#### Decrement a numerical value for a single-value profile property (if it exists)
+```
+CleverTapBinding.ProfileDecrementValueForKey("score", 10); // INTEGER PROFERTY
+CleverTapBinding.ProfileDecrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
+```
 #### Create a User profile when user logs in (On User Login)
 
 ```
@@ -48,7 +58,7 @@ CleverTapBinding.SetLocation(34.147785, -118.144516);
 #### Record an event  
 
 ```
-
+CleverTapBinding.RecordEvent("Button Clicked");
 ```
 
 #### Record Charged event
@@ -153,6 +163,21 @@ CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
 
 ```
 CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
+```
+
+## In-App Notification Controls
+
+#### Suspend In-App Notifications  
+```
+CleverTapBinding.SuspendInAppNotifications();
+```
+#### Discard In-App Notifications  
+```
+CleverTapBinding.DiscardInAppNotifications();
+```
+#### Resume In-App Notifications  
+```
+CleverTapBinding.ResumeInAppNotifications();
 ```
 
 ### For more information,
