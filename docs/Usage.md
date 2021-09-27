@@ -105,6 +105,22 @@ void CleverTapInAppNotificationDismissedCallback(string message)
 Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
 }
 ```
+
+## In-App Notification Controls
+
+#### Suspend In-App Notifications  
+```
+CleverTapBinding.SuspendInAppNotifications();
+```
+#### Discard In-App Notifications  
+```
+CleverTapBinding.DiscardInAppNotifications();
+```
+#### Resume In-App Notifications  
+```
+CleverTapBinding.ResumeInAppNotifications();
+```
+
 ## App Inbox
 
 #### Initialize the CleverTap App Inbox Method
@@ -154,30 +170,11 @@ CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name"
 ```
 CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");			
 ```
-#### Registering Fcm, Baidu, Xiaomi, Huawei Token
 
-```
-
-```
 #### Create Notification
 
 ```
 CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
-```
-
-## In-App Notification Controls
-
-#### Suspend In-App Notifications  
-```
-CleverTapBinding.SuspendInAppNotifications();
-```
-#### Discard In-App Notifications  
-```
-CleverTapBinding.DiscardInAppNotifications();
-```
-#### Resume In-App Notifications  
-```
-CleverTapBinding.ResumeInAppNotifications();
 ```
 
 ### For more information,
