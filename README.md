@@ -37,7 +37,8 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 ## 💻 Example Usage #
 
-A [demo application](https://github.com/CleverTap/clevertap-unity-sdk/tree/master/example) showing the integration of our Plugin.
+- [See the CleverTap Unity Usage Documentation](/docs/Usage.md)
+- [See the included Example Project](/example) showing the integration of our Plugin
 
 ## 🆕 Changelog #
 
