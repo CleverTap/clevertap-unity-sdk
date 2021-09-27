@@ -42,7 +42,7 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 ## 🆕 Changelog #
 
-Check out the CleverTap Unity plugin SDK [Change Log](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/CHANGELOG.md) here.
+Check out the CleverTap Unity plugin SDK [Change Log](/CHANGELOG.md) here.
 
 ## ⁉️ Questions? #
 
