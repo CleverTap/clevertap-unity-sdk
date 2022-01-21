@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.1.2";
+    public const string Version = "2.2.0";
 
 #if UNITY_IOS
     void Start() {
@@ -674,13 +674,55 @@ namespace CleverTap {
         return CleverTap.Call<string>("profileGet", key);
     }
 
-    public static string ProfileGetCleverTapAttributionIdentifier() {
-        return CleverTap.Call<string>("profileGetCleverTapAttributionIdentifier");
-    }
-
-    public static string ProfileGetCleverTapID() {
-        return CleverTap.Call<string>("profileGetCleverTapID");
-    }
+      /**
+       * Returns a unique CleverTap identifier suitable for use with install attribution providers.
+       *
+       * @return The attribution identifier currently being used to identify this user.
+       *
+       * <p><br><span style="background:#ffcc99" >&#9888; this method may take a long time to return,
+       * so you should not call it from the application main thread</span></p>
+       *
+       * <p style="color:red;font-size: 25px;margin-left:10px">&#9760;</p>
+       * <b><span style="color:#4d2e00;background:#ffcc99" >Deprecated as of version <code>4.2.0</code> and will be
+       * removed in future versions</span>
+       * </b><br>
+       * <code>Use {@link CleverTapAPI#getCleverTapID(OnInitCleverTapIDListener)} instead</code>
+       */
+//    public static string ProfileGetCleverTapAttributionIdentifier() {
+//        return CleverTap.Call<string>("profileGetCleverTapID");
+//    }
+//
+//    public static string ProfileGetCleverTapID() {
+//        return CleverTap.Call<string>("profileGetCleverTapID");
+//    }
+//
+//    public static void ProfileIncrementValueForKey(string key, double val) {
+//        CleverTap.Call("profileIncrementDoubleValueForKey",key, val);
+//    }
+//
+//    public static void ProfileIncrementValueForKey(string key, int val) {
+//        CleverTap.Call("profileIncrementIntValueForKey",key, val);
+//    }
+//
+//    public static void ProfileDecrementValueForKey(string key, double val) {
+//        CleverTap.Call("profileDecrementDoubleValueForKey",key, val);
+//    }
+//
+//    public static void ProfileDecrementValueForKey(string key, int val) {
+//        CleverTap.Call("profileDecrementIntValueForKey",key, val);
+//    }
+//
+//    public static void SuspendInAppNotifications() {
+//        CleverTap.Call("suspendInAppNotifications");
+//    }
+//
+//    public static void DiscardInAppNotifications() {
+//        CleverTap.Call("discardInAppNotifications");
+//    }
+//
+//    public static void ResumeInAppNotifications() {
+//        CleverTap.Call("resumeInAppNotifications");
+//    }
 
     public static void ProfileRemoveValueForKey(string key) {
         CleverTap.Call("profileRemoveValueForKey", key);
