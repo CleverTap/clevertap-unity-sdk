@@ -402,6 +402,63 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Log.e(LOG_TAG, "profileRemoveMultiValuesForKey error", t);
         }
     }
+    public void profileIncrementDoubleValueForKey(final String key, final double value){
+        try {
+            clevertap.incrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileIncrementDoubleValueForKey error", t);
+        }
+    }
+
+    public void profileIncrementIntValueForKey(final String key, final int value){
+        try {
+            clevertap.incrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileIncrementIntValueForKey error", t);
+        }
+    }
+
+    public void profileDecrementDoubleValueForKey(final String key,final double value) {
+        try {
+            clevertap.incrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileIncrementIntValueForKey error", t);
+        }
+    }
+
+    public void profileDecrementIntValueForKey(final String key,final int value) {
+        try {
+            clevertap.incrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileIncrementIntValueForKey error", t);
+        }
+    }
+
+    public void suspendInAppNotifications(){
+        try {
+            clevertap.suspendInAppNotifications();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "recordScreenView error", t);
+        }
+    }
+
+
+    public void discardInAppNotifications(){
+        try {
+            clevertap.discardInAppNotifications();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "recordScreenView error", t);
+        }
+    }
+
+
+    public void ResumeInAppNotifications(){
+        try {
+            clevertap.resumeInAppNotifications();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "recordScreenView error", t);
+        }
+    }
 
     public void recordScreenView(final String screenName) {
         try {
