@@ -688,41 +688,41 @@ namespace CleverTap {
        * </b><br>
        * <code>Use {@link CleverTapAPI#getCleverTapID(OnInitCleverTapIDListener)} instead</code>
        */
-//    public static string ProfileGetCleverTapAttributionIdentifier() {
-//        return CleverTap.Call<string>("profileGetCleverTapID");
-//    }
-//
-//    public static string ProfileGetCleverTapID() {
-//        return CleverTap.Call<string>("profileGetCleverTapID");
-//    }
-//
-//    public static void ProfileIncrementValueForKey(string key, double val) {
-//        CleverTap.Call("profileIncrementDoubleValueForKey",key, val);
-//    }
-//
-//    public static void ProfileIncrementValueForKey(string key, int val) {
-//        CleverTap.Call("profileIncrementIntValueForKey",key, val);
-//    }
-//
-//    public static void ProfileDecrementValueForKey(string key, double val) {
-//        CleverTap.Call("profileDecrementDoubleValueForKey",key, val);
-//    }
-//
-//    public static void ProfileDecrementValueForKey(string key, int val) {
-//        CleverTap.Call("profileDecrementIntValueForKey",key, val);
-//    }
-//
-//    public static void SuspendInAppNotifications() {
-//        CleverTap.Call("suspendInAppNotifications");
-//    }
-//
-//    public static void DiscardInAppNotifications() {
-//        CleverTap.Call("discardInAppNotifications");
-//    }
-//
-//    public static void ResumeInAppNotifications() {
-//        CleverTap.Call("resumeInAppNotifications");
-//    }
+    public static string ProfileGetCleverTapAttributionIdentifier() {
+        return CleverTap.Call<string>("profileGetCleverTapID");
+    }
+
+    public static string ProfileGetCleverTapID() {
+        return CleverTap.Call<string>("profileGetCleverTapID");
+    }
+
+    public static void ProfileIncrementValueForKey(string key, double val) {
+        CleverTap.Call("profileIncrementDoubleValueForKey",key, val);
+    }
+
+    public static void ProfileIncrementValueForKey(string key, int val) {
+        CleverTap.Call("profileIncrementIntValueForKey",key, val);
+    }
+
+    public static void ProfileDecrementValueForKey(string key, double val) {
+        CleverTap.Call("profileDecrementDoubleValueForKey",key, val);
+    }
+
+    public static void ProfileDecrementValueForKey(string key, int val) {
+        CleverTap.Call("profileDecrementIntValueForKey",key, val);
+    }
+
+    public static void SuspendInAppNotifications() {
+        CleverTap.Call("suspendInAppNotifications");
+    }
+
+    public static void DiscardInAppNotifications() {
+        CleverTap.Call("discardInAppNotifications");
+    }
+
+    public static void ResumeInAppNotifications() {
+        CleverTap.Call("resumeInAppNotifications");
+    }
 
     public static void ProfileRemoveValueForKey(string key) {
         CleverTap.Call("profileRemoveValueForKey", key);
