@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 2.2.0 *(XX XXX, 2022)*
+-------------------------------------------
+- Add public APIs for Increment/Decrement ops and InApp Controls
+- Deprecates `profileGetCleverTapID()`and `profileGetCleverTapAttributionIdentifier()`.
+- Adds a new public method `getCleverTapID()` as an alternative to above-deprecated methods.
+- Updated to [CleverTap Android SDK v4.4.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/core-v4.4.0)
+```
+- Updated to [CleverTap iOS SDK v3.10.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.10.0)
+```
+
 Version 2.1.2 *(19 May, 2021)*
 -------------------------------------------
 - Updated to [CleverTap iOS SDK v3.9.4](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.9.4)
