@@ -111,6 +111,11 @@ public class CleverTapUnity: MonoBehaviour {
         }
     }
 
+    // returns a unique CleverTap identifier suitable for use with install attribution providers.
+    void CleverTapInitCleverTapIdCallback(string message) {
+        Debug.Log("unity received clevertap id: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message) {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));

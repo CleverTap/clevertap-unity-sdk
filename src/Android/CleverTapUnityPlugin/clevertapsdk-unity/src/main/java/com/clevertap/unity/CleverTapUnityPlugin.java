@@ -40,7 +40,7 @@ import org.json.JSONObject;
 
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
         CTInboxListener, InAppNotificationButtonListener,
-        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener {
+        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener, OnInitCleverTapIDListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -74,6 +74,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_PRODUCT_CONFIG_FETCHED = "CleverTapProductConfigFetched";
 
     private static final String CLEVERTAP_PRODUCT_CONFIG_ACTIVATED = "CleverTapProductConfigActivated";
+
+    private static final String CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK = "CleverTapInitCleverTapIdCallback";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -402,7 +404,18 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Log.e(LOG_TAG, "profileRemoveMultiValuesForKey error", t);
         }
     }
-    public void profileIncrementDoubleValueForKey(final String key, final double value){
+
+    void onInitCleverTapID(String cleverTapID){
+        final String json = "{cleverTapID:" + cleverTapID + "}";
+        try {
+            return messageUnity(CLEVERTAP_GAME_OBJECT_NAME,CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK,json);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileGetCleverTapID error", t);
+            return null;
+        }
+    }
+
+    public void profileIncrementDoubleValueForKey(final String key, final double value){ // use this ProfileIncrementValueForKey
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {

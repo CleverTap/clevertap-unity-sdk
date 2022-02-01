@@ -682,7 +682,8 @@ namespace CleverTap {
        * application main thread
        *
        * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
-       *  in future versions .provide a clevertap  CleverTapAPI#ProfileGetCleverTapID()} instead</code>
+       *  in future versions .
+       * instead listen for the id on CleverTapUnity#CleverTapInitCleverTapIdCallback() function
        */
     public static string ProfileGetCleverTapAttributionIdentifier() {
         return CleverTap.Call<string>("profileGetCleverTapAttributionIdentifier");
