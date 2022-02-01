@@ -674,17 +674,17 @@ namespace CleverTap {
         return CleverTap.Call<string>("profileGet", key);
     }
 
-      /**
-       * Returns a unique CleverTap identifier suitable for use with install attribution providers.
-       * @return The attribution identifier currently being used to identify this user.
-       *
-       * Disclaimer: this method may take a long time to return, so you should not call it from the
-       * application main thread
-       *
-       * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
-       *  in future versions .
-       * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
-       */
+  /**
+   * Returns a unique CleverTap identifier suitable for use with install attribution providers.
+   * @return The attribution identifier currently being used to identify this user.
+   *
+   * Disclaimer: this method may take a long time to return, so you should not call it from the
+   * application main thread
+   *
+   * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
+   *  in future versions .
+   * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
+   */
     public static string ProfileGetCleverTapAttributionIdentifier() {
         return CleverTap.Call<string>("profileGetCleverTapAttributionIdentifier");
     }
@@ -698,10 +698,18 @@ namespace CleverTap {
     *
     * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
     *  in future versions .
-    * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
-   */
+    * instead request for clevertapId via getCleverTapId() call and  listen for response
+    * via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
+    */
     public static string ProfileGetCleverTapID() {
         return CleverTap.Call<string>("profileGetCleverTapID");
+    }
+
+    /*
+     * requests for a unique, asynchronous CleverTap identifier.
+     */
+    public static void GetCleverTapId(){
+        CleverTap.Call<string>("getCleverTapID");
     }
 
     /**
@@ -715,7 +723,7 @@ namespace CleverTap {
      * This method is used to increment the given value.Number should be in positive range
      */
     public static void ProfileIncrementValueForKey(string key, int val) {
-        CleverTap.Call("profileIncrementValueForKey",key, val); //use ProfileIncrementValueForKey
+        CleverTap.Call("profileIncrementValueForKey",key, val);
     }
 
     /**

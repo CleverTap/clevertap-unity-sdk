@@ -416,6 +416,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    public void getCleverTapID(){
+        try {
+            clevertap.getCleverTapID(this);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "getCleverTapID error", t);
+        }
+    }
+
+
     public void profileIncrementValueForKey(final String key, final double value){
         try {
             clevertap.incrementValue(key, value);
