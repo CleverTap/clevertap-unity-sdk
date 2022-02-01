@@ -410,40 +410,40 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             return messageUnity(CLEVERTAP_GAME_OBJECT_NAME,CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK,json);
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "profileGetCleverTapID error", t);
+            Log.e(LOG_TAG, "onInitCleverTapID error", t);
             return null;
         }
     }
 
-    public void profileIncrementDoubleValueForKey(final String key, final double value){ // use this ProfileIncrementValueForKey
+    public void profileIncrementValueForKey(final String key, final double value){
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "profileIncrementDoubleValueForKey error", t);
+            Log.e(LOG_TAG, "profileIncrementForKey(double) error", t);
         }
     }
 
-    public void profileIncrementIntValueForKey(final String key, final int value){
+    public void profileIncrementValueForKey(final String key, final int value){
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "profileIncrementIntValueForKey error", t);
+            Log.e(LOG_TAG, "profileIncrementValueForKey(int) error", t);
         }
     }
 
-    public void profileDecrementDoubleValueForKey(final String key,final double value) {
+    public void profileDecrementValueForKey(final String key,final double value) {
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "profileIncrementIntValueForKey error", t);
+            Log.e(LOG_TAG, "profileDecrementValueForKey(double) error", t);
         }
     }
 
-    public void profileDecrementIntValueForKey(final String key,final int value) {
+    public void profileDecrementValueForKey(final String key,final int value) {
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "profileIncrementIntValueForKey error", t);
+            Log.e(LOG_TAG, "profileDecrementValueForKey(int) error", t);
         }
     }
 

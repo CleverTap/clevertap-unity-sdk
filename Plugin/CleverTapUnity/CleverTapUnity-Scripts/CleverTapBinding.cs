@@ -708,28 +708,28 @@ namespace CleverTap {
      * This method is used to increment the given value.Number should be in positive range
      */
     public static void ProfileIncrementValueForKey(string key, double val) {
-        CleverTap.Call("profileIncrementDoubleValueForKey",key, val);
+        CleverTap.Call("profileIncrementValueForKey",key, val);
     }
 
     /**
      * This method is used to increment the given value.Number should be in positive range
      */
     public static void ProfileIncrementValueForKey(string key, int val) {
-        CleverTap.Call("profileIncrementIntValueForKey",key, val); //use ProfileIncrementValueForKey
+        CleverTap.Call("profileIncrementValueForKey",key, val); //use ProfileIncrementValueForKey
     }
 
     /**
      * This method is used to decrement the given value.Number should be in positive range
      */
     public static void ProfileDecrementValueForKey(string key, double val) {
-        CleverTap.Call("profileDecrementDoubleValueForKey",key, val);
+        CleverTap.Call("profileDecrementValueForKey",key, val);
     }
 
     /**
      * This method is used to decrement the given value.Number should be in positive range
      */
     public static void ProfileDecrementValueForKey(string key, int val) {
-        CleverTap.Call("profileDecrementIntValueForKey",key, val);
+        CleverTap.Call("profileDecrementValueForKey",key, val);
     }
 
     /**
