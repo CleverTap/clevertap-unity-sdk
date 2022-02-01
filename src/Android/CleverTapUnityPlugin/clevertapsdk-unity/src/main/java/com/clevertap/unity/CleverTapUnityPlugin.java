@@ -25,6 +25,7 @@ import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
+import com.clevertap.android.sdk.interfaces.OnInitCleverTapIDListener;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.unity3d.player.UnityPlayer;
@@ -405,13 +406,13 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    void onInitCleverTapID(String cleverTapID){
+    @Override
+    public void onInitCleverTapID(String cleverTapID){
         final String json = "{cleverTapID:" + cleverTapID + "}";
         try {
-            return messageUnity(CLEVERTAP_GAME_OBJECT_NAME,CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK,json);
+             messageUnity(CLEVERTAP_GAME_OBJECT_NAME,CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK,json);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "onInitCleverTapID error", t);
-            return null;
         }
     }
 
