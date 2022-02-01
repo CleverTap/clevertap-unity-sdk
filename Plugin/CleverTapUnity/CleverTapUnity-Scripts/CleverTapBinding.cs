@@ -676,20 +676,16 @@ namespace CleverTap {
 
       /**
        * Returns a unique CleverTap identifier suitable for use with install attribution providers.
-       *
        * @return The attribution identifier currently being used to identify this user.
        *
-       * <p><br><span style="background:#ffcc99" >&#9888; this method may take a long time to return,
-       * so you should not call it from the application main thread</span></p>
+       * Disclaimer: this method may take a long time to return, so you should not call it from the
+       * application main thread
        *
-       * <p style="color:red;font-size: 25px;margin-left:10px">&#9760;</p>
-       * <b><span style="color:#4d2e00;background:#ffcc99" >Deprecated as of version <code>4.2.0</code> and will be
-       * removed in future versions</span>
-       * </b><br>
-       * <code>Use {@link CleverTapAPI#getCleverTapID(OnInitCleverTapIDListener)} instead</code>
+       * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
+       *  in future versions .provide a clevertap  CleverTapAPI#ProfileGetCleverTapID()} instead</code>
        */
     public static string ProfileGetCleverTapAttributionIdentifier() {
-        return CleverTap.Call<string>("profileGetCleverTapID");
+        return CleverTap.Call<string>("profileGetCleverTapAttributionIdentifier");
     }
 
     public static string ProfileGetCleverTapID() {
@@ -701,7 +697,7 @@ namespace CleverTap {
     }
 
     public static void ProfileIncrementValueForKey(string key, int val) {
-        CleverTap.Call("profileIncrementIntValueForKey",key, val);
+        CleverTap.Call("profileIncrementIntValueForKey",key, val); //use ProfileIncrementValueForKey
     }
 
     public static void ProfileDecrementValueForKey(string key, double val) {
