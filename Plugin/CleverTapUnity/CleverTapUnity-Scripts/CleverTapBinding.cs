@@ -683,40 +683,78 @@ namespace CleverTap {
        *
        * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
        *  in future versions .
-       * instead listen for the id on CleverTapUnity#CleverTapInitCleverTapIdCallback() function
+       * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
        */
     public static string ProfileGetCleverTapAttributionIdentifier() {
         return CleverTap.Call<string>("profileGetCleverTapAttributionIdentifier");
     }
 
+   /**
+    * Returns a unique CleverTap identifier suitable for use with install attribution providers.
+    * @return The attribution identifier currently being used to identify this user.
+    *
+    * Disclaimer: this method may take a long time to return, so you should not call it from the
+    * application main thread
+    *
+    * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
+    *  in future versions .
+    * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
+   */
     public static string ProfileGetCleverTapID() {
         return CleverTap.Call<string>("profileGetCleverTapID");
     }
 
+    /**
+     * This method is used to increment the given value.Number should be in positive range
+     */
     public static void ProfileIncrementValueForKey(string key, double val) {
         CleverTap.Call("profileIncrementDoubleValueForKey",key, val);
     }
 
+    /**
+     * This method is used to increment the given value.Number should be in positive range
+     */
     public static void ProfileIncrementValueForKey(string key, int val) {
         CleverTap.Call("profileIncrementIntValueForKey",key, val); //use ProfileIncrementValueForKey
     }
 
+    /**
+     * This method is used to decrement the given value.Number should be in positive range
+     */
     public static void ProfileDecrementValueForKey(string key, double val) {
         CleverTap.Call("profileDecrementDoubleValueForKey",key, val);
     }
 
+    /**
+     * This method is used to decrement the given value.Number should be in positive range
+     */
     public static void ProfileDecrementValueForKey(string key, int val) {
         CleverTap.Call("profileDecrementIntValueForKey",key, val);
     }
 
+    /**
+     * Suspends display of InApp Notifications.
+     * The InApp Notifications are queued once this method is called
+     * and will be displayed once resumeInAppNotifications() is called.
+     */
     public static void SuspendInAppNotifications() {
         CleverTap.Call("suspendInAppNotifications");
     }
 
+    /**
+     * Suspends the display of InApp Notifications and discards any new InApp Notifications to be shown
+     * after this method is called.
+     * The InApp Notifications will be displayed only once resumeInAppNotifications() is called.
+     */
     public static void DiscardInAppNotifications() {
         CleverTap.Call("discardInAppNotifications");
     }
 
+    /**
+     * Suspends the display of InApp Notifications and discards any new InApp Notifications to be shown
+     * after this method is called.
+     * The InApp Notifications will be displayed only once resumeInAppNotifications() is called.
+     */
     public static void ResumeInAppNotifications() {
         CleverTap.Call("resumeInAppNotifications");
     }
