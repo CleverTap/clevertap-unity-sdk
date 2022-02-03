@@ -475,7 +475,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
 
-    public void ResumeInAppNotifications(){
+    public void resumeInAppNotifications(){
         try {
             clevertap.resumeInAppNotifications();
         } catch (Throwable t) {

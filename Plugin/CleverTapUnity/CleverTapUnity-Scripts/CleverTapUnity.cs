@@ -34,15 +34,15 @@ public class CleverTapUnity: MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
         CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_ACCOUNT_REGION);
-        //==========]Testing Newly added Clevertap APIs[============================================
-            CleverTapBinding.GetCleverTapId();
-            CleverTapBinding.ProfileIncrementValueForKey("add_int",2);
-            CleverTapBinding.ProfileIncrementValueForKey("add_double",3.5);
-            CleverTapBinding.ProfileDecrementValueForKey("minus_int",2);
-            CleverTapBinding.ProfileDecrementValueForKey("minus_double",3.5);
-            CleverTapBinding.SuspendInAppNotifications();
-            CleverTapBinding.DiscardInAppNotifications();
-            CleverTapBinding.ResumeInAppNotifications();
+        //==========[Testing Newly added Clevertap APIs]============================================
+        //    CleverTapBinding.GetCleverTapId();
+        //    CleverTapBinding.ProfileIncrementValueForKey("add_int",2);
+        //    CleverTapBinding.ProfileIncrementValueForKey("add_double",3.5);
+        //    CleverTapBinding.ProfileDecrementValueForKey("minus_int",2);
+        //    CleverTapBinding.ProfileDecrementValueForKey("minus_double",3.5);
+        //    CleverTapBinding.SuspendInAppNotifications();
+        //    CleverTapBinding.DiscardInAppNotifications();
+        //    CleverTapBinding.ResumeInAppNotifications();
         //==========[Testing Newly added Clevertap APIs]============================================
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();

@@ -709,7 +709,7 @@ namespace CleverTap {
      * requests for a unique, asynchronous CleverTap identifier.
      */
     public static void GetCleverTapId(){
-        CleverTap.Call<string>("getCleverTapID");
+        CleverTap.Call("getCleverTapID");
     }
 
     /**
