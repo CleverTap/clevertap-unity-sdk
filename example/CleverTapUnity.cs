@@ -92,6 +92,15 @@ public class CleverTapUnity : MonoBehaviour
         //CleverTapBinding.DeleteNotificationChannel("YourChannelId");
         //CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
 
+        //    CleverTapBinding.GetCleverTapId();
+        //    CleverTapBinding.ProfileIncrementValueForKey("add_int",2);
+        //    CleverTapBinding.ProfileIncrementValueForKey("add_double",3.5);
+        //    CleverTapBinding.ProfileDecrementValueForKey("minus_int",2);
+        //    CleverTapBinding.ProfileDecrementValueForKey("minus_double",3.5);
+        //    CleverTapBinding.SuspendInAppNotifications();
+        //    CleverTapBinding.DiscardInAppNotifications();
+        //    CleverTapBinding.ResumeInAppNotifications();
+
     }
 
 
