@@ -80,7 +80,7 @@ public class CleverTapUnity : MonoBehaviour
     //Add Android Platform Specific Init Code here
     void OnAndroidInit()
     {
-
+#if (UNITY_ANDROID && !UNITY_EDITOR)
         CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
 
         CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
@@ -100,7 +100,7 @@ public class CleverTapUnity : MonoBehaviour
         //    CleverTapBinding.SuspendInAppNotifications();
         //    CleverTapBinding.DiscardInAppNotifications();
         //    CleverTapBinding.ResumeInAppNotifications();
-
+#endif
     }
 
 
@@ -393,7 +393,7 @@ public class CleverTapUnity : MonoBehaviour
 
     void LaunchInbox()
     {
-        CleverTapBinding.ShowAppInbox("");
+        CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
     }
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message)
@@ -404,7 +404,7 @@ public class CleverTapUnity : MonoBehaviour
     //returns callback for InitializeInbox
     void CleverTapInboxDidInitializeCallback()
     {
-        CleverTapBinding.ShowAppInbox("");
+        CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
         Debug.Log("unity received inbox initialized");
     }
 
