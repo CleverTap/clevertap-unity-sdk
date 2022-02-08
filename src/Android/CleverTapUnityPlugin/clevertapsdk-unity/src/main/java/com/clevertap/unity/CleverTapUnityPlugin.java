@@ -443,7 +443,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profileDecrementValueForKey(final String key,final double value) {
         try {
-            clevertap.incrementValue(key, value);
+            clevertap.decrementValue(key, value);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileDecrementValueForKey(double) error", t);
         }
@@ -451,7 +451,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profileDecrementValueForKey(final String key,final int value) {
         try {
-            clevertap.incrementValue(key, value);
+            clevertap.decrementValue(key, value);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileDecrementValueForKey(int) error", t);
         }

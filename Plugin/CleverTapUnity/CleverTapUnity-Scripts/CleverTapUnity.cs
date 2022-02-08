@@ -43,6 +43,27 @@ public class CleverTapUnity: MonoBehaviour {
         //    CleverTapBinding.SuspendInAppNotifications();
         //    CleverTapBinding.DiscardInAppNotifications();
         //    CleverTapBinding.ResumeInAppNotifications();
+        //    CleverTapBinding.RecordEvent("Send Basic Push");
+        
+        //    CleverTapBinding.RecordEvent("Send Carousel Push");
+        //    CleverTapBinding.RecordEvent("Send Manual Carousel Push");
+        //    CleverTapBinding.RecordEvent("Send Filmstrip Carousel Push");
+        //    CleverTapBinding.RecordEvent("Send Rating Push");
+        //    CleverTapBinding.RecordEvent("Send Product Display Notification");
+        //    CleverTapBinding.RecordEvent("Send Linear Product Display Push");
+        //    CleverTapBinding.RecordEvent("Send CTA Notification");
+        //    CleverTapBinding.RecordEvent("Send Zero Bezel Notification");
+        //    CleverTapBinding.RecordEvent("Send Zero Bezel Text Only Notification");
+        //    CleverTapBinding.RecordEvent("Send Timer Notification");
+        //    CleverTapBinding.RecordEvent("Send Input Box Notification");
+        //    CleverTapBinding.RecordEvent("Send Input Box Reply with Event Notification");
+        //    CleverTapBinding.RecordEvent("Send Input Box Reply with Auto Open Notification");
+        //    CleverTapBinding.RecordEvent("Send Input Box Remind Notification DOC FALSE");
+        //    CleverTapBinding.RecordEvent("Send Input Box CTA DOC true");
+        //    CleverTapBinding.RecordEvent("Send Input Box CTA DOC false");
+        //    CleverTapBinding.RecordEvent("Send Input Box Reminder DOC true");
+        //    CleverTapBinding.RecordEvent("Send Input Box Reminder DOC false");
+        
         //==========[Testing Newly added Clevertap APIs]============================================
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();
