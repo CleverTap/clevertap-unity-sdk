@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 2.2.0 *(XX XXX, 2022)*
+Version 2.2.0 *(08 FEB, 2022)*
 -------------------------------------------
 - Add public APIs for Increment/Decrement ops and InApp Controls
 - Deprecates `profileGetCleverTapID()`and `profileGetCleverTapAttributionIdentifier()`.
