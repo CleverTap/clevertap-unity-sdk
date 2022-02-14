@@ -706,7 +706,8 @@ namespace CleverTap {
     }
 
     /*
-     * requests for a unique, asynchronous CleverTap identifier.
+     * requests for a unique, asynchronous CleverTap identifier. The value will be available as json {"cleverTapID" : <value> } via 
+     * CleverTapUnity#CleverTapInitCleverTapIdCallback() function
      */
     public static void GetCleverTapId(){
         CleverTap.Call("getCleverTapID");
