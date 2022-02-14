@@ -25,6 +25,7 @@ import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
+import com.clevertap.android.sdk.interfaces.OnInitCleverTapIDListener;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.unity3d.player.UnityPlayer;
@@ -40,7 +41,7 @@ import org.json.JSONObject;
 
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
         CTInboxListener, InAppNotificationButtonListener,
-        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener {
+        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener, OnInitCleverTapIDListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -74,6 +75,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_PRODUCT_CONFIG_FETCHED = "CleverTapProductConfigFetched";
 
     private static final String CLEVERTAP_PRODUCT_CONFIG_ACTIVATED = "CleverTapProductConfigActivated";
+
+    private static final String CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK = "CleverTapInitCleverTapIdCallback";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -400,6 +403,83 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             clevertap.removeMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileRemoveMultiValuesForKey error", t);
+        }
+    }
+
+    @Override
+    public void onInitCleverTapID(String cleverTapID){
+        final String json = "{cleverTapID:" + cleverTapID + "}";
+        try {
+             messageUnity(CLEVERTAP_GAME_OBJECT_NAME,CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK,json);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "onInitCleverTapID error", t);
+        }
+    }
+
+    public void getCleverTapID(){
+        try {
+            clevertap.getCleverTapID(this);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "getCleverTapID error", t);
+        }
+    }
+
+
+    public void profileIncrementValueForKey(final String key, final double value){
+        try {
+            clevertap.incrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileIncrementForKey(double) error", t);
+        }
+    }
+
+    public void profileIncrementValueForKey(final String key, final int value){
+        try {
+            clevertap.incrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileIncrementValueForKey(int) error", t);
+        }
+    }
+
+    public void profileDecrementValueForKey(final String key,final double value) {
+        try {
+            clevertap.decrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileDecrementValueForKey(double) error", t);
+        }
+    }
+
+    public void profileDecrementValueForKey(final String key,final int value) {
+        try {
+            clevertap.decrementValue(key, value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "profileDecrementValueForKey(int) error", t);
+        }
+    }
+
+    public void suspendInAppNotifications(){
+        try {
+            clevertap.suspendInAppNotifications();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "recordScreenView error", t);
+        }
+    }
+
+
+    public void discardInAppNotifications(){
+        try {
+            clevertap.discardInAppNotifications();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "recordScreenView error", t);
+        }
+    }
+
+
+    public void resumeInAppNotifications(){
+        try {
+            clevertap.resumeInAppNotifications();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "recordScreenView error", t);
         }
     }
 
