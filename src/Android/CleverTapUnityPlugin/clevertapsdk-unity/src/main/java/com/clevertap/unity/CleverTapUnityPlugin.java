@@ -177,7 +177,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setInAppNotificationButtonListener(this);
                 clevertap.setDisplayUnitListener(this);
                 clevertap.setCTFeatureFlagsListener(this);
-                clevertap.setCTFeatureFlagsListener(this);
+                clevertap.setCTProductConfigListener(this);
                 clevertap.setLibrary("Unity");
             }
         } catch (Throwable t) {
