@@ -11,7 +11,7 @@ ext {
     targetSdkVersionVal = compileSdkVersionVal
     buildToolsVersionVal = "30.0.3"
 
-    libraryVersion = "2.2.0"
+    libraryVersion = "2.3.0"
 }
 
 android {
@@ -51,7 +51,7 @@ dependencies {
     // This will add classes from com.unity3d.player to our library which will  allow the ClevertapPlugin.java class to get access to current unity activity and work on it accordingly
     compileOnly fileTree('libs')
 
-    implementation 'com.clevertap.android:clevertap-android-sdk:4.4.0'
+    implementation 'com.clevertap.android:clevertap-android-sdk:4.6.6'
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }
