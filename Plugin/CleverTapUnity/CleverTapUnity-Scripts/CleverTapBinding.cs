@@ -768,6 +768,16 @@ namespace CleverTap {
         CleverTap.Call("resumeInAppNotifications");
     }
 
+    /**
+         * This method is used to change the credentials of Xiaomi app id and key programmatically.
+         *
+         * @param xiaomiAppID  Xiaomi App Id
+         * @param xiaomiAppKey Xiaomi App Key
+    */
+    public static void ChangeXiaomiCredentials(string xiaomiAppID, string xiaomiAppKey) {
+            CleverTap.Call("changeXiaomiCredentials", xiaomiAppID, xiaomiAppKey);
+    }
+
     public static void ProfileRemoveValueForKey(string key) {
         CleverTap.Call("profileRemoveValueForKey", key);
     }

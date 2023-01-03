@@ -563,6 +563,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    public void changeXiaomiCredentials(final String xiaomiAppID, final String xiaomiAppKey){
+        try {
+            clevertap.changeXiaomiCredentials(xiaomiAppID, xiaomiAppKey);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "changeXiaomiCredentials error", t);
+        }
+    }
+
     public int sessionGetTimeElapsed() {
         return clevertap.getTimeElapsed();
     }
