@@ -256,11 +256,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void setPushToken(String token, String type) {
+    public void setPushToken(String token, String region, String type) {
         if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.FCM)) {
             clevertap.pushFcmRegistrationId(token, true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.XPS)) {
-            clevertap.pushXiaomiRegistrationId(token, true);
+            clevertap.pushXiaomiRegistrationId(token, region,true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.BPS)) {
             clevertap.pushBaiduRegistrationId(token, true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.HPS)) {
