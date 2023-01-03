@@ -19,6 +19,7 @@ import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
+import com.clevertap.android.sdk.InboxMessageListener;
 import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
@@ -41,7 +42,8 @@ import org.json.JSONObject;
 
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
         CTInboxListener, InAppNotificationButtonListener,
-        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener, OnInitCleverTapIDListener {
+        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener,
+        OnInitCleverTapIDListener, InboxMessageListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -174,6 +176,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
                 clevertap.setInboxMessageButtonListener(this);
+                clevertap.setCTInboxMessageListener(this);
                 clevertap.setInAppNotificationButtonListener(this);
                 clevertap.setDisplayUnitListener(this);
                 clevertap.setCTFeatureFlagsListener(this);
@@ -818,6 +821,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         JSONObject jsonObject = new JSONObject(payload);
         final String json = "{inbox button payload:" + jsonObject.toString() + "}";
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
+    }
+
+
+    @Override
+    public void onInboxItemClicked(CTInboxMessage message) {
+        if (message != null && message.getData() != null) {
+        final String json = "{inbox button payload:" + message.getData().toString() + "}";
+        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
+        }
     }
 
     //InApp Button Click Listener
