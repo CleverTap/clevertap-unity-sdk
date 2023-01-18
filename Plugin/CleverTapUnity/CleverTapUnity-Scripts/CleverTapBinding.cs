@@ -204,9 +204,6 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool CleverTap_getFeatureFlag(string key, bool defaultValue);
 
-    [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern void CleverTap_changeXiaomiCredentials(string xiaomiAppID, string xiaomiAppKey);
-
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
     }

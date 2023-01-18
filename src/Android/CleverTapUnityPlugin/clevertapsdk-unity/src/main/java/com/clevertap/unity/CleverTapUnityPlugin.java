@@ -66,6 +66,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
 
+    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemSelect";
+
     private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
 
     private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapNativeDisplayUnitsUpdated";
@@ -824,11 +826,10 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
 
-    @Override
     public void onInboxItemClicked(CTInboxMessage message) {
         if (message != null && message.getData() != null) {
-        final String json = "{inbox button payload:" + message.getData().toString() + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
+            final String json = "{inbox button payload:" + message.getData().toString() + "}";
+            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED, json);
         }
     }
 
