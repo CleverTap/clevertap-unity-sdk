@@ -151,6 +151,9 @@ namespace CleverTap {
     private static extern void CleverTap_deleteInboxMessageForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_deleteInboxMessagesForIDs(string messageIds);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_markReadInboxMessageForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -439,6 +442,11 @@ namespace CleverTap {
 
     public static void DeleteInboxMessageForID(string messageId) {
         CleverTap_deleteInboxMessageForID(messageId);   
+    }
+
+    public static void DeleteInboxMessagesForIDs(Dictionary<string, object> messageIds) {
+        var messageIds = Json.Serialize(messageIds);
+        CleverTap_deleteInboxMessagesForIDs(messageIds);
     }
 
     public static void MarkReadInboxMessageForID(string messageId) {
