@@ -4,11 +4,12 @@ Change Log
 Version 2.3.0 *(xxx, 2023)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v4.6.6](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.6)
-- Updated to [CleverTap iOS SDK v4.1.6](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.1.6)
+- Updated to [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
 - Support for Exoplayer v2.17.1
 - Adds new callback `onCleverTapInboxItemClick` to receive inbox item click.
 - Adds `changeXiaomiCredentials`.
 - Breaks setPushXiaomiToken() API where new changes adds region as second mandatory parameter to specify server region.
+- Adds a public method `deleteInboxMessagesForIds()` for deleting multiple App Inbox messages by passing a collection of messageIDs. Please note that this is only for iOS, and NO-OP for Android as of now.
 
 Version 2.2.0 *(14 FEB, 2022)*
 -------------------------------------------
