@@ -444,10 +444,11 @@ namespace CleverTap {
         CleverTap_deleteInboxMessageForID(messageId);   
     }
 
-    public static void DeleteInboxMessagesForIDs(Dictionary<string, object> messageIds) {
-        var ids = Json.Serialize(messageIds);
-        CleverTap_deleteInboxMessagesForIDs(ids);
-    }
+//this api is to be final tested
+    // public static void DeleteInboxMessagesForIDs(string[] messageIds) {
+    //     var ids = Json.Serialize(messageIds);
+    //     CleverTap_deleteInboxMessagesForIDs(ids);
+    // }
 
     public static void MarkReadInboxMessageForID(string messageId) {
         CleverTap_markReadInboxMessageForID(messageId);
