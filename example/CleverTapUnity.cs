@@ -42,7 +42,7 @@ public class CleverTapUnity : MonoBehaviour
 #endif
 
         // set to true to stop sending events to CleverTap
-        CleverTapBinding.SetOptOut(true);
+        CleverTapBinding.SetOptOut(false);
         // set to true to enable Device Network information to be sent to CleverTap
         CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
         if (CLEVERTAP_ENABLE_PERSONALIZATION)
@@ -399,6 +399,16 @@ public class CleverTapUnity : MonoBehaviour
     void CleverTapInAppNotificationDismissedCallback(string message)
     {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    void CleverTapInboxItemSelect(string message)
+    {
+        Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    void CleverTapInboxCustomExtrasButtonSelect(string message)
+    {
+        Debug.Log("unity received inbox message button selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     //returns callback for InitializeInbox

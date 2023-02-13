@@ -520,7 +520,7 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [clevertap deleteInboxMessageForID:messageId];
 }
 
-- (void)deleteInboxMessagesForIDs:(NSString *)messageIds {
+- (void)deleteInboxMessagesForIDs:(NSArray *)messageIds {
     [clevertap deleteInboxMessagesForIDs:messageIds];
 }
 

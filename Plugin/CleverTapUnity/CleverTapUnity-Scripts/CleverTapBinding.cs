@@ -445,8 +445,8 @@ namespace CleverTap {
     }
 
     public static void DeleteInboxMessagesForIDs(Dictionary<string, object> messageIds) {
-        var messageIds = Json.Serialize(messageIds);
-        CleverTap_deleteInboxMessagesForIDs(messageIds);
+        var ids = Json.Serialize(messageIds);
+        CleverTap_deleteInboxMessagesForIDs(ids);
     }
 
     public static void MarkReadInboxMessageForID(string messageId) {
