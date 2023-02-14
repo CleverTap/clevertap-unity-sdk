@@ -426,8 +426,8 @@ void CleverTap_deleteInboxMessageForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] deleteInboxMessageForID:clevertap_stringToNSString(messageId)];
 }
 
-void CleverTap_deleteInboxMessagesForIDs(const char* messageIds) {
-    [[CleverTapUnityManager sharedInstance] deleteInboxMessagesForIDs:clevertap_stringToNSString(messageIds)];
+void CleverTap_deleteInboxMessagesForIDs(const char* messageIds[], int size) {
+    [[CleverTapUnityManager sharedInstance] deleteInboxMessagesForIDs:clevertap_NSArrayFromArray(messageIds, size)];
 }
 
 void CleverTap_markReadInboxMessageForID(const char* messageId) {

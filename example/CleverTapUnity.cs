@@ -416,6 +416,8 @@ public class CleverTapUnity : MonoBehaviour
     {
         CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
         Debug.Log("unity received inbox initialized");
+        // string[] arr = {"1608798445_1676289520","1548315289_1676289520","1608798445_1676289268", "1548315289_1676289268"};
+        // CleverTapBinding.DeleteInboxMessagesForIDs(arr);
     }
 
     void CleverTapInboxMessagesDidUpdateCallback()
