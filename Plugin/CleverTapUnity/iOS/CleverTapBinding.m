@@ -538,7 +538,7 @@ void CleverTap_promptForPushPermission(const BOOL showFallbackSettings) {
     [[CleverTapUnityManager sharedInstance] promptForPushPermission: showFallbackSettings];
 }
 
-bool CleverTap_isPushPermissionGranted() {
+void CleverTap_isPushPermissionGranted() {
     return [[CleverTapUnityManager sharedInstance] isPushPermissionGranted];
 }
 

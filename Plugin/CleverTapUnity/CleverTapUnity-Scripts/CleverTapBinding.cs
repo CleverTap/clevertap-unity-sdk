@@ -214,7 +214,7 @@ namespace CleverTap {
     private static extern void CleverTap_promptPushPrimer(string json);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern bool CleverTap_isPushPermissionGranted();
+    private static extern void CleverTap_isPushPermissionGranted();
 
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
@@ -565,8 +565,8 @@ namespace CleverTap {
         CleverTap_promptForPushPermission(showFallbackSettings);
     }
 
-    public static bool IsPushPermissionGranted() {
-        return CleverTap_isPushPermissionGranted();
+    public static void IsPushPermissionGranted() {
+        CleverTap_isPushPermissionGranted();
     }
 
 
@@ -946,8 +946,8 @@ namespace CleverTap {
          CleverTap.Call("promptForPushPermission", showFallbackSettings);
     }
 
-    public static bool IsPushPermissionGranted(){
-        return CleverTap.Call<bool>("isPushPermissionGranted");
+    public static void IsPushPermissionGranted(){
+        return CleverTap.Call<void>("isPushPermissionGranted");
     }
 
 
@@ -1120,9 +1120,8 @@ namespace CleverTap {
     public static void PromptForPushPermission(bool showFallbackSettings){
     }
 
-    // public static bool IsPushPermissionGranted(){
-    //     return -1;
-    // }
+    public static void IsPushPermissionGranted(){
+    }
 
 #endif
     }

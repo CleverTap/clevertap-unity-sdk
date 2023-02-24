@@ -71,6 +71,7 @@ public class CleverTapUnity : MonoBehaviour
         item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
         item.Add("btnBorderRadius", "2");
         item.Add("fallbackToSettings", "true");
+        CleverTapBinding.IsPushPermissionGranted();
         CleverTapBinding.PromptPushPrimer(item);
         CleverTapBinding.RecordEvent("Test Unity Event");
         //Invoke("LaunchInbox",30.0f);
@@ -441,5 +442,10 @@ public class CleverTapUnity : MonoBehaviour
     void CleverTapInboxMessagesDidUpdateCallback()
     {
         Debug.Log("unity received inbox messages updated");
+    }
+
+    void CleverTapPushNotificationPermissionStatus(string message)
+    {
+        Debug.Log("CleverTap isPushPermissionGranted " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 }

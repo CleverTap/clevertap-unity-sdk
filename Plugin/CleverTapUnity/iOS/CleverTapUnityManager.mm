@@ -29,6 +29,7 @@ static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigAct
 static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigInitialized";
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
+static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -796,13 +797,22 @@ static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPerm
     [clevertap promptPushPrimer:localInAppBuilder.getLocalInAppSettings];
 }
 
-- (BOOL)isPushPermissionGranted {
+- (void)isPushPermissionGranted {
     if (@available(iOS 10.0, *)) {
         [clevertap getNotificationPermissionStatusWithCompletionHandler:^(UNAuthorizationStatus status) {
-                BOOL result = (status == UNAuthorizationStatusAuthorized);
-                return result;
+            BOOL isPushEnabled = YES;
+                    if (status == UNAuthorizationStatusNotDetermined || status == UNAuthorizationStatusDenied) {
+                        isPushEnabled = NO;
+                    }
+            NSLog(@"[CleverTap isPushPermissionGranted: %i]", isPushEnabled);
+            [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"YES": @"NO"]];
+             
             }];
-    }  
+    }
+    else {
+        // Fallback on earlier versions
+        NSLog(@"Push Notification is available from iOS v10.0 or later");
+    }
 }
 
 

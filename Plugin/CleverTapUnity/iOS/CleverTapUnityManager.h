@@ -126,6 +126,6 @@
 #pragma mark - Push Primer
 - (void)promptForPushPermission:(BOOL)showFallbackSettings;
 - (void)promptPushPrimer:(NSDictionary *)json;
-- (BOOL)isPushPermissionGranted;
+- (void)isPushPermissionGranted;
 
 @end
