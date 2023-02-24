@@ -123,4 +123,9 @@
 
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue;
 
+#pragma mark - Push Primer
+- (void)promptForPushPermission:(BOOL)showFallbackSettings;
+- (void)promptPushPrimer:(NSDictionary *)json;
+- (BOOL)isPushPermissionGranted;
+
 @end

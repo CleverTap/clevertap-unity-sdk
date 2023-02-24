@@ -527,3 +527,18 @@ void CleverTap_resetProductConfig() {
 BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
     return [[CleverTapUnityManager sharedInstance] get:clevertap_stringToNSString(key) withDefaultValue:defaultValue];
 }
+
+#pragma mark - Push Primer
+void CleverTap_promptPushPrimer(const char* json) {
+    NSMutableDictionary *jsonDict = clevertap_dictFromJsonString(json);
+    [[CleverTapUnityManager sharedInstance] promptPushPrimer: jsonDict];
+}
+
+void CleverTap_promptForPushPermission(const BOOL showFallbackSettings) {
+    [[CleverTapUnityManager sharedInstance] promptForPushPermission: showFallbackSettings];
+}
+
+bool CleverTap_isPushPermissionGranted() {
+    return [[CleverTapUnityManager sharedInstance] isPushPermissionGranted];
+}
+
