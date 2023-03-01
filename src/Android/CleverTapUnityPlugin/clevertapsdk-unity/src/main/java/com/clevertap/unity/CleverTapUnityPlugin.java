@@ -1,5 +1,6 @@
 package com.clevertap.unity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
+import com.clevertap.android.sdk.inapp.CTInAppNotification;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.interfaces.OnInitCleverTapIDListener;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
@@ -59,6 +61,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK
             = "CleverTapInAppNotificationDismissedCallback";
+
+    private static final String CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK
+            = "CleverTapInAppNotificationShowCallback";
 
     private static final String CLEVERTAP_INBOX_DID_INITIALIZE = "CleverTapInboxDidInitializeCallback";
 
@@ -568,14 +573,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void changeXiaomiCredentials(final String xiaomiAppID, final String xiaomiAppKey){
-        try {
-            clevertap.changeXiaomiCredentials(xiaomiAppID, xiaomiAppKey);
-        } catch (Throwable t) {
-            Log.e(LOG_TAG, "changeXiaomiCredentials error", t);
-        }
-    }
-
     public int sessionGetTimeElapsed() {
         return clevertap.getTimeElapsed();
     }
@@ -769,6 +766,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     // InAppNotificationListener
     public boolean beforeShow(Map<String, Object> var1) {
         return true;
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void onShow(CTInAppNotification ctInAppNotification) {
+        if (ctInAppNotification != null && ctInAppNotification.getJsonDescription() != null) {
+            final String json = "{inApp onShow() json payload:" + ctInAppNotification.getJsonDescription().toString() + "}";
+            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK, json);
+        }
     }
 
     public void onDismissed(Map<String, Object> var1, @Nullable Map<String, Object> var2) {
