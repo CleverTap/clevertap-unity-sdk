@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.3.0_dev";
+    public const string Version = "2.3.0";
 
 #if UNITY_IOS
     void Start() {
@@ -206,6 +206,15 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool CleverTap_getFeatureFlag(string key, bool defaultValue);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_promptForPushPermission(bool showFallbackSettings);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_promptPushPrimer(string json);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern bool CleverTap_isPushPermissionGranted();
 
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
@@ -545,6 +554,21 @@ namespace CleverTap {
     public static bool GetFeatureFlag(string key, bool defaultValue) {
         return CleverTap_getFeatureFlag(key, defaultValue);
     }
+
+    public static void PromptPushPrimer(Dictionary<string, object> json) {
+        var jsonString = Json.Serialize(json);
+        CleverTap_promptPushPrimer(jsonString);
+    }
+
+
+    public static void PromptForPushPermission(bool showFallbackSettings) {
+        CleverTap_promptForPushPermission(showFallbackSettings);
+    }
+
+    public static bool IsPushPermissionGranted() {
+        return CleverTap_isPushPermissionGranted();
+    }
+
 
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
@@ -914,6 +938,19 @@ namespace CleverTap {
         return CleverTap.Call<int>("getInboxMessageUnreadCount");
     }
 
+    public static void PromptPushPrimer(Dictionary<string, object> details){
+         CleverTap.Call("promptPushPrimer", Json.Serialize(details));
+    }
+
+    public static void PromptForPushPermission(bool showFallbackSettings){
+         CleverTap.Call("promptForPushPermission", showFallbackSettings);
+    }
+
+    public static bool IsPushPermissionGranted(){
+        return CleverTap.Call<bool>("isPushPermissionGranted");
+    }
+
+
 #else
 
    // Empty implementations of the API, in case the application is being compiled for a platform other than iOS or Android.
@@ -1076,6 +1113,13 @@ namespace CleverTap {
     public static int GetInboxMessageUnreadCount(){
         return -1;
     }
+
+    public static void PromptPushPrimer(string json){
+    }
+
+    public static void PromptForPushPermission(bool showFallbackSettings){
+    }
+
 #endif
     }
 }
