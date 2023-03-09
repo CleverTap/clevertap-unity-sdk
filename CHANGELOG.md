@@ -1,13 +1,13 @@
 Change Log
 ==========
 
-Version 2.2.0 *(27 September, 2021)*
+Version 2.2.0 *(14 FEB, 2022)*
 -------------------------------------------
-* Adds public methods for suspending, discarding & resuming InApp Notifications
-* Adds public methods to increment/decrement values set via User properties
-* Deprecates `ProfileGetCleverTapID()` and `ProfileGetCleverTapAttributionIdentifier()` methods
-* Adds a new public method `GetCleverTapID()` as an alternative to above deprecated methods
-* Supports [CleverTap iOS SDK v3.10.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/3.10.0)
+- Add public APIs for Increment/Decrement ops and InApp Controls
+- Deprecates `profileGetCleverTapID()`and `profileGetCleverTapAttributionIdentifier()`.
+- Adds a new public method `getCleverTapID()` as an alternative to above-deprecated methods.
+- Updated to [CleverTap Android SDK v4.4.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/core-v4.4.0)
+- Updated to [CleverTap iOS SDK v4.0.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.0.0)
 
 Version 2.1.2 *(19 May, 2021)*
 -------------------------------------------
