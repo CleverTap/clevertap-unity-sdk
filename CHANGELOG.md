@@ -1,11 +1,10 @@
 Change Log
 ==========
 
-Version 2.3.0 *(8 March, 2023)*
+Version 2.3.0 *(13 March, 2023)*
 -------------------------------------------
-- Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3)
-    - `isPushPermissionGranted()`, `promptPushPrimer(object)`, `promptForPushPermission(boolean)`
-- Updated to [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
+- Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3) and [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
+    - `isPushPermissionGranted()`, `promptPushPrimer(object)`, `promptForPushNotification(boolean)`
 - Adds push permission callback method `CleverTapOnPushPermissionResponseCallback` which returns true/false after user allows/denies the notification permission.
 - Adds `CleverTapInAppNotificationShowCallback` to handle InApp notification shown - Only for Android.
 - Support for Exoplayer v2.17.1 - Only for Android.

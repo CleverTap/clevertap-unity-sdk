@@ -562,3 +562,17 @@ void CleverTap_discardInAppNotifications() {
 void CleverTap_resumeInAppNotifications() {
     [[CleverTapUnityManager sharedInstance] resumeInAppNotifications];
 }
+
+#pragma mark - Push Primer
+void CleverTap_promptPushPrimer(const char* json) {
+    NSMutableDictionary *jsonDict = clevertap_dictFromJsonString(json);
+    [[CleverTapUnityManager sharedInstance] promptPushPrimer: jsonDict];
+}
+
+void CleverTap_promptForPushPermission(const BOOL showFallbackSettings) {
+    [[CleverTapUnityManager sharedInstance] promptForPushPermission: showFallbackSettings];
+}
+
+void CleverTap_isPushPermissionGranted() {
+    return [[CleverTapUnityManager sharedInstance] isPushPermissionGranted];
+}
