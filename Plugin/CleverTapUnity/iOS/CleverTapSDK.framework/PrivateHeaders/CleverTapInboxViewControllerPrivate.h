@@ -7,10 +7,6 @@
 @required
 - (void)messageDidShow:(CleverTapInboxMessage * _Nonnull)message;
 - (void)messageDidSelect:(CleverTapInboxMessage * _Nonnull)message atIndex:(int)index withButtonIndex:(int)buttonIndex;
-/**
- Called when app inbox link is tapped for requesting push permission.
- */
-- (void)messageDidSelectForPushPermission:(BOOL)fallbackToSettings;
 @end
 
 @interface CleverTapInboxViewController ()

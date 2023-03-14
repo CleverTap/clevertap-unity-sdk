@@ -109,8 +109,7 @@ public class CleverTapUnity : MonoBehaviour
         CleverTap.CleverTapBinding.RegisterPush();
         // set to 0 to remove icon badge
         CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
-        //Will check whether notification permission is granted or not
-        CleverTapBinding.IsPushPermissionGranted();
+
     }
 
     /* --------------------------------------------------------------------------------
@@ -139,10 +138,6 @@ public class CleverTapUnity : MonoBehaviour
         //    CleverTapBinding.SuspendInAppNotifications();
         //    CleverTapBinding.DiscardInAppNotifications();
         //    CleverTapBinding.ResumeInAppNotifications();
-
-        //Returns a boolean to indicate whether notification permission is granted or not
-        bool isPushPermissionGranted = CleverTapBinding.IsPushPermissionGranted();
-        Debug.Log("isPushPermissionGranted"+ isPushPermissionGranted);
 #endif
     }
 
@@ -473,12 +468,6 @@ public class CleverTapUnity : MonoBehaviour
         Debug.Log("unity received inbox initialized");
         // string[] arr = {"1608798445_1676289520","1548315289_1676289520","1608798445_1676289268", "1548315289_1676289268"};
         // CleverTapBinding.DeleteInboxMessagesForIDs(arr);
-    }
-
-    // returns callback to indicate whether notification permission is granted or not
-    void CleverTapPushNotificationPermissionStatus(string message)
-    {
-        Debug.Log("CleverTap application isPushPermissionGranted " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     void CleverTapInboxMessagesDidUpdateCallback()
