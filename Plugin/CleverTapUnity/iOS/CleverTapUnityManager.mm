@@ -6,6 +6,7 @@
 #import <CleverTapSDK/CleverTap+FeatureFlags.h>
 #import <CleverTapSDK/CleverTap+ProductConfig.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
+#import <CleverTapSDK/CleverTap+InAppNotifications.h>
 #import <CleverTapSDK/CTLocalInApp.h>
 #import <CleverTapSDK/Clevertap+PushPermission.h>
 
@@ -30,6 +31,7 @@ static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigI
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
 static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
+
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -174,6 +176,14 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
 
 - (void)profileRemoveMultiValues:(NSArray<NSString *> *)values forKey:(NSString *)key {
     [clevertap profileRemoveMultiValues:values forKey:key];
+}
+
+- (void)profileIncrementValueBy:(NSNumber* _Nonnull)value forKey:(NSString *_Nonnull)key {
+    [clevertap profileIncrementValueBy:value forKey:key];
+}
+
+- (void)profileDecrementValueBy:(NSNumber* _Nonnull)value forKey:(NSString *_Nonnull)key {
+    [clevertap profileDecrementValueBy:value forKey:key];
 }
 
 - (NSString *)profileGetCleverTapID {
@@ -681,9 +691,9 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
     }
     else {
         jsonDict = @{ key: value.jsonValue };
-    }
-    
-    return jsonDict;
+}
+
+return jsonDict;
 }
 
 - (double)getProductConfigLastFetchTimeStamp {
@@ -804,9 +814,8 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
                     if (status == UNAuthorizationStatusNotDetermined || status == UNAuthorizationStatusDenied) {
                         isPushEnabled = NO;
                     }
-            NSLog(@"[CleverTap isPushPermissionGranted: %i]", isPushEnabled);
-            [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"YES": @"NO"]];
-             
+            NSLog(@"[CleverTap isPushPermissionGranted: %d]", isPushEnabled);
+            [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"True": @"False"]];
             }];
     }
     else {
@@ -821,7 +830,7 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
 - (void)onPushPermissionResponse:(BOOL)accepted {
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];
    
-    jsonDict[@"isPermissionGranted"] = [NSNumber numberWithBool:accepted];
+    jsonDict[@"accepted"] = [NSNumber numberWithBool:accepted];
     
     NSString *jsonString = [self dictToJson:jsonDict];
 
@@ -845,6 +854,20 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
     }
     
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark - In App Controls
+
+- (void)suspendInAppNotifications {
+    [clevertap suspendInAppNotifications];
+}
+
+- (void)discardInAppNotifications {
+    [clevertap discardInAppNotifications];
+}
+
+- (void)resumeInAppNotifications {
+    [clevertap resumeInAppNotifications];
 }
 
 @end
