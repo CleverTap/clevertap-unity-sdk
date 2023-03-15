@@ -21,7 +21,7 @@ static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNoti
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
-static NSString * kCleverTapInboxItemSelect = @"CleverTapInboxItemSelect";
+static NSString * kCleverTapInboxItemClicked = @"CleverTapInboxItemClicked";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetched";
 static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigActivated";
@@ -568,7 +568,7 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         // body[@"data"] = jsonString;
         if (jsonString != nil) {
-          [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemSelect withMessage:jsonString];
+          [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemClicked withMessage:jsonString];
     }
     }
 }

@@ -414,9 +414,9 @@ public class CleverTapUnity : MonoBehaviour
         Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
-    void CleverTapInboxItemSelect(string message)
+    void CleverTapInboxItemClicked(string message)
     {
-        Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+        Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     void CleverTapInboxCustomExtrasButtonSelect(string message)
