@@ -1,12 +1,10 @@
 Change Log
 ==========
 
-Version 2.3.0 *(13 March, 2023)*
+Version 2.3.0 *(15 March, 2023)*
 -------------------------------------------
-- Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3) and [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
-    - `isPushPermissionGranted()`, `promptPushPrimer(object)`, `promptForPushNotification(boolean)`
-- Adds push permission callback method `CleverTapOnPushPermissionResponseCallback` which returns true/false after user allows/denies the notification permission.
-- Adds `CleverTapInAppNotificationShowCallback` to handle InApp notification shown - Only for Android.
+- Updated to [CleverTap Android SDK v4.6.6](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.6)
+- Updated to [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
 - Support for Exoplayer v2.17.1 - Only for Android.
 - Adds new callback `onCleverTapInboxItemClick` to receive inbox item click.
 - Breaks setPushXiaomiToken() API where new changes adds region as second mandatory parameter to specify server region.
