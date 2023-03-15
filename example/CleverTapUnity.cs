@@ -57,43 +57,6 @@ public class CleverTapUnity : MonoBehaviour
         CleverTapBinding.RecordEvent("Test Unity Event");
         //Invoke("LaunchInbox",30.0f);
 
-
-        //Push primer APIs usage
-        //Half-Interstial Local InApp
-        Dictionary<string, object> item = new Dictionary<string, object>();
-        item.Add("inAppType", "half-interstitial");
-        item.Add("titleText", "Get Notified");
-        item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
-        item.Add("followDeviceOrientation", true);
-        item.Add("positiveBtnText", "Allow");
-        item.Add("negativeBtnText", "Cancel");
-        item.Add("backgroundColor", "#FFFFFF");
-        item.Add("btnBorderColor", "#0000FF");
-        item.Add("titleTextColor", "#0000FF");
-        item.Add("messageTextColor", "#000000");
-        item.Add("btnTextColor", "#FFFFFF");
-        item.Add("btnBackgroundColor", "#0000FF");
-        item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
-        item.Add("btnBorderRadius", "2");
-        item.Add("fallbackToSettings", true);
-        CleverTapBinding.PromptPushPrimer(item);
-
-        //Alert Local InApp
-        Dictionary<string, object> item = new Dictionary<string, object>();
-        item.Add("inAppType", "half-interstitial");
-        item.Add("titleText", "Get Notified");
-        item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
-        item.Add("followDeviceOrientation", true);
-        item.Add("fallbackToSettings", true);
-        CleverTapBinding.PromptPushPrimer(item);
-
-        /*Prompt to show hard notification permission dialog
-          true - fallbacks to app's notification settings if permission is denied
-          false - does not fallback to app's notification settings if permission is denied
-        */
-        CleverTapBinding.PromptForPushPermission(false);
-
-
     }
 
     /* --------------------------------------------------------------------------------
