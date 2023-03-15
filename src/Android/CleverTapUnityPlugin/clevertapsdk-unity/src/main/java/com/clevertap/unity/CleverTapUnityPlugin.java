@@ -66,7 +66,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
 
-    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemSelect";
+    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemClicked";
 
     private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
 
