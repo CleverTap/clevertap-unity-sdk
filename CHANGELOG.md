@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 2.3.0 *(15 March, 2023)*
+Version 2.3.0 *(16 March, 2023)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v4.6.6](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.6)
 - Updated to [CleverTap iOS SDK v4.1.6](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.1.6)

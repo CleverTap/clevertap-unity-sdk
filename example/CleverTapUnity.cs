@@ -220,7 +220,6 @@ public class CleverTapUnity : MonoBehaviour
                 Debug.Log("unable to parse json");
             }
         }
-
     }
 
     /* --------------------------------------------------------------------------------
@@ -397,23 +396,12 @@ public class CleverTapUnity : MonoBehaviour
     {
         CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
     }
-
-    // returns the custom data associated with an in-app notification click
-    void CleverTapInAppNotificationShowCallback(string message) {
-        Debug.Log("unity received inapp notification onShow(): " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message)
     {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
-
-    // returns the status of push permission response after it's granted/denied
-    void CleverTapOnPushPermissionResponseCallback(string message) {
-        Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
+    //returns data associated with inbox message item click
     void CleverTapInboxItemClicked(string message)
     {
         Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
