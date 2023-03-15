@@ -178,16 +178,6 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
-    // returns the custom data associated with an in-app notification click
-    void CleverTapInAppNotificationShowCallback(string message) {
-        Debug.Log("unity received inapp notification onShow(): " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
-    // returns the status of push permission response after it's granted/denied
-    void CleverTapOnPushPermissionResponseCallback(string message) {
-        Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
     // returns when an in-app notification is dismissed by a call to action with custom extras
     void CleverTapInAppNotificationButtonTapped(string message) {
         Debug.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));

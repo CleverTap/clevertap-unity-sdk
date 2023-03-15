@@ -1166,12 +1166,6 @@ namespace CleverTap {
         return -1;
     }
 
-    public static void PromptPushPrimer(string json){
-    }
-
-    public static void PromptForPushPermission(bool showFallbackSettings){
-    }
-
 #endif
     }
 }
