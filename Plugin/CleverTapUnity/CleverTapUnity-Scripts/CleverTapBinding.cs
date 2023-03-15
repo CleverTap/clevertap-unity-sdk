@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.2.0";
+    public const string Version = "2.3.0";
 
 #if UNITY_IOS
     void Start() {
@@ -173,6 +173,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_deleteInboxMessageForID(string messageId);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_deleteInboxMessagesForIDs(string[] messageIds,int arrLength);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_markReadInboxMessageForID(string messageId);
@@ -498,6 +501,11 @@ namespace CleverTap {
         CleverTap_deleteInboxMessageForID(messageId);   
     }
 
+    public static void DeleteInboxMessagesForIDs(string[] messageIds) {
+        int arrLength = messageIds.Length;
+        CleverTap_deleteInboxMessagesForIDs(messageIds, arrLength);
+    }
+
     public static void MarkReadInboxMessageForID(string messageId) {
         CleverTap_markReadInboxMessageForID(messageId);
     }
@@ -594,6 +602,7 @@ namespace CleverTap {
     public static bool GetFeatureFlag(string key, bool defaultValue) {
         return CleverTap_getFeatureFlag(key, defaultValue);
     }
+
 
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
@@ -848,19 +857,6 @@ namespace CleverTap {
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
     }
-
-    public static void SuspendInAppNotifications() {
-        CleverTap.Call("suspendInAppNotifications");
-    }
-
-    public static void DiscardInAppNotifications() {
-        CleverTap.Call("discardInAppNotifications");
-    }
-
-    public static void ResumeInAppNotifications() {
-        CleverTap.Call("resumeInAppNotifications");
-    }
-
     public static void RecordScreenView(string screenName) {
         CleverTap.Call("recordScreenView", screenName);
     }
@@ -959,6 +955,10 @@ namespace CleverTap {
 
     public static int GetInboxMessageCount(){
         return CleverTap.Call<int>("getInboxMessageCount");
+    }
+
+    public static void DeleteInboxMessagesForIDs(string[] messageIds) {
+        // no-op for Android
     }
 
     public static int GetInboxMessageUnreadCount(){

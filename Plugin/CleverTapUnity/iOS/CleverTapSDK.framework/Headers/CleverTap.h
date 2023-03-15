@@ -18,6 +18,7 @@
 #define CLEVERTAP_NO_GEOFENCE_SUPPORT 1
 #endif
 
+@protocol CleverTapDomainDelegate;
 @protocol CleverTapSyncDelegate;
 @protocol CleverTapURLDelegate;
 @protocol CleverTapPushNotificationDelegate;
@@ -46,6 +47,12 @@ typedef NS_ENUM(int, CleverTapChannel) {
     CleverTapInAppNotification = 2
 };
 
+typedef NS_ENUM(int, CTSignedCallEvent) {
+    SIGNED_CALL_OUTGOING_EVENT = 0,
+    SIGNED_CALL_INCOMING_EVENT,
+    SIGNED_CALL_END_EVENT
+};
+
 @interface CleverTap : NSObject
 
 #pragma mark - Properties
@@ -59,6 +66,12 @@ typedef NS_ENUM(int, CleverTapChannel) {
  */
 
 @property (nonatomic, strong, readonly, nonnull) CleverTapInstanceConfig *config;
+
+/**
+ CleverTap region/ domain value for signed call domain setup
+ */
+@property (nonatomic, strong, readwrite, nullable) NSString *signedCallDomain;
+
 
 /* ------------------------------------------------------------------------------------------------------
  * Initialization
@@ -155,6 +168,19 @@ typedef NS_ENUM(int, CleverTapChannel) {
  
  */
 + (instancetype _Nonnull)instanceWithConfig:(CleverTapInstanceConfig * _Nonnull)config andCleverTapID:(NSString * _Nonnull)cleverTapID;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns the CleverTap instance corresponding to the CleverTap accountId param.
+ 
+ @discussion
+ Returns the instance if such is already created, otherwise loads it from cache.
+ 
+ @param accountId  the CleverTap account id
+ */
++ (CleverTap *_Nullable)getGlobalInstance:(NSString *_Nonnull)accountId;
 
 /*!
  @method
@@ -627,6 +653,18 @@ extern NSString * _Nonnull const CleverTapGeofencesDidUpdateNotification;
  
  */
 - (NSString *_Nullable)profileGetCleverTapID;
+
+/*!
+ @method
+ 
+ @abstract
+ Get CleverTap account Id.
+ 
+ @discussion
+ The CleverTap account Id is the unique identifier assigned to the Account by CleverTap.
+ 
+ */
+- (NSString *_Nullable)getAccountID;
 
 /*!
  @method
@@ -1227,6 +1265,57 @@ extern NSString * _Nonnull const CleverTapProfileDidInitializeNotification;
  */
 - (BOOL)handleMessage:(NSDictionary<NSString *, id> *)message forWatchSession:(WCSession *)session API_AVAILABLE(ios(9.0));
 #endif
+
+/*!
+ @method
+ 
+ @abstract
+ Record Signed Call System Events.
+ 
+ @param calldetails call details dictionary
+ */
+- (void)recordSignedCallEvent:(int)eventRawValue forCallDetails:(NSDictionary *_Nonnull)calldetails;
+
+/*!
+ @method
+ 
+ @abstract
+ Record Signed Call SDK version.
+ 
+ @param version Signed call SDK version
+ */
+- (void)setSignedCallVersion:(NSString* _Nullable)version;
+
+/*!
+ @method
+ 
+ @abstract
+ The `CTDomainDelegate` protocol provides methods for notifying your application (the adopting delegate) about domain/ region changes.
+ 
+ @see CleverTap+DCDomain.h
+ 
+ @discussion
+ This sets the CTDomainDelegate
+ 
+ @param delegate  an object conforming to the CTDomainDelegate Protocol
+ */
+- (void)setDomainDelegate:(id <CleverTapDomainDelegate> _Nullable)delegate;
+
+/*!
+ @method
+ 
+ @abstract
+ Get region/ domain string value
+ */
+- (NSString *_Nullable)getDomainString;
+
+/*!
+ @method
+ 
+ @abstract
+ Checks if a custom CleverTapID is valid
+ */
++ (BOOL)isValidCleverTapId:(NSString *_Nullable)cleverTapID;
 
 @end
 

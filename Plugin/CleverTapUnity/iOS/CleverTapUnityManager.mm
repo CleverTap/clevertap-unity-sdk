@@ -8,7 +8,6 @@
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 #import <CleverTapSDK/CleverTap+InAppNotifications.h>
 
-
 static CleverTap *clevertap;
 
 static NSString * kCleverTapGameObjectName = @"CleverTapUnity";
@@ -22,13 +21,15 @@ static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNoti
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
+static NSString * kCleverTapInboxItemClicked = @"CleverTapInboxItemClicked";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetched";
 static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigActivated";
 static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigInitialized";
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 
-@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate >
+
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate>
 
 @end
 
@@ -525,6 +526,10 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     [clevertap deleteInboxMessageForID:messageId];
 }
 
+- (void)deleteInboxMessagesForIDs:(NSArray *)messageIds {
+    [clevertap deleteInboxMessagesForIDs:messageIds];
+}
+
 - (void)markReadInboxMessageForID:(NSString *)messageId {
     [clevertap markReadInboxMessageForID:messageId];
 }
@@ -550,6 +555,19 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     
     if (jsonString != nil) {
         [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxCustomExtrasButtonSelect withMessage:jsonString];
+    }
+}
+
+- (void)messageDidSelect:(CleverTapInboxMessage *_Nonnull)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
+    if ([message json] != nil) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[message json]
+                                                                   options:0
+                                                                   error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        if (jsonString != nil) {
+          [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemClicked withMessage:jsonString];
+    }
     }
 }
 

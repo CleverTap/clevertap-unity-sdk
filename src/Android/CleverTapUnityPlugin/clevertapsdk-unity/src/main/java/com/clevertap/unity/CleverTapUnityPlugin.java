@@ -19,6 +19,7 @@ import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
+import com.clevertap.android.sdk.InboxMessageListener;
 import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
@@ -41,7 +42,8 @@ import org.json.JSONObject;
 
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
         CTInboxListener, InAppNotificationButtonListener,
-        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener, OnInitCleverTapIDListener {
+        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener,
+        OnInitCleverTapIDListener, InboxMessageListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -63,6 +65,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
 
     private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
+
+    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemClicked";
 
     private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
 
@@ -174,10 +178,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
                 clevertap.setInboxMessageButtonListener(this);
+                clevertap.setCTInboxMessageListener(this);
                 clevertap.setInAppNotificationButtonListener(this);
                 clevertap.setDisplayUnitListener(this);
                 clevertap.setCTFeatureFlagsListener(this);
-                clevertap.setCTFeatureFlagsListener(this);
+                clevertap.setCTProductConfigListener(this);
                 clevertap.setLibrary("Unity");
             }
         } catch (Throwable t) {
@@ -256,11 +261,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void setPushToken(String token, String type) {
+    public void setPushToken(String token, String region, String type) {
         if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.FCM)) {
             clevertap.pushFcmRegistrationId(token, true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.XPS)) {
-            clevertap.pushXiaomiRegistrationId(token, true);
+            clevertap.pushXiaomiRegistrationId(token, region,true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.BPS)) {
             clevertap.pushBaiduRegistrationId(token, true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.HPS)) {
@@ -810,6 +815,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         JSONObject jsonObject = new JSONObject(payload);
         final String json = "{inbox button payload:" + jsonObject.toString() + "}";
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
+    }
+
+
+    public void onInboxItemClicked(CTInboxMessage message) {
+        if (message != null && message.getData() != null) {
+            final String json = "{inbox button payload:" + message.getData().toString() + "}";
+            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED, json);
+        }
     }
 
     //InApp Button Click Listener

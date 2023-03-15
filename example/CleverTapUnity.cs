@@ -42,7 +42,7 @@ public class CleverTapUnity : MonoBehaviour
 #endif
 
         // set to true to stop sending events to CleverTap
-        CleverTapBinding.SetOptOut(true);
+        CleverTapBinding.SetOptOut(false);
         // set to true to enable Device Network information to be sent to CleverTap
         CleverTapBinding.EnableDeviceNetworkInfoReporting(true);
         if (CLEVERTAP_ENABLE_PERSONALIZATION)
@@ -53,7 +53,7 @@ public class CleverTapUnity : MonoBehaviour
         //app inbox
         CleverTapBinding.InitializeInbox();
         Debug.Log("InboxInit started");
-        
+
         CleverTapBinding.RecordEvent("Test Unity Event");
         //Invoke("LaunchInbox",30.0f);
 
@@ -72,6 +72,7 @@ public class CleverTapUnity : MonoBehaviour
         CleverTap.CleverTapBinding.RegisterPush();
         // set to 0 to remove icon badge
         CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
+
     }
 
     /* --------------------------------------------------------------------------------
@@ -400,12 +401,24 @@ public class CleverTapUnity : MonoBehaviour
     {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
+    //returns data associated with inbox message item click
+    void CleverTapInboxItemClicked(string message)
+    {
+        Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    void CleverTapInboxCustomExtrasButtonSelect(string message)
+    {
+        Debug.Log("unity received inbox message button selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
 
     //returns callback for InitializeInbox
     void CleverTapInboxDidInitializeCallback()
     {
         CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
         Debug.Log("unity received inbox initialized");
+        // string[] arr = {"1608798445_1676289520","1548315289_1676289520","1608798445_1676289268", "1548315289_1676289268"};
+        // CleverTapBinding.DeleteInboxMessagesForIDs(arr);
     }
 
     void CleverTapInboxMessagesDidUpdateCallback()
