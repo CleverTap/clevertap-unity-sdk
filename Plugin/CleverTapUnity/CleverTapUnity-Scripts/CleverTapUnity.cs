@@ -35,7 +35,7 @@ public class CleverTapUnity: MonoBehaviour {
         CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
         CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_ACCOUNT_REGION);
         //==========[Testing Newly added Clevertap APIs]============================================
-        //    CleverTapBinding.GetCleverTapId();
+            CleverTapBinding.GetCleverTapId();
         //    CleverTapBinding.ProfileIncrementValueForKey("add_int",2);
         //    CleverTapBinding.ProfileIncrementValueForKey("add_double",3.5);
         //    CleverTapBinding.ProfileDecrementValueForKey("minus_int",2);
@@ -43,6 +43,32 @@ public class CleverTapUnity: MonoBehaviour {
         //    CleverTapBinding.SuspendInAppNotifications();
         //    CleverTapBinding.DiscardInAppNotifications();
         //    CleverTapBinding.ResumeInAppNotifications();
+
+        // record special Charged event
+        // Dictionary<string, object> chargeDetails = new Dictionary<string, object>();
+        // chargeDetails.Add("Amount", 500);
+        // chargeDetails.Add("Currency", "USD");
+        // chargeDetails.Add("Payment Mode", "Credit card");
+        //
+        // Dictionary<string, object> item = new Dictionary<string, object>();
+        // item.Add("price", 50);
+        // item.Add("Product category", "books");
+        // item.Add("Quantity", 1);
+        //
+        // Dictionary<string, object> item2 = new Dictionary<string, object>();
+        // item2.Add("price", 100);
+        // item2.Add("Product category", "plants");
+        // item2.Add("Quantity", 10);
+        //
+        // List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
+        // items.Add(item);
+        // items.Add(item2);
+        //
+        // CleverTapBinding.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
+
+        // CleverTapBinding.RecordEvent("testEventPushAmp");
+
+        //    Push Templates APIs usages
         //    CleverTapBinding.RecordEvent("Send Basic Push");
         
         //    CleverTapBinding.RecordEvent("Send Carousel Push");
@@ -169,6 +195,11 @@ public class CleverTapUnity: MonoBehaviour {
     // returns on the click of app inbox message with a map of custom Key-Value pairs
     void CleverTapInboxCustomExtrasButtonSelect(string message) {
         Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+    // returns on the click of app inbox message with a map of custom Key-Value pairs
+    void CleverTapInboxItemClicked(string message)
+    {
+        Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     // returns native display units data

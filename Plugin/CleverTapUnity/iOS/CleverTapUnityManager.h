@@ -25,7 +25,7 @@
 - (void)setOffline:(BOOL)enabled;
 
 
-#pragma mark - Opt-out APIs
+#pragma mark - Opt-out API
 
 - (void)setOptOut:(BOOL)enabled;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
@@ -41,6 +41,8 @@
 - (void)profileAddMultiValues:(NSArray<NSString *> *)values forKey:(NSString*)key;
 - (void)profileRemoveMultiValue:(NSString *)value forKey:(NSString *)key;
 - (void)profileRemoveMultiValues:(NSArray<NSString *> *)values forKey:(NSString*)key;
+- (void)profileIncrementValueBy:(NSNumber* _Nonnull)value forKey:(NSString *_Nonnull)key;
+- (void)profileDecrementValueBy:(NSNumber* _Nonnull)value forKey:(NSString *_Nonnull)key;
 - (id)profileGet:(NSString *)propertyName;
 - (NSString *)profileGetCleverTapID;
 - (NSString *)profileGetCleverTapAttributionIdentifier;
@@ -91,6 +93,7 @@
 - (NSArray *)getUnreadInboxMessages;
 - (NSDictionary *)getInboxMessageForId:(NSString *)messageId;
 - (void)deleteInboxMessageForID:(NSString *)messageId;
+- (void)deleteInboxMessagesForIDs:(NSArray *)messageIds;
 - (void)markReadInboxMessageForID:(NSString *)messageId;
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;
 - (void)recordInboxNotificationClickedEventForID:(NSString *)messageId;
@@ -121,5 +124,11 @@
 #pragma mark - Feature Flags
 
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue;
+
+#pragma mark - In App Controls
+
+- (void)suspendInAppNotifications;
+- (void)discardInAppNotifications;
+- (void)resumeInAppNotifications;
 
 @end
