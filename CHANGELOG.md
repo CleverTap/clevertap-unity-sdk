@@ -3,7 +3,7 @@ Change Log
 
 Version 2.3.0 *(16 March, 2023)*
 -------------------------------------------
-- Updated to [CleverTap Android SDK v4.6.6](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.6)
+- Updated to [CleverTap Android SDK v4.6.7](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.7_ptv1.0.5.1)
 - Updated to [CleverTap iOS SDK v4.1.6](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.1.6)
 - Support for Exoplayer v2.17.1 - Only for Android.
 - Adds new callback `CleverTapInboxItemClicked` to receive inbox item click.
