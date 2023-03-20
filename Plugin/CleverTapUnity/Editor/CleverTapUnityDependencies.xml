@@ -20,5 +20,7 @@
         <androidPackage spec="androidx.recyclerview:recyclerview:1.2.1" />
 
         <androidPackage spec="com.android.installreferrer:installreferrer:2.2" />
+
+        <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib:1.5.31" />
     </androidPackages>
 </dependencies>
