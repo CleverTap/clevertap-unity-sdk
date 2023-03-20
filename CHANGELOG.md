@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 2.4.0 *(XX March, 2023)*
+-------------------------------------------
+- Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3)
+    - `CleverTapBinding.IsPushPermissionGranted()`, `CleverTapBinding.PromptPushPrimer(object)`, `CleverTapBinding.PromptForPushPermission(boolean)`
+- Updated to [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
+- Adds push permission callback method `CleverTapOnPushPermissionResponseCallback` which returns true/false after user allows/denies the notification permission.
+- Adds `CleverTapInAppNotificationShowCallback` to handle InApp notification shown - Only for Android.
+
 Version 2.3.0 *(16 March, 2023)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v4.6.7](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.7_ptv1.0.5.1)
