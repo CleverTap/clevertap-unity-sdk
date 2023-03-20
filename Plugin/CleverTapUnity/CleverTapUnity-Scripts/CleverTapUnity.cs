@@ -230,10 +230,11 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapInboxCustomExtrasButtonSelect(string message) {
         Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
-    // returns on the click of app inbox message with a map of custom Key-Value pairs
-    void CleverTapInboxItemSelect(string message)
+
+    //returns data associated with inbox message item click
+    void CleverTapInboxItemClicked(string message)
     {
-        Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+        Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     // returns native display units data
