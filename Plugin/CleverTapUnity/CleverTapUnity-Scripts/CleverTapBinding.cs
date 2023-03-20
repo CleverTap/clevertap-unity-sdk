@@ -965,6 +965,18 @@ namespace CleverTap {
         return CleverTap.Call<int>("getInboxMessageUnreadCount");
     }
 
+    public static void PromptPushPrimer(Dictionary<string, object> details){
+             CleverTap.Call("promptPushPrimer", Json.Serialize(details));
+    }
+
+    public static void PromptForPushPermission(bool showFallbackSettings){
+         CleverTap.Call("promptForPushPermission", showFallbackSettings);
+    }
+
+    public static bool IsPushPermissionGranted(){
+        return CleverTap.Call<bool>("isPushPermissionGranted");
+    }
+
 #else
 
    // Empty implementations of the API, in case the application is being compiled for a platform other than iOS or Android.
@@ -1150,6 +1162,12 @@ namespace CleverTap {
 
     public static int GetInboxMessageUnreadCount(){
         return -1;
+    }
+
+    public static void PromptPushPrimer(string json){
+    }
+
+    public static void PromptForPushPermission(bool showFallbackSettings){
     }
 #endif
     }
