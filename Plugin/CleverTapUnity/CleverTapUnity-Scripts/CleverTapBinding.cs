@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.3.0";
+    public const string Version = "2.3.1";
 
 #if UNITY_IOS
     void Start() {
@@ -676,17 +676,17 @@ namespace CleverTap {
 
     public static void CreateNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-        CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge,sound);
+        CleverTapAPI.CallStatic("createNotificationChannelWithSound",context,channelId,channelName,channelDescription,importance,showBadge,sound);
     }
 
     public static void CreateNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-        CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
+        CleverTapAPI.CallStatic("createNotificationChannelWithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
     }
 
     public static void CreateNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-        CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
+        CleverTapAPI.CallStatic("createNotificationChannelWithGroupAndSound",context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
     }
 
     public static void CreateNotificationChannelGroup(string groupId, string groupName){
