@@ -559,15 +559,18 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
 }
 
 - (void)messageDidSelect:(CleverTapInboxMessage *_Nonnull)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
+    NSMutableDictionary *body = [NSMutableDictionary new];
     if ([message json] != nil) {
         NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[message json]
-                                                                   options:0
-                                                                   error:&error];
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        if ([message json] != nil) {
+            body[@"CTInboxMessagePayload"] = [NSMutableDictionary dictionaryWithDictionary:[message json]];
+        }
+        body[@"ContentPageIndex"] = @(index);
+        body[@"ButtonIndex"] = @(buttonIndex);
+        NSString *jsonString = [self dictToJson:body];
         if (jsonString != nil) {
-          [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemClicked withMessage:jsonString];
-    }
+            [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemClicked withMessage:jsonString];
+        }
     }
 }
 
