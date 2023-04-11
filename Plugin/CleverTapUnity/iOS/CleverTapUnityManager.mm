@@ -566,7 +566,7 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
             body[@"CTInboxMessagePayload"] = [NSMutableDictionary dictionaryWithDictionary:[message json]];
         }
         body[@"ContentPageIndex"] = @(index);
-        body[@"buttonIndex"] = @(buttonIndex);
+        body[@"ButtonIndex"] = @(buttonIndex);
         NSString *jsonString = [self dictToJson:body];
         if (jsonString != nil) {
             [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemClicked withMessage:jsonString];
