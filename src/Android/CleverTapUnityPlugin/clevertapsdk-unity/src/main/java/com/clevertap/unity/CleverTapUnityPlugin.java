@@ -822,9 +822,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         if (message != null && message.getData() != null) {
             JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.put("CTInboxMessagePayload",message.getData());
                 jsonObject.put("ContentPageIndex",contentPageIndex);
                 jsonObject.put("ButtonIndex",buttonIndex);
+                jsonObject.put("CTInboxMessagePayload",message.getData());
                 messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED,
                     jsonObject.toString());
             } catch (JSONException e) {
