@@ -4,7 +4,7 @@ Change Log
 Version 2.3.1 *(11 April, 2023)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v4.6.9](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.9)
-- Updated to [CleverTap iOS SDK v4.1.6](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.1.6)
+- Updated to [CleverTap iOS SDK v4.2.2](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.2)
 - Updates the callback `CleverTapInboxItemClicked` to receive inbox item click with item payload and index.
 
 Version 2.3.0 *(16 March, 2023)*
