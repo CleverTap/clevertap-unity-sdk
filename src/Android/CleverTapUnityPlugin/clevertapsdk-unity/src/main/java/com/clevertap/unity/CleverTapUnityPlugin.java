@@ -466,7 +466,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.suspendInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to suspendInAppNotification", t);
         }
     }
 
@@ -475,7 +475,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.discardInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to discardInAppNotification", t);
         }
     }
 
@@ -484,7 +484,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.resumeInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to resumeInAppNotification", t);
         }
     }
 
@@ -607,6 +607,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON Exception in converting style config", e);
+        }
+    }
+
+    public void dismissAppInbox() {
+        try {
+            clevertap.dismissAppInbox();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "Unable to dismissAppInbox", t);
         }
     }
 

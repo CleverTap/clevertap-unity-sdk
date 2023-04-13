@@ -87,6 +87,7 @@
 
 - (void)initializeInbox;
 - (void)showAppInbox:(NSDictionary *)styleConfig;
+- (void)dismissAppInbox;
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
 - (NSArray *)getAllInboxMessages;
