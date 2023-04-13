@@ -953,6 +953,10 @@ namespace CleverTap {
          CleverTap.Call("showAppInbox", styleConfig);
     }
 
+    public static void DismissAppInbox(string styleConfig){
+         CleverTap.Call("dismissAppInbox", styleConfig);
+    }
+
     public static int GetInboxMessageCount(){
         return CleverTap.Call<int>("getInboxMessageCount");
     }
