@@ -154,6 +154,9 @@ namespace CleverTap {
     private static extern void CleverTap_showAppInbox(string styleConfig);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_dismissAppInbox();
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern int CleverTap_getInboxMessageCount();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -451,6 +454,10 @@ namespace CleverTap {
     public static void ShowAppInbox(Dictionary<string, object> styleConfig) {
         var styleConfigString = Json.Serialize(styleConfig);
         CleverTap_showAppInbox(styleConfigString);
+    }
+
+    public static void DismissAppInbox() {
+        CleverTap_dismissAppInbox();
     }
 
     public static int GetInboxMessageCount() {
@@ -1146,6 +1153,9 @@ namespace CleverTap {
     }
 
     public static void ShowAppInbox(string styleConfig){
+    }
+
+    public static void DismissAppInbox(){
     }
 
     public static int GetInboxMessageCount(){
