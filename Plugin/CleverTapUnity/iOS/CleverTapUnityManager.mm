@@ -409,6 +409,10 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
     }
 }
 
+- (void)dismissAppInbox {
+    [clevertap dismissAppInbox];
+}
+
 - (CleverTapInboxStyleConfig *)_dictToInboxStyleConfig: (NSDictionary *)dict {
     CleverTapInboxStyleConfig *_config = [CleverTapInboxStyleConfig new];
     NSString *title = [dict valueForKey:@"navBarTitle"];
