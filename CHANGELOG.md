@@ -2,7 +2,7 @@ Change Log
 ==========
 
 
-Version 2.4.0 *(XX March, 2023)*
+Version 2.4.0 *(14 April, 2023)*
 -------------------------------------------
 - Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3)
     - `CleverTapBinding.IsPushPermissionGranted()`, `CleverTapBinding.PromptPushPrimer(object)`, `CleverTapBinding.PromptForPushPermission(boolean)`
