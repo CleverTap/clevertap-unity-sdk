@@ -452,7 +452,7 @@ public class CleverTapUnity : MonoBehaviour
         Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
-    //returns data associated with inbox message item click
+    //returns data associated with inbox message item click along with page index and button index
     void CleverTapInboxItemClicked(string message)
     {
         Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));

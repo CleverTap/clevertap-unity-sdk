@@ -477,7 +477,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.suspendInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to suspendInAppNotification", t);
         }
     }
 
@@ -486,7 +486,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.discardInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to discardInAppNotification", t);
         }
     }
 
@@ -495,7 +495,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.resumeInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to resumeInAppNotification", t);
         }
     }
 
@@ -618,6 +618,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON Exception in converting style config", e);
+        }
+    }
+
+    public void dismissAppInbox() {
+        try {
+            clevertap.dismissAppInbox();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "Unable to dismissAppInbox", t);
         }
     }
 
@@ -863,10 +871,18 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
 
-    public void onInboxItemClicked(CTInboxMessage message) {
+    public void onInboxItemClicked(CTInboxMessage message, int contentPageIndex, int buttonIndex) {
         if (message != null && message.getData() != null) {
-            final String json = "{inbox button payload:" + message.getData().toString() + "}";
-            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED, json);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("ContentPageIndex",contentPageIndex);
+                jsonObject.put("ButtonIndex",buttonIndex);
+                jsonObject.put("CTInboxMessagePayload",message.getData());
+                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED,
+                    jsonObject.toString());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+
 Version 2.4.0 *(XX March, 2023)*
 -------------------------------------------
 - Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3)
@@ -8,6 +9,15 @@ Version 2.4.0 *(XX March, 2023)*
 - Updated to [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
 - Adds push permission callback method `CleverTapOnPushPermissionResponseCallback` which returns true/false after user allows/denies the notification permission.
 - Adds `CleverTapInAppNotificationShowCallback` to handle InApp notification shown - Only for Android.
+
+=======
+Version 2.3.1 *(13 April, 2023)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v4.6.9](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.9)
+- Updated to [CleverTap iOS SDK v4.2.2](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.2)
+- Fixes `CreateNotificationChannelWithSound`, `CreateNotificationChannelWithGroup`, `CreateNotificationChannelWithGroupAndSound` - Only for Android
+- Updates the callback `CleverTapInboxItemClicked` to receive inbox item click with item payload.The `ContentPageIndex` corresponds the index of the item clicked in the list whereas the `ButtonIndex` for the App Inbox button clicked (0, 1, or 2). A value of -1 indicates the App Inbox item is clicked.
+- Adds `DismissAppInbox` to dismiss the App Inbox.
 
 Version 2.3.0 *(16 March, 2023)*
 -------------------------------------------

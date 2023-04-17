@@ -137,6 +137,12 @@ void LaunchInbox()
     CleverTapBinding.ShowAppInbox("");
 }
 ```
+
+#### Dismiss the App Inbox
+
+```
+CleverTapBinding.DismissAppInbox();
+```
 ## Enable Debugging
 
 #### Set Debug Level
