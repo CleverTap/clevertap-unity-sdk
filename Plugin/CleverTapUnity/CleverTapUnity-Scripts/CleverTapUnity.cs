@@ -68,9 +68,33 @@ public class CleverTapUnity: MonoBehaviour {
 
         // CleverTapBinding.RecordEvent("testEventPushAmp");
 
+        //Push Primer APIs usages
+
+        // bool isPushPermissionGranted = CleverTapBinding.IsPushPermissionGranted();
+        // Debug.Log("isPushPermissionGranted"+ isPushPermissionGranted);
+
+        // Dictionary<string, object> item = new Dictionary<string, object>();
+        //   item.Add("inAppType", "half-interstitial");
+        //   item.Add("titleText", "Get Notified");
+        //   item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
+        //   item.Add("followDeviceOrientation", true);
+        //   item.Add("positiveBtnText", "Allow");
+        //   item.Add("negativeBtnText", "Cancel");
+        //   item.Add("backgroundColor", "#FFFFFF");
+        //   item.Add("btnBorderColor", "#0000FF");
+        //   item.Add("titleTextColor", "#0000FF");
+        //   item.Add("messageTextColor", "#000000");
+        //   item.Add("btnTextColor", "#FFFFFF");
+        //   item.Add("btnBackgroundColor", "#0000FF");
+        //   item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
+        //   item.Add("btnBorderRadius", "2");
+        //   item.Add("fallbackToSettings", true);
+        //   CleverTapBinding.PromptPushPrimer(item);
+
+        // CleverTapBinding.PromptForPushPermission(false);
+
         //    Push Templates APIs usages
         //    CleverTapBinding.RecordEvent("Send Basic Push");
-        
         //    CleverTapBinding.RecordEvent("Send Carousel Push");
         //    CleverTapBinding.RecordEvent("Send Manual Carousel Push");
         //    CleverTapBinding.RecordEvent("Send Filmstrip Carousel Push");
@@ -89,14 +113,14 @@ public class CleverTapUnity: MonoBehaviour {
         //    CleverTapBinding.RecordEvent("Send Input Box CTA DOC false");
         //    CleverTapBinding.RecordEvent("Send Input Box Reminder DOC true");
         //    CleverTapBinding.RecordEvent("Send Input Box Reminder DOC false");
-        
+
         //==========[Testing Newly added Clevertap APIs]============================================
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapBinding.EnablePersonalization();
         }
         #endif
     }
-    
+
     void Start() {}
 
     // handle deep link url
@@ -122,7 +146,7 @@ public class CleverTapUnity: MonoBehaviour {
     }
 
     // called when the user profile is updated as a result of a server sync
-    /** 
+    /**
         returns dict in the form:
         {
             "profile":{"<property1>":{"oldValue":<value>, "newValue":<value>}, ...},
@@ -150,8 +174,8 @@ public class CleverTapUnity: MonoBehaviour {
         } catch {
             Debug.LogError("unable to parse json");
         }
-    }	
-		
+    }
+
     // returns the data associated with the push notification
     void CleverTapPushOpenedCallback(string message) {
         Debug.Log("unity received push opened: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
@@ -178,6 +202,16 @@ public class CleverTapUnity: MonoBehaviour {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
+    // returns the custom data associated with an in-app notification click
+    void CleverTapInAppNotificationShowCallback(string message) {
+        Debug.Log("unity received inapp notification onShow(): " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns the status of push permission response after it's granted/denied
+    void CleverTapOnPushPermissionResponseCallback(string message) {
+        Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
     // returns when an in-app notification is dismissed by a call to action with custom extras
     void CleverTapInAppNotificationButtonTapped(string message) {
         Debug.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
@@ -196,10 +230,11 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapInboxCustomExtrasButtonSelect(string message) {
         Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
+
     // returns on the click of app inbox message with a string of the inbox payload along with page index and button index
     void CleverTapInboxItemClicked(string message)
     {
-        Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+        Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     // returns native display units data
