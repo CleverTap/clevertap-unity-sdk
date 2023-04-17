@@ -132,4 +132,9 @@
 - (void)discardInAppNotifications;
 - (void)resumeInAppNotifications;
 
+#pragma mark - Push Primer
+- (void)promptForPushPermission:(BOOL)showFallbackSettings;
+- (void)promptPushPrimer:(NSDictionary *)json;
+- (void)isPushPermissionGranted;
+
 @end

@@ -67,6 +67,30 @@ public class CleverTapUnity: MonoBehaviour {
         // CleverTapBinding.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
 
         // CleverTapBinding.RecordEvent("testEventPushAmp");
+        //Push Primer APIs usages
+
+        // CleverTapBinding.IsPushPermissionGranted();
+        // Debug.Log("isPushPermissionGranted"+ isPushPermissionGranted);
+
+        //   Dictionary<string, object> item = new Dictionary<string, object>();
+        //   item.Add("inAppType", "half-interstitial");
+        //   item.Add("titleText", "Get Notified");
+        //   item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
+        //   item.Add("followDeviceOrientation", true);
+        //   item.Add("positiveBtnText", "Allow");
+        //   item.Add("negativeBtnText", "Cancel");
+        //   item.Add("backgroundColor", "#FFFFFF");
+        //   item.Add("btnBorderColor", "#0000FF");
+        //   item.Add("titleTextColor", "#0000FF");
+        //   item.Add("messageTextColor", "#000000");
+        //   item.Add("btnTextColor", "#FFFFFF");
+        //   item.Add("btnBackgroundColor", "#0000FF");
+        //   item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
+        //   item.Add("btnBorderRadius", "2");
+        //   item.Add("fallbackToSettings", true);
+        //   CleverTapBinding.PromptPushPrimer(item);
+
+        // CleverTapBinding.PromptForPushPermission(false);
 
         //    Push Templates APIs usages
         //    CleverTapBinding.RecordEvent("Send Basic Push");
@@ -176,6 +200,16 @@ public class CleverTapUnity: MonoBehaviour {
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message) {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns the custom data associated with an in-app notification click
+    void CleverTapInAppNotificationShowCallback(string message) {
+        Debug.Log("unity received inapp notification onShow(): " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+    }
+
+    // returns the status of push permission response after it's granted/denied
+    void CleverTapOnPushPermissionResponseCallback(string message) {
+        Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     // returns when an in-app notification is dismissed by a call to action with custom extras
