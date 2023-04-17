@@ -67,13 +67,12 @@ public class CleverTapUnity: MonoBehaviour {
         // CleverTapBinding.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
 
         // CleverTapBinding.RecordEvent("testEventPushAmp");
-
         //Push Primer APIs usages
 
-        // bool isPushPermissionGranted = CleverTapBinding.IsPushPermissionGranted();
+        // CleverTapBinding.IsPushPermissionGranted();
         // Debug.Log("isPushPermissionGranted"+ isPushPermissionGranted);
 
-        // Dictionary<string, object> item = new Dictionary<string, object>();
+        //   Dictionary<string, object> item = new Dictionary<string, object>();
         //   item.Add("inAppType", "half-interstitial");
         //   item.Add("titleText", "Get Notified");
         //   item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
@@ -231,8 +230,8 @@ public class CleverTapUnity: MonoBehaviour {
     void CleverTapInboxCustomExtrasButtonSelect(string message) {
         Debug.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
-    // returns on the click of app inbox message with a map of custom Key-Value pairs
-    void CleverTapInboxItemSelect(string message)
+    // returns on the click of app inbox message with a string of the inbox payload along with page index and button index
+    void CleverTapInboxItemClicked(string message)
     {
         Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }

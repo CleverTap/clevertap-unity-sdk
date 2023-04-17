@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.3.0";
+    public const string Version = "2.3.1";
 
 #if UNITY_IOS
     void Start() {
@@ -152,6 +152,9 @@ namespace CleverTap {
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_showAppInbox(string styleConfig);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_dismissAppInbox();
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern int CleverTap_getInboxMessageCount();
@@ -462,6 +465,10 @@ namespace CleverTap {
         CleverTap_showAppInbox(styleConfigString);
     }
 
+    public static void DismissAppInbox() {
+        CleverTap_dismissAppInbox();
+    }
+
     public static int GetInboxMessageCount() {
         return CleverTap_getInboxMessageCount();
     }
@@ -623,9 +630,8 @@ namespace CleverTap {
     }
 
     public static void IsPushPermissionGranted() {
-        return CleverTap_isPushPermissionGranted();
+        CleverTap_isPushPermissionGranted();
     }
-
 
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
@@ -699,17 +705,17 @@ namespace CleverTap {
 
     public static void CreateNotificationChannelWithSound(string channelId,string channelName, string channelDescription, int importance, bool showBadge, string sound){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-        CleverTapAPI.CallStatic("createNotificationChannel",context,channelId,channelName,channelDescription,importance,showBadge,sound);
+        CleverTapAPI.CallStatic("createNotificationChannelWithSound",context,channelId,channelName,channelDescription,importance,showBadge,sound);
     }
 
     public static void CreateNotificationChannelWithGroup(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-        CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
+        CleverTapAPI.CallStatic("createNotificationChannelWithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge);
     }
 
     public static void CreateNotificationChannelWithGroupAndSound(string channelId,string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound){
         AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-        CleverTapAPI.CallStatic("createNotificationChannelwithGroup",context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
+        CleverTapAPI.CallStatic("createNotificationChannelWithGroupAndSound",context,channelId,channelName,channelDescription,importance,groupId,showBadge,sound);
     }
 
     public static void CreateNotificationChannelGroup(string groupId, string groupName){
@@ -989,6 +995,10 @@ namespace CleverTap {
          CleverTap.Call("showAppInbox", styleConfig);
     }
 
+    public static void DismissAppInbox(){
+         CleverTap.Call("dismissAppInbox");
+    }
+
     public static int GetInboxMessageCount(){
         return CleverTap.Call<int>("getInboxMessageCount");
     }
@@ -1012,8 +1022,6 @@ namespace CleverTap {
     public static bool IsPushPermissionGranted(){
         return CleverTap.Call<bool>("isPushPermissionGranted");
     }
-
-
 #else
 
    // Empty implementations of the API, in case the application is being compiled for a platform other than iOS or Android.
@@ -1193,6 +1201,9 @@ namespace CleverTap {
     public static void ShowAppInbox(string styleConfig){
     }
 
+    public static void DismissAppInbox(){
+    }
+
     public static int GetInboxMessageCount(){
         return -1;
     }
@@ -1207,6 +1218,8 @@ namespace CleverTap {
     public static void PromptForPushPermission(bool showFallbackSettings){
     }
 
+    public static void IsPushPermissionGranted(){
+    }
 #endif
     }
 }

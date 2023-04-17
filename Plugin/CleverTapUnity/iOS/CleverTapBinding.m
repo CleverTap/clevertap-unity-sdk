@@ -415,6 +415,10 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+void CleverTap_dismissAppInbox() {
+    [[CleverTapUnityManager sharedInstance] dismissAppInbox];
+}
+
 char* CleverTap_getAllInboxMessages() {
     id ret = [[CleverTapUnityManager sharedInstance] getAllInboxMessages];
     NSString *jsonString = clevertap_toJsonString(ret);

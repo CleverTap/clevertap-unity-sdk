@@ -87,6 +87,7 @@
 
 - (void)initializeInbox;
 - (void)showAppInbox:(NSDictionary *)styleConfig;
+- (void)dismissAppInbox;
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
 - (NSArray *)getAllInboxMessages;
@@ -94,7 +95,7 @@
 - (NSDictionary *)getInboxMessageForId:(NSString *)messageId;
 - (void)deleteInboxMessageForID:(NSString *)messageId;
 - (void)deleteInboxMessagesForIDs:(NSArray *)messageIds;
-- (void)markReadInboxMessageForID:(NSString *)messageIds;
+- (void)markReadInboxMessageForID:(NSString *)messageId;
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;
 - (void)recordInboxNotificationClickedEventForID:(NSString *)messageId;
 

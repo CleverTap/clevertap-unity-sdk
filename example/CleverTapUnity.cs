@@ -57,8 +57,10 @@ public class CleverTapUnity : MonoBehaviour
         CleverTapBinding.RecordEvent("Test Unity Event");
         //Invoke("LaunchInbox",30.0f);
 
-
         //Push primer APIs usage
+
+        CleverTapBinding.IsPushPermissionGranted();
+
         //Half-Interstial Local InApp
         Dictionary<string, object> item = new Dictionary<string, object>();
         item.Add("inAppType", "half-interstitial");
@@ -109,8 +111,7 @@ public class CleverTapUnity : MonoBehaviour
         CleverTap.CleverTapBinding.RegisterPush();
         // set to 0 to remove icon badge
         CleverTap.CleverTapBinding.SetApplicationIconBadgeNumber(0);
-        //Will check whether notification permission is granted or not
-        CleverTapBinding.IsPushPermissionGranted();
+
     }
 
     /* --------------------------------------------------------------------------------
@@ -139,10 +140,6 @@ public class CleverTapUnity : MonoBehaviour
         //    CleverTapBinding.SuspendInAppNotifications();
         //    CleverTapBinding.DiscardInAppNotifications();
         //    CleverTapBinding.ResumeInAppNotifications();
-
-        //Returns a boolean to indicate whether notification permission is granted or not
-        bool isPushPermissionGranted = CleverTapBinding.IsPushPermissionGranted();
-        Debug.Log("isPushPermissionGranted"+ isPushPermissionGranted);
 #endif
     }
 
@@ -262,7 +259,6 @@ public class CleverTapUnity : MonoBehaviour
                 Debug.Log("unable to parse json");
             }
         }
-
     }
 
     /* --------------------------------------------------------------------------------
@@ -439,26 +435,15 @@ public class CleverTapUnity : MonoBehaviour
     {
         CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
     }
-
-    // returns the custom data associated with an in-app notification click
-    void CleverTapInAppNotificationShowCallback(string message) {
-        Debug.Log("unity received inapp notification onShow(): " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
     // returns the custom data associated with an in-app notification click
     void CleverTapInAppNotificationDismissedCallback(string message)
     {
         Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
-
-    // returns the status of push permission response after it's granted/denied
-    void CleverTapOnPushPermissionResponseCallback(string message) {
-        Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-    }
-
-    void CleverTapInboxItemSelect(string message)
+    //returns data associated with inbox message item click along with page index and button index
+    void CleverTapInboxItemClicked(string message)
     {
-        Debug.Log("unity received inbox message selected callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+        Debug.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     void CleverTapInboxCustomExtrasButtonSelect(string message)
@@ -473,6 +458,11 @@ public class CleverTapUnity : MonoBehaviour
         Debug.Log("unity received inbox initialized");
         // string[] arr = {"1608798445_1676289520","1548315289_1676289520","1608798445_1676289268", "1548315289_1676289268"};
         // CleverTapBinding.DeleteInboxMessagesForIDs(arr);
+    }
+
+    // returns the status of push permission response after it's granted/denied
+    void CleverTapOnPushPermissionResponseCallback(string message) {
+        Debug.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
     // returns callback to indicate whether notification permission is granted or not

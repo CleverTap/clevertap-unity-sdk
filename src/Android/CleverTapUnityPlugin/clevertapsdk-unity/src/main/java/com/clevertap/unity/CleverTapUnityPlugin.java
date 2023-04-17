@@ -1,6 +1,5 @@
 package com.clevertap.unity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,14 +20,11 @@ import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
 import com.clevertap.android.sdk.InboxMessageListener;
-import com.clevertap.android.sdk.PushPermissionResponseListener;
 import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
-import com.clevertap.android.sdk.inapp.CTInAppNotification;
-import com.clevertap.android.sdk.inapp.CTLocalInApp;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.interfaces.OnInitCleverTapIDListener;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
@@ -47,7 +43,7 @@ import org.json.JSONObject;
 public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
         CTInboxListener, InAppNotificationButtonListener,
         InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener,
-        OnInitCleverTapIDListener, InboxMessageListener, PushPermissionResponseListener {
+        OnInitCleverTapIDListener, InboxMessageListener {
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
@@ -64,19 +60,13 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK
             = "CleverTapInAppNotificationDismissedCallback";
 
-    private static final String CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK
-            = "CleverTapInAppNotificationShowCallback";
-
-    private static final String CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK
-            = "CleverTapOnPushPermissionResponseCallback";
-
     private static final String CLEVERTAP_INBOX_DID_INITIALIZE = "CleverTapInboxDidInitializeCallback";
 
     private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
 
     private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
 
-    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemSelect";
+    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemClicked";
 
     private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
 
@@ -184,7 +174,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             clevertap = CleverTapAPI.getDefaultInstance(context);
             if (clevertap != null) {
                 Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
-                clevertap.registerPushPermissionNotificationResponseListener(this);
                 clevertap.setInAppNotificationListener(this);
                 clevertap.setSyncListener(this);
                 clevertap.setCTNotificationInboxListener(this);
@@ -477,7 +466,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.suspendInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to suspendInAppNotification", t);
         }
     }
 
@@ -486,7 +475,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.discardInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to discardInAppNotification", t);
         }
     }
 
@@ -495,7 +484,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         try {
             clevertap.resumeInAppNotifications();
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "recordScreenView error", t);
+            Log.e(LOG_TAG, "Unable to resumeInAppNotification", t);
         }
     }
 
@@ -618,6 +607,14 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON Exception in converting style config", e);
+        }
+    }
+
+    public void dismissAppInbox() {
+        try {
+            clevertap.dismissAppInbox();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "Unable to dismissAppInbox", t);
         }
     }
 
@@ -769,43 +766,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return clevertap.productConfig().getLastFetchTimeStampInMillis();
     }
 
-    //Push Primer
-    public boolean isPushPermissionGranted() {
-        return clevertap.isPushPermissionGranted();
-    }
-
-    public void promptForPushPermission(boolean showFallbackSettings){
-        clevertap.promptForPushPermission(showFallbackSettings);
-    }
-
-    public void promptPushPrimer(String jsonStr){
-        try {
-            Map<String, Object> localInAppMap = toMap(new JSONObject(jsonStr));
-            JSONObject jsonObject = localInAppFromMap(localInAppMap);
-            clevertap.promptPushPrimer(jsonObject);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "JSON Exception in converting local InApp", e);
-        }
-    }
-
-    //Push primer listener
-    @Override
-    public void onPushPermissionResponse(boolean accepted) {
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK,
-                String.valueOf(accepted));
-    }
-
     // InAppNotificationListener
     public boolean beforeShow(Map<String, Object> var1) {
         return true;
-    }
-
-    @SuppressLint("RestrictedApi")
-    public void onShow(CTInAppNotification ctInAppNotification) {
-        if (ctInAppNotification != null && ctInAppNotification.getJsonDescription() != null) {
-            final String json = "{inApp onShow() json payload:" + ctInAppNotification.getJsonDescription().toString() + "}";
-            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK, json);
-        }
     }
 
     public void onDismissed(Map<String, Object> var1, @Nullable Map<String, Object> var2) {
@@ -863,10 +826,18 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
 
-    public void onInboxItemClicked(CTInboxMessage message) {
+    public void onInboxItemClicked(CTInboxMessage message, int contentPageIndex, int buttonIndex) {
         if (message != null && message.getData() != null) {
-            final String json = "{inbox button payload:" + message.getData().toString() + "}";
-            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED, json);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("ContentPageIndex",contentPageIndex);
+                jsonObject.put("ButtonIndex",buttonIndex);
+                jsonObject.put("CTInboxMessagePayload",message.getData());
+                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED,
+                    jsonObject.toString());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -987,153 +958,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
 
         return json;
-    }
-
-    static JSONObject localInAppFromMap(Map<String, Object> objectMap) {
-        if (objectMap == null) {
-            Log.e("CleverTapError", "LocalInApp map is null or empty");
-            return null;
-        }
-        CTLocalInApp.InAppType inAppType = null;
-        String titleText = null, messageText = null, positiveBtnText = null,
-                negativeBtnText = null, backgroundColor = null, btnBorderColor = null,
-                titleTextColor = null, messageTextColor = null,
-                btnTextColor = null, imageUrl = null, btnBackgroundColor = null, btnBorderRadius = null;
-        boolean fallbackToSettings = false, followDeviceOrientation = false;
-
-        for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
-            try {
-                String configKey = entry.getKey();
-                if ("inAppType".equals(configKey)) {
-                    inAppType = inAppTypeFromString((String) entry.getValue());
-                }
-                if ("titleText".equals(configKey)) {
-                    titleText = (String) entry.getValue();
-                }
-                if ("messageText".equals(configKey)) {
-                    messageText = (String) entry.getValue();
-                }
-                if ("followDeviceOrientation".equals(configKey)) {
-                    followDeviceOrientation = (Boolean) entry.getValue();
-                }
-                if ("positiveBtnText".equals(configKey)) {
-                    positiveBtnText = (String) entry.getValue();
-                }
-                if ("negativeBtnText".equals(configKey)) {
-                    negativeBtnText = (String) entry.getValue();
-                }
-                if ("fallbackToSettings".equals(configKey)) {
-                    fallbackToSettings = (Boolean) entry.getValue();
-                }
-                if ("backgroundColor".equals(configKey)) {
-                    backgroundColor = (String) entry.getValue();
-                }
-                if ("btnBorderColor".equals(configKey)) {
-                    btnBorderColor = (String) entry.getValue();
-                }
-                if ("titleTextColor".equals(configKey)) {
-                    titleTextColor = (String) entry.getValue();
-                }
-                if ("messageTextColor".equals(configKey)) {
-                    messageTextColor = (String) entry.getValue();
-                }
-                if ("btnTextColor".equals(configKey)) {
-                    btnTextColor = (String) entry.getValue();
-                }
-                if ("imageUrl".equals(configKey)) {
-                    imageUrl = (String) entry.getValue();
-                }
-                if ("btnBackgroundColor".equals(configKey)) {
-                    btnBackgroundColor = (String) entry.getValue();
-                }
-                if ("btnBorderRadius".equals(configKey)) {
-                    btnBorderRadius = (String) entry.getValue();
-                }
-            } catch (Throwable t) {
-                Log.e("CleverTapError", "Invalid parameters in LocalInApp config"
-                        + t.getLocalizedMessage());
-                return null;
-            }
-        }
-
-
-        //creates the builder instance of localInApp with all the required parameters
-        CTLocalInApp.Builder.Builder6 builderWithRequiredParams = getLocalInAppBuilderWithRequiredParam(
-                inAppType, titleText, messageText, followDeviceOrientation, positiveBtnText,
-                negativeBtnText
-        );
-
-        //adds the optional parameters to the builder instance
-        if (backgroundColor != null) {
-            builderWithRequiredParams.setBackgroundColor(backgroundColor);
-        }
-        if (btnBorderColor != null) {
-            builderWithRequiredParams.setBtnBorderColor(btnBorderColor);
-        }
-        if (titleTextColor != null) {
-            builderWithRequiredParams.setTitleTextColor(titleTextColor);
-        }
-        if (messageTextColor != null) {
-            builderWithRequiredParams.setMessageTextColor(messageTextColor);
-        }
-        if (btnTextColor != null) {
-            builderWithRequiredParams.setBtnTextColor(btnTextColor);
-        }
-        if (imageUrl != null) {
-            builderWithRequiredParams.setImageUrl(imageUrl);
-        }
-        if (btnBackgroundColor != null) {
-            builderWithRequiredParams.setBtnBackgroundColor(btnBackgroundColor);
-        }
-        if (btnBorderRadius != null) {
-            builderWithRequiredParams.setBtnBorderRadius(btnBorderRadius);
-        }
-        builderWithRequiredParams.setFallbackToSettings(fallbackToSettings);
-
-        JSONObject localInAppConfig = builderWithRequiredParams.build();
-        Log.i("CTLocalInAppConfig", "LocalInAppConfig for push primer prompt: "
-                + localInAppConfig);
-        return localInAppConfig;
-    }
-
-    /**
-     * Creates an instance of the {@link CTLocalInApp.Builder.Builder6} with the required parameters.
-     *
-     * @return the {@link CTLocalInApp.Builder.Builder6} instance
-     */
-    private static CTLocalInApp.Builder.Builder6
-    getLocalInAppBuilderWithRequiredParam(CTLocalInApp.InAppType inAppType,
-                                          String titleText, String messageText,
-                                          boolean followDeviceOrientation, String positiveBtnText,
-                                          String negativeBtnText) {
-
-        //throws exception if any of the required parameter is missing
-        if (inAppType == null || titleText == null || messageText == null || positiveBtnText == null
-                || negativeBtnText == null) {
-            throw new IllegalArgumentException("Mandatory parameters are missing for LocalInApp config");
-        }
-
-        CTLocalInApp.Builder builder = CTLocalInApp.builder();
-        return builder.setInAppType(inAppType)
-                .setTitleText(titleText)
-                .setMessageText(messageText)
-                .followDeviceOrientation(followDeviceOrientation)
-                .setPositiveBtnText(positiveBtnText)
-                .setNegativeBtnText(negativeBtnText);
-    }
-
-    private static CTLocalInApp.InAppType inAppTypeFromString(String inAppType) {
-        if (inAppType == null) {
-            return null;
-        }
-        switch (inAppType) {
-            case "half-interstitial":
-                return CTLocalInApp.InAppType.HALF_INTERSTITIAL;
-            case "alert":
-                return CTLocalInApp.InAppType.ALERT;
-            default:
-                return null;
-        }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

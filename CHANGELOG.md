@@ -1,15 +1,20 @@
 Change Log
 ==========
 
-Version 2.3.0 *(13 March, 2023)*
+Version 2.3.1 *(13 April, 2023)*
 -------------------------------------------
-- Adds below new public APIs to support [CleverTap Android SDK v4.7.5](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.7.5_rmv1.0.3) and [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
-    - `isPushPermissionGranted()`, `promptPushPrimer(object)`, `promptForPushNotification(boolean)`
-- Adds push permission callback method `CleverTapOnPushPermissionResponseCallback` which returns true/false after user allows/denies the notification permission.
-- Adds `CleverTapInAppNotificationShowCallback` to handle InApp notification shown - Only for Android.
+- Updated to [CleverTap Android SDK v4.6.9](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.9)
+- Updated to [CleverTap iOS SDK v4.2.2](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.2)
+- Fixes `CreateNotificationChannelWithSound`, `CreateNotificationChannelWithGroup`, `CreateNotificationChannelWithGroupAndSound` - Only for Android
+- Updates the callback `CleverTapInboxItemClicked` to receive inbox item click with item payload.The `ContentPageIndex` corresponds the index of the item clicked in the list whereas the `ButtonIndex` for the App Inbox button clicked (0, 1, or 2). A value of -1 indicates the App Inbox item is clicked.
+- Adds `DismissAppInbox` to dismiss the App Inbox.
+
+Version 2.3.0 *(16 March, 2023)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v4.6.7](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.7_ptv1.0.5.1)
+- Updated to [CleverTap iOS SDK v4.1.6](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.1.6)
 - Support for Exoplayer v2.17.1 - Only for Android.
-- Adds new callback `onCleverTapInboxItemClick` to receive inbox item click.
-- Breaks setPushXiaomiToken() API where new changes adds region as second mandatory parameter to specify server region.
+- Adds new callback `CleverTapInboxItemClicked` to receive inbox item click.
 - Adds a public method `deleteInboxMessagesForIds()` for deleting multiple App Inbox messages by passing a collection of messageIDs. Please note that this is only for iOS, and NO-OP for Android as of now.
 
 Version 2.2.0 *(14 FEB, 2022)*

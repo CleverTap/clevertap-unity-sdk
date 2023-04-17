@@ -23,7 +23,7 @@ static NSString * kCleverTapInAppNotificationButtonTapped = @"CleverTapInAppNoti
 static NSString * kCleverTapInboxDidInitializeCallback = @"CleverTapInboxDidInitializeCallback";
 static NSString * kCleverTapInboxMessagesDidUpdateCallback = @"CleverTapInboxMessagesDidUpdateCallback";
 static NSString * kCleverTapInboxCustomExtrasButtonSelect = @"CleverTapInboxCustomExtrasButtonSelect";
-static NSString * kCleverTapInboxItemSelect = @"CleverTapInboxItemSelect";
+static NSString * kCleverTapInboxItemClicked = @"CleverTapInboxItemClicked";
 static NSString * kCleverTapNativeDisplayUnitsUpdated = @"CleverTapNativeDisplayUnitsUpdated";
 static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetched";
 static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigActivated";
@@ -31,7 +31,6 @@ static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigI
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
 static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
-
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -54,6 +53,7 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
         [[clevertap productConfig] setDelegate:sharedInstance];
         [[clevertap featureFlags] setDelegate:sharedInstance];
         [clevertap setPushPermissionDelegate:sharedInstance];
+
     }
     
     return sharedInstance;
@@ -414,15 +414,15 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
     }
 }
 
+- (void)dismissAppInbox {
+    [clevertap dismissAppInbox];
+}
+
 - (CleverTapInboxStyleConfig *)_dictToInboxStyleConfig: (NSDictionary *)dict {
     CleverTapInboxStyleConfig *_config = [CleverTapInboxStyleConfig new];
     NSString *title = [dict valueForKey:@"navBarTitle"];
     if (title) {
         _config.title = title;
-    }
-    NSString *firstTabTitle = [dict valueForKey:@"firstTabTitle"];
-    if (firstTabTitle) {
-        _config.firstTabTitle = firstTabTitle;
     }
     NSArray *messageTags = [dict valueForKey:@"tabs"];
     if (messageTags) {
@@ -568,17 +568,18 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
 }
 
 - (void)messageDidSelect:(CleverTapInboxMessage *_Nonnull)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
-    // NSMutableDictionary *body = [NSMutableDictionary new];
+    NSMutableDictionary *body = [NSMutableDictionary new];
     if ([message json] != nil) {
         NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[message json]
-                                                                   options:0
-                                                                   error:&error];
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        // body[@"data"] = jsonString;
+        if ([message json] != nil) {
+            body[@"CTInboxMessagePayload"] = [NSMutableDictionary dictionaryWithDictionary:[message json]];
+        }
+        body[@"ContentPageIndex"] = @(index);
+        body[@"ButtonIndex"] = @(buttonIndex);
+        NSString *jsonString = [self dictToJson:body];
         if (jsonString != nil) {
-          [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemSelect withMessage:jsonString];
-    }
+            [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInboxItemClicked withMessage:jsonString];
+        }
     }
 }
 
@@ -823,7 +824,6 @@ return jsonDict;
         NSLog(@"Push Notification is available from iOS v10.0 or later");
     }
 }
-
 
 #pragma mark - Push Permission Delegate
 
