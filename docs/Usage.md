@@ -131,11 +131,30 @@ Debug.Log("InboxInit started");
 
 #### Show the App Inbox
 
+#### Use the below snippet to show default CleverTap's Inbox 
 ```
 void LaunchInbox()
 {
     CleverTapBinding.ShowAppInbox("");
 }
+```
+
+#### Use the below snippet to show custom CleverTap's Inbox
+```
+Dictionary<string, object> StyleConfig = new Dictionary<string, object>();
+StyleConfig.Add("navBarTitle", "My App Inbox");
+StyleConfig.Add("navBarTitleColor", "#FF0000");
+StyleConfig.Add("navBarColor", "#FFFFFF");
+StyleConfig.Add("inboxBackgroundColor", "#AED6F1");
+StyleConfig.Add("backButtonColor", "#00FF00");
+StyleConfig.Add("unselectedTabColor", "#0000FF");
+StyleConfig.Add("selectedTabColor", "#FF0000");
+StyleConfig.Add("noMessageText", "No message(s)");
+StyleConfig.Add("noMessageTextColor", "#FF0000");
+
+//Convert the Dictionary parameters to a string and pass it to `ShowAppInbox()`
+string jsonStr = JsonConvert.SerializeObject(StyleConfig, Formatting.Indented);
+CleverTapBinding.ShowAppInbox(jsonStr);
 ```
 
 #### Dismiss the App Inbox
@@ -181,6 +200,56 @@ CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");
 
 ```
 CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
+```
+
+## Push Primer
+
+### Half-Interstial Local In-App 
+
+```
+Dictionary<string, object> item = new Dictionary<string, object>();
+item.Add("inAppType", "half-interstitial");
+item.Add("titleText", "Get Notified");
+item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
+item.Add("followDeviceOrientation", true);
+item.Add("positiveBtnText", "Allow");
+item.Add("negativeBtnText", "Cancel");
+item.Add("backgroundColor", "#FFFFFF");
+item.Add("btnBorderColor", "#0000FF");
+item.Add("titleTextColor", "#0000FF");
+item.Add("messageTextColor", "#000000");
+item.Add("btnTextColor", "#FFFFFF");
+item.Add("btnBackgroundColor", "#0000FF");
+item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
+item.Add("btnBorderRadius", "2");
+item.Add("fallbackToSettings", true);
+CleverTapBinding.PromptPushPrimer(item);
+```
+
+### Alert Local In-App
+
+```
+Dictionary<string, object> item = new Dictionary<string, object>();
+item.Add("inAppType", "half-interstitial");
+item.Add("titleText", "Get Notified");
+item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
+item.Add("followDeviceOrientation", true);
+item.Add("fallbackToSettings", true);
+CleverTapBinding.PromptPushPrimer(item);
+```
+
+## Prompt to show hard notification permission dialog. 
+### true - fallbacks to app's notification settings if permission is denied,
+### false - does not fallback to app's notification settings if permission is denied
+
+```
+CleverTapBinding.PromptForPushPermission(false);
+```
+
+### Returns a boolean to indicate whether notification permission is granted or not
+
+```
+bool isPushPermissionGranted = CleverTapBinding.IsPushPermissionGranted();
 ```
 
 ### For more information,

@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-    public const string Version = "2.4.0";
+  public const string Version = "2.4.0";
 
 #if UNITY_IOS
     void Start() {
@@ -886,7 +886,7 @@ namespace CleverTap {
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
     }
-
+    
     public static void SuspendInAppNotifications() {
         CleverTap.Call("suspendInAppNotifications");
     }
