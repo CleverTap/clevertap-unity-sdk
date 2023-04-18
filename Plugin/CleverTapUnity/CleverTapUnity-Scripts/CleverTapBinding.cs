@@ -1012,7 +1012,7 @@ namespace CleverTap {
     }
 
     public static void PromptPushPrimer(Dictionary<string, object> details){
-             CleverTap.Call("promptPushPrimer", Json.Serialize(details));
+         CleverTap.Call("promptPushPrimer", Json.Serialize(details));
     }
 
     public static void PromptForPushPermission(bool showFallbackSettings){

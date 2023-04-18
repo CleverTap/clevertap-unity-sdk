@@ -7,6 +7,8 @@
 #import <CleverTapSDK/CleverTap+ProductConfig.h>
 #import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
 #import <CleverTapSDK/CleverTap+InAppNotifications.h>
+#import <CleverTapSDK/CTLocalInApp.h>
+#import <CleverTapSDK/Clevertap+PushPermission.h>
 
 static CleverTap *clevertap;
 
@@ -27,9 +29,10 @@ static NSString * kCleverTapProductConfigFetched = @"CleverTapProductConfigFetch
 static NSString * kCleverTapProductConfigActivated = @"CleverTapProductConfigActivated";
 static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigInitialized";
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
+static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
+static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
 
-
-@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate>
+@interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
 @end
 
@@ -49,6 +52,8 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
         [clevertap setDisplayUnitDelegate:sharedInstance];
         [[clevertap productConfig] setDelegate:sharedInstance];
         [[clevertap featureFlags] setDelegate:sharedInstance];
+        [clevertap setPushPermissionDelegate:sharedInstance];
+
     }
     
     return sharedInstance;
@@ -711,6 +716,127 @@ return jsonDict;
 
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue {
     return [[clevertap featureFlags] get:key withDefaultValue:defaultValue];
+}
+
+#pragma mark - Push Primer
+
+- (CTLocalInApp*)_localInAppConfigFromReadableMap: (NSDictionary *)json {
+    CTLocalInApp *inAppBuilder;
+    CTLocalInAppType inAppType = HALF_INTERSTITIAL;
+    //Required parameters
+    NSString *titleText = nil, *messageText = nil, *followDeviceOrientation = nil, *positiveBtnText = nil, *negativeBtnText = nil;
+    //Additional parameters
+    NSString *fallbackToSettings = nil, *backgroundColor = nil, *btnBorderColor = nil, *titleTextColor = nil, *messageTextColor = nil, *btnTextColor = nil, *imageUrl = nil, *btnBackgroundColor = nil, *btnBorderRadius = nil;
+    
+    if ([json[@"inAppType"]  isEqual: @"half-interstitial"]){
+        inAppType = HALF_INTERSTITIAL;
+    }
+    else {
+        inAppType = ALERT;
+    }
+    if (json[@"titleText"]) {
+        titleText = [json valueForKey:@"titleText"];
+    }
+    if (json[@"messageText"]) {
+        messageText = [json valueForKey:@"messageText"];
+    }
+    if (json[@"followDeviceOrientation"]) {
+        followDeviceOrientation = [json valueForKey:@"followDeviceOrientation"];
+    }
+    if (json[@"positiveBtnText"]) {
+        positiveBtnText = [json valueForKey:@"positiveBtnText"];
+    }
+    
+    if (json[@"negativeBtnText"]) {
+        negativeBtnText = [json valueForKey:@"negativeBtnText"];
+    }
+
+    //creates the builder instance with all the required parameters
+    inAppBuilder = [[CTLocalInApp alloc] initWithInAppType:inAppType
+                                                 titleText:titleText
+                                               messageText:messageText
+                                   followDeviceOrientation:followDeviceOrientation
+                                           positiveBtnText:positiveBtnText
+                                           negativeBtnText:negativeBtnText];
+    
+    //adds optional parameters to the builder instance
+    if (json[@"fallbackToSettings"]) {
+        fallbackToSettings = [json valueForKey:@"fallbackToSettings"];
+        [inAppBuilder setFallbackToSettings:fallbackToSettings];
+    }
+    if (json[@"backgroundColor"]) {
+        backgroundColor = [json valueForKey:@"backgroundColor"];
+        [inAppBuilder setBackgroundColor:backgroundColor];
+    }
+    if (json[@"btnBorderColor"]) {
+        btnBorderColor = [json valueForKey:@"btnBorderColor"];
+        [inAppBuilder setBtnBorderColor:btnBorderColor];
+    }
+    if (json[@"titleTextColor"]) {
+        titleTextColor = [json valueForKey:@"titleTextColor"];
+        [inAppBuilder setTitleTextColor:titleTextColor];
+    }
+    if (json[@"messageTextColor"]) {
+        messageTextColor = [json valueForKey:@"messageTextColor"];
+        [inAppBuilder setMessageTextColor:messageTextColor];
+    }
+    if (json[@"btnTextColor"]) {
+        btnTextColor = [json valueForKey:@"btnTextColor"];
+        [inAppBuilder setBtnTextColor:btnTextColor];
+    }
+    if (json[@"imageUrl"]) {
+        imageUrl = [json valueForKey:@"imageUrl"];
+        [inAppBuilder setImageUrl:imageUrl];
+    }
+    if (json[@"btnBackgroundColor"]) {
+        btnBackgroundColor = [json valueForKey:@"btnBackgroundColor"];
+        [inAppBuilder setBtnBackgroundColor:btnBackgroundColor];
+    }
+    if (json[@"btnBorderRadius"]) {
+        btnBorderRadius = [json valueForKey:@"btnBorderRadius"];
+        [inAppBuilder setBtnBorderRadius:btnBorderRadius];
+    }
+    return inAppBuilder;
+}  
+
+- (void)promptForPushPermission:(BOOL)showFallbackSettings {
+    [clevertap promptForPushPermission:showFallbackSettings];
+}
+
+- (void)promptPushPrimer:(NSDictionary *)json {
+    CTLocalInApp *localInAppBuilder = [self _localInAppConfigFromReadableMap:json];
+    [clevertap promptPushPrimer:localInAppBuilder.getLocalInAppSettings];
+}
+
+- (void)isPushPermissionGranted {
+    if (@available(iOS 10.0, *)) {
+        [clevertap getNotificationPermissionStatusWithCompletionHandler:^(UNAuthorizationStatus status) {
+            BOOL isPushEnabled = YES;
+                    if (status == UNAuthorizationStatusNotDetermined || status == UNAuthorizationStatusDenied) {
+                        isPushEnabled = NO;
+                    }
+            NSLog(@"[CleverTap isPushPermissionGranted: %d]", isPushEnabled);
+            [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"True": @"False"]];
+            }];
+    }
+    else {
+        // Fallback on earlier versions
+        NSLog(@"Push Notification is available from iOS v10.0 or later");
+    }
+}
+
+#pragma mark - Push Permission Delegate
+
+- (void)onPushPermissionResponse:(BOOL)accepted {
+    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
+   
+    jsonDict[@"accepted"] = [NSNumber numberWithBool:accepted];
+    
+    NSString *jsonString = [self dictToJson:jsonDict];
+
+    if (jsonString != nil) {
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapPushPermissionResponseReceived withMessage:jsonString];
+    }
 }
 
 #pragma mark - Private Helpers
