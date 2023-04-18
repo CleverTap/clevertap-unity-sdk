@@ -1022,7 +1022,6 @@ namespace CleverTap {
     public static bool IsPushPermissionGranted(){
         return CleverTap.Call<bool>("isPushPermissionGranted");
     }
-
 #else
 
    // Empty implementations of the API, in case the application is being compiled for a platform other than iOS or Android.
