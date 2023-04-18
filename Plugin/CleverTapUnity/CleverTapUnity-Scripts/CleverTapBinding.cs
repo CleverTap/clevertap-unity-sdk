@@ -234,6 +234,15 @@ namespace CleverTap {
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool CleverTap_getFeatureFlag(string key, bool defaultValue);
 
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_promptForPushPermission(bool showFallbackSettings);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_promptPushPrimer(string json);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_isPushPermissionGranted();
+
     public static void LaunchWithCredentials(string accountID, string token) {
         CleverTap_launchWithCredentials(accountID, token);
     }
@@ -610,6 +619,19 @@ namespace CleverTap {
         return CleverTap_getFeatureFlag(key, defaultValue);
     }
 
+    public static void PromptPushPrimer(Dictionary<string, object> json) {
+        var jsonString = Json.Serialize(json);
+        CleverTap_promptPushPrimer(jsonString);
+    }
+
+
+    public static void PromptForPushPermission(bool showFallbackSettings) {
+        CleverTap_promptForPushPermission(showFallbackSettings);
+    }
+
+    public static void IsPushPermissionGranted() {
+        CleverTap_isPushPermissionGranted();
+    }
 
 #elif UNITY_ANDROID
     private static AndroidJavaObject unityActivity;
@@ -864,6 +886,19 @@ namespace CleverTap {
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
     }
+    
+    public static void SuspendInAppNotifications() {
+        CleverTap.Call("suspendInAppNotifications");
+    }
+
+    public static void DiscardInAppNotifications() {
+        CleverTap.Call("discardInAppNotifications");
+    }
+
+    public static void ResumeInAppNotifications() {
+        CleverTap.Call("resumeInAppNotifications");
+    }
+
     public static void RecordScreenView(string screenName) {
         CleverTap.Call("recordScreenView", screenName);
     }
@@ -1182,6 +1217,9 @@ namespace CleverTap {
     }
 
     public static void PromptForPushPermission(bool showFallbackSettings){
+    }
+
+    public static void IsPushPermissionGranted(){
     }
 #endif
     }
