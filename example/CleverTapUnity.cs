@@ -120,6 +120,7 @@ public class CleverTapUnity : MonoBehaviour
 #if (UNITY_ANDROID && !UNITY_EDITOR)
         CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
 
+        //For Android 13+ do ensure to grant notification permission to receive push notifications.
         CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 
         //CleverTapBinding.CreateNotificationChannelWithSound("YourChannelId","Your Channel Name", "Your Channel Description", 5, true, "Your raw sound file");
@@ -483,7 +484,7 @@ public class CleverTapUnity : MonoBehaviour
     // returns callback to indicate whether notification permission is granted or not
     void CleverTapPushNotificationPermissionStatus(string message)
     {
-        //Ensure to create call the `CreateNotificationChannel` to register for receiving push notifications for Android 13+ devices.
+        //Ensure to create call the `CreateNotificationChannel` once notification permission is granted to register for receiving push notifications for Android 13+ devices.
         Debug.Log("CleverTap application isPushPermissionGranted " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
