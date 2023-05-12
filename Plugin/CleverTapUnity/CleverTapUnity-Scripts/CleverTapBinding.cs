@@ -886,18 +886,6 @@ namespace CleverTap {
     public static void ProfileRemoveMultiValueForKey(string key, string val) {
         CleverTap.Call("profileRemoveMultiValueForKey", key, val);
     }
-    
-    public static void SuspendInAppNotifications() {
-        CleverTap.Call("suspendInAppNotifications");
-    }
-
-    public static void DiscardInAppNotifications() {
-        CleverTap.Call("discardInAppNotifications");
-    }
-
-    public static void ResumeInAppNotifications() {
-        CleverTap.Call("resumeInAppNotifications");
-    }
 
     public static void RecordScreenView(string screenName) {
         CleverTap.Call("recordScreenView", screenName);
