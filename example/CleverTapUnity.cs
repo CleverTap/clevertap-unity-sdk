@@ -259,6 +259,19 @@ public class CleverTapUnity : MonoBehaviour
                 Debug.Log("unable to parse json");
             }
         }
+
+        //Delete multiple inbox ids
+        string[] arr = {"1608798445_1676289520","1548315289_1676289520","1608798445_1676289268", "1548315289_1676289268"};
+        CleverTapBinding.DeleteInboxMessagesForIDs(arr);
+        //Marks read for multiple inbox ids
+        CleverTapBinding.MarkReadInboxMessagesForIDs(arr);
+
+        //Delete a single inbox id
+        string inboxId = "1608798445_1676289520";
+        CleverTapBinding.DeleteInboxMessageForID(inboxId);
+        //Marks read for a single inbox id
+        CleverTapBinding.MarkReadInboxMessageForID(inboxId);
+
     }
 
     /* --------------------------------------------------------------------------------
@@ -468,8 +481,7 @@ public class CleverTapUnity : MonoBehaviour
     {
         CleverTapBinding.ShowAppInbox(new Dictionary<string, object>());
         Debug.Log("unity received inbox initialized");
-        // string[] arr = {"1608798445_1676289520","1548315289_1676289520","1608798445_1676289268", "1548315289_1676289268"};
-        // CleverTapBinding.DeleteInboxMessagesForIDs(arr);
+
     }
 
     void CleverTapInboxMessagesDidUpdateCallback()
