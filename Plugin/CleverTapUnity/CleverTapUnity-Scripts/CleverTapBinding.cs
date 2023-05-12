@@ -972,8 +972,16 @@ namespace CleverTap {
         CleverTap.Call("deleteInboxMessagesForIDs", messageIds)
     }
 
+    public static void DeleteInboxMessageForID(string messageId) {
+        CleverTap.Call("deleteInboxMessageForId", messageId)
+    }
+
     public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
         CleverTap.Call("markReadInboxMessagesForIDs", messageIds)
+    }
+
+    public static void MarkReadInboxMessageForID(string messageId) {
+        CleverTap.Call("markReadInboxMessageForId", messageId)
     }
 
     public static int GetInboxMessageUnreadCount(){
@@ -1180,6 +1188,18 @@ namespace CleverTap {
 
     public static int GetInboxMessageUnreadCount(){
         return -1;
+    }
+
+    public static void DeleteInboxMessagesForIDs(string[] messageIds) {
+    }
+
+    public static void DeleteInboxMessageForID(string messageId) {
+    }
+
+    public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
+    }
+
+    public static void MarkReadInboxMessageForID(string messageId) {
     }
 
     public static void PromptPushPrimer(string json){
