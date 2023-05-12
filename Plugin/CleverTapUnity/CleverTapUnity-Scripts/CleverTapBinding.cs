@@ -1004,19 +1004,19 @@ namespace CleverTap {
     }
 
     public static void DeleteInboxMessagesForIDs(string[] messageIds) {
-        CleverTap.Call("deleteInboxMessagesForIDs", messageIds)
+        CleverTap.Call("deleteInboxMessagesForIDs", messageIds);
     }
 
     public static void DeleteInboxMessageForID(string messageId) {
-        CleverTap.Call("deleteInboxMessageForId", messageId)
+        CleverTap.Call("deleteInboxMessageForId", messageId);
     }
 
     public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
-        CleverTap.Call("markReadInboxMessagesForIDs", messageIds)
+        CleverTap.Call("markReadInboxMessagesForIDs", messageIds);
     }
 
     public static void MarkReadInboxMessageForID(string messageId) {
-        CleverTap.Call("markReadInboxMessageForId", messageId)
+        CleverTap.Call("markReadInboxMessageForId", messageId);
     }
 
     public static int GetInboxMessageUnreadCount(){
