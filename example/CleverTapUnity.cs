@@ -483,6 +483,7 @@ public class CleverTapUnity : MonoBehaviour
     // returns callback to indicate whether notification permission is granted or not
     void CleverTapPushNotificationPermissionStatus(string message)
     {
+        //Ensure to create call the `CreateNotificationChannel` to register for receiving push notifications for Android 13+ devices.
         Debug.Log("CleverTap application isPushPermissionGranted " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
     }
 
