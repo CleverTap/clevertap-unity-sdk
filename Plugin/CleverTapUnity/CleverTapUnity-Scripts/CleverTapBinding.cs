@@ -969,7 +969,11 @@ namespace CleverTap {
     }
 
     public static void DeleteInboxMessagesForIDs(string[] messageIds) {
-        // no-op for Android
+        CleverTap.Call("deleteInboxMessagesForIDs", messageIds)
+    }
+
+    public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
+        CleverTap.Call("markReadInboxMessagesForIDs", messageIds)
     }
 
     public static int GetInboxMessageUnreadCount(){
