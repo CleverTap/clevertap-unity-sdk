@@ -655,8 +655,20 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         clevertap.deleteInboxMessage(messageId);
     }
 
+    public void deleteInboxMessagesForIDs(String[] messageIds) {
+        List<String> messageIdsList = Arrays.asList(messageIds);
+        ArrayList<String> messageIdsArrayList = new ArrayList<>(messageIdsList);
+        clevertap.deleteInboxMessagesForIDs(messageIdsArrayList);
+    }
+
     public void markReadInboxMessageForId(String messageId) {
         clevertap.markReadInboxMessage(messageId);
+    }
+
+    public void markReadInboxMessagesForIDs(String[] messageIds) {
+        List<String> messageIdsList = Arrays.asList(messageIds);
+        ArrayList<String> messageIdsArrayList = new ArrayList<>(messageIdsList);
+        clevertap.markReadInboxMessagesForIDs(messageIdsArrayList);
     }
 
     public void pushInboxNotificationViewedEventForId(String messageId) {
