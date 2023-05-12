@@ -131,11 +131,30 @@ Debug.Log("InboxInit started");
 
 #### Show the App Inbox
 
+#### Use the below snippet to show default CleverTap's Inbox 
 ```
 void LaunchInbox()
 {
     CleverTapBinding.ShowAppInbox("");
 }
+```
+
+#### Use the below snippet to show custom CleverTap's Inbox
+```
+Dictionary<string, object> StyleConfig = new Dictionary<string, object>();
+StyleConfig.Add("navBarTitle", "My App Inbox");
+StyleConfig.Add("navBarTitleColor", "#FF0000");
+StyleConfig.Add("navBarColor", "#FFFFFF");
+StyleConfig.Add("inboxBackgroundColor", "#AED6F1");
+StyleConfig.Add("backButtonColor", "#00FF00");
+StyleConfig.Add("unselectedTabColor", "#0000FF");
+StyleConfig.Add("selectedTabColor", "#FF0000");
+StyleConfig.Add("noMessageText", "No message(s)");
+StyleConfig.Add("noMessageTextColor", "#FF0000");
+
+//Convert the Dictionary parameters to a string and pass it to `ShowAppInbox()`
+string jsonStr = JsonConvert.SerializeObject(StyleConfig, Formatting.Indented);
+CleverTapBinding.ShowAppInbox(jsonStr);
 ```
 
 #### Dismiss the App Inbox

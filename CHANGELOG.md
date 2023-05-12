@@ -1,12 +1,10 @@
 Change Log
 ==========
 
-
 Version 2.4.0 *(15 May, 2023)*
 -------------------------------------------
 - Adds below new public APIs to support [CleverTap Android SDK v5.0.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev5.0.0_ptv1.0.9)
     - `CleverTapBinding.IsPushPermissionGranted()`, `CleverTapBinding.PromptPushPrimer(object)`, `CleverTapBinding.PromptForPushPermission(boolean)`
-- Updated to [CleverTap iOS SDK v4.2.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/4.2.0)
 - Adds push permission callback method `CleverTapOnPushPermissionResponseCallback` which returns true/false after user allows/denies the notification permission.
 - Adds `CleverTapInAppNotificationShowCallback` to handle InApp notification shown - Only for Android.
 - Adds `DeleteInboxMessagesForIDs` for deleting multiple app inbox messages by passing a collection of messageIDs.
