@@ -458,6 +458,10 @@ void CleverTap_markReadInboxMessageForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] markReadInboxMessageForID:clevertap_stringToNSString(messageId)];
 }
 
+void CleverTap_markReadInboxMessagesForIDs(const char* messageIds[], int size) {
+    [[CleverTapUnityManager sharedInstance] markReadInboxMessagesForIDs:clevertap_NSArrayFromArray(messageIds, size)];
+}
+
 void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] recordInboxNotificationViewedEventForID:clevertap_stringToNSString(messageId)];
 }
@@ -565,4 +569,18 @@ void CleverTap_discardInAppNotifications() {
 
 void CleverTap_resumeInAppNotifications() {
     [[CleverTapUnityManager sharedInstance] resumeInAppNotifications];
+}
+
+#pragma mark - Push Primer
+void CleverTap_promptPushPrimer(const char* json) {
+    NSMutableDictionary *jsonDict = clevertap_dictFromJsonString(json);
+    [[CleverTapUnityManager sharedInstance] promptPushPrimer: jsonDict];
+}
+
+void CleverTap_promptForPushPermission(const BOOL showFallbackSettings) {
+    [[CleverTapUnityManager sharedInstance] promptForPushPermission: showFallbackSettings];
+}
+
+void CleverTap_isPushPermissionGranted() {
+    return [[CleverTapUnityManager sharedInstance] isPushPermissionGranted];
 }
