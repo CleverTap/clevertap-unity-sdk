@@ -543,6 +543,10 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
     [clevertap markReadInboxMessageForID:messageId];
 }
 
+- (void)markReadInboxMessagesForIDs:(NSArray *)messageIds {
+    [clevertap markReadInboxMessagesForIDs:messageIds];
+}
+
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId {
     
     [clevertap recordInboxNotificationViewedEventForID:messageId];

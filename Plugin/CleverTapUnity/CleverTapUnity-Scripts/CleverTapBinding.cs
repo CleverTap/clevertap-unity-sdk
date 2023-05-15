@@ -184,6 +184,9 @@ namespace CleverTap {
     private static extern void CleverTap_markReadInboxMessageForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CleverTap_markReadInboxMessagesForIDs(string[] messageIds,int arrLength);
+
+    [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void CleverTap_recordInboxNotificationViewedEventForID(string messageId);
 
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -524,6 +527,11 @@ namespace CleverTap {
 
     public static void MarkReadInboxMessageForID(string messageId) {
         CleverTap_markReadInboxMessageForID(messageId);
+    }
+
+    public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
+        int arrLength = messageIds.Length;
+        CleverTap_MarkReadInboxMessagesForIDs(messageIds, arrLength);
     }
 
     public static void RecordInboxNotificationViewedEventForID(string messageId) {

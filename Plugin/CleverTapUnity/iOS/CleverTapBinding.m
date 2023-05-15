@@ -458,6 +458,10 @@ void CleverTap_markReadInboxMessageForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] markReadInboxMessageForID:clevertap_stringToNSString(messageId)];
 }
 
+void CleverTap_markReadInboxMessagesForIDs(const char* messageIds[], int size) {
+    [[CleverTapUnityManager sharedInstance] markReadInboxMessagesForIDs:clevertap_NSArrayFromArray(messageIds, size)];
+}
+
 void CleverTap_recordInboxNotificationViewedEventForID(const char* messageId) {
     [[CleverTapUnityManager sharedInstance] recordInboxNotificationViewedEventForID:clevertap_stringToNSString(messageId)];
 }
