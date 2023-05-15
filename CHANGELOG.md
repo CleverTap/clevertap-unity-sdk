@@ -12,7 +12,6 @@ Version 2.4.0 *(15 May, 2023)*
 - Adds `MarkReadInboxMessagesForIDs` for marking multiple app inbox messages as read messages by passing a collection of messageIDs.
 - Adds `MarkReadInboxMessageForID` for marking an app inbox messages as read message by passing a messageID.
 
-=======
 Version 2.3.1 *(13 April, 2023)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v4.6.9](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev4.6.9)
