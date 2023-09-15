@@ -21,7 +21,7 @@ public class CleverTapOverrideActivity extends UnityPlayerActivity {
 
     private void handleIntent(Intent intent) {
         if (intent != null) {
-            CleverTapUnityPlugin.handleIntent(intent);
+            CleverTapUnityPlugin.handleIntent(intent, this);
         }
     }
 }

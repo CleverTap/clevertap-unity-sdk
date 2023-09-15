@@ -11,7 +11,7 @@ ext {
     targetSdkVersionVal = compileSdkVersionVal
     buildToolsVersionVal = "33.0.0"
 
-    libraryVersion = "2.4.0"
+    libraryVersion = "2.4.1"
 }
 
 android {

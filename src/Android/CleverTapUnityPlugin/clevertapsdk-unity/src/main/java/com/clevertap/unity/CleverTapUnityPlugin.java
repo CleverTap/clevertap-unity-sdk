@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -100,7 +101,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
     }
 
-    static void handleIntent(Intent intent) {
+    static void handleIntent(Intent intent, Activity activity) {
         if (intent == null) {
             return;
         }
@@ -117,6 +118,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Bundle extras = intent.getExtras();
             boolean isPushNotification = (extras != null && extras.get("wzrk_pn") != null);
             if (isPushNotification) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    CleverTapAPI.getDefaultInstance(activity).pushNotificationClickedEvent(extras);
+                }
+
                 JSONObject data = new JSONObject();
 
                 for (String key : extras.keySet()) {
