@@ -531,7 +531,7 @@ namespace CleverTap {
 
     public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
         int arrLength = messageIds.Length;
-        CleverTap_MarkReadInboxMessagesForIDs(messageIds, arrLength);
+        CleverTap_markReadInboxMessagesForIDs(messageIds, arrLength);
     }
 
     public static void RecordInboxNotificationViewedEventForID(string messageId) {
