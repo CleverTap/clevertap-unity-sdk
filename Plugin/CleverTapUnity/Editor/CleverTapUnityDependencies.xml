@@ -22,5 +22,7 @@
         <androidPackage spec="com.android.installreferrer:installreferrer:2.2" />
 
         <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib:1.5.31" />
+
+        <androidPackage spec="androidx.work:work-runtime:2.7.1" />
     </androidPackages>
 </dependencies>

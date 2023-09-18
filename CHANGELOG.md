@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-Version 2.4.1 *(17 Sept, 2023)*
+Version 2.4.1 *(18 Sept, 2023)*
 -------------------------------------------
-- Updated to [CleverTap Android SDK v5.2.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev5.2.0_hmsv1.3.3_xpsv1.5.3)
+- Updated to [CleverTap Android SDK v5.1.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev5.1.0_ptv1.1.0)
 - Fixes push notification clicked event handling for Android 12+
 
 Version 2.4.0 *(15 May, 2023)*
