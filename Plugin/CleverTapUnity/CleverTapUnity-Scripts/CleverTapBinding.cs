@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-  public const string Version = "2.4.0";
+  public const string Version = "2.4.1";
 
 #if UNITY_IOS
     void Start() {
@@ -531,7 +531,7 @@ namespace CleverTap {
 
     public static void MarkReadInboxMessagesForIDs(string[] messageIds) {
         int arrLength = messageIds.Length;
-        CleverTap_MarkReadInboxMessagesForIDs(messageIds, arrLength);
+        CleverTap_markReadInboxMessagesForIDs(messageIds, arrLength);
     }
 
     public static void RecordInboxNotificationViewedEventForID(string messageId) {
@@ -1098,6 +1098,7 @@ namespace CleverTap {
     }
 
     public static string GetCleverTapID() {
+        return "testCleverTapID";
     }
 
     public static void RecordScreenView(string screenName) {
