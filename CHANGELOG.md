@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+<<<<<<< HEAD
 Version 3.0.0 *(15 Jan, 2024)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v6.0.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev6.0.0)
