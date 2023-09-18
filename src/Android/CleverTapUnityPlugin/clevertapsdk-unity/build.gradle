@@ -51,7 +51,7 @@ dependencies {
     // This will add classes from com.unity3d.player to our library which will  allow the ClevertapPlugin.java class to get access to current unity activity and work on it accordingly
     compileOnly fileTree('libs')
 
-    implementation 'com.clevertap.android:clevertap-android-sdk:5.0.0'
+    implementation 'com.clevertap.android:clevertap-android-sdk:5.1.0'
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.6.0-rc01'
 }
