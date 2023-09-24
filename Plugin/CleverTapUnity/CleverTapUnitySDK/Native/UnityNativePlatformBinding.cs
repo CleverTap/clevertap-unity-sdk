@@ -1,4 +1,6 @@
-﻿namespace CleverTapTest.NewBindings
+﻿using CleverTapUnitySDK.Common;
+
+namespace CleverTapUnitySDK.Native
 {
     public class UnityNativePlatformBinding : CleverTapPlatformBindings
     {

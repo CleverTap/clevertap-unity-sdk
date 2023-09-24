@@ -1,12 +1,15 @@
 ﻿using CleverTap.Utilities;
 using System.Collections.Generic;
 
-namespace CleverTapTest.NewBindings
+namespace CleverTapUnitySDK.Common
 {
-    // Default implementation of all plaform binding methods
     public abstract class CleverTapPlatformBindings
     {
-        public const string Version = "2.4.0";
+        public const string Version = "2.4.1";
+
+        public CleverTapCallbackHandler CallbackHandler { get; protected set; }
+
+        #region Default - Platform Bindings
 
         public virtual void ActivateProductConfig()
         {
@@ -373,5 +376,7 @@ namespace CleverTapTest.NewBindings
         {
             return -1;
         }
+
+        #endregion
     }
 }

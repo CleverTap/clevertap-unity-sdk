@@ -1,8 +1,10 @@
 ﻿using CleverTap.Utilities;
+using CleverTapUnitySDK.Android;
+using CleverTapUnitySDK.Common;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CleverTapTest.NewBindings
+namespace CleverTapUnitySDK.IOS
 {
     public class IOSPlatformBinding : CleverTapPlatformBindings
     {
@@ -237,6 +239,11 @@ namespace CleverTapTest.NewBindings
         private static extern void CleverTap_isPushPermissionGranted();
 
         #endregion
+
+        public IOSPlatformBinding()
+        {
+            CallbackHandler = new AndoridCallbackHandler();
+        }
 
         public override void ActivateProductConfig()
         {

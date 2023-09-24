@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using CleverTap.Utilities;
+using CleverTapUnitySDK.Common;
 using System.Collections.Generic;
-using CleverTap.Utilities;
+using UnityEngine;
 
-namespace CleverTapTest.NewBindings
+namespace CleverTapUnitySDK.Android
 {
     public class AndroidPlatformBinding : CleverTapPlatformBindings
     {
@@ -51,6 +52,11 @@ namespace CleverTapTest.NewBindings
             }
         }
         #endregion
+
+        public AndroidPlatformBinding()
+        {
+            CallbackHandler = new AndoridCallbackHandler();
+        }
 
         public override void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge)
         {
