@@ -1,5 +1,4 @@
 ﻿using CleverTap.Utilities;
-using CleverTapUnitySDK.Android;
 using CleverTapUnitySDK.Common;
 using System.Collections.Generic;
 using UnityEngine;
@@ -242,7 +241,7 @@ namespace CleverTapUnitySDK.IOS
 
         public IOSPlatformBinding()
         {
-            CallbackHandler = new AndoridCallbackHandler();
+            CallbackHandler = new IOSCallbackHandler();
         }
 
         public override void ActivateProductConfig()
