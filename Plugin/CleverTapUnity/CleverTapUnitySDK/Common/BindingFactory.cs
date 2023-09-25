@@ -1,37 +1,26 @@
-﻿using CleverTapUnitySDK.Android;
+﻿#if UNITY_IOS
+using CleverTapUnitySDK.Android;
+#elif UNITY_ANDROID
 using CleverTapUnitySDK.IOS;
+#else
 using CleverTapUnitySDK.Native;
+#endif
 
-namespace CleverTapUnitySDK.Common
-{
-    public static class BindingFactory
-    {
+namespace CleverTapUnitySDK.Common {
+    public static class BindingFactory {
+        
         private static CleverTapPlatformBindings cleverTapBinding;
 
         public static CleverTapPlatformBindings CleverTapBinding { get => cleverTapBinding; }
 
-        static BindingFactory()
-        {
+        static BindingFactory() {
             #if UNITY_IOS
             platform = "UNITY_IOS";
             #elif UNITY_ANDROID
-            platform = "UNITY_ANDROID";
+            cleverTapBinding = new IOSPlatformBinding();
             #else
-            var platform = "UNITY";
+            cleverTapBinding = new UnityNativePlatformBinding();
             #endif
-
-            if (platform == "UNITY_IOS")
-            {
-                cleverTapBinding = new AndroidPlatformBinding();
-            } 
-            else if (platform == "UNITY_ANDROID")
-            {
-                cleverTapBinding = new IOSPlatformBinding();
-            }
-            else
-            {
-                cleverTapBinding = new UnityNativePlatformBinding();
-            }
         }
     }
 }

@@ -11,109 +11,109 @@ namespace CleverTapUnitySDK
 
         #region Events - CleverTap Callback Handler
 
-        public static event CleverTapDeepLinkCallbackDelegate OnCleverTapDeepLinkCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapDeepLinkCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapDeepLinkCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapDeepLinkCallback -= value;
         }
 
-        public static event CleverTapProfileInitializedCallbackDelegate OnCleverTapProfileInitializedCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapProfileInitializedCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapProfileInitializedCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapProfileInitializedCallback -= value;
         }
         
-        public static event CleverTapProfileUpdatesCallbackDelegate OnCleverTapProfileUpdatesCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapProfileUpdatesCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapProfileUpdatesCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapProfileUpdatesCallback -= value;
         }
         
-        public static event CleverTapPushOpenedCallbackDelegate OnCleverTapPushOpenedCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapPushOpenedCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapPushOpenedCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapPushOpenedCallback -= value;
         }
        
-        public static event CleverTapInitCleverTapIdCallbackDelegate OnCleverTapInitCleverTapIdCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapInitCleverTapIdCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapInitCleverTapIdCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInitCleverTapIdCallback -= value;
         }
         
-        public static event CleverTapInAppNotificationDismissedCallbackDelegate OnCleverTapInAppNotificationDismissedCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapInAppNotificationDismissedCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapInAppNotificationDismissedCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInAppNotificationDismissedCallback -= value;
         }
         
-        public static event CleverTapInAppNotificationShowCallbackDelegate OnCleverTapInAppNotificationShowCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapInAppNotificationShowCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapInAppNotificationShowCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInAppNotificationShowCallback -= value;
         }
         
-        public static event CleverTapOnPushPermissionResponseCallbackDelegate OnCleverTapOnPushPermissionResponseCallback
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapOnPushPermissionResponseCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapOnPushPermissionResponseCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapOnPushPermissionResponseCallback -= value;
         }
         
-        public static event CleverTapInAppNotificationButtonTappedDelegate OnCleverTapInAppNotificationButtonTapped
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapInAppNotificationButtonTapped
         {
             add => cleverTapCallbackHandler.OnCleverTapInAppNotificationButtonTapped += value;
             remove => cleverTapCallbackHandler.OnCleverTapInAppNotificationButtonTapped -= value;
         }
         
-        public static event CleverTapInboxDidInitializeCallbackDelegate OnCleverTapInboxDidInitializeCallback
+        public static event CleverTapCallbackDelegate OnCleverTapInboxDidInitializeCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapInboxDidInitializeCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInboxDidInitializeCallback -= value;
         }
         
-        public static event CleverTapInboxMessagesDidUpdateCallbackDelegate OnCleverTapInboxMessagesDidUpdateCallback
+        public static event CleverTapCallbackDelegate OnCleverTapInboxMessagesDidUpdateCallback
         {
             add => cleverTapCallbackHandler.OnCleverTapInboxMessagesDidUpdateCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInboxMessagesDidUpdateCallback -= value;
         }
         
-        public static event CleverTapInboxCustomExtrasButtonSelectDelegate OnCleverTapInboxCustomExtrasButtonSelect
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapInboxCustomExtrasButtonSelect
         {
             add => cleverTapCallbackHandler.OnCleverTapInboxCustomExtrasButtonSelect += value;
             remove => cleverTapCallbackHandler.OnCleverTapInboxCustomExtrasButtonSelect -= value;
         }
         
-        public static event CleverTapInboxItemClickedDelegate OnCleverTapInboxItemClicked
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapInboxItemClicked
         {
             add => cleverTapCallbackHandler.OnCleverTapInboxItemClicked += value;
             remove => cleverTapCallbackHandler.OnCleverTapInboxItemClicked -= value;
         }
         
-        public static event CleverTapNativeDisplayUnitsUpdatedDelegate OnCleverTapNativeDisplayUnitsUpdated
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapNativeDisplayUnitsUpdated
         {
             add => cleverTapCallbackHandler.OnCleverTapNativeDisplayUnitsUpdated += value;
             remove => cleverTapCallbackHandler.OnCleverTapNativeDisplayUnitsUpdated -= value;
         }
         
-        public static event CleverTapProductConfigFetchedDelegate OnCleverTapProductConfigFetched
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigFetched
         {
             add => cleverTapCallbackHandler.OnCleverTapProductConfigFetched += value;
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigFetched -= value;
         }
         
-        public static event CleverTapProductConfigActivatedDelegate OnCleverTapProductConfigActivated
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigActivated
         {
             add => cleverTapCallbackHandler.OnCleverTapProductConfigActivated += value;
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigActivated -= value;
         }
         
-        public static event CleverTapProductConfigInitializedDelegate OnCleverTapProductConfigInitialized
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigInitialized
         {
             add => cleverTapCallbackHandler.OnCleverTapProductConfigInitialized += value;
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigInitialized -= value;
         }
         
-        public static event CleverTapFeatureFlagsUpdatedDelegate OnCleverTapFeatureFlagsUpdated
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapFeatureFlagsUpdated
         {
             add => cleverTapCallbackHandler.OnCleverTapFeatureFlagsUpdated += value;
             remove => cleverTapCallbackHandler.OnCleverTapFeatureFlagsUpdated -= value;

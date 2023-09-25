@@ -1,15 +1,8 @@
-﻿using CleverTapUnitySDK.Common;
-using UnityEngine;
+﻿#if UNITY_IOS
+using CleverTapUnitySDK.Common;
 
-namespace CleverTapUnitySDK.IOS
-{
-    public class IOSCallbackHandler : CleverTapCallbackHandler
-    {
-        public IOSCallbackHandler()
-        {
-            var gameObject = new GameObject();
-            gameObject.AddComponent<IOSCallbackHandler>();
-            GameObject.DontDestroyOnLoad(gameObject);
-        }
+namespace CleverTapUnitySDK.IOS {
+    public class IOSCallbackHandler : CleverTapCallbackHandler {
     }
 }
+#endif

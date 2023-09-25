@@ -1,12 +1,11 @@
-﻿using CleverTap.Utilities;
+﻿#if UNITY_IOS
+using CleverTap.Utilities;
 using CleverTapUnitySDK.Common;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CleverTapUnitySDK.IOS
-{
-    public class IOSPlatformBinding : CleverTapPlatformBindings
-    {
+namespace CleverTapUnitySDK.IOS {
+    public class IOSPlatformBinding : CleverTapPlatformBindings {
         #region Extern
 
         [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -239,511 +238,406 @@ namespace CleverTapUnitySDK.IOS
 
         #endregion
 
-        public IOSPlatformBinding()
-        {
-            CallbackHandler = new IOSCallbackHandler();
+        public IOSPlatformBinding() {
+            CallbackHandler = CreateGameObjectAndAttachCallbackHandler<IOSCallbackHandler>();
         }
 
-        public override void ActivateProductConfig()
-        {
+        public override void ActivateProductConfig() {
             CleverTap_activateProductConfig();
         }
 
-        public override void DeleteInboxMessageForID(string messageId)
-        {
+        public override void DeleteInboxMessageForID(string messageId) {
             CleverTap_deleteInboxMessageForID(messageId);
         }
 
-        public override void DeleteInboxMessagesForIDs(string[] messageIds)
-        {
+        public override void DeleteInboxMessagesForIDs(string[] messageIds) {
             CleverTap_deleteInboxMessagesForIDs(messageIds, messageIds.Length);
         }
 
-        public override void DisablePersonalization()
-        {
+        public override void DisablePersonalization() {
             CleverTap_disablePersonalization();
         }
 
-        public override void DiscardInAppNotifications()
-        {
+        public override void DiscardInAppNotifications() {
             CleverTap_discardInAppNotifications();
         }
 
-        public override void DismissAppInbox()
-        {
+        public override void DismissAppInbox() {
             CleverTap_dismissAppInbox();
         }
 
-        public override void EnableDeviceNetworkInfoReporting(bool enabled)
-        {
+        public override void EnableDeviceNetworkInfoReporting(bool enabled) {
             CleverTap_enableDeviceNetworkInfoReporting(enabled);
         }
 
-        public override void EnablePersonalization()
-        {
+        public override void EnablePersonalization() {
             CleverTap_enablePersonalization();
         }
 
-        public override JSONClass EventGetDetail(string eventName)
-        {
+        public override JSONClass EventGetDetail(string eventName) {
             string jsonString = CleverTap_eventGetDetail(eventName);
             JSONClass json;
-            try
-            {
+            try {
                 json = (JSONClass)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse event detail json");
                 json = new JSONClass();
             }
             return json;
         }
 
-        public override int EventGetFirstTime(string eventName)
-        {
+        public override int EventGetFirstTime(string eventName) {
             return CleverTap_eventGetFirstTime(eventName);
         }
 
-        public override int EventGetLastTime(string eventName)
-        {
+        public override int EventGetLastTime(string eventName) {
             return CleverTap_eventGetLastTime(eventName);
         }
 
-        public override int EventGetOccurrences(string eventName)
-        {
+        public override int EventGetOccurrences(string eventName) {
             return CleverTap_eventGetOccurrences(eventName);
         }
 
-        public override void FetchAndActivateProductConfig()
-        {
+        public override void FetchAndActivateProductConfig() {
             CleverTap_fetchAndActivateProductConfig();
         }
 
-        public override void FetchProductConfig()
-        {
+        public override void FetchProductConfig() {
             CleverTap_fetchProductConfig();
         }
 
-        public override void FetchProductConfigWithMinimumInterval(double minimumInterval)
-        {
+        public override void FetchProductConfigWithMinimumInterval(double minimumInterval) {
             CleverTap_fetchProductConfigWithMinimumInterval(minimumInterval);
         }
 
-        public override JSONArray GetAllDisplayUnits()
-        {
+        public override JSONArray GetAllDisplayUnits() {
             string jsonString = CleverTap_getAllDisplayUnits();
             JSONArray json;
-            try
-            {
+            try {
                 json = (JSONArray)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse native display units json");
                 json = new JSONArray();
             }
             return json;
         }
 
-        public override JSONArray GetAllInboxMessages()
-        {
+        public override JSONArray GetAllInboxMessages() {
             string jsonString = CleverTap_getAllInboxMessages();
             JSONArray json;
-            try
-            {
+            try {
                 json = (JSONArray)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse app inbox messages json");
                 json = new JSONArray();
             }
             return json;
         }
 
-        public override string GetCleverTapID()
-        {
+        public override string GetCleverTapID() {
             return CleverTap_getCleverTapID();
         }
 
-        public override JSONClass GetDisplayUnitForID(string unitID)
-        {
+        public override JSONClass GetDisplayUnitForID(string unitID) {
             string jsonString = CleverTap_getDisplayUnitForID(unitID);
             JSONClass json;
-            try
-            {
+            try {
                 json = (JSONClass)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse native display unit json");
                 json = new JSONClass();
             }
             return json;
         }
 
-        public override bool GetFeatureFlag(string key, bool defaultValue)
-        {
+        public override bool GetFeatureFlag(string key, bool defaultValue) {
             return CleverTap_getFeatureFlag(key, defaultValue);
         }
 
-        public override int GetInboxMessageCount()
-        {
+        public override int GetInboxMessageCount() {
             return CleverTap_getInboxMessageCount();
         }
 
-        public override JSONClass GetInboxMessageForId(string messageId)
-        {
+        public override JSONClass GetInboxMessageForId(string messageId) {
             string jsonString = CleverTap_getInboxMessageForId(messageId);
             JSONClass json;
-            try
-            {
+            try {
                 json = (JSONClass)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse app inbox message json");
                 json = new JSONClass();
             }
             return json;
         }
 
-        public override int GetInboxMessageUnreadCount()
-        {
+        public override int GetInboxMessageUnreadCount() {
             return CleverTap_getInboxMessageUnreadCount();
         }
 
-        public override double GetProductConfigLastFetchTimeStamp()
-        {
+        public override double GetProductConfigLastFetchTimeStamp() {
             return CleverTap_getProductConfigLastFetchTimeStamp();
         }
 
-        public override JSONClass GetProductConfigValueFor(string key)
-        {
+        public override JSONClass GetProductConfigValueFor(string key) {
             string jsonString = CleverTap_getProductConfigValueFor(key);
             JSONClass json;
-            try
-            {
+            try {
                 json = (JSONClass)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse product config value");
                 json = new JSONClass();
             }
             return json;
         }
 
-        public override JSONArray GetUnreadInboxMessages()
-        {
+        public override JSONArray GetUnreadInboxMessages() {
             string jsonString = CleverTap_getUnreadInboxMessages();
             JSONArray json;
-            try
-            {
+            try {
                 json = (JSONArray)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse unread app inbox messages json");
                 json = new JSONArray();
             }
             return json;
         }
 
-        public override void InitializeInbox()
-        {
+        public override void InitializeInbox() {
             CleverTap_initializeInbox();
         }
 
-        public override bool IsPushPermissionGranted()
-        {
+        public override bool IsPushPermissionGranted() {
             CleverTap_isPushPermissionGranted();
             // Added for iOS
             return true;
         }
 
-        public override void LaunchWithCredentials(string accountID, string token)
-        {
+        public override void LaunchWithCredentials(string accountID, string token) {
             CleverTap_launchWithCredentials(accountID, token);
         }
 
-        public override void LaunchWithCredentialsForRegion(string accountID, string token, string region)
-        {
+        public override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
             CleverTap_launchWithCredentialsForRegion(accountID, token, region);
         }
 
-        public override void MarkReadInboxMessageForID(string messageId)
-        {
+        public override void MarkReadInboxMessageForID(string messageId) {
             CleverTap_markReadInboxMessageForID(messageId);
         }
 
-        public override void MarkReadInboxMessagesForIDs(string[] messageIds)
-        {
+        public override void MarkReadInboxMessagesForIDs(string[] messageIds) {
             int arrLength = messageIds.Length;
             CleverTap_markReadInboxMessagesForIDs(messageIds, arrLength);
         }
 
-        public override void OnUserLogin(Dictionary<string, string> properties)
-        {
+        public override void OnUserLogin(Dictionary<string, string> properties) {
             var propertiesString = Json.Serialize(properties);
             CleverTap_onUserLogin(propertiesString);
         }
 
-        public override void ProfileAddMultiValueForKey(string key, string val)
-        {
+        public override void ProfileAddMultiValueForKey(string key, string val) {
             CleverTap_profileAddMultiValueForKey(key, val);
         }
 
-        public override void ProfileAddMultiValuesForKey(string key, List<string> values)
-        {
+        public override void ProfileAddMultiValuesForKey(string key, List<string> values) {
             CleverTap_profileAddMultiValuesForKey(key, values.ToArray(), values.Count);
         }
 
-        public override void ProfileDecrementValueForKey(string key, double val)
-        {
+        public override void ProfileDecrementValueForKey(string key, double val) {
             CleverTap_profileDecrementDoubleValueForKey(key, val);
         }
 
-        public override void ProfileDecrementValueForKey(string key, int val)
-        {
+        public override void ProfileDecrementValueForKey(string key, int val) {
             CleverTap_profileDecrementIntValueForKey(key, val);
         }
 
-        public override string ProfileGet(string key)
-        {
+        public override string ProfileGet(string key) {
             return CleverTap_profileGet(key);
         }
 
-        public override string ProfileGetCleverTapAttributionIdentifier()
-        {
+        public override string ProfileGetCleverTapAttributionIdentifier() {
             return CleverTap_profileGetCleverTapAttributionIdentifier(); ;
         }
 
-        public override string ProfileGetCleverTapID()
-        {
+        public override string ProfileGetCleverTapID() {
             return CleverTap_profileGetCleverTapID(); ;
         }
 
-        public override void ProfileIncrementValueForKey(string key, double val)
-        {
+        public override void ProfileIncrementValueForKey(string key, double val) {
             CleverTap_profileIncrementDoubleValueForKey(key, val);
         }
 
-        public override void ProfileIncrementValueForKey(string key, int val)
-        {
+        public override void ProfileIncrementValueForKey(string key, int val) {
             CleverTap_profileIncrementIntValueForKey(key, val);
         }
 
-        public override void ProfilePush(Dictionary<string, string> properties)
-        {
+        public override void ProfilePush(Dictionary<string, string> properties) {
             var propertiesString = Json.Serialize(properties);
             CleverTap_profilePush(propertiesString);
         }
 
-        public override void ProfileRemoveMultiValueForKey(string key, string val)
-        {
+        public override void ProfileRemoveMultiValueForKey(string key, string val) {
             CleverTap_profileRemoveMultiValueForKey(key, val);
         }
 
-        public override void ProfileRemoveMultiValuesForKey(string key, List<string> values)
-        {
+        public override void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
             CleverTap_profileRemoveMultiValuesForKey(key, values.ToArray(), values.Count);
         }
 
-        public override void ProfileRemoveValueForKey(string key)
-        {
+        public override void ProfileRemoveValueForKey(string key) {
             CleverTap_profileRemoveValueForKey(key);
         }
 
-        public override void ProfileSetMultiValuesForKey(string key, List<string> values)
-        {
+        public override void ProfileSetMultiValuesForKey(string key, List<string> values) {
             CleverTap_profileSetMultiValuesForKey(key, values.ToArray(), values.Count);
         }
 
-        public override void PromptForPushPermission(bool showFallbackSettings)
-        {
+        public override void PromptForPushPermission(bool showFallbackSettings) {
             CleverTap_promptForPushPermission(showFallbackSettings);
         }
 
-        public override void PromptPushPrimer(Dictionary<string, object> json)
-        {
+        public override void PromptPushPrimer(Dictionary<string, object> json) {
             var jsonString = Json.Serialize(json);
             CleverTap_promptPushPrimer(jsonString);
         }
 
-        public override void PushInstallReferrerSource(string source, string medium, string campaign)
-        {
+        public override void PushInstallReferrerSource(string source, string medium, string campaign) {
             CleverTap_pushInstallReferrerSource(source, medium, campaign);
         }
 
-        public override void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items)
-        {
+        public override void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
             var detailsString = Json.Serialize(details);
             var itemsString = Json.Serialize(items);
             CleverTap_recordChargedEventWithDetailsAndItems(detailsString, itemsString);
         }
 
-        public override void RecordDisplayUnitClickedEventForID(string unitID)
-        {
+        public override void RecordDisplayUnitClickedEventForID(string unitID) {
             CleverTap_recordDisplayUnitClickedEventForID(unitID);
         }
 
-        public override void RecordDisplayUnitViewedEventForID(string unitID)
-        {
+        public override void RecordDisplayUnitViewedEventForID(string unitID) {
             CleverTap_recordDisplayUnitViewedEventForID(unitID);
         }
 
-        public override void RecordEvent(string eventName)
-        {
+        public override void RecordEvent(string eventName) {
             CleverTap_recordEvent(eventName, null);
         }
 
-        public override void RecordEvent(string eventName, Dictionary<string, object> properties)
-        {
+        public override void RecordEvent(string eventName, Dictionary<string, object> properties) {
             var propertiesString = Json.Serialize(properties);
             CleverTap_recordEvent(eventName, propertiesString);
         }
 
-        public override void RecordInboxNotificationClickedEventForID(string messageId)
-        {
+        public override void RecordInboxNotificationClickedEventForID(string messageId) {
             CleverTap_recordInboxNotificationClickedEventForID(messageId);
         }
 
-        public override void RecordInboxNotificationViewedEventForID(string messageId)
-        {
+        public override void RecordInboxNotificationViewedEventForID(string messageId) {
             CleverTap_recordInboxNotificationViewedEventForID(messageId);
         }
 
-        public override void RecordScreenView(string screenName)
-        {
+        public override void RecordScreenView(string screenName) {
             CleverTap_recordScreenView(screenName);
         }
 
-        public override void RegisterPush()
-        {
+        public override void RegisterPush() {
             CleverTap_registerPush();
         }
 
-        public override void ResetProductConfig()
-        {
+        public override void ResetProductConfig() {
             CleverTap_resetProductConfig();
         }
 
-        public override void ResumeInAppNotifications()
-        {
+        public override void ResumeInAppNotifications() {
             CleverTap_resumeInAppNotifications();
         }
 
-        public override int SessionGetTimeElapsed()
-        {
+        public override int SessionGetTimeElapsed() {
             return CleverTap_sessionGetTimeElapsed();
         }
 
-        public override JSONClass SessionGetUTMDetails()
-        {
+        public override JSONClass SessionGetUTMDetails() {
             string jsonString = CleverTap_sessionGetUTMDetails();
             JSONClass json;
-            try
-            {
+            try {
                 json = (JSONClass)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse session utm details json");
                 json = new JSONClass();
             }
             return json;
         }
 
-        public override void SetApplicationIconBadgeNumber(int num)
-        {
+        public override void SetApplicationIconBadgeNumber(int num) {
             CleverTap_setApplicationIconBadgeNumber(num);
         }
 
-        public override void SetDebugLevel(int level)
-        {
+        public override void SetDebugLevel(int level) {
             CleverTap_setDebugLevel(level);
         }
 
-        public override void SetLocation(double lat, double lon)
-        {
+        public override void SetLocation(double lat, double lon) {
             CleverTap_setLocation(lat, lon);
         }
 
-        public override void SetOffline(bool enabled)
-        {
+        public override void SetOffline(bool enabled) {
             CleverTap_setOffline(enabled);
         }
 
-        public override void SetOptOut(bool enabled)
-        {
+        public override void SetOptOut(bool enabled) {
             CleverTap_setOptOut(enabled);
         }
 
-        public override void SetProductConfigDefaults(Dictionary<string, object> defaults)
-        {
+        public override void SetProductConfigDefaults(Dictionary<string, object> defaults) {
             var defaultsString = Json.Serialize(defaults);
             CleverTap_setProductConfigDefaults(defaultsString);
         }
 
-        public override void SetProductConfigDefaultsFromPlistFileName(string fileName)
-        {
+        public override void SetProductConfigDefaultsFromPlistFileName(string fileName) {
             CleverTap_setProductConfigDefaultsFromPlistFileName(fileName);
         }
 
-        public override void SetProductConfigMinimumFetchInterval(double minimumFetchInterval)
-        {
+        public override void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
             CleverTap_setProductConfigMinimumFetchInterval(minimumFetchInterval);
         }
 
-        public override void ShowAppInbox(Dictionary<string, object> styleConfig)
-        {
+        public override void ShowAppInbox(Dictionary<string, object> styleConfig) {
             var styleConfigString = Json.Serialize(styleConfig);
             CleverTap_showAppInbox(styleConfigString);
         }
 
-        public override void ShowAppInbox(string styleConfig)
-        {
+        public override void ShowAppInbox(string styleConfig) {
             // TODO : Validate if we can use it like this (following Android implemenation) 
             var styleConfigString = Json.Serialize(new Dictionary<string, object> { { "showAppInbox", styleConfig } });
             CleverTap_showAppInbox(styleConfigString);
         }
 
-        public override void SuspendInAppNotifications()
-        {
+        public override void SuspendInAppNotifications() {
             CleverTap_suspendInAppNotifications();
         }
 
-        public override JSONClass UserGetEventHistory()
-        {
+        public override JSONClass UserGetEventHistory() {
             string jsonString = CleverTap_userGetEventHistory();
             JSONClass json;
-            try
-            {
+            try {
                 json = (JSONClass)JSON.Parse(jsonString);
-            }
-            catch
-            {
+            } catch {
                 Debug.LogError("Unable to parse user event history json");
                 json = new JSONClass();
             }
             return json;
         }
 
-        public override int UserGetPreviousVisitTime()
-        {
+        public override int UserGetPreviousVisitTime() {
             return CleverTap_userGetPreviousVisitTime();
         }
 
-        public override int UserGetScreenCount()
-        {
+        public override int UserGetScreenCount() {
             return CleverTap_userGetScreenCount();
         }
 
-        public override int UserGetTotalVisits()
-        {
+        public override int UserGetTotalVisits() {
             return CleverTap_userGetTotalVisits();
         }
     }
 }
+#endif
