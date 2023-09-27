@@ -1,6 +1,6 @@
-﻿#if UNITY_IOS
+﻿#if UNITY_ANDROID
 using CleverTapUnitySDK.Android;
-#elif UNITY_ANDROID
+#elif UNITY_IOS
 using CleverTapUnitySDK.IOS;
 #else
 using CleverTapUnitySDK.Native;
@@ -14,9 +14,9 @@ namespace CleverTapUnitySDK.Common {
         public static CleverTapPlatformBindings CleverTapBinding { get => cleverTapBinding; }
 
         static BindingFactory() {
-            #if UNITY_IOS
-            platform = "UNITY_IOS";
-            #elif UNITY_ANDROID
+            #if UNITY_ANDROID
+            cleverTapBinding = new AndroidPlatformBinding();
+            #elif UNITY_IOS
             cleverTapBinding = new IOSPlatformBinding();
             #else
             cleverTapBinding = new UnityNativePlatformBinding();
