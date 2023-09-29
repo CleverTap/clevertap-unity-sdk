@@ -9,7 +9,7 @@ namespace CleverTapUnitySDK.Common {
         public CleverTapCallbackHandler CallbackHandler { get; protected set; }
 
         protected T CreateGameObjectAndAttachCallbackHandler<T>() where T : CleverTapCallbackHandler {
-            var gameObject = new GameObject();
+            var gameObject = new GameObject("CleverTapCallback");
             gameObject.AddComponent<T>();
             GameObject.DontDestroyOnLoad(gameObject);
             return gameObject.GetComponent<T>();
