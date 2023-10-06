@@ -2,7 +2,7 @@
 using CleverTapUnitySDK.Common;
 
 namespace CleverTapUnitySDK.Android {
-    public class AndoridCallbackHandler : CleverTapCallbackHandler {
+    public class AndroidCallbackHandler : CleverTapCallbackHandler {
     }
 }
 #endif

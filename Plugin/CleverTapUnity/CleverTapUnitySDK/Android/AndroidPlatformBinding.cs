@@ -43,7 +43,8 @@ namespace CleverTapUnitySDK.Android {
         #endregion
 
         public AndroidPlatformBinding() {
-            CallbackHandler = CreateGameObjectAndAttachCallbackHandler<AndoridCallbackHandler>();
+            CallbackHandler = CreateGameObjectAndAttachCallbackHandler<AndroidCallbackHandler>("AndroidCallbackHandler");
+            Debug.Log("Start: CleverTap binding for Android.");
         }
 
         public override void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) {

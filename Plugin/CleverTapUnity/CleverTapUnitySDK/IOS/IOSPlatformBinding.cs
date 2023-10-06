@@ -239,7 +239,8 @@ namespace CleverTapUnitySDK.IOS {
         #endregion
 
         public IOSPlatformBinding() {
-            CallbackHandler = CreateGameObjectAndAttachCallbackHandler<IOSCallbackHandler>();
+            CallbackHandler = CreateGameObjectAndAttachCallbackHandler<IOSCallbackHandler>("IOSCallbackHandler");
+            Debug.Log("Start: CleverTap binding for iOS.");
         }
 
         public override void ActivateProductConfig() {

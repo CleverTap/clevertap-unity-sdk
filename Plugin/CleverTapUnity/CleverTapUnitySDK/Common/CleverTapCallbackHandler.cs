@@ -212,13 +212,6 @@ namespace CleverTapUnitySDK.Common {
             Debug.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
-        public virtual GameObject CreateGameObjectAndAttachCallbackHandler() {
-            var gameObject = new GameObject();
-            gameObject.AddComponent(this.GetType());
-            GameObject.DontDestroyOnLoad(gameObject);
-            return gameObject;
-        }
-
         #endregion
     }
 }
