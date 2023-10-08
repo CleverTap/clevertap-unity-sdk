@@ -11,6 +11,7 @@ using CleverTap.Utilities;
 using UnityEditor;
 #endif
 
+[Obsolete("Please use CleverTapUnitySDK.CleverTap instead.")]
 public class CleverTapUnity : MonoBehaviour {
 
     public String CLEVERTAP_ACCOUNT_ID = "YOUR_CLEVERTAP_ACCOUNT_ID";
@@ -22,6 +23,8 @@ public class CleverTapUnity : MonoBehaviour {
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
+
+        CleverTapUnitySDK.CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 
         CleverTapUnitySDK.CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
         CleverTapUnitySDK.CleverTap.OnCleverTapProfileInitializedCallback += CleverTapProfileInitializedCallback;
@@ -41,13 +44,12 @@ public class CleverTapUnity : MonoBehaviour {
         CleverTapUnitySDK.CleverTap.OnCleverTapProductConfigActivated += CleverTapProductConfigActivated;
         CleverTapUnitySDK.CleverTap.OnCleverTapProductConfigInitialized += CleverTapProductConfigInitialized;
         CleverTapUnitySDK.CleverTap.OnCleverTapFeatureFlagsUpdated += CleverTapFeatureFlagsUpdated;
-
-        CleverTapUnitySDK.CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
+        
         CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_ACCOUNT_REGION);
 
         if (CLEVERTAP_ENABLE_PERSONALIZATION) {
             CleverTapUnitySDK.CleverTap.EnablePersonalization();
-        }
+        }        
 
         //==========[Testing Newly added Clevertap APIs]============================================
         //CleverTapUnitySDK.CleverTap.GetCleverTapID();
@@ -60,7 +62,7 @@ public class CleverTapUnity : MonoBehaviour {
         //CleverTapUnitySDK.CleverTap.DiscardInAppNotifications();
         //CleverTapUnitySDK.CleverTap.ResumeInAppNotifications();
 
-        ////record special Charged event
+        //record special Charged event
         //Dictionary<string, object> chargeDetails = new Dictionary<string, object>();
         //chargeDetails.Add("Amount", 500);
         //chargeDetails.Add("Currency", "USD");

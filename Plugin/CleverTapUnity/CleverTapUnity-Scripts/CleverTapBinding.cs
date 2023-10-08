@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CleverTap.Utilities;
+using System;
 
 /// <summary>
 /// These methods can be called by Unity applications to record
@@ -13,236 +14,313 @@ namespace CleverTap {
         public const string Version = "2.4.1";
 
 #if UNITY_IOS
-
+        
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.LaunchWithCredentials(string, string) instead.")]
         public static void LaunchWithCredentials(string accountID, string token) =>
             CleverTapUnitySDK.CleverTap.LaunchWithCredentials(accountID, token);
 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(string, string, string) instead.")]
         public static void LaunchWithCredentialsForRegion(string accountID, string token, string region) =>
             CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(accountID, token, region);
 
-        public static void OnUserLogin(Dictionary<string, string> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.OnUserLogin(Dictionary<string, string>) instead.")]
+        public static void OnUserLogin(Dictionary<string, string> properties) =>
             CleverTapUnitySDK.CleverTap.OnUserLogin(properties);
 
-        public static void ProfilePush(Dictionary<string, string> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfilePush(Dictionary<string, string>) instead.")]
+        public static void ProfilePush(Dictionary<string, string> properties) =>
             CleverTapUnitySDK.CleverTap.ProfilePush(properties);
 
-        public static string ProfileGet(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGet(string) instead.")]
+        public static string ProfileGet(string key) =>
             CleverTapUnitySDK.CleverTap.ProfileGet(key);
 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGetCleverTapAttributionIdentifier() instead.")]
         public static string ProfileGetCleverTapAttributionIdentifier() =>
             CleverTapUnitySDK.CleverTap.ProfileGetCleverTapAttributionIdentifier();
 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGetCleverTapID() instead.")]
         public static string ProfileGetCleverTapID() =>
             CleverTapUnitySDK.CleverTap.ProfileGetCleverTapID();
 
-        public static void ProfileRemoveValueForKey(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveValueForKey(string) instead.")]
+        public static void ProfileRemoveValueForKey(string key) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveValueForKey(key);
 
-        public static void ProfileSetMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileSetMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileSetMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileSetMultiValuesForKey(key, values);
 
-        public static void ProfileAddMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileAddMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileAddMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileAddMultiValuesForKey(key, values);
 
-        public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValuesForKey(key, values);
 
-        public static void ProfileAddMultiValueForKey(string key, string val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileAddMultiValueForKey(string, string) instead.")]
+        public static void ProfileAddMultiValueForKey(string key, string val) =>
             CleverTapUnitySDK.CleverTap.ProfileAddMultiValueForKey(key, val);
 
-        public static void ProfileRemoveMultiValueForKey(string key, string val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValueForKey(string, string) instead.")]
+        public static void ProfileRemoveMultiValueForKey(string key, string val) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValueForKey(key, val);
 
-        public static void ProfileIncrementValueForKey(string key, double val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(string, double) instead.")]
+        public static void ProfileIncrementValueForKey(string key, double val) =>
             CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(key, val);
 
-        public static void ProfileIncrementValueForKey(string key, int val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(string, int) instead.")]
+        public static void ProfileIncrementValueForKey(string key, int val) =>
             CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(key, val);
 
-        public static void ProfileDecrementValueForKey(string key, double val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(string, double) instead.")]
+        public static void ProfileDecrementValueForKey(string key, double val) =>
             CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(key, val);
 
-        public static void ProfileDecrementValueForKey(string key, int val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(string, int) instead.")]
+        public static void ProfileDecrementValueForKey(string key, int val) =>
             CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(key, val);
 
-        public static void SuspendInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SuspendInAppNotifications() instead.")]
+        public static void SuspendInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.SuspendInAppNotifications();
 
-        public static void DiscardInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DiscardInAppNotifications() instead.")]
+        public static void DiscardInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.DiscardInAppNotifications();
 
-        public static void ResumeInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ResumeInAppNotifications() instead.")]
+        public static void ResumeInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.ResumeInAppNotifications();
 
-        public static string GetCleverTapID() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetCleverTapID() instead.")]
+        public static string GetCleverTapID() =>
             CleverTapUnitySDK.CleverTap.GetCleverTapID();
 
-        public static void RecordScreenView(string screenName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordScreenView(string) instead.")]
+        public static void RecordScreenView(string screenName) =>
             CleverTapUnitySDK.CleverTap.RecordScreenView(screenName);
 
-        public static void RecordEvent(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordEvent(string) instead.")]
+        public static void RecordEvent(string eventName) =>
             CleverTapUnitySDK.CleverTap.RecordEvent(eventName);
 
-        public static void RecordEvent(string eventName, Dictionary<string, object> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordEvent(string, Dictionary<string, object>) instead.")]
+        public static void RecordEvent(string eventName, Dictionary<string, object> properties) =>
             CleverTapUnitySDK.CleverTap.RecordEvent(eventName, properties);
 
-        public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordChargedEventWithDetailsAndItems(Dictionary<string, object>, List<Dictionary<string, object>>) instead.")]
+        public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) =>
             CleverTapUnitySDK.CleverTap.RecordChargedEventWithDetailsAndItems(details, items);
 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetFirstTime(string) instead.")]
         public static int EventGetFirstTime(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetFirstTime(eventName);
 
-        public static int EventGetLastTime(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetLastTime(string) instead.")]
+        public static int EventGetLastTime(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetLastTime(eventName);
 
-        public static int EventGetOccurrences(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetOccurrences(string) instead.")]
+        public static int EventGetOccurrences(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetOccurrences(eventName);
 
-        public static JSONClass UserGetEventHistory() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetEventHistory() instead.")]
+        public static JSONClass UserGetEventHistory() =>
             CleverTapUnitySDK.CleverTap.UserGetEventHistory();
 
-        public static JSONClass SessionGetUTMDetails() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SessionGetUTMDetails() instead.")]
+        public static JSONClass SessionGetUTMDetails() =>
             CleverTapUnitySDK.CleverTap.SessionGetUTMDetails();
 
-        public static int SessionGetTimeElapsed() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SessionGetTimeElapsed() instead.")]
+        public static int SessionGetTimeElapsed() =>
             CleverTapUnitySDK.CleverTap.SessionGetTimeElapsed();
 
-        public static JSONClass EventGetDetail(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetDetail(string eventName) instead.")]
+        public static JSONClass EventGetDetail(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetDetail(eventName);
 
-        public static int UserGetTotalVisits() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetTotalVisits() instead.")]
+        public static int UserGetTotalVisits() =>
             CleverTapUnitySDK.CleverTap.UserGetTotalVisits();
 
-        public static int UserGetScreenCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetScreenCount() instead.")]
+        public static int UserGetScreenCount() =>
             CleverTapUnitySDK.CleverTap.UserGetScreenCount();
 
-        public static int UserGetPreviousVisitTime() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetPreviousVisitTime() instead.")]
+        public static int UserGetPreviousVisitTime() =>
             CleverTapUnitySDK.CleverTap.UserGetPreviousVisitTime();
 
-        public static void RegisterPush() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RegisterPush() instead.")]
+        public static void RegisterPush() =>
             CleverTapUnitySDK.CleverTap.RegisterPush();
 
-        public static void SetApplicationIconBadgeNumber(int num) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetApplicationIconBadgeNumber(int) instead.")]
+        public static void SetApplicationIconBadgeNumber(int num) =>
             CleverTapUnitySDK.CleverTap.SetApplicationIconBadgeNumber(num);
 
-        public static void SetDebugLevel(int level) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetDebugLevel(int) instead.")]
+        public static void SetDebugLevel(int level) =>
             CleverTapUnitySDK.CleverTap.SetDebugLevel(level);
 
-        public static void EnablePersonalization() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EnablePersonalization() instead.")]
+        public static void EnablePersonalization() =>
             CleverTapUnitySDK.CleverTap.EnablePersonalization();
 
-        public static void DisablePersonalization() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DisablePersonalization() instead.")]
+        public static void DisablePersonalization() =>
             CleverTapUnitySDK.CleverTap.DisablePersonalization();
 
-        public static void SetLocation(double lat, double lon) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetLocation(double, double) instead.")]
+        public static void SetLocation(double lat, double lon) =>
             CleverTapUnitySDK.CleverTap.SetLocation(lat, lon);
 
-        public static void PushInstallReferrerSource(string source, string medium, string campaign) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PushInstallReferrerSource(string, string, string) instead.")]
+        public static void PushInstallReferrerSource(string source, string medium, string campaign) =>
             CleverTapUnitySDK.CleverTap.PushInstallReferrerSource(source, medium, campaign);
 
-        public static void SetOffline(bool enabled) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetOffline(bool) instead.")]
+        public static void SetOffline(bool enabled) =>
             CleverTapUnitySDK.CleverTap.SetOffline(enabled);
 
-        public static void SetOptOut(bool enabled) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetOptOut(bool) instead.")]
+        public static void SetOptOut(bool enabled) =>
             CleverTapUnitySDK.CleverTap.SetOptOut(enabled);
 
-        public static void EnableDeviceNetworkInfoReporting(bool enabled) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EnableDeviceNetworkInfoReporting(bool) instead.")]
+        public static void EnableDeviceNetworkInfoReporting(bool enabled) =>
             CleverTapUnitySDK.CleverTap.EnableDeviceNetworkInfoReporting(enabled);
 
-        public static void InitializeInbox() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.InitializeInbox() instead.")]
+        public static void InitializeInbox() =>
             CleverTapUnitySDK.CleverTap.InitializeInbox();
 
-        public static void ShowAppInbox(Dictionary<string, object> styleConfig) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ShowAppInbox(Dictionary<string, object>) instead.")]
+        public static void ShowAppInbox(Dictionary<string, object> styleConfig) =>
             CleverTapUnitySDK.CleverTap.ShowAppInbox(styleConfig);
 
-        public static void DismissAppInbox() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DismissAppInbox() instead.")]
+        public static void DismissAppInbox() =>
             CleverTapUnitySDK.CleverTap.DismissAppInbox();
 
-        public static int GetInboxMessageCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageCount() instead.")]
+        public static int GetInboxMessageCount() =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageCount();
 
-        public static int GetInboxMessageUnreadCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageUnreadCount() instead.")]
+        public static int GetInboxMessageUnreadCount() =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageUnreadCount();
 
-        public static JSONArray GetAllInboxMessages() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetAllInboxMessages() instead.")]
+        public static JSONArray GetAllInboxMessages() =>
             CleverTapUnitySDK.CleverTap.GetAllInboxMessages();
 
-        public static JSONArray GetUnreadInboxMessages() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetUnreadInboxMessages() instead.")]
+        public static JSONArray GetUnreadInboxMessages() =>
             CleverTapUnitySDK.CleverTap.GetUnreadInboxMessages();
 
-        public static JSONClass GetInboxMessageForId(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageForId(string) instead.")]
+        public static JSONClass GetInboxMessageForId(string messageId) =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageForId(messageId);
 
-        public static void DeleteInboxMessageForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteInboxMessageForID(string) instead.")]
+        public static void DeleteInboxMessageForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.DeleteInboxMessageForID(messageId);
 
-        public static void DeleteInboxMessagesForIDs(string[] messageIds) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteInboxMessagesForIDs(string[]) instead.")]
+        public static void DeleteInboxMessagesForIDs(string[] messageIds) =>
             CleverTapUnitySDK.CleverTap.DeleteInboxMessagesForIDs(messageIds);
 
-        public static void MarkReadInboxMessageForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.MarkReadInboxMessageForID(string) instead.")]
+        public static void MarkReadInboxMessageForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.MarkReadInboxMessageForID(messageId);
 
-        public static void MarkReadInboxMessagesForIDs(string[] messageIds) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.MarkReadInboxMessagesForIDs(string[]) instead.")]
+        public static void MarkReadInboxMessagesForIDs(string[] messageIds) =>
             CleverTapUnitySDK.CleverTap.MarkReadInboxMessagesForIDs(messageIds);
 
-        public static void RecordInboxNotificationViewedEventForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordInboxNotificationViewedEventForID(string) instead.")]
+        public static void RecordInboxNotificationViewedEventForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.RecordInboxNotificationViewedEventForID(messageId);
 
-        public static void RecordInboxNotificationClickedEventForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordInboxNotificationClickedEventForID(string) instead.")]
+        public static void RecordInboxNotificationClickedEventForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.RecordInboxNotificationClickedEventForID(messageId);
 
-        public static JSONArray GetAllDisplayUnits() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetAllDisplayUnits() instead.")]
+        public static JSONArray GetAllDisplayUnits() =>
             CleverTapUnitySDK.CleverTap.GetAllDisplayUnits();
 
-        public static JSONClass GetDisplayUnitForID(string unitID) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetDisplayUnitForID(string) instead.")]
+        public static JSONClass GetDisplayUnitForID(string unitID) =>
             CleverTapUnitySDK.CleverTap.GetDisplayUnitForID(unitID);
 
-        public static void RecordDisplayUnitViewedEventForID(string unitID) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordDisplayUnitViewedEventForID(string) instead.")]
+        public static void RecordDisplayUnitViewedEventForID(string unitID) =>
             CleverTapUnitySDK.CleverTap.RecordDisplayUnitViewedEventForID(unitID);
 
-        public static void RecordDisplayUnitClickedEventForID(string unitID) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordDisplayUnitClickedEventForID(string) instead.")]
+        public static void RecordDisplayUnitClickedEventForID(string unitID) =>
             CleverTapUnitySDK.CleverTap.RecordDisplayUnitClickedEventForID(unitID);
 
-        public static void FetchProductConfig() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.FetchProductConfig() instead.")]
+        public static void FetchProductConfig() =>
             CleverTapUnitySDK.CleverTap.FetchProductConfig();
 
-        public static void FetchProductConfigWithMinimumInterval(double minimumInterval) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.FetchProductConfigWithMinimumInterval(double) instead.")]
+        public static void FetchProductConfigWithMinimumInterval(double minimumInterval) =>
             CleverTapUnitySDK.CleverTap.FetchProductConfigWithMinimumInterval(minimumInterval);
 
-        public static void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetProductConfigMinimumFetchInterval(double) instead.")]
+        public static void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) =>
             CleverTapUnitySDK.CleverTap.SetProductConfigMinimumFetchInterval(minimumFetchInterval);
 
-        public static void ActivateProductConfig() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ActivateProductConfig() instead.")]
+        public static void ActivateProductConfig() =>
             CleverTapUnitySDK.CleverTap.ActivateProductConfig();
 
-        public static void FetchAndActivateProductConfig() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.FetchAndActivateProductConfig() instead.")]
+        public static void FetchAndActivateProductConfig() =>
             CleverTapUnitySDK.CleverTap.FetchAndActivateProductConfig();
 
-        public static void SetProductConfigDefaults(Dictionary<string, object> defaults) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetProductConfigDefaults(Dictionary<string, object>) instead.")]
+        public static void SetProductConfigDefaults(Dictionary<string, object> defaults) =>
             CleverTapUnitySDK.CleverTap.SetProductConfigDefaults(defaults);
 
-        public static void SetProductConfigDefaultsFromPlistFileName(string fileName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetProductConfigDefaultsFromPlistFileName(string) instead.")]
+        public static void SetProductConfigDefaultsFromPlistFileName(string fileName) =>
             CleverTapUnitySDK.CleverTap.SetProductConfigDefaultsFromPlistFileName(fileName);
 
-        public static JSONClass GetProductConfigValueFor(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetProductConfigValueFor(string) instead.")]
+        public static JSONClass GetProductConfigValueFor(string key) =>
             CleverTapUnitySDK.CleverTap.GetProductConfigValueFor(key);
 
-        public static double GetProductConfigLastFetchTimeStamp() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetProductConfigLastFetchTimeStamp() instead.")]
+        public static double GetProductConfigLastFetchTimeStamp() =>
             CleverTapUnitySDK.CleverTap.GetProductConfigLastFetchTimeStamp();
 
-        public static void ResetProductConfig() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ResetProductConfig() instead.")]
+        public static void ResetProductConfig() =>
             CleverTapUnitySDK.CleverTap.ResetProductConfig();
 
-        public static bool GetFeatureFlag(string key, bool defaultValue) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetFeatureFlag(string, bool) instead.")]
+        public static bool GetFeatureFlag(string key, bool defaultValue) =>
             CleverTapUnitySDK.CleverTap.GetFeatureFlag(key, defaultValue);
 
-        public static void PromptPushPrimer(Dictionary<string, object> json) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PromptPushPrimer(Dictionary<string, object>) instead.")]
+        public static void PromptPushPrimer(Dictionary<string, object> json) =>
             CleverTapUnitySDK.CleverTap.PromptPushPrimer(json);
 
-        public static void PromptForPushPermission(bool showFallbackSettings) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PromptForPushPermission(bool) instead.")]
+        public static void PromptForPushPermission(bool showFallbackSettings) =>
             CleverTapUnitySDK.CleverTap.PromptForPushPermission(showFallbackSettings);
 
-        public static void IsPushPermissionGranted() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.IsPushPermissionGranted() instead.")]
+        public static void IsPushPermissionGranted() =>
             CleverTapUnitySDK.CleverTap.IsPushPermissionGranted();
 
 #elif UNITY_ANDROID
@@ -283,451 +361,526 @@ namespace CleverTap {
         }
         #endregion
 
-        public static void SetDebugLevel(int level) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetDebugLevel(int) instead.")]
+        public static void SetDebugLevel(int level) =>
             CleverTapUnitySDK.CleverTap.SetDebugLevel(level);
 
-        public static void Initialize(string accountID, string accountToken) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.LaunchWithCredentials(string, string) instead.")]
+        public static void Initialize(string accountID, string accountToken) =>
             CleverTapUnitySDK.CleverTap.LaunchWithCredentials(accountID, accountToken);
 
-        public static void Initialize(string accountID, string accountToken, string region) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(string, string, string) instead.")]
+        public static void Initialize(string accountID, string accountToken, string region) =>
             CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(accountID, accountToken, region);
 
-        public static void LaunchWithCredentials(string accountID, string token, string region) {            
-            //no op only supported on ios
-        }
-
+        [Obsolete("Not supported for Android.")]
         public static void LaunchWithCredentials(string accountID, string token) {
             //no op only supported on ios
         }
 
+        [Obsolete("Not supported for Android.")]
+        public static void LaunchWithCredentials(string accountID, string token, string region) {            
+            //no op only supported on ios
+        }
+
+        [Obsolete("Not supported for Android.")]
         public static void RegisterPush() {
             //no op only supported on ios
         }
 
-        public static void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannel(string, string, string, int, bool) instead.")]
+        public static void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannel(channelId, channelName, channelDescription, importance, showBadge);
 
-        public static void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithSound(string, string, string, int, bool, string) instead.")]
+        public static void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithSound(channelId, channelName, channelDescription, importance, showBadge, sound);
 
-        public static void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroup(string, string, string, int, string, bool) instead.")]
+        public static void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroup(channelId, channelName, channelDescription, importance, groupId, showBadge);
 
-        public static void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroupAndSound(string, string, string, int, string, bool, string) instead.")]
+        public static void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroupAndSound(channelId, channelName, channelDescription, importance, groupId, showBadge, sound);
 
-        public static void CreateNotificationChannelGroup(string groupId, string groupName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelGroup(string, string) instead.")]
+        public static void CreateNotificationChannelGroup(string groupId, string groupName) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelGroup(groupId, groupName);
 
-        public static void DeleteNotificationChannel(string channelId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteNotificationChannel(string) instead.")]
+        public static void DeleteNotificationChannel(string channelId) =>
             CleverTapUnitySDK.CleverTap.DeleteNotificationChannel(channelId);
 
-        public static void DeleteNotificationChannelGroup(string groupId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteNotificationChannelGroup(string) instead.")]
+        public static void DeleteNotificationChannelGroup(string groupId) =>
             CleverTapUnitySDK.CleverTap.DeleteNotificationChannelGroup(groupId);
 
-        public static void SetOptOut(bool value) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetOptOut(bool) instead.")]
+        public static void SetOptOut(bool value) =>
             CleverTapUnitySDK.CleverTap.SetOptOut(value);
 
-        public static void SetOffline(bool value) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetOffline(bool) instead.")]
+        public static void SetOffline(bool value) =>
             CleverTapUnitySDK.CleverTap.SetOffline(value);
 
-        public static void EnableDeviceNetworkInfoReporting(bool value) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EnableDeviceNetworkInfoReporting(bool) instead.")]
+        public static void EnableDeviceNetworkInfoReporting(bool value) =>
             CleverTapUnitySDK.CleverTap.EnableDeviceNetworkInfoReporting(value);
 
-        public static void EnablePersonalization() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EnablePersonalization() instead.")]
+        public static void EnablePersonalization() =>
             CleverTapUnitySDK.CleverTap.EnablePersonalization();
 
-        public static void DisablePersonalization() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DisablePersonalization() instead.")]
+        public static void DisablePersonalization() =>
             CleverTapUnitySDK.CleverTap.DisablePersonalization();
 
-        public static void SetLocation(double lat, double lon) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetLocation(double, double) instead.")]
+        public static void SetLocation(double lat, double lon) =>
             CleverTapUnitySDK.CleverTap.SetLocation(lat, lon);
 
-        public static void OnUserLogin(Dictionary<string, string> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.OnUserLogin(Dictionary<string, string>) instead.")]
+        public static void OnUserLogin(Dictionary<string, string> properties) =>
             CleverTapUnitySDK.CleverTap.OnUserLogin(properties);
 
-        public static void ProfilePush(Dictionary<string, string> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfilePush(Dictionary<string, string>) instead.")]
+        public static void ProfilePush(Dictionary<string, string> properties) =>
             CleverTapUnitySDK.CleverTap.ProfilePush(properties);
 
-        public static string ProfileGet(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGet(string) instead.")]
+        public static string ProfileGet(string key) =>
             CleverTapUnitySDK.CleverTap.ProfileGet(key);
 
-        /**
-         * Returns a unique CleverTap identifier suitable for use with install attribution providers.
-         * @return The attribution identifier currently being used to identify this user.
-         *
-         * Disclaimer: this method may take a long time to return, so you should not call it from the
-         * application main thread
-         *
-         * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
-         *  in future versions .
-         * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
-         */
-        public static string ProfileGetCleverTapAttributionIdentifier() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGetCleverTapAttributionIdentifier() instead.")]
+        public static string ProfileGetCleverTapAttributionIdentifier() =>
             CleverTapUnitySDK.CleverTap.ProfileGetCleverTapAttributionIdentifier();
 
-        /**
-         * Returns a unique CleverTap identifier suitable for use with install attribution providers.
-         * @return The attribution identifier currently being used to identify this user.
-         *
-         * Disclaimer: this method may take a long time to return, so you should not call it from the
-         * application main thread
-         *
-         * NOTE: Deprecated as of clevertap android core sdk version 4.2.0 and will be removed
-         *  in future versions .
-         * instead request for clevertapId via getCleverTapId() call and  listen for response
-         * via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
-         */
-        public static string ProfileGetCleverTapID() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGetCleverTapID() instead.")]
+        public static string ProfileGetCleverTapID() =>
             CleverTapUnitySDK.CleverTap.ProfileGetCleverTapID();
 
-        /*
-         * requests for a unique, asynchronous CleverTap identifier. The value will be available as json {"cleverTapID" : <value> } via 
-         * CleverTapUnity#CleverTapInitCleverTapIdCallback() function
-         */
-        public static void GetCleverTapId() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetCleverTapId() instead.")]
+        public static void GetCleverTapId() =>
             CleverTapUnitySDK.CleverTap.GetCleverTapID();
 
-        /**
-         * This method is used to increment the given value.Number should be in positive range
-         */
-        public static void ProfileIncrementValueForKey(string key, double val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(string, double) instead.")]
+        public static void ProfileIncrementValueForKey(string key, double val) =>
             CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(key, val);
 
-        /**
-         * This method is used to increment the given value.Number should be in positive range
-         */
-        public static void ProfileIncrementValueForKey(string key, int val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(string, int) instead.")]
+        public static void ProfileIncrementValueForKey(string key, int val) =>
             CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(key, val);
 
-        /**
-         * This method is used to decrement the given value.Number should be in positive range
-         */
-        public static void ProfileDecrementValueForKey(string key, double val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(string, double) instead.")]
+        public static void ProfileDecrementValueForKey(string key, double val) =>
             CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(key, val);
 
-        /**
-         * This method is used to decrement the given value.Number should be in positive range
-         */
-        public static void ProfileDecrementValueForKey(string key, int val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(string, int) instead.")]
+        public static void ProfileDecrementValueForKey(string key, int val) =>
             CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(key, val);
 
-        /**
-         * Suspends display of InApp Notifications.
-         * The InApp Notifications are queued once this method is called
-         * and will be displayed once resumeInAppNotifications() is called.
-         */
-        public static void SuspendInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SuspendInAppNotifications() instead.")]
+        public static void SuspendInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.SuspendInAppNotifications();
 
-        /**
-         * Suspends the display of InApp Notifications and discards any new InApp Notifications to be shown
-         * after this method is called.
-         * The InApp Notifications will be displayed only once resumeInAppNotifications() is called.
-         */
-        public static void DiscardInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DiscardInAppNotifications() instead.")]
+        public static void DiscardInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.DiscardInAppNotifications();
 
-        /**
-         * Suspends the display of InApp Notifications and discards any new InApp Notifications to be shown
-         * after this method is called.
-         * The InApp Notifications will be displayed only once resumeInAppNotifications() is called.
-         */
-        public static void ResumeInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ResumeInAppNotifications() instead.")]
+        public static void ResumeInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.ResumeInAppNotifications();
 
-        public static void ProfileRemoveValueForKey(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveValueForKey(string) instead.")]
+        public static void ProfileRemoveValueForKey(string key) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveValueForKey(key);
 
-        public static void ProfileSetMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileSetMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileSetMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileSetMultiValuesForKey(key, values);
 
-        public static void ProfileAddMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileAddMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileAddMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileAddMultiValuesForKey(key, values);
 
-        public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValuesForKey(key, values);
 
-        public static void ProfileAddMultiValueForKey(string key, string val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileAddMultiValueForKey(string, string) instead.")]
+        public static void ProfileAddMultiValueForKey(string key, string val) =>
             CleverTapUnitySDK.CleverTap.ProfileAddMultiValueForKey(key, val);
 
-        public static void ProfileRemoveMultiValueForKey(string key, string val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValueForKey(string, string) instead.")]
+        public static void ProfileRemoveMultiValueForKey(string key, string val) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValueForKey(key, val);
 
-        public static void RecordScreenView(string screenName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordScreenView(string) instead.")]
+        public static void RecordScreenView(string screenName) =>
             CleverTapUnitySDK.CleverTap.RecordScreenView(screenName);
 
-        public static void RecordEvent(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordEvent(string) instead.")]
+        public static void RecordEvent(string eventName) =>
             CleverTapUnitySDK.CleverTap.RecordEvent(eventName);
 
-        public static void RecordEvent(string eventName, Dictionary<string, object> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordEvent(string, Dictionary<string, object>) instead.")]
+        public static void RecordEvent(string eventName, Dictionary<string, object> properties) =>
             CleverTapUnitySDK.CleverTap.RecordEvent(eventName, properties);
 
-        public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordChargedEventWithDetailsAndItems(Dictionary<string, object>, List<Dictionary<string, object>>) instead.")]
+        public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) =>
             CleverTapUnitySDK.CleverTap.RecordChargedEventWithDetailsAndItems(details, items);
 
-        public static int EventGetFirstTime(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetFirstTime(string) instead.")]
+        public static int EventGetFirstTime(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetFirstTime(eventName);
 
-        public static int EventGetLastTime(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetLastTime(string) instead.")]
+        public static int EventGetLastTime(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetLastTime(eventName);
 
-        public static int EventGetOccurrences(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetOccurrences(string) instead.")]
+        public static int EventGetOccurrences(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetOccurrences(eventName);
 
-        public static JSONClass EventGetDetail(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetDetail(string) instead.")]
+        public static JSONClass EventGetDetail(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetDetail(eventName);
 
-        public static JSONClass UserGetEventHistory() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetEventHistory() instead.")]
+        public static JSONClass UserGetEventHistory() =>
             CleverTapUnitySDK.CleverTap.UserGetEventHistory();
 
-        public static JSONClass SessionGetUTMDetails() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SessionGetUTMDetails() instead.")]
+        public static JSONClass SessionGetUTMDetails() =>
             CleverTapUnitySDK.CleverTap.SessionGetUTMDetails();
 
-        public static int SessionGetTimeElapsed() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SessionGetTimeElapsed() instead.")]
+        public static int SessionGetTimeElapsed() =>
             CleverTapUnitySDK.CleverTap.SessionGetTimeElapsed();
 
-        public static int UserGetTotalVisits() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetTotalVisits() instead.")]
+        public static int UserGetTotalVisits() =>
             CleverTapUnitySDK.CleverTap.UserGetTotalVisits();
 
-        public static int UserGetScreenCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetScreenCount() instead.")]
+        public static int UserGetScreenCount() =>
             CleverTapUnitySDK.CleverTap.UserGetScreenCount();
 
-        public static int UserGetPreviousVisitTime() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetPreviousVisitTime() instead.")]
+        public static int UserGetPreviousVisitTime() =>
             CleverTapUnitySDK.CleverTap.UserGetPreviousVisitTime();
 
+        [Obsolete("Not supported for Android.")]
         public static void SetApplicationIconBadgeNumber(int num) {
             // no-op for Android
         }
 
-        public static void PushInstallReferrerSource(string source, string medium, string campaign) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PushInstallReferrerSource(string, string, string) instead.")]
+        public static void PushInstallReferrerSource(string source, string medium, string campaign) =>
             CleverTapUnitySDK.CleverTap.PushInstallReferrerSource(source, medium, campaign);
 
-        public static void InitializeInbox() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.InitializeInbox() instead.")]
+        public static void InitializeInbox() =>
             CleverTapUnitySDK.CleverTap.InitializeInbox();
 
-        public static void ShowAppInbox(string styleConfig) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ShowAppInbox(string) instead.")]
+        public static void ShowAppInbox(string styleConfig) =>
             CleverTapUnitySDK.CleverTap.ShowAppInbox(styleConfig);
 
-        public static void DismissAppInbox() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DismissAppInbox() instead.")]
+        public static void DismissAppInbox() =>
             CleverTapUnitySDK.CleverTap.DismissAppInbox();
 
-        public static int GetInboxMessageCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageCount() instead.")]
+        public static int GetInboxMessageCount() =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageCount();
 
-        public static void DeleteInboxMessagesForIDs(string[] messageIds) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteInboxMessagesForIDs(string[]) instead.")]
+        public static void DeleteInboxMessagesForIDs(string[] messageIds) =>
             CleverTapUnitySDK.CleverTap.DeleteInboxMessagesForIDs(messageIds);
 
-        public static void DeleteInboxMessageForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteInboxMessageForID(string) instead.")]
+        public static void DeleteInboxMessageForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.DeleteInboxMessageForID(messageId);
 
-        public static void MarkReadInboxMessagesForIDs(string[] messageIds) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.MarkReadInboxMessagesForIDs(string[]) instead.")]
+        public static void MarkReadInboxMessagesForIDs(string[] messageIds) =>
             CleverTapUnitySDK.CleverTap.MarkReadInboxMessagesForIDs(messageIds);
 
-        public static void MarkReadInboxMessageForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.MarkReadInboxMessageForID(string) instead.")]
+        public static void MarkReadInboxMessageForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.MarkReadInboxMessageForID(messageId);
 
-        public static int GetInboxMessageUnreadCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageUnreadCount() instead. ")]
+        public static int GetInboxMessageUnreadCount() =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageUnreadCount();
 
-        public static void PromptPushPrimer(Dictionary<string, object> details) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PromptPushPrimer(Dictionary<string, object>) instead.")]
+        public static void PromptPushPrimer(Dictionary<string, object> details) =>
             CleverTapUnitySDK.CleverTap.PromptPushPrimer(details);
 
-        public static void PromptForPushPermission(bool showFallbackSettings) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PromptForPushPermission(bool) instead.")]
+        public static void PromptForPushPermission(bool showFallbackSettings) =>
             CleverTapUnitySDK.CleverTap.PromptForPushPermission(showFallbackSettings);
 
-        public static bool IsPushPermissionGranted() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.IsPushPermissionGranted() instead.")]
+        public static bool IsPushPermissionGranted() =>
             CleverTapUnitySDK.CleverTap.IsPushPermissionGranted();
 
 #else
 
-        public static void LaunchWithCredentials(string accountID, string token, string region) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(string, string, string) instead.")]
+        public static void LaunchWithCredentials(string accountID, string token, string region) =>
             CleverTapUnitySDK.CleverTap.LaunchWithCredentialsForRegion(accountID, token, region);
 
-        public static void OnUserLogin(Dictionary<string, string> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.OnUserLogin(Dictionary<string, string>) instead.")]
+        public static void OnUserLogin(Dictionary<string, string> properties) =>
             CleverTapUnitySDK.CleverTap.OnUserLogin(properties);
 
-        public static void ProfilePush(Dictionary<string, string> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfilePush(Dictionary<string, string>) instead.")]
+        public static void ProfilePush(Dictionary<string, string> properties) =>
             CleverTapUnitySDK.CleverTap.ProfilePush(properties);
 
-        public static string ProfileGet(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGet(string) instead.")]
+        public static string ProfileGet(string key) =>
             CleverTapUnitySDK.CleverTap.ProfileGet(key);
 
-        public static string ProfileGetCleverTapAttributionIdentifier() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGetCleverTapAttributionIdentifier() instead.")]
+        public static string ProfileGetCleverTapAttributionIdentifier() =>
             CleverTapUnitySDK.CleverTap.ProfileGetCleverTapAttributionIdentifier();
 
-        public static string ProfileGetCleverTapID() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileGetCleverTapID() instead.")]
+        public static string ProfileGetCleverTapID() =>
             CleverTapUnitySDK.CleverTap.ProfileGetCleverTapID();
 
-        public static void ProfileRemoveValueForKey(string key) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveValueForKey(string) instead.")]
+        public static void ProfileRemoveValueForKey(string key) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveValueForKey(key);
 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileSetMultiValuesForKey(string, List<string>) instead.")]
         public static void ProfileSetMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileSetMultiValuesForKey(key, values);
 
-        public static void ProfileAddMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileAddMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileAddMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileAddMultiValuesForKey(key, values);
 
-        public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValuesForKey(string, List<string>) instead.")]
+        public static void ProfileRemoveMultiValuesForKey(string key, List<string> values) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValuesForKey(key, values);
 
-        public static void ProfileAddMultiValueForKey(string key, string val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileAddMultiValueForKey(string, string) instead.")]
+        public static void ProfileAddMultiValueForKey(string key, string val) =>
             CleverTapUnitySDK.CleverTap.ProfileAddMultiValueForKey(key, val);
 
-        public static void ProfileRemoveMultiValueForKey(string key, string val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValueForKey(string, string) instead.")]
+        public static void ProfileRemoveMultiValueForKey(string key, string val) =>
             CleverTapUnitySDK.CleverTap.ProfileRemoveMultiValueForKey(key, val);
 
-        public static void ProfileIncrementValueForKey(string key, double val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(string, double) instead.")]
+        public static void ProfileIncrementValueForKey(string key, double val) =>
             CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(key, val);
 
-        public static void ProfileIncrementValueForKey(string key, int val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(string, int) instead.")]
+        public static void ProfileIncrementValueForKey(string key, int val) =>
             CleverTapUnitySDK.CleverTap.ProfileIncrementValueForKey(key, val);
 
-        public static void ProfileDecrementValueForKey(string key, double val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(string, double) instead.")]
+        public static void ProfileDecrementValueForKey(string key, double val) =>
             CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(key, val);
 
-        public static void ProfileDecrementValueForKey(string key, int val) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(string, int) instead.")]
+        public static void ProfileDecrementValueForKey(string key, int val) =>
             CleverTapUnitySDK.CleverTap.ProfileDecrementValueForKey(key, val);
 
-        public static void SuspendInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SuspendInAppNotifications() instead.")]
+        public static void SuspendInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.SuspendInAppNotifications();
 
-        public static void DiscardInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DiscardInAppNotifications() instead.")]
+        public static void DiscardInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.DiscardInAppNotifications();
 
-        public static void ResumeInAppNotifications() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ResumeInAppNotifications() instead.")]
+        public static void ResumeInAppNotifications() =>
             CleverTapUnitySDK.CleverTap.ResumeInAppNotifications();
 
-        public static string GetCleverTapID() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetCleverTapID() instead.")]
+        public static string GetCleverTapID() =>
             CleverTapUnitySDK.CleverTap.GetCleverTapID();
 
-        public static void RecordScreenView(string screenName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordScreenView(string) instead.")]
+        public static void RecordScreenView(string screenName) =>
             CleverTapUnitySDK.CleverTap.RecordScreenView(screenName);
 
-        public static void RecordEvent(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordEvent(string) instead.")]
+        public static void RecordEvent(string eventName) =>
             CleverTapUnitySDK.CleverTap.RecordEvent(eventName);
 
-        public static void RecordEvent(string eventName, Dictionary<string, object> properties) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordEvent(string, Dictionary<string, object>) instead.")]
+        public static void RecordEvent(string eventName, Dictionary<string, object> properties) =>
             CleverTapUnitySDK.CleverTap.RecordEvent(eventName, properties);
 
-        public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RecordChargedEventWithDetailsAndItems(Dictionary<string, object>, List<Dictionary<string, object>>) instead.")]
+        public static void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) =>
             CleverTapUnitySDK.CleverTap.RecordChargedEventWithDetailsAndItems(details, items);
 
-        public static int EventGetFirstTime(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetFirstTime(string) instead.")]
+        public static int EventGetFirstTime(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetFirstTime(eventName);
 
-        public static int EventGetLastTime(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetLastTime(string) instead.")]
+        public static int EventGetLastTime(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetLastTime(eventName);
 
-        public static int EventGetOccurrences(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetOccurrences(string) instead.")]
+        public static int EventGetOccurrences(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetOccurrences(eventName);
 
-        public static JSONClass EventGetDetail(string eventName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EventGetDetail(string) instead.")]
+        public static JSONClass EventGetDetail(string eventName) =>
             CleverTapUnitySDK.CleverTap.EventGetDetail(eventName);
 
-        public static JSONClass UserGetEventHistory() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetEventHistory() instead.")]
+        public static JSONClass UserGetEventHistory() =>
             CleverTapUnitySDK.CleverTap.UserGetEventHistory();
 
-        public static JSONClass SessionGetUTMDetails() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SessionGetUTMDetails() instead.")]
+        public static JSONClass SessionGetUTMDetails() =>
             CleverTapUnitySDK.CleverTap.SessionGetUTMDetails();
 
-        public static int SessionGetTimeElapsed() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SessionGetTimeElapsed() instead.")]
+        public static int SessionGetTimeElapsed() =>
             CleverTapUnitySDK.CleverTap.SessionGetTimeElapsed();
 
-        public static int UserGetTotalVisits() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetTotalVisits() instead.")]
+        public static int UserGetTotalVisits() =>
             CleverTapUnitySDK.CleverTap.UserGetTotalVisits();
 
-        public static int UserGetScreenCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetScreenCount() instead.")]
+        public static int UserGetScreenCount() =>
             CleverTapUnitySDK.CleverTap.UserGetScreenCount();
 
-        public static int UserGetPreviousVisitTime() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.UserGetPreviousVisitTime() instead.")]
+        public static int UserGetPreviousVisitTime() =>
             CleverTapUnitySDK.CleverTap.UserGetPreviousVisitTime();
 
-        public static void EnablePersonalization() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EnablePersonalization() instead.")]
+        public static void EnablePersonalization() =>
             CleverTapUnitySDK.CleverTap.EnablePersonalization();
 
-        public static void DisablePersonalization() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DisablePersonalization() instead.")]
+        public static void DisablePersonalization() =>
             CleverTapUnitySDK.CleverTap.DisablePersonalization();
 
-        public static void RegisterPush() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.RegisterPush() instead.")]
+        public static void RegisterPush() =>
             CleverTapUnitySDK.CleverTap.RegisterPush();
 
-        public static void SetApplicationIconBadgeNumber(int num) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetApplicationIconBadgeNumber(int) instead.")]
+        public static void SetApplicationIconBadgeNumber(int num) =>
             CleverTapUnitySDK.CleverTap.SetApplicationIconBadgeNumber(num);
 
-        public static void SetDebugLevel(int level) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetDebugLevel(int) instead.")]
+        public static void SetDebugLevel(int level) =>
             CleverTapUnitySDK.CleverTap.SetDebugLevel(level);
 
-        public static void SetLocation(double lat, double lon) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetLocation(double, double) instead.")]
+        public static void SetLocation(double lat, double lon) =>
             CleverTapUnitySDK.CleverTap.SetLocation(lat, lon);
 
-        public static void PushInstallReferrerSource(string source, string medium, string campaign) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PushInstallReferrerSource(string, string, string) instead.")]
+        public static void PushInstallReferrerSource(string source, string medium, string campaign) =>
             CleverTapUnitySDK.CleverTap.PushInstallReferrerSource(source, medium, campaign);
 
-        public static void EnableDeviceNetworkInfoReporting(bool value) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.EnableDeviceNetworkInfoReporting(bool) instead.")]
+        public static void EnableDeviceNetworkInfoReporting(bool value) =>
             CleverTapUnitySDK.CleverTap.EnableDeviceNetworkInfoReporting(value);
 
-        public static void SetOptOut(bool value) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetOptOut(bool) instead.")]
+        public static void SetOptOut(bool value) =>
             CleverTapUnitySDK.CleverTap.SetOptOut(value);
 
-        public static void SetOffline(bool value) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.SetOffline(bool) instead.")]
+        public static void SetOffline(bool value) =>
             CleverTapUnitySDK.CleverTap.SetOffline(value);
 
-        public static void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannel(string, string, string, int, bool) instead.")]
+        public static void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannel(channelId, channelName, channelDescription, importance, showBadge);
 
-        public static void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithSound(string, string, string, int, bool, string) instead.")]
+        public static void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithSound(channelId, channelName, channelDescription, importance, showBadge, sound);
 
-        public static void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroup(string, string, string, int, string, bool) instead.")]
+        public static void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroup(channelId, channelName, channelDescription, importance, groupId, showBadge);
 
-        public static void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroupAndSound(string, string, string, int, string, bool, string) instead.")]
+        public static void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelWithGroupAndSound(channelId, channelName, channelDescription, importance, groupId, showBadge, sound);
 
-        public static void CreateNotificationChannelGroup(string groupId, string groupName) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.CreateNotificationChannelGroup(string, string) instead.")]
+        public static void CreateNotificationChannelGroup(string groupId, string groupName) =>
             CleverTapUnitySDK.CleverTap.CreateNotificationChannelGroup(groupId, groupName);
 
-        public static void DeleteNotificationChannel(string channelId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteNotificationChannel(string) instead.")]
+        public static void DeleteNotificationChannel(string channelId) =>
             CleverTapUnitySDK.CleverTap.DeleteNotificationChannel(channelId);
 
-        public static void DeleteNotificationChannelGroup(string groupId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteNotificationChannelGroup(string) instead.")]
+        public static void DeleteNotificationChannelGroup(string groupId) =>
             CleverTapUnitySDK.CleverTap.DeleteNotificationChannelGroup(groupId);
 
-        public static void InitializeInbox() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.InitializeInbox() instead.")]
+        public static void InitializeInbox() =>
             CleverTapUnitySDK.CleverTap.InitializeInbox();
 
-        public static void ShowAppInbox(string styleConfig) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.ShowAppInbox(string) instead.")]
+        public static void ShowAppInbox(string styleConfig) =>
             CleverTapUnitySDK.CleverTap.ShowAppInbox(styleConfig);
 
-        public static void DismissAppInbox() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DismissAppInbox() instead.")]
+        public static void DismissAppInbox() =>
             CleverTapUnitySDK.CleverTap.DismissAppInbox();
 
-        public static int GetInboxMessageCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageCount() instead.")]
+        public static int GetInboxMessageCount() =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageCount();
 
-        public static int GetInboxMessageUnreadCount() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.GetInboxMessageUnreadCount() instead.")]
+        public static int GetInboxMessageUnreadCount() =>
             CleverTapUnitySDK.CleverTap.GetInboxMessageUnreadCount();
 
-        public static void DeleteInboxMessagesForIDs(string[] messageIds) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteInboxMessagesForIDs(string[]) instead.")]
+        public static void DeleteInboxMessagesForIDs(string[] messageIds) =>
             CleverTapUnitySDK.CleverTap.DeleteInboxMessagesForIDs(messageIds);
 
-        public static void DeleteInboxMessageForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.DeleteInboxMessageForID(string) instead.")]
+        public static void DeleteInboxMessageForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.DeleteInboxMessageForID(messageId);
 
-        public static void MarkReadInboxMessagesForIDs(string[] messageIds) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.MarkReadInboxMessagesForIDs(string[]) instead.")]
+        public static void MarkReadInboxMessagesForIDs(string[] messageIds) =>
             CleverTapUnitySDK.CleverTap.MarkReadInboxMessagesForIDs(messageIds);
 
-        public static void MarkReadInboxMessageForID(string messageId) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.MarkReadInboxMessageForID(string) instead.")]
+        public static void MarkReadInboxMessageForID(string messageId) =>
             CleverTapUnitySDK.CleverTap.MarkReadInboxMessageForID(messageId);
 
-        public static void PromptPushPrimer(Dictionary<string, object> json) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PromptPushPrimer(Dictionary<string, object>) instead.")]
+        public static void PromptPushPrimer(Dictionary<string, object> json) =>
             CleverTapUnitySDK.CleverTap.PromptPushPrimer(json);
 
-        public static void PromptForPushPermission(bool showFallbackSettings) => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.PromptForPushPermission(bool) instead.")]
+        public static void PromptForPushPermission(bool showFallbackSettings) =>
             CleverTapUnitySDK.CleverTap.PromptForPushPermission(showFallbackSettings);
 
-        public static bool IsPushPermissionGranted() => 
+        [Obsolete("Please use CleverTapUnitySDK.CleverTap.IsPushPermissionGranted() instead.")]
+        public static bool IsPushPermissionGranted() =>
             CleverTapUnitySDK.CleverTap.IsPushPermissionGranted();
 
 #endif
