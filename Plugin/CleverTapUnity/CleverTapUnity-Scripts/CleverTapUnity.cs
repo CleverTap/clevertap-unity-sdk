@@ -11,7 +11,6 @@ using CleverTap.Utilities;
 using UnityEditor;
 #endif
 
-[Obsolete("Please use CleverTapUnitySDK.CleverTap instead.")]
 public class CleverTapUnity : MonoBehaviour {
 
     public String CLEVERTAP_ACCOUNT_ID = "YOUR_CLEVERTAP_ACCOUNT_ID";
