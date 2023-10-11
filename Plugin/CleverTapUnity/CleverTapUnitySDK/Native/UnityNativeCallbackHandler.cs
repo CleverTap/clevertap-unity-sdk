@@ -1,7 +1,7 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
-using CleverTapUnitySDK.Common;
+using CleverTap.Common;
 
-namespace CleverTapUnitySDK.Native {
+namespace CleverTap.Native {
     public class UnityNativeCallbackHandler : CleverTapCallbackHandler {
     }
 }

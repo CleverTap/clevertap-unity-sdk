@@ -1,11 +1,10 @@
 ﻿#if UNITY_IOS
+using CleverTap.Common;
 using CleverTap.Utilities;
-using CleverTapUnitySDK.Common;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace CleverTapUnitySDK.IOS {
-    public class IOSPlatformBinding : CleverTapPlatformBindings {
+namespace CleverTap.IOS {
+    internal class IOSPlatformBinding : CleverTapPlatformBindings {
         #region Extern
 
         [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -240,7 +239,7 @@ namespace CleverTapUnitySDK.IOS {
 
         public IOSPlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<IOSCallbackHandler>("IOSCallbackHandler");
-            Debug.Log("Start: CleverTap binding for iOS.");
+            CleverTapLogger.Log("Start: CleverTap binding for iOS.");
         }
 
         public override void ActivateProductConfig() {
@@ -281,7 +280,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse event detail json");
+                CleverTapLogger.LogError("Unable to parse event detail json");
                 json = new JSONClass();
             }
             return json;
@@ -317,7 +316,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONArray)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse native display units json");
+                CleverTapLogger.LogError("Unable to parse native display units json");
                 json = new JSONArray();
             }
             return json;
@@ -329,7 +328,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONArray)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse app inbox messages json");
+                CleverTapLogger.LogError("Unable to parse app inbox messages json");
                 json = new JSONArray();
             }
             return json;
@@ -345,7 +344,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse native display unit json");
+                CleverTapLogger.LogError("Unable to parse native display unit json");
                 json = new JSONClass();
             }
             return json;
@@ -365,7 +364,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse app inbox message json");
+                CleverTapLogger.LogError("Unable to parse app inbox message json");
                 json = new JSONClass();
             }
             return json;
@@ -385,7 +384,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse product config value");
+                CleverTapLogger.LogError("Unable to parse product config value");
                 json = new JSONClass();
             }
             return json;
@@ -397,7 +396,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONArray)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse unread app inbox messages json");
+                CleverTapLogger.LogError("Unable to parse unread app inbox messages json");
                 json = new JSONArray();
             }
             return json;
@@ -562,7 +561,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse session utm details json");
+                CleverTapLogger.LogError("Unable to parse session utm details json");
                 json = new JSONClass();
             }
             return json;
@@ -622,7 +621,7 @@ namespace CleverTapUnitySDK.IOS {
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.LogError("Unable to parse user event history json");
+                CleverTapLogger.LogError("Unable to parse user event history json");
                 json = new JSONClass();
             }
             return json;

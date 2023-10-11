@@ -1,12 +1,26 @@
-﻿using CleverTap.Utilities;
-using CleverTapUnitySDK.Common;
+﻿using CleverTap.Common;
+using CleverTap.Constants;
+using CleverTap.Utilities;
 using System.Collections.Generic;
 
-namespace CleverTapUnitySDK {
+namespace CleverTap {
     public static class CleverTap {
-        
+
         private static CleverTapPlatformBindings cleverTapBinding = BindingFactory.CleverTapBinding;
         private static CleverTapCallbackHandler cleverTapCallbackHandler = BindingFactory.CleverTapBinding.CallbackHandler;
+
+        #region Constants - CleverTap Version
+
+        public const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;
+
+        #endregion
+
+        #region Looger - Clever Tap Looger
+
+        public static void SetLogLevel(CleverTapLogger.LogLevel level) =>
+            CleverTapLogger.SetLogLevel(level);
+
+        #endregion
 
         #region Events - CleverTap Callback Handler
 

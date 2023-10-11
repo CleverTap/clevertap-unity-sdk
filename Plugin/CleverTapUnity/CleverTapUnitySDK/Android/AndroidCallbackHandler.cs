@@ -1,7 +1,7 @@
 ﻿#if UNITY_ANDROID
-using CleverTapUnitySDK.Common;
+using CleverTap.Common;
 
-namespace CleverTapUnitySDK.Android {
+namespace CleverTap.Android {
     public class AndroidCallbackHandler : CleverTapCallbackHandler {
     }
 }

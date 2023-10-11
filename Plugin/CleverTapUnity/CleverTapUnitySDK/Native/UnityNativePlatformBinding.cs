@@ -1,12 +1,12 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID 
-using CleverTapUnitySDK.Common;
-using UnityEngine;
+using CleverTap.Common;
+using CleverTap.Utilities;
 
-namespace CleverTapUnitySDK.Native {
-    public class UnityNativePlatformBinding : CleverTapPlatformBindings {
+namespace CleverTap.Native {
+    internal class UnityNativePlatformBinding : CleverTapPlatformBindings {
         public UnityNativePlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>("UnityNativeCallbackHandler");
-            Debug.Log("Start: no-op CleverTap binding for non iOS/Android.");
+            CleverTapLogger.Log("Start: no-op CleverTap binding for non iOS/Android.");
         }
     }
 }

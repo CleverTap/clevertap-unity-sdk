@@ -1,13 +1,13 @@
 ﻿#if UNITY_ANDROID
-using CleverTapUnitySDK.Android;
+using CleverTap.Android;
 #elif UNITY_IOS
-using CleverTapUnitySDK.IOS;
+using CleverTap.IOS;
 #else
-using CleverTapUnitySDK.Native;
+using CleverTap.Native;
 #endif
 
-namespace CleverTapUnitySDK.Common {
-    public static class BindingFactory {
+namespace CleverTap.Common {
+    internal static class BindingFactory {
         
         private static CleverTapPlatformBindings cleverTapBinding;
 

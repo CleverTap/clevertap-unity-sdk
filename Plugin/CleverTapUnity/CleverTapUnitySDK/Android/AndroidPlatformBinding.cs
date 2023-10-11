@@ -1,97 +1,54 @@
 ﻿#if UNITY_ANDROID
+using CleverTap.Common;
 using CleverTap.Utilities;
-using CleverTapUnitySDK.Common;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace CleverTapUnitySDK.Android {
-    public class AndroidPlatformBinding : CleverTapPlatformBindings {
-        private AndroidJavaObject unityActivity;
-        private AndroidJavaObject clevertap;
-        private AndroidJavaObject CleverTapClass;
-
-        #region Properties
-        public AndroidJavaObject unityCurrentActivity {
-            get {
-                if (unityActivity == null) {
-                    using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
-                        unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-                    }
-                }
-                return unityActivity;
-            }
-        }
-
-        public AndroidJavaObject CleverTapAPI {
-            get {
-                if (CleverTapClass == null) {
-                    CleverTapClass = new AndroidJavaClass("com.clevertap.unity.CleverTapUnityPlugin");
-                }
-                return CleverTapClass;
-            }
-        }
-
-        public AndroidJavaObject CleverTap {
-            get {
-                if (clevertap == null) {
-                    AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-                    clevertap = CleverTapAPI.CallStatic<AndroidJavaObject>("getInstance", context);
-                }
-                return clevertap;
-            }
-        }
-        #endregion
+namespace CleverTap.Android {
+    internal class AndroidPlatformBinding : CleverTapPlatformBindings {
 
         public AndroidPlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<AndroidCallbackHandler>("AndroidCallbackHandler");
-            Debug.Log("Start: CleverTap binding for Android.");
+            CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }
 
         public override void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("createNotificationChannel", context, channelId, channelName, channelDescription, importance, showBadge);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("createNotificationChannel", CleverTapAndroidJNI.ApplicationContext, channelId, channelName, channelDescription, importance, showBadge);
         }
 
         public override void CreateNotificationChannelGroup(string groupId, string groupName) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("createNotificationChannelGroup", context, groupId, groupName);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("createNotificationChannelGroup", CleverTapAndroidJNI.ApplicationContext, groupId, groupName);
         }
 
         public override void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("createNotificationChannelWithGroup", context, channelId, channelName, channelDescription, importance, groupId, showBadge);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("createNotificationChannelWithGroup", CleverTapAndroidJNI.ApplicationContext, channelId, channelName, channelDescription, importance, groupId, showBadge);
         }
 
         public override void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("createNotificationChannelWithGroupAndSound", context, channelId, channelName, channelDescription, importance, groupId, showBadge, sound);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("createNotificationChannelWithGroupAndSound", CleverTapAndroidJNI.ApplicationContext, channelId, channelName, channelDescription, importance, groupId, showBadge, sound);
         }
 
         public override void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("createNotificationChannelWithSound", context, channelId, channelName, channelDescription, importance, showBadge, sound);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("createNotificationChannelWithSound", CleverTapAndroidJNI.ApplicationContext, channelId, channelName, channelDescription, importance, showBadge, sound);
         }
 
         public override void DeleteInboxMessageForID(string messageId) {
-            CleverTap.Call("deleteInboxMessageForId", messageId);
+            CleverTapAndroidJNI.CleverTapJNI.Call("deleteInboxMessageForId", messageId);
         }
 
         public override void DeleteInboxMessagesForIDs(string[] messageIds) {
-            CleverTap.Call("deleteInboxMessagesForIDs", messageIds);
+            CleverTapAndroidJNI.CleverTapJNI.Call("deleteInboxMessagesForIDs", messageIds);
         }
 
         public override void DeleteNotificationChannel(string channelId) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("deleteNotificationChannel", context, channelId);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("deleteNotificationChannel", CleverTapAndroidJNI.ApplicationContext, channelId);
         }
 
         public override void DeleteNotificationChannelGroup(string groupId) {
-            AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            CleverTapAPI.CallStatic("deleteNotificationChannelGroup", context, groupId);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("deleteNotificationChannelGroup", CleverTapAndroidJNI.ApplicationContext, groupId);
         }
 
         public override void DisablePersonalization() {
-            CleverTap.Call("disablePersonalization");
+            CleverTapAndroidJNI.CleverTapJNI.Call("disablePersonalization");
         }
 
         /**
@@ -100,43 +57,43 @@ namespace CleverTapUnitySDK.Android {
         * The InApp Notifications will be displayed only once resumeInAppNotifications() is called.
         */
         public override void DiscardInAppNotifications() {
-            CleverTap.Call("discardInAppNotifications");
+            CleverTapAndroidJNI.CleverTapJNI.Call("discardInAppNotifications");
         }
 
         public override void DismissAppInbox() {
-            CleverTap.Call("dismissAppInbox");
+            CleverTapAndroidJNI.CleverTapJNI.Call("dismissAppInbox");
         }
 
         public override void EnableDeviceNetworkInfoReporting(bool value) {
-            CleverTap.Call("enableDeviceNetworkInfoReporting", value);
+            CleverTapAndroidJNI.CleverTapJNI.Call("enableDeviceNetworkInfoReporting", value);
         }
 
         public override void EnablePersonalization() {
-            CleverTap.Call("enablePersonalization");
+            CleverTapAndroidJNI.CleverTapJNI.Call("enablePersonalization");
         }
 
         public override JSONClass EventGetDetail(string eventName) {
-            string jsonString = CleverTap.Call<string>("eventGetDetail", eventName);
+            string jsonString = CleverTapAndroidJNI.CleverTapJNI.Call<string>("eventGetDetail", eventName);
             JSONClass json;
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.Log("Unable to event detail json");
+                CleverTapLogger.LogError("Unable to event detail json");
                 json = new JSONClass();
             }
             return json;
         }
 
         public override int EventGetFirstTime(string eventName) {
-            return CleverTap.Call<int>("eventGetFirstTime", eventName);
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("eventGetFirstTime", eventName);
         }
 
         public override int EventGetLastTime(string eventName) {
-            return CleverTap.Call<int>("eventGetLastTime", eventName);
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("eventGetLastTime", eventName);
         }
 
         public override int EventGetOccurrences(string eventName) {
-            return CleverTap.Call<int>("eventGetOccurrences", eventName);
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("eventGetOccurrences", eventName);
         }
 
         /**
@@ -144,71 +101,70 @@ namespace CleverTapUnitySDK.Android {
         * CleverTapUnity#CleverTapInitCleverTapIdCallback() function
         */
         public override string GetCleverTapID() {
-            CleverTap.Call("getCleverTapID");
-            // Check this
-            return string.Empty;
+            // check this
+            return CleverTapAndroidJNI.CleverTapJNI.Call<string>("getCleverTapID");
         }
 
         public override int GetInboxMessageCount() {
-            return CleverTap.Call<int>("getInboxMessageCount");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("getInboxMessageCount");
         }
 
         public override int GetInboxMessageUnreadCount() {
-            return CleverTap.Call<int>("getInboxMessageUnreadCount");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("getInboxMessageUnreadCount");
         }
 
         public override void InitializeInbox() {
-            CleverTap.Call("initializeInbox");
+            CleverTapAndroidJNI.CleverTapJNI.Call("initializeInbox");
         }
 
         public override bool IsPushPermissionGranted() {
-            return CleverTap.Call<bool>("isPushPermissionGranted");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<bool>("isPushPermissionGranted");
         }
 
         public override void LaunchWithCredentials(string accountID, string token) {
-            CleverTapAPI.CallStatic("initialize", accountID, token, unityCurrentActivity);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("initialize", accountID, token, CleverTapAndroidJNI.UnityActivity);
         }
 
         public override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
-            CleverTapAPI.CallStatic("initialize", accountID, token, region, unityCurrentActivity);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("initialize", accountID, token, region, CleverTapAndroidJNI.UnityActivity);
         }
 
         public override void MarkReadInboxMessageForID(string messageId) {
-            CleverTap.Call("markReadInboxMessageForId", messageId);
+            CleverTapAndroidJNI.CleverTapJNI.Call("markReadInboxMessageForId", messageId);
         }
 
         public override void MarkReadInboxMessagesForIDs(string[] messageIds) {
-            CleverTap.Call("markReadInboxMessagesForIDs", messageIds);
+            CleverTapAndroidJNI.CleverTapJNI.Call("markReadInboxMessagesForIDs", messageIds);
         }
 
         public override void OnUserLogin(Dictionary<string, string> properties) {
-            CleverTap.Call("onUserLogin", Json.Serialize(properties));
+            CleverTapAndroidJNI.CleverTapJNI.Call("onUserLogin", Json.Serialize(properties));
         }
 
         public override void ProfileAddMultiValueForKey(string key, string val) {
-            CleverTap.Call("profileAddMultiValueForKey", key, val);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileAddMultiValueForKey", key, val);
         }
 
         public override void ProfileAddMultiValuesForKey(string key, List<string> values) {
-            CleverTap.Call("profileAddMultiValuesForKey", key, values.ToArray());
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileAddMultiValuesForKey", key, values.ToArray());
         }
 
         /**
         * This method is used to decrement the given value.Number should be in positive range
         */
         public override void ProfileDecrementValueForKey(string key, double val) {
-            CleverTap.Call("profileDecrementValueForKey", key, val);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileDecrementValueForKey", key, val);
         }
 
         /**
         * This method is used to decrement the given value.Number should be in positive range
         */
         public override void ProfileDecrementValueForKey(string key, int val) {
-            CleverTap.Call("profileDecrementValueForKey", key, val);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileDecrementValueForKey", key, val);
         }
 
         public override string ProfileGet(string key) {
-            return CleverTap.Call<string>("profileGet", key);
+            return CleverTapAndroidJNI.CleverTapJNI.Call<string>("profileGet", key);
         }
 
         /**
@@ -223,7 +179,7 @@ namespace CleverTapUnitySDK.Android {
         * instead listen for the id via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
         */
         public override string ProfileGetCleverTapAttributionIdentifier() {
-            return CleverTap.Call<string>("profileGetCleverTapAttributionIdentifier");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<string>("profileGetCleverTapAttributionIdentifier");
         }
 
         /**
@@ -239,69 +195,69 @@ namespace CleverTapUnitySDK.Android {
         * via CleverTapUnity#CleverTapInitCleverTapIdCallback() function
         */
         public override string ProfileGetCleverTapID() {
-            return CleverTap.Call<string>("profileGetCleverTapID");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<string>("profileGetCleverTapID");
         }
 
         /**
         * This method is used to increment the given value.Number should be in positive range
         */
         public override void ProfileIncrementValueForKey(string key, double val) {
-            CleverTap.Call("profileIncrementValueForKey", key, val);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileIncrementValueForKey", key, val);
         }
 
         /**
         * This method is used to increment the given value.Number should be in positive range
         */
         public override void ProfileIncrementValueForKey(string key, int val) {
-            CleverTap.Call("profileIncrementValueForKey", key, val);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileIncrementValueForKey", key, val);
         }
 
         public override void ProfilePush(Dictionary<string, string> properties) {
-            CleverTap.Call("profilePush", Json.Serialize(properties));
+            CleverTapAndroidJNI.CleverTapJNI.Call("profilePush", Json.Serialize(properties));
         }
 
         public override void ProfileRemoveMultiValueForKey(string key, string val) {
-            CleverTap.Call("profileRemoveMultiValueForKey", key, val);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileRemoveMultiValueForKey", key, val);
         }
 
         public override void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
-            CleverTap.Call("profileRemoveMultiValuesForKey", key, values.ToArray());
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileRemoveMultiValuesForKey", key, values.ToArray());
         }
 
         public override void ProfileRemoveValueForKey(string key) {
-            CleverTap.Call("profileRemoveValueForKey", key);
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileRemoveValueForKey", key);
         }
 
         public override void ProfileSetMultiValuesForKey(string key, List<string> values) {
-            CleverTap.Call("profileSetMultiValuesForKey", key, values.ToArray());
+            CleverTapAndroidJNI.CleverTapJNI.Call("profileSetMultiValuesForKey", key, values.ToArray());
         }
 
         public override void PromptForPushPermission(bool showFallbackSettings) {
-            CleverTap.Call("promptForPushPermission", showFallbackSettings);
+            CleverTapAndroidJNI.CleverTapJNI.Call("promptForPushPermission", showFallbackSettings);
         }
 
         public override void PromptPushPrimer(Dictionary<string, object> details) {
-            CleverTap.Call("promptPushPrimer", Json.Serialize(details));
+            CleverTapAndroidJNI.CleverTapJNI.Call("promptPushPrimer", Json.Serialize(details));
         }
 
         public override void PushInstallReferrerSource(string source, string medium, string campaign) {
-            CleverTap.Call("pushInstallReferrer", source, medium, campaign);
+            CleverTapAndroidJNI.CleverTapJNI.Call("pushInstallReferrer", source, medium, campaign);
         }
 
         public override void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
-            CleverTap.Call("recordChargedEventWithDetailsAndItems", Json.Serialize(details), Json.Serialize(items));
+            CleverTapAndroidJNI.CleverTapJNI.Call("recordChargedEventWithDetailsAndItems", Json.Serialize(details), Json.Serialize(items));
         }
 
         public override void RecordEvent(string eventName) {
-            CleverTap.Call("recordEvent", eventName, null);
+            CleverTapAndroidJNI.CleverTapJNI.Call("recordEvent", eventName, null);
         }
 
         public override void RecordEvent(string eventName, Dictionary<string, object> properties) {
-            CleverTap.Call("recordEvent", eventName, Json.Serialize(properties));
+            CleverTapAndroidJNI.CleverTapJNI.Call("recordEvent", eventName, Json.Serialize(properties));
         }
 
         public override void RecordScreenView(string screenName) {
-            CleverTap.Call("recordScreenView", screenName);
+            CleverTapAndroidJNI.CleverTapJNI.Call("recordScreenView", screenName);
         }
 
         /**
@@ -310,43 +266,43 @@ namespace CleverTapUnitySDK.Android {
         * The InApp Notifications will be displayed only once resumeInAppNotifications() is called.
         */
         public override void ResumeInAppNotifications() {
-            CleverTap.Call("resumeInAppNotifications");
+            CleverTapAndroidJNI.CleverTapJNI.Call("resumeInAppNotifications");
         }
 
         public override int SessionGetTimeElapsed() {
-            return CleverTap.Call<int>("sessionGetTimeElapsed");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("sessionGetTimeElapsed");
         }
 
         public override JSONClass SessionGetUTMDetails() {
-            string jsonString = CleverTap.Call<string>("sessionGetUTMDetails");
+            string jsonString = CleverTapAndroidJNI.CleverTapJNI.Call<string>("sessionGetUTMDetails");
             JSONClass json;
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.Log("Unable to parse session utm details json");
+                CleverTapLogger.LogError("Unable to parse session utm details json");
                 json = new JSONClass();
             }
             return json;
         }
 
         public override void SetDebugLevel(int level) {
-            CleverTapAPI.CallStatic("setDebugLevel", level);
+            CleverTapAndroidJNI.CleverTapClass.CallStatic("setDebugLevel", level);
         }
 
         public override void SetLocation(double lat, double lon) {
-            CleverTap.Call("setLocation", lat, lon);
+            CleverTapAndroidJNI.CleverTapJNI.Call("setLocation", lat, lon);
         }
 
         public override void SetOffline(bool value) {
-            CleverTap.Call("setOffline", value);
+            CleverTapAndroidJNI.CleverTapJNI.Call("setOffline", value);
         }
 
         public override void SetOptOut(bool value) {
-            CleverTap.Call("setOptOut", value);
+            CleverTapAndroidJNI.CleverTapJNI.Call("setOptOut", value);
         }
 
         public override void ShowAppInbox(string styleConfig) {
-            CleverTap.Call("showAppInbox", styleConfig);
+            CleverTapAndroidJNI.CleverTapJNI.Call("showAppInbox", styleConfig);
         }
 
         /**
@@ -355,31 +311,31 @@ namespace CleverTapUnitySDK.Android {
         * and will be displayed once resumeInAppNotifications() is called.
         */
         public override void SuspendInAppNotifications() {
-            CleverTap.Call("suspendInAppNotifications");
+            CleverTapAndroidJNI.CleverTapJNI.Call("suspendInAppNotifications");
         }
 
         public override JSONClass UserGetEventHistory() {
-            string jsonString = CleverTap.Call<string>("userGetEventHistory");
+            string jsonString = CleverTapAndroidJNI.CleverTapJNI.Call<string>("userGetEventHistory");
             JSONClass json;
             try {
                 json = (JSONClass)JSON.Parse(jsonString);
             } catch {
-                Debug.Log("Unable to parse user event history json");
+                CleverTapLogger.LogError("Unable to parse user event history json");
                 json = new JSONClass();
             }
             return json;
         }
 
         public override int UserGetPreviousVisitTime() {
-            return CleverTap.Call<int>("userGetPreviousVisitTime");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("userGetPreviousVisitTime");
         }
 
         public override int UserGetScreenCount() {
-            return CleverTap.Call<int>("userGetScreenCount");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("userGetScreenCount");
         }
 
         public override int UserGetTotalVisits() {
-            return CleverTap.Call<int>("userGetTotalVisits");
+            return CleverTapAndroidJNI.CleverTapJNI.Call<int>("userGetTotalVisits");
         }
     }
 }

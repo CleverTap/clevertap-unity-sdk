@@ -1,10 +1,11 @@
-﻿using CleverTap.Utilities;
+﻿using CleverTap.Constants;
+using CleverTap.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CleverTapUnitySDK.Common {
-    public abstract class CleverTapPlatformBindings {
-        public const string Version = "2.4.1";
+namespace CleverTap.Common {
+    internal abstract class CleverTapPlatformBindings {
+        public const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;
 
         public CleverTapCallbackHandler CallbackHandler { get; protected set; }
 
