@@ -52,7 +52,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String LOG_TAG = "CleverTapUnityPlugin";
 
-    private static final String CLEVERTAP_GAME_OBJECT_NAME = "CleverTapUnity";
+    private static final String CLEVERTAP_GAME_OBJECT_NAME = "AndroidCallbackHandler";
 
     private static final String CLEVERTAP_PROFILE_INITIALIZED_CALLBACK = "CleverTapProfileInitializedCallback";
 

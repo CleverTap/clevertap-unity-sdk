@@ -12,7 +12,7 @@
 
 static CleverTap *clevertap;
 
-static NSString * kCleverTapGameObjectName = @"CleverTapUnity";
+static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 static NSString * kCleverTapGameObjectProfileInitializedCallback = @"CleverTapProfileInitializedCallback";
 static NSString * kCleverTapGameObjectProfileUpdatesCallback = @"CleverTapProfileUpdatesCallback";
 static NSString * kCleverTapDeepLinkCallback = @"CleverTapDeepLinkCallback";
