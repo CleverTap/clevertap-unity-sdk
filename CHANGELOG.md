@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.4.2 *(20 October, 2023)*
+-------------------------------------------
+- Profile APIs support for multiple data types
+    - Adds `OnUserLogin(Dictionary<string, object> properties)` and `ProfilePush(Dictionary<string, object> properties)`
+
 Version 2.4.1 *(18 Sept, 2023)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v5.1.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev5.1.0_ptv1.1.0)
