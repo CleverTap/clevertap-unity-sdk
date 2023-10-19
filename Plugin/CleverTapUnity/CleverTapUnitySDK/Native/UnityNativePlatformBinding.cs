@@ -4,7 +4,7 @@ using CleverTap.Utilities;
 
 namespace CleverTap.Native {
     internal class UnityNativePlatformBinding : CleverTapPlatformBindings {
-        public UnityNativePlatformBinding() {
+        internal UnityNativePlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>("UnityNativeCallbackHandler");
             CleverTapLogger.Log("Start: no-op CleverTap binding for non iOS/Android.");
         }

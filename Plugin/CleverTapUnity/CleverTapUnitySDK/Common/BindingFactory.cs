@@ -8,7 +8,6 @@ using CleverTap.Native;
 
 namespace CleverTap.Common {
     internal static class BindingFactory {
-        
         private static CleverTapPlatformBindings cleverTapBinding;
 
         public static CleverTapPlatformBindings CleverTapBinding { get => cleverTapBinding; }

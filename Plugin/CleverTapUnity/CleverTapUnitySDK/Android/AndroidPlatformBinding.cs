@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace CleverTap.Android {
     internal class AndroidPlatformBinding : CleverTapPlatformBindings {
 
-        public AndroidPlatformBinding() {
+        internal AndroidPlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<AndroidCallbackHandler>("AndroidCallbackHandler");
             CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }

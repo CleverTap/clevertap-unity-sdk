@@ -6,8 +6,9 @@ using System.Collections.Generic;
 namespace CleverTap {
     public static class CleverTap {
 
-        private static CleverTapPlatformBindings cleverTapBinding = BindingFactory.CleverTapBinding;
         private static CleverTapCallbackHandler cleverTapCallbackHandler = BindingFactory.CleverTapBinding.CallbackHandler;
+        private static CleverTapPlatformBindings cleverTapBinding = BindingFactory.CleverTapBinding;
+        private static CleverTapPlatformVariable cleverTapVariable = VariableFactory.CleverTapVariable;
 
         #region Constants - CleverTap Version
 
@@ -17,7 +18,7 @@ namespace CleverTap {
 
         #region Looger - Clever Tap Looger
 
-        public static void SetLogLevel(CleverTapLogger.LogLevel level) =>
+        public static void SetLogLevel(LogLevel level) =>
             CleverTapLogger.SetLogLevel(level);
 
         #endregion
@@ -112,6 +113,11 @@ namespace CleverTap {
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapFeatureFlagsUpdated {
             add => cleverTapCallbackHandler.OnCleverTapFeatureFlagsUpdated += value;
             remove => cleverTapCallbackHandler.OnCleverTapFeatureFlagsUpdated -= value;
+        }
+
+        public static event CleverTapCallbackDelegate OnVariablesChanged {
+            add => cleverTapCallbackHandler.OnVariablesChanged += value;
+            remove => cleverTapCallbackHandler.OnVariablesChanged -= value;
         }
 
         #endregion
@@ -372,6 +378,43 @@ namespace CleverTap {
 
         public static int UserGetTotalVisits() =>
             cleverTapBinding.UserGetTotalVisits();
+
+        #endregion
+
+        #region Methods - CleverTap Platform Variables
+
+        public static Var<long> Define(string name, long defaultValue) => 
+            cleverTapVariable.Define(name, defaultValue);
+        
+        public static Var<short> Define(string name, short defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<byte> Define(string name, byte defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<bool> Define(string name, bool defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<float> Define(string name, float defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<double> Define(string name, double defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<string> Define(string name, string defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<List<object>> Define(string name, List<object> defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<List<string>> Define(string name, List<string> defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
+
+        public static Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
 
         #endregion
     }

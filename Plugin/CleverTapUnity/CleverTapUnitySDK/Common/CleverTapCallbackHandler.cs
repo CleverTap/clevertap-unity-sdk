@@ -3,18 +3,9 @@ using System;
 using UnityEngine;
 
 namespace CleverTap.Common {
-
-    #region Delegates
-
-    public delegate void CleverTapCallbackDelegate();
-
-    public delegate void CleverTapCallbackWithMessageDelegate(string message);
-
-    #endregion
-
     public abstract class CleverTapCallbackHandler : MonoBehaviour {
 
-        #region Events
+        #region Callback Events
 
         public event CleverTapCallbackWithMessageDelegate OnCleverTapDeepLinkCallback;
 
@@ -51,6 +42,8 @@ namespace CleverTap.Common {
         public event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigInitialized;
 
         public event CleverTapCallbackWithMessageDelegate OnCleverTapFeatureFlagsUpdated;
+
+        public event CleverTapCallbackDelegate OnVariablesChanged;
 
         #endregion
 
@@ -210,6 +203,22 @@ namespace CleverTap.Common {
         public virtual void CleverTapFeatureFlagsUpdated(string message) {
             OnCleverTapFeatureFlagsUpdated(message);
             CleverTapLogger.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+        }
+
+        #endregion
+
+        #region Default - Variables Callbacks
+
+        // invoked when any variable changed
+        public virtual void CleverTapVariablesChanged() {
+            OnVariablesChanged();
+            CleverTapLogger.Log("Unity received variables changed");
+        }
+
+        // invoked when an variable changed
+        public virtual void CleverTapVariableValueChanged(string variableName) {
+            VariableFactory.CleverTapVariable.VariableChanged(variableName);
+            CleverTapLogger.Log("Unity received variables changed: " + (!String.IsNullOrEmpty(variableName) ? variableName : "NULL"));
         }
 
         #endregion
