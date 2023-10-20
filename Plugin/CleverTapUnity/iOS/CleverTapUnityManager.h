@@ -138,4 +138,9 @@
 - (void)promptPushPrimer:(NSDictionary *)json;
 - (void)isPushPermissionGranted;
 
+
+#pragma mark - Variables
+- (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue;
+- (NSString *)getVariableValue:(NSString *)name;
+
 @end

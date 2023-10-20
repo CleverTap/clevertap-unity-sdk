@@ -584,3 +584,15 @@ void CleverTap_promptForPushPermission(const BOOL showFallbackSettings) {
 void CleverTap_isPushPermissionGranted() {
     return [[CleverTapUnityManager sharedInstance] isPushPermissionGranted];
 }
+
+# MARK: - Variables
+
+void CleverTap_defineVar(const char* name, const char* value) 
+{
+    
+}
+
+char* CleverTap_getVariableValue(const char* name)
+{
+
+}
