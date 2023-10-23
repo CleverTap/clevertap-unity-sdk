@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 2.4.2 *(20 October, 2023)*
+Version 2.4.2 *(24 October, 2023)*
 -------------------------------------------
 - Profile APIs support for multiple data types
     - Adds `OnUserLogin(Dictionary<string, object> properties)` and `ProfilePush(Dictionary<string, object> properties)`
