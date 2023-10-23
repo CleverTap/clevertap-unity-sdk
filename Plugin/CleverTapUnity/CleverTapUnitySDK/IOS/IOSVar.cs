@@ -1,10 +1,8 @@
 ﻿#if UNITY_IOS
 using CleverTap.Common;
-using CleverTap.Constants;
 using CleverTap.Utilities;
 using System;
 using System.Collections;
-using UnityEngine;
 
 namespace CleverTap.IOS {
     internal class IOSVar<T> : Var<T> {
@@ -21,14 +19,6 @@ namespace CleverTap.IOS {
 
                 if (jsonRepresentation == Json.Serialize(value)) {
                     return value;
-                }
-
-                if (Kind == CleverTapVariableKind.FILE) {
-                    if (jsonRepresentation != fileName) {
-                        fileName = jsonRepresentation;
-                    }
-
-                    return (T)Convert.ChangeType(AssetBundle.LoadFromFile(FileName), typeof(T));
                 }
 
                 object newValue = Json.Deserialize(jsonRepresentation);

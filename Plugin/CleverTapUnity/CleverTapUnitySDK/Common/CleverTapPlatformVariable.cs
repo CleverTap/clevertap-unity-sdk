@@ -10,40 +10,40 @@ namespace CleverTap.Common {
 
         #region Default - Variables
 
-        public virtual Var<int> Define(string name, int defaultValue) =>
+        internal virtual Var<int> Define(string name, int defaultValue) =>
             GetOrDefineVariable<int>(name, defaultValue);
-        
-        public virtual Var<long> Define(string name, long defaultValue) => 
+
+        internal virtual Var<long> Define(string name, long defaultValue) => 
             GetOrDefineVariable<long>(name, defaultValue);
-        
-        public virtual Var<short> Define(string name, short defaultValue) => 
+
+        internal virtual Var<short> Define(string name, short defaultValue) => 
             GetOrDefineVariable<short>(name, defaultValue);
-        
-        public virtual Var<byte> Define(string name, byte defaultValue) => 
+
+        internal virtual Var<byte> Define(string name, byte defaultValue) => 
             GetOrDefineVariable<byte>(name, defaultValue);
-        
-        public virtual Var<bool> Define(string name, bool defaultValue) => 
+
+        internal virtual Var<bool> Define(string name, bool defaultValue) => 
             GetOrDefineVariable<bool>(name, defaultValue);
-        
-        public virtual Var<float> Define(string name, float defaultValue) => 
+
+        internal virtual Var<float> Define(string name, float defaultValue) => 
             GetOrDefineVariable<float>(name, defaultValue);
-        
-        public virtual Var<double> Define(string name, double defaultValue) => 
+
+        internal virtual Var<double> Define(string name, double defaultValue) => 
             GetOrDefineVariable<double>(name, defaultValue);
-        
-        public virtual Var<string> Define(string name, string defaultValue) => 
+
+        internal virtual Var<string> Define(string name, string defaultValue) => 
             GetOrDefineVariable<string>(name, defaultValue);
-        
-        public virtual Var<List<object>> Define(string name, List<object> defaultValue) => 
+
+        internal virtual Var<List<object>> Define(string name, List<object> defaultValue) => 
             GetOrDefineVariable<List<object>>(name, defaultValue);
 
-        public virtual Var<List<string>> Define(string name, List<string> defaultValue) =>
+        internal virtual Var<List<string>> Define(string name, List<string> defaultValue) =>
             GetOrDefineVariable<List<string>>(name, defaultValue);
-        
-        public virtual Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) => 
+
+        internal virtual Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) => 
             GetOrDefineVariable<Dictionary<string, object>>(name, defaultValue);
-        
-        public virtual Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) => 
+
+        internal virtual Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) => 
             GetOrDefineVariable<Dictionary<string, string>>(name, defaultValue);
 
         internal virtual void VariableChanged(string name) {

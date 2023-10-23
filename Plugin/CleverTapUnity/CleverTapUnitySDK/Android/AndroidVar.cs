@@ -1,11 +1,9 @@
 ﻿#if UNITY_ANDROID
 using CleverTap.Common;
-using CleverTap.Constants;
 using CleverTap.Utilities;
 using System;
 using System.Collections;
 using System.Linq;
-using UnityEngine;
 
 namespace CleverTap.Android {
     internal class AndroidVar<T> : Var<T> {

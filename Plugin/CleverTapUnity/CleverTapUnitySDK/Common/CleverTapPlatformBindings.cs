@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CleverTap.Common {
     internal abstract class CleverTapPlatformBindings {
-        public const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;
+        internal const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;
 
         public CleverTapCallbackHandler CallbackHandler { get; protected set; }
 
@@ -18,284 +18,284 @@ namespace CleverTap.Common {
 
         #region Default - Platform Bindings
 
-        public virtual void ActivateProductConfig() {
+        internal virtual void ActivateProductConfig() {
         }
 
-        public virtual void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) {
+        internal virtual void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) {
         }
 
-        public virtual void CreateNotificationChannelGroup(string groupId, string groupName) {
+        internal virtual void CreateNotificationChannelGroup(string groupId, string groupName) {
         }
 
-        public virtual void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) {
+        internal virtual void CreateNotificationChannelWithGroup(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge) {
         }
 
-        public virtual void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) {
+        internal virtual void CreateNotificationChannelWithGroupAndSound(string channelId, string channelName, string channelDescription, int importance, string groupId, bool showBadge, string sound) {
         }
 
-        public virtual void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) {
+        internal virtual void CreateNotificationChannelWithSound(string channelId, string channelName, string channelDescription, int importance, bool showBadge, string sound) {
         }
 
-        public virtual void DeleteInboxMessageForID(string messageId) {
+        internal virtual void DeleteInboxMessageForID(string messageId) {
         }
 
-        public virtual void DeleteInboxMessagesForIDs(string[] messageIds) {
+        internal virtual void DeleteInboxMessagesForIDs(string[] messageIds) {
         }
 
-        public virtual void DeleteNotificationChannel(string channelId) {
+        internal virtual void DeleteNotificationChannel(string channelId) {
         }
 
-        public virtual void DeleteNotificationChannelGroup(string groupId) {
+        internal virtual void DeleteNotificationChannelGroup(string groupId) {
         }
 
-        public virtual void DisablePersonalization() {
+        internal virtual void DisablePersonalization() {
         }
 
-        public virtual void DiscardInAppNotifications() {
+        internal virtual void DiscardInAppNotifications() {
         }
 
-        public virtual void DismissAppInbox() {
+        internal virtual void DismissAppInbox() {
         }
 
-        public virtual void EnableDeviceNetworkInfoReporting(bool enabled) {
+        internal virtual void EnableDeviceNetworkInfoReporting(bool enabled) {
         }
 
-        public virtual void EnablePersonalization() {
+        internal virtual void EnablePersonalization() {
         }
 
-        public virtual JSONClass EventGetDetail(string eventName) {
+        internal virtual JSONClass EventGetDetail(string eventName) {
             return new JSONClass();
         }
 
-        public virtual int EventGetFirstTime(string eventName) {
+        internal virtual int EventGetFirstTime(string eventName) {
             return -1;
         }
 
-        public virtual int EventGetLastTime(string eventName) {
+        internal virtual int EventGetLastTime(string eventName) {
             return -1;
         }
 
-        public virtual int EventGetOccurrences(string eventName) {
+        internal virtual int EventGetOccurrences(string eventName) {
             return -1;
         }
 
-        public virtual void FetchAndActivateProductConfig() {
+        internal virtual void FetchAndActivateProductConfig() {
         }
 
-        public virtual void FetchProductConfig() {
+        internal virtual void FetchProductConfig() {
         }
 
-        public virtual void FetchProductConfigWithMinimumInterval(double minimumInterval) {
+        internal virtual void FetchProductConfigWithMinimumInterval(double minimumInterval) {
         }
 
-        public virtual JSONArray GetAllDisplayUnits() {
+        internal virtual JSONArray GetAllDisplayUnits() {
             return new JSONArray();
         }
 
-        public virtual JSONArray GetAllInboxMessages() {
+        internal virtual JSONArray GetAllInboxMessages() {
             return new JSONArray();
         }
 
-        public virtual string GetCleverTapID() {
+        internal virtual string GetCleverTapID() {
             return "testCleverTapID";
         }
 
-        public virtual JSONClass GetDisplayUnitForID(string unitID) {
+        internal virtual JSONClass GetDisplayUnitForID(string unitID) {
             return new JSONClass();
         }
 
-        public virtual bool GetFeatureFlag(string key, bool defaultValue) {
+        internal virtual bool GetFeatureFlag(string key, bool defaultValue) {
             // Validate if this is ok?
             return defaultValue;
         }
 
-        public virtual int GetInboxMessageCount() {
+        internal virtual int GetInboxMessageCount() {
             return -1;
         }
 
-        public virtual JSONClass GetInboxMessageForId(string messageId) {
+        internal virtual JSONClass GetInboxMessageForId(string messageId) {
             return new JSONClass();
         }
 
-        public virtual int GetInboxMessageUnreadCount() {
+        internal virtual int GetInboxMessageUnreadCount() {
             return -1;
         }
 
-        public virtual double GetProductConfigLastFetchTimeStamp() {
+        internal virtual double GetProductConfigLastFetchTimeStamp() {
             return -1;
         }
 
-        public virtual JSONClass GetProductConfigValueFor(string key) {
+        internal virtual JSONClass GetProductConfigValueFor(string key) {
             return new JSONClass();
         }
 
-        public virtual JSONArray GetUnreadInboxMessages() {
+        internal virtual JSONArray GetUnreadInboxMessages() {
             return new JSONArray();
         }
 
-        public virtual void InitializeInbox() {
+        internal virtual void InitializeInbox() {
         }
 
-        public virtual bool IsPushPermissionGranted() {
+        internal virtual bool IsPushPermissionGranted() {
             return false;
         }
 
-        public virtual void LaunchWithCredentials(string accountID, string token) {
+        internal virtual void LaunchWithCredentials(string accountID, string token) {
         }
 
-        public virtual void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
+        internal virtual void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
         }
 
-        public virtual void MarkReadInboxMessageForID(string messageId) {
+        internal virtual void MarkReadInboxMessageForID(string messageId) {
         }
 
-        public virtual void MarkReadInboxMessagesForIDs(string[] messageIds) {
+        internal virtual void MarkReadInboxMessagesForIDs(string[] messageIds) {
         }
 
-        public virtual void OnUserLogin(Dictionary<string, string> properties) {
+        internal virtual void OnUserLogin(Dictionary<string, string> properties) {
         }
 
-        public virtual void ProfileAddMultiValueForKey(string key, string val) {
+        internal virtual void ProfileAddMultiValueForKey(string key, string val) {
         }
 
-        public virtual void ProfileAddMultiValuesForKey(string key, List<string> values) {
+        internal virtual void ProfileAddMultiValuesForKey(string key, List<string> values) {
         }
 
-        public virtual void ProfileDecrementValueForKey(string key, double val) {
+        internal virtual void ProfileDecrementValueForKey(string key, double val) {
         }
 
-        public virtual void ProfileDecrementValueForKey(string key, int val) {
+        internal virtual void ProfileDecrementValueForKey(string key, int val) {
         }
 
-        public virtual string ProfileGet(string key) {
+        internal virtual string ProfileGet(string key) {
             return "test";
         }
 
-        public virtual string ProfileGetCleverTapAttributionIdentifier() {
+        internal virtual string ProfileGetCleverTapAttributionIdentifier() {
             return "testAttributionIdentifier";
         }
 
-        public virtual string ProfileGetCleverTapID() {
+        internal virtual string ProfileGetCleverTapID() {
             return "testCleverTapID";
         }
 
-        public virtual void ProfileIncrementValueForKey(string key, double val) {
+        internal virtual void ProfileIncrementValueForKey(string key, double val) {
         }
 
-        public virtual void ProfileIncrementValueForKey(string key, int val) {
+        internal virtual void ProfileIncrementValueForKey(string key, int val) {
         }
 
-        public virtual void ProfilePush(Dictionary<string, string> properties) {
+        internal virtual void ProfilePush(Dictionary<string, string> properties) {
         }
 
-        public virtual void ProfileRemoveMultiValueForKey(string key, string val) {
+        internal virtual void ProfileRemoveMultiValueForKey(string key, string val) {
         }
 
-        public virtual void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
+        internal virtual void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
         }
 
-        public virtual void ProfileRemoveValueForKey(string key) {
+        internal virtual void ProfileRemoveValueForKey(string key) {
         }
 
-        public virtual void ProfileSetMultiValuesForKey(string key, List<string> values) {
+        internal virtual void ProfileSetMultiValuesForKey(string key, List<string> values) {
         }
 
-        public virtual void PromptForPushPermission(bool showFallbackSettings) {
+        internal virtual void PromptForPushPermission(bool showFallbackSettings) {
         }
 
-        public virtual void PromptPushPrimer(Dictionary<string, object> json) {
+        internal virtual void PromptPushPrimer(Dictionary<string, object> json) {
         }
 
-        public virtual void PushInstallReferrerSource(string source, string medium, string campaign) {
+        internal virtual void PushInstallReferrerSource(string source, string medium, string campaign) {
         }
 
-        public virtual void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
+        internal virtual void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
         }
 
-        public virtual void RecordDisplayUnitClickedEventForID(string unitID) {
+        internal virtual void RecordDisplayUnitClickedEventForID(string unitID) {
         }
 
-        public virtual void RecordDisplayUnitViewedEventForID(string unitID) {
+        internal virtual void RecordDisplayUnitViewedEventForID(string unitID) {
         }
 
-        public virtual void RecordEvent(string eventName) {
+        internal virtual void RecordEvent(string eventName) {
         }
 
-        public virtual void RecordEvent(string eventName, Dictionary<string, object> properties) {
+        internal virtual void RecordEvent(string eventName, Dictionary<string, object> properties) {
         }
 
-        public virtual void RecordInboxNotificationClickedEventForID(string messageId) {
+        internal virtual void RecordInboxNotificationClickedEventForID(string messageId) {
         }
 
-        public virtual void RecordInboxNotificationViewedEventForID(string messageId) {
+        internal virtual void RecordInboxNotificationViewedEventForID(string messageId) {
         }
 
-        public virtual void RecordScreenView(string screenName) {
+        internal virtual void RecordScreenView(string screenName) {
         }
 
-        public virtual void RegisterPush() {
+        internal virtual void RegisterPush() {
         }
 
-        public virtual void ResetProductConfig() {
+        internal virtual void ResetProductConfig() {
         }
 
-        public virtual void ResumeInAppNotifications() {
+        internal virtual void ResumeInAppNotifications() {
         }
 
-        public virtual int SessionGetTimeElapsed() {
+        internal virtual int SessionGetTimeElapsed() {
             return -1;
         }
 
-        public virtual JSONClass SessionGetUTMDetails() {
+        internal virtual JSONClass SessionGetUTMDetails() {
             return new JSONClass();
         }
 
-        public virtual void SetApplicationIconBadgeNumber(int num) {
+        internal virtual void SetApplicationIconBadgeNumber(int num) {
         }
 
-        public virtual void SetDebugLevel(int level) {
+        internal virtual void SetDebugLevel(int level) {
         }
 
-        public virtual void SetLocation(double lat, double lon) {
+        internal virtual void SetLocation(double lat, double lon) {
         }
 
-        public virtual void SetOffline(bool enabled) {
+        internal virtual void SetOffline(bool enabled) {
         }
 
-        public virtual void SetOptOut(bool enabled) {
+        internal virtual void SetOptOut(bool enabled) {
         }
 
-        public virtual void SetProductConfigDefaults(Dictionary<string, object> defaults) {
+        internal virtual void SetProductConfigDefaults(Dictionary<string, object> defaults) {
         }
 
-        public virtual void SetProductConfigDefaultsFromPlistFileName(string fileName) {
+        internal virtual void SetProductConfigDefaultsFromPlistFileName(string fileName) {
         }
 
-        public virtual void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
+        internal virtual void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
         }
 
-        public virtual void ShowAppInbox(Dictionary<string, object> styleConfig) {
+        internal virtual void ShowAppInbox(Dictionary<string, object> styleConfig) {
         }
 
-        public virtual void ShowAppInbox(string styleConfig) {
+        internal virtual void ShowAppInbox(string styleConfig) {
         }
 
-        public virtual void SuspendInAppNotifications() {
+        internal virtual void SuspendInAppNotifications() {
         }
 
-        public virtual JSONClass UserGetEventHistory() {
+        internal virtual JSONClass UserGetEventHistory() {
             return new JSONClass();
         }
 
-        public virtual int UserGetPreviousVisitTime() {
+        internal virtual int UserGetPreviousVisitTime() {
             return -1;
         }
 
-        public virtual int UserGetScreenCount() {
+        internal virtual int UserGetScreenCount() {
             return -1;
         }
 
-        public virtual int UserGetTotalVisits() {
+        internal virtual int UserGetTotalVisits() {
             return -1;
         }
 

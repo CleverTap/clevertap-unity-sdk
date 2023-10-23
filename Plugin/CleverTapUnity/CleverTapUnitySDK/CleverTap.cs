@@ -382,6 +382,8 @@ namespace CleverTap {
         #endregion
 
         #region Methods - CleverTap Platform Variables
+        public static Var<int> Define(string name, int defaultValue) =>
+            cleverTapVariable.Define(name, defaultValue);
 
         public static Var<long> Define(string name, long defaultValue) => 
             cleverTapVariable.Define(name, defaultValue);

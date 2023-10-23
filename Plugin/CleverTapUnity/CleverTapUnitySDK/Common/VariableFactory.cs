@@ -10,7 +10,7 @@ namespace CleverTap.Common {
     internal static class VariableFactory {
         private static CleverTapPlatformVariable cleverTapVariable;
 
-        public static CleverTapPlatformVariable CleverTapVariable { get => cleverTapVariable; }
+        internal static CleverTapPlatformVariable CleverTapVariable { get => cleverTapVariable; }
 
         static VariableFactory() {
             #if UNITY_ANDROID
