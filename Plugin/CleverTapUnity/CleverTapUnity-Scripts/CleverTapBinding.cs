@@ -11,7 +11,7 @@ using CleverTap.Utilities;
 namespace CleverTap {
   public class CleverTapBinding : MonoBehaviour {
       
-  public const string Version = "2.4.1";
+  public const string Version = "2.4.2";
 
 #if UNITY_IOS
     void Start() {
@@ -259,7 +259,17 @@ namespace CleverTap {
         CleverTap_onUserLogin(propertiesString);
     }
 
+    public static void OnUserLogin(Dictionary<string, object> properties) {
+        var propertiesString = Json.Serialize(properties);
+        CleverTap_onUserLogin(propertiesString);
+    }
+
     public static void ProfilePush(Dictionary<string, string> properties) {
+        var propertiesString = Json.Serialize(properties);
+        CleverTap_profilePush(propertiesString);
+    }
+
+    public static void ProfilePush(Dictionary<string, object> properties) {
         var propertiesString = Json.Serialize(properties);
         CleverTap_profilePush(propertiesString);
     }
@@ -769,7 +779,15 @@ namespace CleverTap {
         CleverTap.Call("onUserLogin", Json.Serialize(properties));
     }
 
+    public static void OnUserLogin(Dictionary<string, object> properties) {
+        CleverTap.Call("onUserLogin", Json.Serialize(properties));
+    }
+
     public static void ProfilePush(Dictionary<string, string> properties) {
+        CleverTap.Call("profilePush", Json.Serialize(properties));
+    }
+
+    public static void ProfilePush(Dictionary<string, object> properties) {
         CleverTap.Call("profilePush", Json.Serialize(properties));
     }
 
@@ -1043,7 +1061,13 @@ namespace CleverTap {
     public static void OnUserLogin(Dictionary<string, string> properties) {
     }
 
+    public static void OnUserLogin(Dictionary<string, object> properties) {
+    }
+
     public static void ProfilePush(Dictionary<string, string> properties) {
+    }
+
+    public static void ProfilePush(Dictionary<string, object> properties) {
     }
 
     public static string ProfileGet(string key) {
