@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.clevertap.android:clevertap-android-sdk:5.2.1" />
+        <androidPackage spec="androidx.annotation:annotation:[1.2.0]" />
+    </androidPackages>
+    <iosPods>
+        <iosPod name="CleverTap-iOS-SDK" version="5.2.1" minTargetSdk="9.0" />
+    </iosPods>
+</dependencies>
