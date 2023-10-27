@@ -429,7 +429,7 @@ namespace CleverTap.IOS {
             CleverTap_markReadInboxMessagesForIDs(messageIds, arrLength);
         }
 
-        public override void OnUserLogin(Dictionary<string, string> properties) {
+        public override void OnUserLogin(Dictionary<string, object> properties) {
             var propertiesString = Json.Serialize(properties);
             CleverTap_onUserLogin(propertiesString);
         }
@@ -470,7 +470,7 @@ namespace CleverTap.IOS {
             CleverTap_profileIncrementIntValueForKey(key, val);
         }
 
-        public override void ProfilePush(Dictionary<string, string> properties) {
+        public override void ProfilePush(Dictionary<string, object> properties) {
             var propertiesString = Json.Serialize(properties);
             CleverTap_profilePush(propertiesString);
         }

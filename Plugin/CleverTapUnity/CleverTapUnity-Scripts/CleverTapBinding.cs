@@ -14,9 +14,10 @@ using CleverTap.Android;
 /// events and set and get user profile attributes.
 /// </summary>
 
-namespace CleverTap {
-    public class CleverTapBinding : MonoBehaviour {
-
+namespace CleverTap 
+{
+    public class CleverTapBinding : MonoBehaviour 
+    {
         [Obsolete("Please use CleverTap.VERSION instead.")]
         public const string Version = CleverTapVersion.CLEVERTAP_SDK_VERSION;
 
@@ -36,6 +37,14 @@ namespace CleverTap {
 
         [Obsolete("Please use CleverTap.ProfilePush(Dictionary<string, string>) instead.")]
         public static void ProfilePush(Dictionary<string, string> properties) =>
+            CleverTapStatic.ProfilePush(properties);
+
+        [Obsolete("Please use CleverTap.OnUserLogin(Dictionary<string, object>) instead.")]
+        public static void OnUserLogin(Dictionary<string, object> properties) =>
+            CleverTapStatic.OnUserLogin(properties);
+
+        [Obsolete("Please use CleverTap.ProfilePush(Dictionary<string, object>) instead.")]
+        public static void ProfilePush(Dictionary<string, object> properties) =>
             CleverTapStatic.ProfilePush(properties);
 
         [Obsolete("Please use CleverTap.ProfileGet(string) instead.")]
@@ -356,17 +365,20 @@ namespace CleverTap {
             CleverTapStatic.LaunchWithCredentialsForRegion(accountID, accountToken, region);
 
         [Obsolete("Not supported for Android.")]
-        public static void LaunchWithCredentials(string accountID, string token) {
+        public static void LaunchWithCredentials(string accountID, string token)
+        {
             //no op only supported on ios
         }
 
         [Obsolete("Not supported for Android.")]
-        public static void LaunchWithCredentials(string accountID, string token, string region) {            
+        public static void LaunchWithCredentials(string accountID, string token, string region)
+        {
             //no op only supported on ios
         }
 
         [Obsolete("Not supported for Android.")]
-        public static void RegisterPush() {
+        public static void RegisterPush()
+        {
             //no op only supported on ios
         }
 
@@ -428,6 +440,14 @@ namespace CleverTap {
 
         [Obsolete("Please use CleverTap.ProfilePush(Dictionary<string, string>) instead.")]
         public static void ProfilePush(Dictionary<string, string> properties) =>
+            CleverTapStatic.ProfilePush(properties);
+
+        [Obsolete("Please use CleverTap.OnUserLogin(Dictionary<string, object>) instead.")]
+        public static void OnUserLogin(Dictionary<string, object> properties) =>
+            CleverTapStatic.OnUserLogin(properties);
+
+        [Obsolete("Please use CleverTap.ProfilePush(Dictionary<string, object>) instead.")]
+        public static void ProfilePush(Dictionary<string, object> properties) =>
             CleverTapStatic.ProfilePush(properties);
 
         [Obsolete("Please use CleverTap.ProfileGet(string) instead.")]
@@ -555,7 +575,8 @@ namespace CleverTap {
             CleverTapStatic.UserGetPreviousVisitTime();
 
         [Obsolete("Not supported for Android.")]
-        public static void SetApplicationIconBadgeNumber(int num) {
+        public static void SetApplicationIconBadgeNumber(int num)
+        {
             // no-op for Android
         }
 
@@ -623,6 +644,14 @@ namespace CleverTap {
 
         [Obsolete("Please use CleverTap.ProfilePush(Dictionary<string, string>) instead.")]
         public static void ProfilePush(Dictionary<string, string> properties) =>
+            CleverTapStatic.ProfilePush(properties);
+
+        [Obsolete("Please use CleverTap.OnUserLogin(Dictionary<string, object>) instead.")]
+        public static void OnUserLogin(Dictionary<string, object> properties) =>
+            CleverTapStatic.OnUserLogin(properties);
+
+        [Obsolete("Please use CleverTap.ProfilePush(Dictionary<string, object>) instead.")]
+        public static void ProfilePush(Dictionary<string, object> properties) =>
             CleverTapStatic.ProfilePush(properties);
 
         [Obsolete("Please use CleverTap.ProfileGet(string) instead.")]
