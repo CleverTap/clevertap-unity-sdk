@@ -101,8 +101,8 @@ namespace CleverTap.Android {
         * CleverTapUnity#CleverTapInitCleverTapIdCallback() function
         */
         internal override string GetCleverTapID() {
-            // check this
-            return CleverTapAndroidJNI.CleverTapJNI.Call<string>("getCleverTapID");
+            CleverTapAndroidJNI.CleverTapJNI.Call("getCleverTapID");
+            return string.Empty;
         }
 
         internal override int GetInboxMessageCount() {
