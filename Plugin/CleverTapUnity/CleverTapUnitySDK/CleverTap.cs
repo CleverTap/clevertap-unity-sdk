@@ -1,8 +1,7 @@
-﻿using CleverTap.Common;
+using CleverTap.Common;
 using CleverTap.Constants;
 using CleverTap.Utilities;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CleverTap {
     public static class CleverTap {
@@ -242,12 +241,7 @@ namespace CleverTap {
         public static void MarkReadInboxMessagesForIDs(string[] messageIds) =>
             cleverTapBinding.MarkReadInboxMessagesForIDs(messageIds);
 
-        public static void OnUserLogin(Dictionary<string, string> properties) {
-            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object) kv.Value);
-            OnUserLogin(propsObjectValue);
-        }
-
-        public static void OnUserLogin(Dictionary<string, object> properties) =>
+        public static void OnUserLogin(Dictionary<string, string> properties) =>
             cleverTapBinding.OnUserLogin(properties);
 
         public static void OnUserLogin(Dictionary<string, object> properties) =>
@@ -280,13 +274,7 @@ namespace CleverTap {
         public static void ProfileIncrementValueForKey(string key, int val) =>
             cleverTapBinding.ProfileIncrementValueForKey(key, val);
 
-        public static void ProfilePush(Dictionary<string, string> properties)
-        {
-            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object) kv.Value);
-            ProfilePush(propsObjectValue);
-        }
-
-        public static void ProfilePush(Dictionary<string, object> properties) =>
+        public static void ProfilePush(Dictionary<string, string> properties) =>
             cleverTapBinding.ProfilePush(properties);
 
         public static void ProfilePush(Dictionary<string, object> properties) =>
@@ -403,9 +391,9 @@ namespace CleverTap {
         public static Var<int> Define(string name, int defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
-        public static Var<long> Define(string name, long defaultValue) =>
+        public static Var<long> Define(string name, long defaultValue) => 
             cleverTapVariable.Define(name, defaultValue);
-
+        
         public static Var<short> Define(string name, short defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
