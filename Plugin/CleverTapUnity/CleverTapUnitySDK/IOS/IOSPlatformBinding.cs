@@ -198,9 +198,8 @@ namespace CleverTap.IOS {
             IOSDllImport.CleverTap_markReadInboxMessagesForIDs(messageIds, arrLength);
         }
 
-        public override void OnUserLogin(Dictionary<string, object> properties) {
-            var propertiesString = Json.Serialize(properties);
-            IOSDllImport.CleverTap_onUserLogin(propertiesString);
+        internal override void OnUserLogin(Dictionary<string, object> properties) {
+            IOSDllImport.CleverTap_onUserLogin(Json.Serialize(properties));
         }
 
         internal override void ProfileAddMultiValueForKey(string key, string val) {
@@ -239,9 +238,8 @@ namespace CleverTap.IOS {
             IOSDllImport.CleverTap_profileIncrementIntValueForKey(key, val);
         }
 
-        public override void ProfilePush(Dictionary<string, object> properties) {
-            var propertiesString = Json.Serialize(properties);
-            IOSDllImport.CleverTap_profilePush(propertiesString);
+        internal override void ProfilePush(Dictionary<string, object> properties) {
+            IOSDllImport.CleverTap_profilePush(Json.Serialize(properties));
         }
 
         internal override void ProfileRemoveMultiValueForKey(string key, string val) {

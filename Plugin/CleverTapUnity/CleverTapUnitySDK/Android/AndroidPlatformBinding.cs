@@ -137,7 +137,7 @@ namespace CleverTap.Android {
             CleverTapAndroidJNI.CleverTapJNI.Call("markReadInboxMessagesForIDs", messageIds);
         }
 
-        public override void OnUserLogin(Dictionary<string, object> properties) {
+        internal override void OnUserLogin(Dictionary<string, object> properties) {
             CleverTapAndroidJNI.CleverTapJNI.Call("onUserLogin", Json.Serialize(properties));
         }
 
@@ -212,7 +212,7 @@ namespace CleverTap.Android {
             CleverTapAndroidJNI.CleverTapJNI.Call("profileIncrementValueForKey", key, val);
         }
 
-        public override void ProfilePush(Dictionary<string, object> properties) {
+        internal override void ProfilePush(Dictionary<string, object> properties) {
             CleverTapAndroidJNI.CleverTapJNI.Call("profilePush", Json.Serialize(properties));
         }
 

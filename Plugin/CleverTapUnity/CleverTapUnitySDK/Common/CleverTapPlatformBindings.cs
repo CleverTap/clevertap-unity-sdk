@@ -1,6 +1,7 @@
 ﻿using CleverTap.Constants;
 using CleverTap.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CleverTap.Common {
@@ -152,7 +153,12 @@ namespace CleverTap.Common {
         internal virtual void MarkReadInboxMessagesForIDs(string[] messageIds) {
         }
 
-        public virtual void OnUserLogin(Dictionary<string, object> properties) {
+        internal virtual void OnUserLogin(Dictionary<string, string> properties) {
+            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+            OnUserLogin(propsObjectValue);
+        }
+
+        internal virtual void OnUserLogin(Dictionary<string, object> properties) {
         }
 
         internal virtual void ProfileAddMultiValueForKey(string key, string val) {
@@ -185,7 +191,12 @@ namespace CleverTap.Common {
         internal virtual void ProfileIncrementValueForKey(string key, int val) {
         }
 
-        public virtual void ProfilePush(Dictionary<string, object> properties) {
+        internal virtual void ProfilePush(Dictionary<string, string> properties) {
+            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+            ProfilePush(propsObjectValue);
+        }
+
+        internal virtual void ProfilePush(Dictionary<string, object> properties) {
         }
 
         internal virtual void ProfileRemoveMultiValueForKey(string key, string val) {
