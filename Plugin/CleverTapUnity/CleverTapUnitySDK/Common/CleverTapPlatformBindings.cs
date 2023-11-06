@@ -1,4 +1,4 @@
-﻿using CleverTap.Constants;
+using CleverTap.Constants;
 using CleverTap.Utilities;
 using System.Collections.Generic;
 using System.Linq;

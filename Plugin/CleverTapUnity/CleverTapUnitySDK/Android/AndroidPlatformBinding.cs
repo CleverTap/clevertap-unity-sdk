@@ -1,4 +1,4 @@
-﻿#if UNITY_ANDROID
+#if UNITY_ANDROID
 using CleverTap.Common;
 using CleverTap.Constants;
 using CleverTap.Utilities;

@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS
+#if UNITY_IOS
 using CleverTap.Common;
 using CleverTap.Constants;
 using CleverTap.Utilities;
