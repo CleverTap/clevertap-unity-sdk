@@ -198,7 +198,7 @@ namespace CleverTap.IOS {
             IOSDllImport.CleverTap_markReadInboxMessagesForIDs(messageIds, arrLength);
         }
 
-        internal override void OnUserLogin(Dictionary<string, string> properties) {
+        public override void OnUserLogin(Dictionary<string, object> properties) {
             var propertiesString = Json.Serialize(properties);
             IOSDllImport.CleverTap_onUserLogin(propertiesString);
         }
@@ -239,7 +239,7 @@ namespace CleverTap.IOS {
             IOSDllImport.CleverTap_profileIncrementIntValueForKey(key, val);
         }
 
-        internal override void ProfilePush(Dictionary<string, string> properties) {
+        public override void ProfilePush(Dictionary<string, object> properties) {
             var propertiesString = Json.Serialize(properties);
             IOSDllImport.CleverTap_profilePush(propertiesString);
         }
@@ -375,7 +375,7 @@ namespace CleverTap.IOS {
         }
 
         internal override void ShowAppInbox(string styleConfig) {
-            // TODO : Validate if we can use it like this (following Android implemenation) 
+            // TODO : Validate if we can use it like this (following Android implemenation)
             var styleConfigString = Json.Serialize(new Dictionary<string, object> { { "showAppInbox", styleConfig } });
             IOSDllImport.CleverTap_showAppInbox(styleConfigString);
         }

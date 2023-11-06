@@ -152,7 +152,7 @@ namespace CleverTap.Common {
         internal virtual void MarkReadInboxMessagesForIDs(string[] messageIds) {
         }
 
-        internal virtual void OnUserLogin(Dictionary<string, string> properties) {
+        public virtual void OnUserLogin(Dictionary<string, object> properties) {
         }
 
         internal virtual void ProfileAddMultiValueForKey(string key, string val) {
@@ -185,7 +185,7 @@ namespace CleverTap.Common {
         internal virtual void ProfileIncrementValueForKey(string key, int val) {
         }
 
-        internal virtual void ProfilePush(Dictionary<string, string> properties) {
+        public virtual void ProfilePush(Dictionary<string, object> properties) {
         }
 
         internal virtual void ProfileRemoveMultiValueForKey(string key, string val) {
