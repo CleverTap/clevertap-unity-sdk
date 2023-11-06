@@ -403,9 +403,9 @@ namespace CleverTap {
         public static Var<int> Define(string name, int defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
-        public static Var<long> Define(string name, long defaultValue) => 
+        public static Var<long> Define(string name, long defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
-        
+
         public static Var<short> Define(string name, short defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
