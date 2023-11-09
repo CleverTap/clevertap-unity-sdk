@@ -19,11 +19,10 @@ namespace CleverTap {
         void Awake() {
             DontDestroyOnLoad(gameObject);
 
-            //Disable logging 
-            //CleverTap.SetLogLevel(CleverTapLogger.LogLevel.None);
+            //Disable CleverTap unity logger
+            //CleverTap.SetLogLevel(LogLevel.None);
 
             CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
-           
 
             CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
             CleverTap.OnCleverTapProfileInitializedCallback += CleverTapProfileInitializedCallback;
@@ -229,7 +228,7 @@ namespace CleverTap {
         void CleverTapNativeDisplayUnitsUpdated(string message) {
         }
 
-        // invoked when Product Experiences - Product Config are fetched 
+        // invoked when Product Experiences - Product Config are fetched
         void CleverTapProductConfigFetched(string message) {
         }
 
@@ -241,7 +240,7 @@ namespace CleverTap {
         void CleverTapProductConfigInitialized(string message) {
         }
 
-        // invoked when Product Experiences - Feature Flags are updated 
+        // invoked when Product Experiences - Feature Flags are updated
         void CleverTapFeatureFlagsUpdated(string message) {
         }
 

@@ -50,14 +50,18 @@ namespace CleverTap.Common {
         #region Default - Callback Methods
 
         public virtual void CleverTapDeepLinkCallback(string url) {
-            OnCleverTapDeepLinkCallback(url);
+            if (OnCleverTapDeepLinkCallback != null) {
+                OnCleverTapDeepLinkCallback(url);
+            }
             CleverTapLogger.Log("unity received deep link: " + (!String.IsNullOrEmpty(url) ? url : "NULL"));
         }
 
         // called when then the CleverTap user profile is initialized
         // returns {"CleverTapID":<CleverTap unique user id>}
         public virtual void CleverTapProfileInitializedCallback(string message) {
-            OnCleverTapProfileInitializedCallback(message);
+            if (OnCleverTapProfileInitializedCallback != null) {
+                OnCleverTapProfileInitializedCallback(message);
+            }
             CleverTapLogger.Log("unity received profile initialized: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
 
             if (String.IsNullOrEmpty(message)) {
@@ -89,7 +93,9 @@ namespace CleverTap.Common {
             }
         */
         public virtual void CleverTapProfileUpdatesCallback(string message) {
-            OnCleverTapProfileUpdatesCallback(message);
+            if (OnCleverTapProfileUpdatesCallback != null) {
+                OnCleverTapProfileUpdatesCallback(message);
+            }
             CleverTapLogger.Log("unity received profile updates: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
 
             if (String.IsNullOrEmpty(message)) {
@@ -106,7 +112,9 @@ namespace CleverTap.Common {
 
         // returns the data associated with the push notification
         public virtual void CleverTapPushOpenedCallback(string message) {
-            OnCleverTapPushOpenedCallback(message);
+            if (OnCleverTapPushOpenedCallback != null) {
+                OnCleverTapPushOpenedCallback(message);
+            }
             CleverTapLogger.Log("unity received push opened: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
 
             if (String.IsNullOrEmpty(message)) {
@@ -123,85 +131,113 @@ namespace CleverTap.Common {
 
         // returns a unique CleverTap identifier suitable for use with install attribution providers.
         public virtual void CleverTapInitCleverTapIdCallback(string message) {
-            OnCleverTapInitCleverTapIdCallback(message);
+            if (OnCleverTapInitCleverTapIdCallback != null) {
+                OnCleverTapInitCleverTapIdCallback(message);
+            }
             CleverTapLogger.Log("unity received clevertap id: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns the custom data associated with an in-app notification click
         public virtual void CleverTapInAppNotificationDismissedCallback(string message) {
-            OnCleverTapInAppNotificationDismissedCallback(message);
+            if (OnCleverTapInAppNotificationDismissedCallback != null) {
+                OnCleverTapInAppNotificationDismissedCallback(message);
+            }
             CleverTapLogger.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns the custom data associated with an in-app notification click
         public virtual void CleverTapInAppNotificationShowCallback(string message) {
-            OnCleverTapInAppNotificationShowCallback(message);
+            if (OnCleverTapInAppNotificationShowCallback != null) {
+                OnCleverTapInAppNotificationShowCallback(message);
+            }
             CleverTapLogger.Log("unity received inapp notification onShow(): " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns the status of push permission response after it's granted/denied
         public virtual void CleverTapOnPushPermissionResponseCallback(string message) {
-            OnCleverTapOnPushPermissionResponseCallback(message);
+            if (OnCleverTapOnPushPermissionResponseCallback != null) {
+                OnCleverTapOnPushPermissionResponseCallback(message);
+            }
             //Ensure to create call the `CreateNotificationChannel` once notification permission is granted to register for receiving push notifications for Android 13+ devices.
             CleverTapLogger.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns when an in-app notification is dismissed by a call to action with custom extras
         public virtual void CleverTapInAppNotificationButtonTapped(string message) {
-            OnCleverTapInAppNotificationButtonTapped(message);
+            if (OnCleverTapInAppNotificationButtonTapped != null) {
+                OnCleverTapInAppNotificationButtonTapped(message);
+            }
             CleverTapLogger.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns callback for InitializeInbox
         public virtual void CleverTapInboxDidInitializeCallback() {
-            OnCleverTapInboxDidInitializeCallback();
+            if (OnCleverTapInboxDidInitializeCallback != null) {
+                OnCleverTapInboxDidInitializeCallback();
+            }
             CleverTapLogger.Log("unity received inbox initialized");
         }
 
         public virtual void CleverTapInboxMessagesDidUpdateCallback() {
-            OnCleverTapInboxMessagesDidUpdateCallback();
+            if (OnCleverTapInboxMessagesDidUpdateCallback != null) {
+                OnCleverTapInboxMessagesDidUpdateCallback();
+            }
             CleverTapLogger.Log("unity received inbox messages updated");
         }
 
         // returns on the click of app inbox message with a map of custom Key-Value pairs
         public virtual void CleverTapInboxCustomExtrasButtonSelect(string message) {
-            OnCleverTapInboxCustomExtrasButtonSelect(message);
+            if (OnCleverTapInboxCustomExtrasButtonSelect != null) {
+                OnCleverTapInboxCustomExtrasButtonSelect(message);
+            }
             CleverTapLogger.Log("unity received inbox message button with custom extras select: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns on the click of app inbox message with a string of the inbox payload along with page index and button index
         public virtual void CleverTapInboxItemClicked(string message) {
-            OnCleverTapInboxItemClicked(message);
+            if (OnCleverTapInboxItemClicked != null) {
+                OnCleverTapInboxItemClicked(message);
+            }
             CleverTapLogger.Log("unity received inbox message clicked callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // returns native display units data
         public virtual void CleverTapNativeDisplayUnitsUpdated(string message) {
-            OnCleverTapNativeDisplayUnitsUpdated(message);
+            if (OnCleverTapNativeDisplayUnitsUpdated != null) {
+                OnCleverTapNativeDisplayUnitsUpdated(message);
+            }
             CleverTapLogger.Log("unity received native display units updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // invoked when Product Experiences - Product Config are fetched 
         public virtual void CleverTapProductConfigFetched(string message) {
-            OnCleverTapProductConfigFetched(message);
+            if (OnCleverTapProductConfigFetched != null) {
+                OnCleverTapProductConfigFetched(message);
+            }
             CleverTapLogger.Log("unity received product config fetched: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // invoked when Product Experiences - Product Config are activated
         public virtual void CleverTapProductConfigActivated(string message) {
-            OnCleverTapProductConfigActivated(message);
+            if (OnCleverTapProductConfigActivated != null) {
+                OnCleverTapProductConfigActivated(message);
+            }
             CleverTapLogger.Log("unity received product config activated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // invoked when Product Experiences - Product Config are initialized
         public virtual void CleverTapProductConfigInitialized(string message) {
-            OnCleverTapProductConfigInitialized(message);
+            if (OnCleverTapProductConfigInitialized != null) {
+                OnCleverTapProductConfigInitialized(message);
+            }
             CleverTapLogger.Log("unity received product config initialized: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
         // invoked when Product Experiences - Feature Flags are updated 
         public virtual void CleverTapFeatureFlagsUpdated(string message) {
-            OnCleverTapFeatureFlagsUpdated(message);
+            if (OnCleverTapFeatureFlagsUpdated != null) {
+                OnCleverTapFeatureFlagsUpdated(message);
+            }
             CleverTapLogger.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
         }
 
@@ -211,11 +247,13 @@ namespace CleverTap.Common {
 
         // invoked when any variable changed
         public virtual void CleverTapVariablesChanged() {
-            OnVariablesChanged();
+            if (OnVariablesChanged != null) {
+                OnVariablesChanged();
+            }
             CleverTapLogger.Log("Unity received variables changed");
         }
 
-        // invoked when an variable changed
+        // invoked when an variable value changed
         public virtual void CleverTapVariableValueChanged(string variableName) {
             VariableFactory.CleverTapVariable.VariableChanged(variableName);
             CleverTapLogger.Log("Unity received variables changed: " + (!String.IsNullOrEmpty(variableName) ? variableName : "NULL"));

@@ -38,7 +38,9 @@ namespace CleverTap.Common {
                  .ToArray();
 
         public virtual void ValueChanged() {
-            OnValueChanged();
+            if (OnValueChanged != null) {
+                OnValueChanged();
+            }
         }
 
         public static implicit operator T(Var<T> var) {

@@ -1,4 +1,4 @@
-﻿using CleverTap.Common;
+using CleverTap.Common;
 using CleverTap.Constants;
 using CleverTap.Utilities;
 using System.Collections.Generic;
@@ -244,6 +244,9 @@ namespace CleverTap {
         public static void OnUserLogin(Dictionary<string, string> properties) =>
             cleverTapBinding.OnUserLogin(properties);
 
+        public static void OnUserLogin(Dictionary<string, object> properties) =>
+            cleverTapBinding.OnUserLogin(properties);
+
         public static void ProfileAddMultiValueForKey(string key, string val) =>
             cleverTapBinding.ProfileAddMultiValueForKey(key, val);
 
@@ -272,6 +275,9 @@ namespace CleverTap {
             cleverTapBinding.ProfileIncrementValueForKey(key, val);
 
         public static void ProfilePush(Dictionary<string, string> properties) =>
+            cleverTapBinding.ProfilePush(properties);
+
+        public static void ProfilePush(Dictionary<string, object> properties) =>
             cleverTapBinding.ProfilePush(properties);
 
         public static void ProfileRemoveMultiValueForKey(string key, string val) =>
