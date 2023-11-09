@@ -9,6 +9,8 @@
 #import <CleverTapSDK/CleverTap+InAppNotifications.h>
 #import <CleverTapSDK/CTLocalInApp.h>
 #import <CleverTapSDK/Clevertap+PushPermission.h>
+#import <CleverTapSDK/CTVar.h>
+#import <CleverTapSDK/CleverTap+CTVar.h>
 
 static CleverTap *clevertap;
 
@@ -31,6 +33,8 @@ static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigI
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
 static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
+static NSString * kCleverTapVariablesChanged = @"CleverTapVariablesChanged";
+static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChanged";
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -53,7 +57,9 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
         [[clevertap productConfig] setDelegate:sharedInstance];
         [[clevertap featureFlags] setDelegate:sharedInstance];
         [clevertap setPushPermissionDelegate:sharedInstance];
-
+        [clevertap onVariablesChanged:^{
+            [sharedInstance callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariablesChanged withMessage:@"VariablesChanged"];
+        }];
     }
     
     return sharedInstance;
@@ -880,7 +886,52 @@ return jsonDict;
 
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue
 {
+    NSData *data = [defaultValue dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    
+    CTVar *var = nil;
 
+    if ([kind isEqualToString:@"integer"])
+    {
+        var = [clevertap defineVar:name withInt:[defaultValue intValue]];
+    }
+    else if ([kind isEqualToString:@"float"])
+    {
+        var = [clevertap defineVar:name withDouble:[defaultValue doubleValue]];
+    }
+    else if ([kind isEqualToString:@"bool"])
+    {
+        var = [clevertap defineVar:name withBool:[defaultValue boolValue]];
+    }
+    else if ([kind isEqualToString:@"group"])
+    {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            NSLog(@"CleverTap: Error parsing JSON: %@", error);
+            return;
+        }
+        var = [clevertap defineVar:name withDictionary:json];
+    }
+    else if ([kind isEqualToString:@"string"])
+    {
+        var = [clevertap defineVar:name withString:defaultValue];
+    }
+    else
+    {
+        NSLog(@"CleverTap: Unsupported type %@", kind);
+        return;
+    }
+    
+    [var onValueChanged:^{
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[var value] options:0 error:&error];
+        if (!jsonData) {
+            NSLog(@"CleverTap: Error converting to JSON: %@", error);
+            return;
+        }
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableValueChanged withMessage:jsonString];
+    }];
 }
 
 - (NSString *)getVariableValue:(NSString *)name

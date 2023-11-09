@@ -3,6 +3,7 @@ using CleverTap.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CleverTap.Common {
     internal abstract class CleverTapPlatformVariable {
@@ -33,12 +34,6 @@ namespace CleverTap.Common {
 
         internal virtual Var<string> Define(string name, string defaultValue) => 
             GetOrDefineVariable<string>(name, defaultValue);
-
-        internal virtual Var<List<object>> Define(string name, List<object> defaultValue) => 
-            GetOrDefineVariable<List<object>>(name, defaultValue);
-
-        internal virtual Var<List<string>> Define(string name, List<string> defaultValue) =>
-            GetOrDefineVariable<List<string>>(name, defaultValue);
 
         internal virtual Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) => 
             GetOrDefineVariable<Dictionary<string, object>>(name, defaultValue);
@@ -71,18 +66,16 @@ namespace CleverTap.Common {
         }
 
         protected virtual string GetKindNameFromGenericType<T>() {
-            T defaultValue = default;
-            if (defaultValue is int || defaultValue is long || defaultValue is short || defaultValue is char || defaultValue is sbyte || defaultValue is byte) {
+            Type type = typeof(T);
+            if (type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(char) || type == typeof(sbyte) || type == typeof(byte)) {
                 return CleverTapVariableKind.INT;
-            } else if (defaultValue is float || defaultValue is double || defaultValue is decimal) {
+            } else if (type == typeof(float) || type == typeof(double) || type == typeof(decimal)) {
                 return CleverTapVariableKind.FLOAT;
-            } else if (defaultValue is string) {
+            } else if (type == typeof(string)) {
                 return CleverTapVariableKind.STRING;
-            } else if (defaultValue is IList || defaultValue is Array) {
-                return CleverTapVariableKind.ARRAY;
-            } else if (defaultValue is IDictionary) {
+            } else if (type.GetInterfaces().Contains(typeof(IDictionary))) {
                 return CleverTapVariableKind.DICTIONARY;
-            } else if (defaultValue is bool) {
+            } else if (type == typeof(bool)) {
                 return CleverTapVariableKind.BOOLEAN;
             }
 

@@ -737,17 +737,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             } catch (Throwable t) {
                 Log.e(LOG_TAG, "defineVar error", t);
             }
-        } else if (kind.equals("list")) {
-            try {
-                JSONArray jsonArray = new JSONArray(jsonValue);
-                List<Object> value = new ArrayList<>();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    value.add(jsonArray.get(i));
-                }
-                variable = instance.clevertap.defineVariable(name, value);
-            } catch (Throwable t) {
-                Log.e(LOG_TAG, "defineVar error", t);
-            }
         }
 
         if (variable != null) {

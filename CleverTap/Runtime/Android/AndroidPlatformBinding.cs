@@ -1,4 +1,4 @@
-﻿#if UNITY_ANDROID
+#if UNITY_ANDROID
 using CleverTap.Common;
 using CleverTap.Constants;
 using CleverTap.Utilities;
@@ -97,12 +97,12 @@ namespace CleverTap.Android {
         }
 
         /**
-        * requests for a unique, asynchronous CleverTap identifier. The value will be available as json {"cleverTapID" : <value> } via 
+        * requests for a unique, asynchronous CleverTap identifier. The value will be available as json {"cleverTapID" : <value> } via
         * CleverTapUnity#CleverTapInitCleverTapIdCallback() function
         */
         internal override string GetCleverTapID() {
-            // check this
-            return CleverTapAndroidJNI.CleverTapJNI.Call<string>("getCleverTapID");
+            CleverTapAndroidJNI.CleverTapJNI.Call("getCleverTapID");
+            return string.Empty;
         }
 
         internal override int GetInboxMessageCount() {
@@ -137,7 +137,7 @@ namespace CleverTap.Android {
             CleverTapAndroidJNI.CleverTapJNI.Call("markReadInboxMessagesForIDs", messageIds);
         }
 
-        internal override void OnUserLogin(Dictionary<string, string> properties) {
+        internal override void OnUserLogin(Dictionary<string, object> properties) {
             CleverTapAndroidJNI.CleverTapJNI.Call("onUserLogin", Json.Serialize(properties));
         }
 
@@ -212,7 +212,7 @@ namespace CleverTap.Android {
             CleverTapAndroidJNI.CleverTapJNI.Call("profileIncrementValueForKey", key, val);
         }
 
-        internal override void ProfilePush(Dictionary<string, string> properties) {
+        internal override void ProfilePush(Dictionary<string, object> properties) {
             CleverTapAndroidJNI.CleverTapJNI.Call("profilePush", Json.Serialize(properties));
         }
 

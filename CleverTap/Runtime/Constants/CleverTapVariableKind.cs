@@ -5,9 +5,5 @@
         internal const string STRING = "string";
         internal const string BOOLEAN = "bool";
         internal const string DICTIONARY = "group";
-        internal const string ARRAY = "list";
-        //internal const string FILE = "file";
-        //internal const string COLOR = "color";
-        //internal const string ACTION = "action";
     }
 }
