@@ -585,11 +585,13 @@ void CleverTap_isPushPermissionGranted() {
     return [[CleverTapUnityManager sharedInstance] isPushPermissionGranted];
 }
 
-# MARK: - Variables
+#pragma mark - Variables
 
-void CleverTap_defineVar(const char* name, const char* value) 
+void CleverTap_defineVar(const char* name, const char* kind, const char* value) 
 {
-    
+     [[CleverTapUnityManager sharedInstance] defineVar:clevertap_stringToNSString(name) 
+                                                 kind:clevertap_stringToNSString(name)
+                                      andDefaultValue:clevertap_stringToNSString(name)];
 }
 
 char* CleverTap_getVariableValue(const char* name)

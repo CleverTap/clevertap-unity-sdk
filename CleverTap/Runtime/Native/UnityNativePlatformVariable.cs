@@ -10,7 +10,8 @@ namespace CleverTap.Native {
         }
 
         protected override Var<T> GetOrDefineVariable<T>(string name, T defaultValue) {
-            CleverTapLogger.LogError("CleverTap Error: Define is not supported for this platform.");
+            var kind = GetKindNameFromGenericType<T>();
+            CleverTapLogger.LogError("CleverTap Error: Define is not supported for this platform. Kind: " + kind);
             return null;
         }
     }
