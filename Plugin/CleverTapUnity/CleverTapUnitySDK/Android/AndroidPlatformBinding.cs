@@ -138,7 +138,7 @@ namespace CleverTap.Android {
         }
 
         internal override void OnUserLogin(Dictionary<string, object> properties) {
-            CleverTapAndroidJNI.CleverTapJNI.Call("onUserLogin", Json.Serialize(properties));
+            CleverTapAndroidJNI.CleverTapJNI.Call("onUserLogin", Json.Serialize(properties.ConvertDateObjects()));
         }
 
         internal override void ProfileAddMultiValueForKey(string key, string val) {
@@ -213,7 +213,7 @@ namespace CleverTap.Android {
         }
 
         internal override void ProfilePush(Dictionary<string, object> properties) {
-            CleverTapAndroidJNI.CleverTapJNI.Call("profilePush", Json.Serialize(properties));
+            CleverTapAndroidJNI.CleverTapJNI.Call("profilePush", Json.Serialize(properties.ConvertDateObjects()));
         }
 
         internal override void ProfileRemoveMultiValueForKey(string key, string val) {
@@ -245,7 +245,7 @@ namespace CleverTap.Android {
         }
 
         internal override void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
-            CleverTapAndroidJNI.CleverTapJNI.Call("recordChargedEventWithDetailsAndItems", Json.Serialize(details), Json.Serialize(items));
+            CleverTapAndroidJNI.CleverTapJNI.Call("recordChargedEventWithDetailsAndItems", Json.Serialize(details.ConvertDateObjects()), Json.Serialize(items));
         }
 
         internal override void RecordEvent(string eventName) {
@@ -253,7 +253,7 @@ namespace CleverTap.Android {
         }
 
         internal override void RecordEvent(string eventName, Dictionary<string, object> properties) {
-            CleverTapAndroidJNI.CleverTapJNI.Call("recordEvent", eventName, Json.Serialize(properties));
+            CleverTapAndroidJNI.CleverTapJNI.Call("recordEvent", eventName, Json.Serialize(properties.ConvertDateObjects()));
         }
 
         internal override void RecordScreenView(string screenName) {

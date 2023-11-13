@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace CleverTap.Utilities {
     internal static class Util {
@@ -65,6 +66,24 @@ namespace CleverTap.Utilities {
 
         internal static Type GetValueType(this object dictionary) {
             return dictionary.GetType().GetGenericArguments()[1];
+        }
+
+        internal static Dictionary<string, object> ConvertDateObjects(this Dictionary<string, object> a) {
+            Dictionary<string, object> converted = new Dictionary<string, object>(a);
+
+            foreach (KeyValuePair<string, object> entry in a) {
+                if (entry.Value is DateTime) {
+                    converted[entry.Key] = "ct_date_" + GetUnixTimestamp((DateTime)entry.Value);
+                }
+            }
+            return converted;
+        }
+
+        private static string GetUnixTimestamp(DateTime dateTime) {
+            // Get the offset from current time in UTC time
+            DateTimeOffset dto = new DateTimeOffset(dateTime);
+            // Get the unix timestamp in seconds, and add the milliseconds
+            return dto.ToUnixTimeMilliseconds().ToString();
         }
 
         #endregion

@@ -348,7 +348,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void onUserLogin(final String jsonString) {
         try {
-            Map<String, Object> profile = toMap(new JSONObject(jsonString));
+            Map<String, Object> profile = JsonConverter.fromJsonWithConvertedDateValues(jsonString);
             clevertap.onUserLogin(profile);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "onUserLogin error", t);
@@ -357,7 +357,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profilePush(final String jsonString) {
         try {
-            Map<String, Object> profile = toMap(new JSONObject(jsonString));
+            Map<String, Object> profile = JsonConverter.fromJsonWithConvertedDateValues(jsonString);
             clevertap.pushProfile(profile);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profilePush error", t);
@@ -536,8 +536,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             clevertap.pushEvent(eventName);
         } else {
             try {
-                JSONObject _props = new JSONObject(propertiesJsonString);
-                Map<String, Object> props = toMap(_props);
+                Map<String, Object> props = JsonConverter.fromJsonWithConvertedDateValues(propertiesJsonString);
                 clevertap.pushEvent(eventName, props);
             } catch (Throwable t) {
                 Log.e(LOG_TAG, "recordEvent error", t);
@@ -548,9 +547,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public void recordChargedEventWithDetailsAndItems(final String detailsJSON, final String itemsJSON) {
 
         try {
-            JSONObject details = new JSONObject(detailsJSON);
+            HashMap<String, Object> details = new HashMap<String, Object>(JsonConverter.fromJsonWithConvertedDateValues(detailsJSON));
             JSONArray items = new JSONArray(itemsJSON);
-            clevertap.pushChargedEvent(toMap(details), toArrayListOfStringObjectMaps(items));
+            clevertap.pushChargedEvent(details, toArrayListOfStringObjectMaps(items));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "recordChargedEventWithDetailsAndItems error", t);
         }
