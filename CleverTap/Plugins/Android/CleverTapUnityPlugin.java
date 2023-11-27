@@ -37,6 +37,7 @@ import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.clevertap.android.sdk.variables.Var;
 import com.clevertap.android.sdk.variables.callbacks.VariableCallback;
 import com.clevertap.android.sdk.variables.callbacks.VariablesChangedCallback;
+import com.clevertap.android.sdk.variables.callbacks.FetchVariablesCallback;
 import com.unity3d.player.UnityPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +100,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_VARIABLES_CHANGED = "CleverTapVariablesChanged";
 
     private static final String CLEVERTAP_VARIABLE_VALUE_CHANGED = "CleverTapVariableValueChanged";
+
+    private static final String CLEVERTAP_VARIABLES_FETCHED = "CleverTapVariablesFetched";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -348,7 +351,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void onUserLogin(final String jsonString) {
         try {
-            Map<String, Object> profile = toMap(new JSONObject(jsonString));
+            Map<String, Object> profile = JsonConverter.fromJsonWithConvertedDateValues(jsonString);
             clevertap.onUserLogin(profile);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "onUserLogin error", t);
@@ -357,7 +360,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public void profilePush(final String jsonString) {
         try {
-            Map<String, Object> profile = toMap(new JSONObject(jsonString));
+            Map<String, Object> profile = JsonConverter.fromJsonWithConvertedDateValues(jsonString);
             clevertap.pushProfile(profile);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profilePush error", t);
@@ -536,8 +539,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             clevertap.pushEvent(eventName);
         } else {
             try {
-                JSONObject _props = new JSONObject(propertiesJsonString);
-                Map<String, Object> props = toMap(_props);
+                Map<String, Object> props = JsonConverter.fromJsonWithConvertedDateValues(propertiesJsonString);
                 clevertap.pushEvent(eventName, props);
             } catch (Throwable t) {
                 Log.e(LOG_TAG, "recordEvent error", t);
@@ -548,9 +550,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public void recordChargedEventWithDetailsAndItems(final String detailsJSON, final String itemsJSON) {
 
         try {
-            JSONObject details = new JSONObject(detailsJSON);
+            HashMap<String, Object> details = new HashMap<String, Object>(JsonConverter.fromJsonWithConvertedDateValues(detailsJSON));
             JSONArray items = new JSONArray(itemsJSON);
-            clevertap.pushChargedEvent(toMap(details), toArrayListOfStringObjectMaps(items));
+            clevertap.pushChargedEvent(details, toArrayListOfStringObjectMaps(items));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "recordChargedEventWithDetailsAndItems error", t);
         }
@@ -716,24 +718,24 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     // Variables
 
-    public static void defineVar(String name, String kind, String jsonValue) {
+    public void defineVar(String name, String kind, String jsonValue) {
         Var<?> variable = null;
         if (kind.equals("integer")) {
             Long value = Long.valueOf(jsonValue);
-            variable = instance.clevertap.defineVariable(name, value);
+            variable = clevertap.defineVariable(name, value);
         } else if (kind.equals("float")) {
             Double value = Double.valueOf(jsonValue);
-            variable = instance.clevertap.defineVariable(name, value);
+            variable = clevertap.defineVariable(name, value);
         } else if (kind.equals("string")) {
-            variable = instance.clevertap.defineVariable(name, jsonValue);
+            variable = clevertap.defineVariable(name, jsonValue);
         } else if (kind.equals("bool")) {
             Boolean value = Boolean.valueOf(jsonValue);
-            variable = instance.clevertap.defineVariable(name, value);
+            variable = clevertap.defineVariable(name, value);
         } else if (kind.equals("group")) {
             try {
                 JSONObject jsonObj = new JSONObject(jsonValue);
                 Map<String, Object> value = toMap(jsonObj);
-                variable = instance.clevertap.defineVariable(name, value);
+                variable = clevertap.defineVariable(name, value);
             } catch (Throwable t) {
                 Log.e(LOG_TAG, "defineVar error", t);
             }
@@ -749,36 +751,38 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public static String getVariableValue(String variableName) {
-        Object value = instance.clevertap.getVariableValue(variableName);
+    public String getVariableValue(String variableName) {
+        Object value = clevertap.getVariableValue(variableName);
 
         // Convert the Object to its JSON string representation
         if (value instanceof Map) {
             return new JSONObject((Map<?, ?>) value).toString();
-        } else if (value instanceof List) {
-            return new JSONArray((List<?>) value).toString();
         } else {
             // For basic types, just return the string representation
             return value != null ? value.toString() : null;
         }
     }
 
-    public static String getVariableNameComponents(String variableName) {
-        Var<?> variable = instance.clevertap.getVariable(variableName);
-        if (variable != null) {
-            try {
-                String[] components = variable.nameComponents();
+    public void syncVariables() {
+        clevertap.syncVariables();
+    }
 
-                // Convert the components array to a JSONArray
-                JSONArray jsonArray = new JSONArray(components);
+    public void fetchVariables(final int callbackId) {
 
-                // Return the JSONArray as a string
-                return jsonArray.toString();
-            } catch (Throwable t) {
-                Log.e(LOG_TAG, "getVariableNameComponents error", t);
+        clevertap.fetchVariables(new FetchVariablesCallback() {
+            @Override
+            public void onVariablesFetched(boolean isSuccess) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("callbackId", callbackId);
+                    json.put("isSuccess", isSuccess);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_FETCHED, json.toString());
             }
-        }
-        return null;
+        });
     }
 
     //Native Display Units

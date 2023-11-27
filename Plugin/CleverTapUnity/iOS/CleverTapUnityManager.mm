@@ -9,6 +9,8 @@
 #import <CleverTapSDK/CleverTap+InAppNotifications.h>
 #import <CleverTapSDK/CTLocalInApp.h>
 #import <CleverTapSDK/Clevertap+PushPermission.h>
+#import <CleverTapSDK/CTVar.h>
+#import <CleverTapSDK/CleverTap+CTVar.h>
 
 static CleverTap *clevertap;
 
@@ -31,6 +33,8 @@ static NSString * kCleverTapProductConfigInitialized = @"CleverTapProductConfigI
 static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated";
 static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
 static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
+static NSString * kCleverTapVariablesChanged = @"CleverTapVariablesChanged";
+static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChanged";
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -53,7 +57,9 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
         [[clevertap productConfig] setDelegate:sharedInstance];
         [[clevertap featureFlags] setDelegate:sharedInstance];
         [clevertap setPushPermissionDelegate:sharedInstance];
-
+        [clevertap onVariablesChanged:^{
+            [sharedInstance callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariablesChanged withMessage:@"VariablesChanged"];
+        }];
     }
     
     return sharedInstance;
@@ -145,11 +151,13 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
 #pragma mark - User Profile
 
 - (void)onUserLogin:(NSDictionary *)properties {
-    [clevertap onUserLogin:properties];
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [clevertap onUserLogin:attributes];
 }
 
 - (void)profilePush:(NSDictionary *)properties {
-    [clevertap profilePush:properties];
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [clevertap profilePush:attributes];
 }
 
 - (id)profileGet:(NSString *)propertyName {
@@ -210,11 +218,13 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
 }
 
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties {
-    [clevertap recordEvent:event withProps:properties];
+	NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [clevertap recordEvent:event withProps:attributes];
 }
 
 - (void)recordChargedEventWithDetails:(NSDictionary *)chargeDetails andItems:(NSArray *)items {
-    [clevertap recordChargedEventWithDetails:chargeDetails andItems:items];
+	NSDictionary *details = cleverTap_convertDateValues(chargeDetails);
+    [clevertap recordChargedEventWithDetails:details andItems:items];
 }
 
 - (void)recordErrorWithMessage:(NSString *)message andErrorCode:(int)code {
@@ -880,79 +890,79 @@ return jsonDict;
 
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue
 {
-    LPVar *var = nil;
-        NSString *nameString = lp::to_nsstring(name);
-        NSData *data = [lp::to_nsstring(jsonValue) dataUsingEncoding:NSUTF8StringEncoding];
-        NSObject *object = [NSJSONSerialization JSONObjectWithData:data
-                                                           options:NSUTF8StringEncoding error:nil];
+    NSData *data = [defaultValue dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error = nil;
+    
+    CTVar *var = nil;
 
-        if (strcmp(kind, "integer") == 0) {
-            if (![object.class isSubclassOfClass:NSNumber.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withInteger:[(NSNumber *)object integerValue]];
-        } else if (strcmp(kind, "float") == 0) {
-            if (![object.class isSubclassOfClass:NSNumber.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withFloat:[(NSNumber *)object floatValue]];
-        } else if (strcmp(kind, "bool") == 0) {
-            if (![object.class isSubclassOfClass:NSNumber.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withBool:[(NSNumber *)object boolValue]];
-        } else if (strcmp(kind, "file") == 0) {
-            if (![object.class isSubclassOfClass:NSString.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withFile:(NSString *) object];
-        } else if (strcmp(kind, "group") == 0) {
-            if (![object.class isSubclassOfClass:NSDictionary.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withDictionary:(NSDictionary *)object];
-        } else if (strcmp(kind, "list") == 0) {
-            if (![object.class isSubclassOfClass:NSArray.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withArray:(NSArray *)object];
-        } else if (strcmp(kind, "string") == 0) {
-            if (![object.class isSubclassOfClass:NSString.class]) {
-                NSLog(@"Leanplum: %@", [NSString stringWithFormat:
-                                        @"Unsupported value %@ for variable %@", object, nameString]);
-                object = nil;
-            }
-            var = [LPVar define:lp::to_nsstring(name) withString:(NSString *) object];
-        } else {
-            NSLog(@"Leanplum: Unsupported type %s", kind);
+    if ([kind isEqualToString:@"integer"])
+    {
+        var = [clevertap defineVar:name withInt:[defaultValue intValue]];
+    }
+    else if ([kind isEqualToString:@"float"])
+    {
+        var = [clevertap defineVar:name withDouble:[defaultValue doubleValue]];
+    }
+    else if ([kind isEqualToString:@"bool"])
+    {
+        var = [clevertap defineVar:name withBool:[defaultValue boolValue]];
+    }
+    else if ([kind isEqualToString:@"group"])
+    {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            NSLog(@"CleverTap: Error parsing JSON: %@", error);
             return;
         }
-
-        static LPUnityVarDelegate* delegate = nil;
-        if (!delegate) {
-            delegate = [[LPUnityVarDelegate alloc] init];
+        var = [clevertap defineVar:name withDictionary:json];
+    }
+    else if ([kind isEqualToString:@"string"])
+    {
+        var = [clevertap defineVar:name withString:defaultValue];
+    }
+    else
+    {
+        NSLog(@"CleverTap: Unsupported type %@", kind);
+        return;
+    }
+    
+    [var onValueChanged:^{
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[var value] options:0 error:&error];
+        if (!jsonData) {
+            NSLog(@"CleverTap: Error converting to JSON: %@", error);
+            return;
         }
-
-        [__LPVariablesCache addObject:var];
-
-        [var setDelegate:delegate];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableValueChanged withMessage:jsonString];
+    }];
 }
 
 - (NSString *)getVariableValue:(NSString *)name
 {
     return nil;
+}
+
+NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
+    if (dictionary == nil) {
+        return dictionary;
+    }
+
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:dictionary];
+    for (id key in dictionary) {
+        id value = [dict objectForKey:key];
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString *strVal = value;
+            NSRange range = [strVal rangeOfString:@"ct_date_"];
+            if(range.location != NSNotFound)
+            {
+                NSString *dateStr = [strVal substringWithRange:NSMakeRange(range.length, strVal.length - range.length)];
+                NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:[dateStr longLongValue]/1000];
+                dict[key] = date;
+            }
+        }
+    }
+    return dict;
 }
 
 @end

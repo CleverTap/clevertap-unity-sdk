@@ -151,11 +151,13 @@ static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChang
 #pragma mark - User Profile
 
 - (void)onUserLogin:(NSDictionary *)properties {
-    [clevertap onUserLogin:properties];
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [clevertap onUserLogin:attributes];
 }
 
 - (void)profilePush:(NSDictionary *)properties {
-    [clevertap profilePush:properties];
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [clevertap profilePush:attributes];
 }
 
 - (id)profileGet:(NSString *)propertyName {
@@ -216,11 +218,13 @@ static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChang
 }
 
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties {
-    [clevertap recordEvent:event withProps:properties];
+	NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [clevertap recordEvent:event withProps:attributes];
 }
 
 - (void)recordChargedEventWithDetails:(NSDictionary *)chargeDetails andItems:(NSArray *)items {
-    [clevertap recordChargedEventWithDetails:chargeDetails andItems:items];
+	NSDictionary *details = cleverTap_convertDateValues(chargeDetails);
+    [clevertap recordChargedEventWithDetails:details andItems:items];
 }
 
 - (void)recordErrorWithMessage:(NSString *)message andErrorCode:(int)code {
@@ -937,6 +941,28 @@ return jsonDict;
 - (NSString *)getVariableValue:(NSString *)name
 {
     return nil;
+}
+
+NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
+    if (dictionary == nil) {
+        return dictionary;
+    }
+
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:dictionary];
+    for (id key in dictionary) {
+        id value = [dict objectForKey:key];
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString *strVal = value;
+            NSRange range = [strVal rangeOfString:@"ct_date_"];
+            if(range.location != NSNotFound)
+            {
+                NSString *dateStr = [strVal substringWithRange:NSMakeRange(range.length, strVal.length - range.length)];
+                NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:[dateStr longLongValue]/1000];
+                dict[key] = date;
+            }
+        }
+    }
+    return dict;
 }
 
 @end
