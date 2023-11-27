@@ -1,17 +1,16 @@
 ﻿#if UNITY_IOS
-using CleverTap.Common;
-using CleverTap.Utilities;
+using CleverTapSDK.Common;
+using CleverTapSDK.Utilities;
 using System;
 using System.Collections;
 
-namespace CleverTap.IOS {
+namespace CleverTapSDK.IOS {
     internal class IOSVar<T> : Var<T> {
-        internal IOSVar(string name, string kind, T defaultValue, string fileName = "") : base(name, kind, defaultValue, fileName) {            
-        }
+        internal IOSVar(string name, string kind, T defaultValue) : base(name, kind, defaultValue) {}
 
         public override T Value {
             get {
-                string jsonRepresentation = IOSDllImport.CleverTap_getVariableValue(Name, Kind);
+                string jsonRepresentation = IOSDllImport.CleverTap_getVariableValue(name, kind);
 
                 if (jsonRepresentation == null) {
                     return defaultValue;
@@ -23,7 +22,7 @@ namespace CleverTap.IOS {
 
                 object newValue = Json.Deserialize(jsonRepresentation);
 
-                if (newValue is IDictionary || newValue is IList) {
+                if (newValue is IDictionary) {
                     Util.FillInValues(newValue, value);
                 } else {
                     value = (T)Convert.ChangeType(newValue, typeof(T));

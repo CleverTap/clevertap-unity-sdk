@@ -1,10 +1,10 @@
-using CleverTap.Constants;
-using CleverTap.Utilities;
+using CleverTapSDK.Constants;
+using CleverTapSDK.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace CleverTap.Common {
+namespace CleverTapSDK.Common {
     internal abstract class CleverTapPlatformBindings {
         internal const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;
 

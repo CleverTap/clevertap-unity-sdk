@@ -1,9 +1,9 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
-using CleverTap.Common;
+using CleverTapSDK.Common;
 
-namespace CleverTap.Native {
+namespace CleverTapSDK.Native {
     internal class UnityNativeVar<T> : Var<T> {
-        internal UnityNativeVar(string name, string kind, T defaultValue, string fileName = "") : base(name, kind, defaultValue, fileName) {
+        internal UnityNativeVar(string name, string kind, T defaultValue) : base(name, kind, defaultValue) {
         }
     }
 }

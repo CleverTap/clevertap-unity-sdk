@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using CleverTap.Utilities;
+using CleverTapSDK.Utilities;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace CleverTap {
+namespace CleverTapSDK {
     public class CleverTapUnity : MonoBehaviour {
 
         public String CLEVERTAP_ACCOUNT_ID = "YOUR_CLEVERTAP_ACCOUNT_ID";
@@ -250,5 +250,4 @@ namespace CleverTap {
         }
 #endif
     }
-
 }

@@ -1,8 +1,8 @@
-using CleverTap.Utilities;
+using CleverTapSDK.Utilities;
 using System;
 using System.Collections.Generic;
 
-namespace CleverTap.Models {
+namespace CleverTapSDK.Models {
   public class ApplePushNotificationAlert {
     public IList<string> LocationArguments { get; set; }
 

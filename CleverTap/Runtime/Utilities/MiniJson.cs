@@ -27,7 +27,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace CleverTap.Utilities 
+namespace CleverTapSDK.Utilities 
 {
     using System;
     using System.Collections;

@@ -1,10 +1,10 @@
 #if UNITY_IOS
-using CleverTap.Common;
-using CleverTap.Constants;
-using CleverTap.Utilities;
+using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
+using CleverTapSDK.Utilities;
 using System.Collections.Generic;
 
-namespace CleverTap.IOS {
+namespace CleverTapSDK.IOS {
     internal class IOSPlatformBinding : CleverTapPlatformBindings {
         internal IOSPlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<IOSCallbackHandler>(CleverTapGameObjectName.IOS_CALLBACK_HANDLER);
@@ -199,7 +199,7 @@ namespace CleverTap.IOS {
         }
 
         internal override void OnUserLogin(Dictionary<string, object> properties) {
-            IOSDllImport.CleverTap_onUserLogin(Json.Serialize(properties));
+            IOSDllImport.CleverTap_onUserLogin(Json.Serialize(properties.ConvertDateObjects()));
         }
 
         internal override void ProfileAddMultiValueForKey(string key, string val) {
@@ -239,7 +239,7 @@ namespace CleverTap.IOS {
         }
 
         internal override void ProfilePush(Dictionary<string, object> properties) {
-            IOSDllImport.CleverTap_profilePush(Json.Serialize(properties));
+            IOSDllImport.CleverTap_profilePush(Json.Serialize(properties.ConvertDateObjects()));
         }
 
         internal override void ProfileRemoveMultiValueForKey(string key, string val) {
@@ -272,7 +272,7 @@ namespace CleverTap.IOS {
         }
 
         internal override void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
-            var detailsString = Json.Serialize(details);
+            var detailsString = Json.Serialize(details.ConvertDateObjects());
             var itemsString = Json.Serialize(items);
             IOSDllImport.CleverTap_recordChargedEventWithDetailsAndItems(detailsString, itemsString);
         }
@@ -290,7 +290,7 @@ namespace CleverTap.IOS {
         }
 
         internal override void RecordEvent(string eventName, Dictionary<string, object> properties) {
-            var propertiesString = Json.Serialize(properties);
+            var propertiesString = Json.Serialize(properties.ConvertDateObjects());
             IOSDllImport.CleverTap_recordEvent(eventName, propertiesString);
         }
 

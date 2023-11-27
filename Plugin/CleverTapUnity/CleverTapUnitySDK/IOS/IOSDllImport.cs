@@ -1,7 +1,7 @@
 ﻿#if UNITY_IOS
 using System.Runtime.InteropServices;
 
-namespace CleverTap.IOS {
+namespace CleverTapSDK.IOS {
     internal static class IOSDllImport {
         
         #region Bindings
@@ -243,6 +243,12 @@ namespace CleverTap.IOS {
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_defineVar(string name, string kind, string jsonValue);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_syncVariables();
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_fetchVariables(int callbackId);
 
         #endregion
     }

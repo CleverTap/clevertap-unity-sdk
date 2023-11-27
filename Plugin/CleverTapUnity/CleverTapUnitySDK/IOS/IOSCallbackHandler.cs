@@ -1,7 +1,7 @@
 ﻿#if UNITY_IOS
-using CleverTap.Common;
+using CleverTapSDK.Common;
 
-namespace CleverTap.IOS {
+namespace CleverTapSDK.IOS {
     public class IOSCallbackHandler : CleverTapCallbackHandler {
     }
 }

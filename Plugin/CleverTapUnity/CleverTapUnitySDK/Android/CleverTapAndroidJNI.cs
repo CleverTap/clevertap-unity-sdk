@@ -1,7 +1,7 @@
 ﻿#if UNITY_ANDROID
 using UnityEngine;
 
-namespace CleverTap.Android {
+namespace CleverTapSDK.Android {
     internal static class CleverTapAndroidJNI {
         private const string UNITY_PLAYER_CLASS = "com.unity3d.player.UnityPlayer";
         private const string CURRENT_ACTIVITY = "currentActivity";
@@ -24,7 +24,7 @@ namespace CleverTap.Android {
             }
         }
 
-        internal static AndroidJavaObject CleverTapClass {
+        internal static AndroidJavaObject CleverTapJNIStatic {
             get {
                 if (_cleverTapClass == null) {
                     _cleverTapClass = new AndroidJavaClass(CLEVERTAP_UNITY_PLUGIN_CLASS);
@@ -36,10 +36,10 @@ namespace CleverTap.Android {
         internal static AndroidJavaObject ApplicationContext =>
             UnityActivity.Call<AndroidJavaObject>(GET_APPLICATION_CONTEXT_METHOD);
 
-        internal static AndroidJavaObject CleverTapJNI {
+        internal static AndroidJavaObject CleverTapJNIInstance {
             get {
                 if (_cleverTapJNI == null) {
-                    _cleverTapJNI = CleverTapClass.CallStatic<AndroidJavaObject>(GET_INSTANCE_METHOD, ApplicationContext);
+                    _cleverTapJNI = CleverTapJNIStatic.CallStatic<AndroidJavaObject>(GET_INSTANCE_METHOD, ApplicationContext);
                 }
                 return _cleverTapJNI;
             }

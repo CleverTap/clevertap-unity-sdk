@@ -1,11 +1,17 @@
 ﻿#if UNITY_ANDROID
-using CleverTap.Common;
-using CleverTap.Utilities;
+using CleverTapSDK.Common;
+using CleverTapSDK.Utilities;
 
-namespace CleverTap.Android {
+namespace CleverTapSDK.Android {
     internal class AndroidPlatformVariable : CleverTapPlatformVariable {
+        internal override void SyncVariables() =>
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("syncVariables");
+
+        internal override void FetchVariables(int callbackId) =>
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchVariables", callbackId);
+
         protected override Var<T> DefineVariable<T>(string name, string kind, T defaultValue) {
-            CleverTapAndroidJNI.CleverTapClass.CallStatic("defineVar", name, kind, Json.Serialize(defaultValue));
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineVar", name, kind, Json.Serialize(defaultValue));
             Var<T> result = new AndroidVar<T>(name, kind, defaultValue);
             varCache.Add(name, result);
             return result;

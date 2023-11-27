@@ -1,9 +1,9 @@
 using UnityEngine;
 using System;
-using CleverTap.Utilities;
+using CleverTapSDK.Utilities;
 using System.Collections.Generic;
 
-namespace CleverTap.Models {
+namespace CleverTapSDK.Models {
   public class ApplePushNotification {
     public ApplePushNotificationAlert Alert { get; set; }
 

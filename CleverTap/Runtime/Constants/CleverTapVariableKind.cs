@@ -1,4 +1,4 @@
-﻿namespace CleverTap.Constants {
+﻿namespace CleverTapSDK.Constants {
     internal static class CleverTapVariableKind {
         internal const string INT = "integer";
         internal const string FLOAT = "float";

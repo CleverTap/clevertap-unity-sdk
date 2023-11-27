@@ -1,9 +1,15 @@
 ﻿#if UNITY_IOS
-using CleverTap.Common;
-using CleverTap.Utilities;
+using CleverTapSDK.Common;
+using CleverTapSDK.Utilities;
 
-namespace CleverTap.IOS {
+namespace CleverTapSDK.IOS {
     internal class IOSPlatformVariable : CleverTapPlatformVariable {
+        internal override void SyncVariables() =>
+            IOSDllImport.CleverTap_syncVariables();
+
+        internal override void FetchVariables(int callbackId) =>
+            IOSDllImport.CleverTap_fetchVariables(callbackId);
+
         protected override Var<T> DefineVariable<T>(string name, string kind, T defaultValue) {
             IOSDllImport.CleverTap_defineVar(name, kind, Json.Serialize(defaultValue));
             Var<T> result = new IOSVar<T>(name, kind, defaultValue);

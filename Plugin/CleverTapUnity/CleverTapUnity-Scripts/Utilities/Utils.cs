@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using CleverTap.Utilities;
+using CleverTapSDK.Utilities;
 
-namespace CleverTap.Utilities {
+namespace CleverTapSDK.Utilities {
   public class Utils {
     public static string DictionaryToString(Dictionary<string, string> dictionary) {
       if (dictionary != null && dictionary.Count > 0) {

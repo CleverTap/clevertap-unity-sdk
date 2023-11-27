@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using System.Linq;
  
  
-namespace CleverTap.Utilities
+namespace CleverTapSDK.Utilities
 {
     public enum JSONBinaryTag
     {

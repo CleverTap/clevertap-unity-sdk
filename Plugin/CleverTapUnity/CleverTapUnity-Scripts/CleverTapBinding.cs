@@ -1,20 +1,19 @@
-using CleverTap.Constants;
-using CleverTap.Utilities;
+using CleverTapSDK.Constants;
+using CleverTapSDK.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using CleverTapStatic = CleverTap.CleverTap;
+using CleverTapStatic = CleverTapSDK.CleverTap;
 #if UNITY_ANDROID
-using CleverTap.Android;
+using CleverTapSDK.Android;
 #endif
-
 
 /// <summary>
 /// These methods can be called by Unity applications to record
 /// events and set and get user profile attributes.
 /// </summary>
 
-namespace CleverTap 
+namespace CleverTapSDK 
 {
     public class CleverTapBinding : MonoBehaviour 
     {
@@ -346,10 +345,10 @@ namespace CleverTap
             CleverTapAndroidJNI.UnityActivity;
 
         public static AndroidJavaObject CleverTapAPI =>
-            CleverTapAndroidJNI.CleverTapClass;
+            CleverTapAndroidJNI.CleverTapJNIStatic;
 
         public static AndroidJavaObject CleverTap =>
-            CleverTapAndroidJNI.CleverTapJNI;
+            CleverTapAndroidJNI.CleverTapJNIInstance;
         #endregion
 
         [Obsolete("Please use CleverTap.SetDebugLevel(int) instead.")]

@@ -1,9 +1,9 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID 
-using CleverTap.Common;
-using CleverTap.Constants;
-using CleverTap.Utilities;
+using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
+using CleverTapSDK.Utilities;
 
-namespace CleverTap.Native {
+namespace CleverTapSDK.Native {
     internal class UnityNativePlatformBinding : CleverTapPlatformBindings {
         internal UnityNativePlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>(CleverTapGameObjectName.UNITY_NATIVE_CALLBACK_HANDLER);

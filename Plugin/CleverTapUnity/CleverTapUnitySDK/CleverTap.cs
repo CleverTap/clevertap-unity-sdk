@@ -1,9 +1,10 @@
-using CleverTap.Common;
-using CleverTap.Constants;
-using CleverTap.Utilities;
+using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
+using CleverTapSDK.Utilities;
+using System;
 using System.Collections.Generic;
 
-namespace CleverTap {
+namespace CleverTapSDK {
     public static class CleverTap {
 
         private static CleverTapCallbackHandler cleverTapCallbackHandler = BindingFactory.CleverTapBinding.CallbackHandler;
@@ -388,6 +389,10 @@ namespace CleverTap {
         #endregion
 
         #region Methods - CleverTap Platform Variables
+
+        public static Var<T> GetVariable<T>(string name) =>
+            cleverTapVariable.GetVariable<T>(name);
+
         public static Var<int> Define(string name, int defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
@@ -412,17 +417,17 @@ namespace CleverTap {
         public static Var<string> Define(string name, string defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
-        public static Var<List<object>> Define(string name, List<object> defaultValue) =>
-            cleverTapVariable.Define(name, defaultValue);
-
-        public static Var<List<string>> Define(string name, List<string> defaultValue) =>
-            cleverTapVariable.Define(name, defaultValue);
-
         public static Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
 
         public static Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) =>
             cleverTapVariable.Define(name, defaultValue);
+
+        public static void SyncVariables() => 
+            cleverTapVariable.SyncVariables();
+
+        public static void FetchVariables(Action<bool> isSucessCallback) => 
+            cleverTapVariable.FetchVariables(isSucessCallback);
 
         #endregion
     }

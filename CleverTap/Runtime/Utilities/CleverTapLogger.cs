@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CleverTap.Utilities {
+namespace CleverTapSDK.Utilities {
     public enum LogLevel {
         None,
         Error,
