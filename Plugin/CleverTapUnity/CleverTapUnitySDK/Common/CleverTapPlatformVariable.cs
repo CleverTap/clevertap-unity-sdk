@@ -15,7 +15,7 @@ namespace CleverTapSDK.Common {
 
         internal virtual Var<T> GetVariable<T>(string name) {
             var kindName = GetKindNameFromGenericType<T>();
-            if (!string.IsNullOrEmpty(kindName) && varCache.ContainsKey(name) && varCache[name].Kind != kindName) {
+            if (!string.IsNullOrEmpty(kindName) && varCache.ContainsKey(name) && varCache[name].Kind == kindName) {
                 return (Var<T>)varCache[name];
             }
 
