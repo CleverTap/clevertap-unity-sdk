@@ -35,6 +35,7 @@ static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPerm
 static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
 static NSString * kCleverTapVariablesChanged = @"CleverTapVariablesChanged";
 static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChanged";
+static NSString * kCleverTapVariablesFetched = @"CleverTapVariablesFetched";
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -888,6 +889,24 @@ return jsonDict;
 
 #pragma mark - Variables
 
+- (void)syncVariables
+{
+    [clevertap syncVariables];
+}
+
+- (void)fetchVariables:(int) callbackId
+{
+    [clevertap fetchVariables:^(BOOL success) {
+        NSDictionary* response = @{
+            @"callbackId": @(callbackId),
+            @"isSuccess": @(success)
+        };
+        
+        NSString* json = [self dictToJson:response];
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariablesFetched withMessage:json];
+    }];
+}
+
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue
 {
     NSData *data = [defaultValue dataUsingEncoding:NSUTF8StringEncoding];
@@ -940,7 +959,24 @@ return jsonDict;
 
 - (NSString *)getVariableValue:(NSString *)name
 {
-    return nil;
+    id value = [clevertap getVariableValue:name];
+    
+    // Check if value is not nil and is serializable to JSON
+    if (value && [NSJSONSerialization isValidJSONObject:value]) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value options:0 error:&error];
+
+        if (!jsonData) {
+            NSLog(@"Error serializing JSON: %@", error);
+            return nil;
+        } else {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            return jsonString;
+        }
+    } else {
+        NSLog(@"Value is nil or not a valid JSON object");
+        return nil;
+    }
 }
 
 NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {

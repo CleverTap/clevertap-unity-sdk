@@ -768,7 +768,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public void fetchVariables(final int callbackId) {
-
         clevertap.fetchVariables(new FetchVariablesCallback() {
             @Override
             public void onVariablesFetched(boolean isSuccess) {

@@ -587,14 +587,26 @@ void CleverTap_isPushPermissionGranted() {
 
 #pragma mark - Variables
 
-void CleverTap_defineVar(const char* name, const char* kind, const char* value) 
+void CleverTap_defineVar(const char* name, const char* kind, const char* value)
 {
-     [[CleverTapUnityManager sharedInstance] defineVar:clevertap_stringToNSString(name) 
+    [[CleverTapUnityManager sharedInstance] defineVar:clevertap_stringToNSString(name)
                                                  kind:clevertap_stringToNSString(name)
                                       andDefaultValue:clevertap_stringToNSString(name)];
 }
 
 char* CleverTap_getVariableValue(const char* name)
 {
+    NSString* json = [[CleverTapUnityManager sharedInstance]
+                      getVariableValue:clevertap_stringToNSString(name)];
+    return clevertap_cStringCopy([json UTF8String]);
+}
 
+void CleverTap_syncVariables()
+{
+    [[CleverTapUnityManager sharedInstance] syncVariables];
+}
+
+void CleverTap_fetchVariables(int callbackId)
+{
+    [[CleverTapUnityManager sharedInstance] fetchVariables:callbackId];
 }
