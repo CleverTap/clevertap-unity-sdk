@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.clevertap.android:clevertap-android-sdk:5.2.1" />
+        <androidPackage spec="androidx.core:core:1.9.0" />
+        <androidPackage spec="com.google.firebase:firebase-messaging:23.0.6" />
+        <androidPackage spec="com.android.installreferrer:installreferrer:2.2" />
+    </androidPackages>
+    <iosPods>
+        <iosPod name="CleverTap-iOS-SDK" version="5.2.1" minTargetSdk="9.0" />
+    </iosPods>
+</dependencies>
