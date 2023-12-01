@@ -9,7 +9,7 @@ do
 done
 
 # Define essential paths
-PROJECT="$PWD/CTTester" # Path to the Unity project
+PROJECT="$PWD/CTExporter" # Path to the Unity project
 PACKAGE="$PWD/CleverTapSDK.unitypackage" # Output package file path
 SYMBOLIC_LINK_PATH="$PROJECT/Assets/CleverTap"
 MANIFEST_JSON_PATH="$PROJECT/Packages/manifest.json"
@@ -22,7 +22,6 @@ awk '!/com.clevertap.clevertap-sdk-unity/' $MANIFEST_JSON_PATH > temp && mv temp
 
 # Find folders to export
 FOLDERS_TO_EXPORT=$(cd $PROJECT; find Assets/CleverTap/* Assets/PlayServicesResolver Assets/ExternalDependencyManager -type d -prune)
-PLUGINS_FOLDER="$PWD/CleverTap/Plugins"
 
 # Check if script is run from the correct location
 if ! [ -d "$PROJECT" ]; then
