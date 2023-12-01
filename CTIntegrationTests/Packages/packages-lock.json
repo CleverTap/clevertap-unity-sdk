@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.clevertap.clevertap-sdk-unity": {
-      "version": "file:/Users/milos/Developer/work/clevertap/clevertap-unity-sdk/CleverTap",
+      "version": "file:../../CleverTap",
       "depth": 0,
       "source": "local",
       "dependencies": {}

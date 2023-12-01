@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.clevertap.clevertap-sdk-unity": "file:/Users/milos/Developer/work/clevertap/clevertap-unity-sdk/CleverTap",
+    "com.clevertap.clevertap-sdk-unity": "file:../../CleverTap",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.feature.2d": "2.0.0",
     "com.unity.ide.rider": "3.0.25",
