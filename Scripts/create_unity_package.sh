@@ -13,9 +13,21 @@ PROJECT="$PWD/CTExporter" # Path to the Unity project
 PACKAGE="$PWD/CleverTapSDK.unitypackage" # Output package file path
 SYMBOLIC_LINK_PATH="$PROJECT/Assets/CleverTap"
 MANIFEST_JSON_PATH="$PROJECT/Packages/manifest.json"
+ORIGINAL_ANDROID_LIB_FOLDER_PATH="$PWD/CleverTap/Plugins/Android/clevertap-android-wrapper.androidlib"
+RENAMED_ANDROID_LIB_FOLDER_PATH="$PWD/CleverTap/Plugins/Android/clevertap-android-wrapper"
+
+echo $ORIGINAL_ANDROID_LIB_FOLDER_PATH
+
+# Rename the folder
+if [ -d "$ORIGINAL_ANDROID_LIB_FOLDER_PATH" ]; then
+    mv "$ORIGINAL_ANDROID_LIB_FOLDER_PATH" "$RENAMED_ANDROID_LIB_FOLDER_PATH"
+else
+    echo "Original folder not found!"
+    exit 1
+fi
 
 # Ensure the necessary folders are in place
-ln -s "$PWD/CleverTap" "$PROJECT/Assets/" # Create a symbolic link to CleverTap
+ln -s "$PWD/CleverTap" "$PROJECT/Assets" # Create a symbolic link to CleverTap
 
 # Update the manifest file to exclude certain packages
 awk '!/com.clevertap.clevertap-sdk-unity/' $MANIFEST_JSON_PATH > temp && mv temp $MANIFEST_JSON_PATH
@@ -75,3 +87,6 @@ echo "Unity package created"
 
 # Cleanup
 rm $SYMBOLIC_LINK_PATH
+
+# Revert the folder name back to original after the build
+mv "$RENAMED_ANDROID_LIB_FOLDER_PATH" "$ORIGINAL_ANDROID_LIB_FOLDER_PATH"
