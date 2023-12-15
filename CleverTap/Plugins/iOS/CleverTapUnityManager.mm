@@ -220,12 +220,12 @@ static NSString * kCleverTapInAppsFetched = @"CleverTapInAppsFetched";
 }
 
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties {
-	NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
     [clevertap recordEvent:event withProps:attributes];
 }
 
 - (void)recordChargedEventWithDetails:(NSDictionary *)chargeDetails andItems:(NSArray *)items {
-	NSDictionary *details = cleverTap_convertDateValues(chargeDetails);
+    NSDictionary *details = cleverTap_convertDateValues(chargeDetails);
     [clevertap recordChargedEventWithDetails:details andItems:items];
 }
 
@@ -896,7 +896,7 @@ return jsonDict;
 }
 
 - (void)syncVariables:(BOOL)isProduction {
-	[clevertap syncVariables:isProduction];
+    [clevertap syncVariables:isProduction];
 }
 
 - (void)fetchVariables:(int) callbackId

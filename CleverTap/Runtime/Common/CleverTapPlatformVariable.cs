@@ -111,7 +111,10 @@ namespace CleverTapSDK.Common {
         #endregion
 
         internal abstract void SyncVariables();
+<<<<<<< HEAD
         internal abstract void SyncVariables(bool isProduction);
+=======
+>>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
         internal abstract void FetchVariables(int callbackId);
         protected abstract Var<T> DefineVariable<T>(string name, string kind, T defaultValue);
     }

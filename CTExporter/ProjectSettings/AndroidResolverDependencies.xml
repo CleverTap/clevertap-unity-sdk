@@ -2,7 +2,11 @@
   <packages>
     <package>androidx.core:core:1.9.0</package>
     <package>com.android.installreferrer:installreferrer:2.2</package>
+<<<<<<< HEAD
     <package>com.clevertap.android:clevertap-android-sdk:6.0.0</package>
+=======
+    <package>com.clevertap.android:clevertap-android-sdk:5.2.1</package>
+>>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
     <package>com.google.firebase:firebase-messaging:23.0.6</package>
   </packages>
   <files />

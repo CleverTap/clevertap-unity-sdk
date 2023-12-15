@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: eaacb9252e249446c99a00b5f8bad6ae
+=======
+guid: bda3b316402c84b42ba345a2270e8a5e
+>>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -20,6 +24,10 @@ PluginImporter:
         Exclude Editor: 1
         Exclude Linux64: 1
         Exclude OSXUniversal: 1
+<<<<<<< HEAD
+=======
+        Exclude WebGL: 1
+>>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
         Exclude Win: 1
         Exclude Win64: 1
         Exclude iOS: 1

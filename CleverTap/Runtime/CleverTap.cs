@@ -3,7 +3,6 @@ using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CleverTapSDK {
     public static class CleverTap {
@@ -249,12 +248,7 @@ namespace CleverTapSDK {
         public static void MarkReadInboxMessagesForIDs(string[] messageIds) =>
             cleverTapBinding.MarkReadInboxMessagesForIDs(messageIds);
 
-        public static void OnUserLogin(Dictionary<string, string> properties) {
-            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object) kv.Value);
-            OnUserLogin(propsObjectValue);
-        }
-
-        public static void OnUserLogin(Dictionary<string, object> properties) =>
+        public static void OnUserLogin(Dictionary<string, string> properties) =>
             cleverTapBinding.OnUserLogin(properties);
 
         public static void OnUserLogin(Dictionary<string, object> properties) =>
@@ -287,13 +281,7 @@ namespace CleverTapSDK {
         public static void ProfileIncrementValueForKey(string key, int val) =>
             cleverTapBinding.ProfileIncrementValueForKey(key, val);
 
-        public static void ProfilePush(Dictionary<string, string> properties)
-        {
-            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object) kv.Value);
-            ProfilePush(propsObjectValue);
-        }
-
-        public static void ProfilePush(Dictionary<string, object> properties) =>
+        public static void ProfilePush(Dictionary<string, string> properties) =>
             cleverTapBinding.ProfilePush(properties);
 
         public static void ProfilePush(Dictionary<string, object> properties) =>

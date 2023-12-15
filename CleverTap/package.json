@@ -1,6 +1,10 @@
 {
     "name": "com.clevertap.clevertap-sdk-unity",
+<<<<<<< HEAD
     "version": "3.0.0",
+=======
+    "version": "2.4.2",
+>>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
     "displayName": "CleverTap",
     "description": "The CleverTap Unity SDK for App Analytics and Engagement.",
     "documentationUrl": "https://www.clevertap.com/docs",
