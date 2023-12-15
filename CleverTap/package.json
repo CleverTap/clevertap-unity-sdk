@@ -1,0 +1,24 @@
+{
+    "name": "com.clevertap.clevertap-sdk-unity",
+    "version": "2.4.2",
+    "displayName": "CleverTap",
+    "description": "The CleverTap Unity SDK for App Analytics and Engagement.",
+    "documentationUrl": "https://www.clevertap.com/docs",
+    "changelogUrl": "https://github.com/CleverTap/clevertap-unity-sdk/blob/main/CHANGELOG.md",
+    "licensesUrl": "https://github.com/CleverTap/clevertap-unity-sdk/blob/main/LICENSE",
+    "author": {
+        "name": "CleverTap",
+        "email": "support@clevertap.com",
+        "url": "https://www.clevertap.com"
+    },
+    "keywords": [
+        "unity",
+        "analytics",
+        "engagement",
+        "iOS",
+        "Apple",
+        "Android"
+    ],
+    "repoUrl": "https://github.com/CleverTap/clevertap-unity-sdk",
+    "dependencies": {}
+}
