@@ -946,14 +946,7 @@ return jsonDict;
     }
     
     [var onValueChanged:^{
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[var value] options:0 error:&error];
-        if (!jsonData) {
-            NSLog(@"CleverTap: Error converting to JSON: %@", error);
-            return;
-        }
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableValueChanged withMessage:jsonString];
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableValueChanged withMessage:[var name]];
     }];
 }
 
