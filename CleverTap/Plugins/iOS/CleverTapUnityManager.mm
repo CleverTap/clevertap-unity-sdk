@@ -937,7 +937,8 @@ return jsonDict;
     }
     else if ([kind isEqualToString:@"string"])
     {
-        var = [clevertap defineVar:name withString:defaultValue];
+        NSString *value = [defaultValue substringWithRange:NSMakeRange(1, [defaultValue length] - 2)];
+        var = [clevertap defineVar:name withString:value];
     }
     else
     {
