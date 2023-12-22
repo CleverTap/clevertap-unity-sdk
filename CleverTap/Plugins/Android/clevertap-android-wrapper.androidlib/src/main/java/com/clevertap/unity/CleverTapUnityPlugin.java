@@ -727,7 +727,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             Double value = Double.valueOf(jsonValue);
             variable = clevertap.defineVariable(name, value);
         } else if (kind.equals("string")) {
-            variable = clevertap.defineVariable(name, jsonValue);
+            String value = jsonValue.substring(1, jsonValue.length() - 1);
+            variable = clevertap.defineVariable(name, value);
         } else if (kind.equals("bool")) {
             Boolean value = Boolean.valueOf(jsonValue);
             variable = clevertap.defineVariable(name, value);
