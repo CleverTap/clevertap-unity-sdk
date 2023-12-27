@@ -38,6 +38,7 @@ import com.clevertap.android.sdk.variables.Var;
 import com.clevertap.android.sdk.variables.callbacks.VariableCallback;
 import com.clevertap.android.sdk.variables.callbacks.VariablesChangedCallback;
 import com.clevertap.android.sdk.variables.callbacks.FetchVariablesCallback;
+import com.clevertap.android.sdk.inapp.callbacks.FetchInAppsCallback;
 import com.unity3d.player.UnityPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,6 +103,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_VARIABLE_VALUE_CHANGED = "CleverTapVariableValueChanged";
 
     private static final String CLEVERTAP_VARIABLES_FETCHED = "CleverTapVariablesFetched";
+	
+	private static final String CLEVERTAP_INAPPS_FETCHED = "CleverTapInAppsFetched";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -781,6 +784,24 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             }
         });
     }
+	
+	// InApps	
+	public void fetchInApps(final int callbackId) {
+		clevertap.fetchInApps(new FetchInAppsCallback() {
+            @Override
+            public void onInAppsFetched(boolean isSuccess) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("callbackId", callbackId);
+                    json.put("isSuccess", isSuccess);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPPS_FETCHED, json.toString());
+            }
+        });
+	}
 
     //Native Display Units
     public String getAllDisplayUnits() {

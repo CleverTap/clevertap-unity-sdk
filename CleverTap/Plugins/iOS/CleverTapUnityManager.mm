@@ -36,6 +36,7 @@ static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNo
 static NSString * kCleverTapVariablesChanged = @"CleverTapVariablesChanged";
 static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChanged";
 static NSString * kCleverTapVariablesFetched = @"CleverTapVariablesFetched";
+static NSString * kCleverTapInAppsFetched = @"CleverTapInAppsFetched";
 
 @interface CleverTapUnityManager () < CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate >
 
@@ -997,6 +998,20 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
         }
     }
     return dict;
+}
+
+#pragma mark - InApps
+- (void)fetchInApps:(int) callbackId
+{
+    [clevertap fetchInApps:^(BOOL success) {
+        NSDictionary* response = @{
+            @"callbackId": @(callbackId),
+            @"isSuccess": @(success)
+        };
+        
+        NSString* json = [self dictToJson:response];
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInAppsFetched withMessage:json];
+    }];
 }
 
 @end
