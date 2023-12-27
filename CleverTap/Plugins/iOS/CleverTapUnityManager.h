@@ -141,7 +141,8 @@
 
 #pragma mark - Variables
 - (void)syncVariables;
-- (void)fetchVariables:(int) callbackId;
+- (void)syncVariables:(BOOL)isProduction;
+- (void)fetchVariables:(int)callbackId;
 
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue;
 - (NSString *)getVariableValue:(NSString *)name;

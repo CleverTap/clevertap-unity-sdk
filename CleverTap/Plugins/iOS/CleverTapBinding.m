@@ -606,6 +606,11 @@ void CleverTap_syncVariables()
     [[CleverTapUnityManager sharedInstance] syncVariables];
 }
 
+void CleverTap_syncVariables(const BOOL isProduction)
+{
+    [[CleverTapUnityManager sharedInstance] syncVariables: isProduction];
+}
+
 void CleverTap_fetchVariables(int callbackId)
 {
     [[CleverTapUnityManager sharedInstance] fetchVariables:callbackId];

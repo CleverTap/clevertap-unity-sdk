@@ -1,4 +1,7 @@
-﻿namespace CleverTapSDK.Common {
+﻿using CleverTapSDK.Constants;
+using CleverTapSDK.Utilities;
+
+namespace CleverTapSDK.Common {
     internal interface IVar {
         string Name { get; }
         string Kind { get; }
@@ -23,6 +26,7 @@
         public virtual string Name => name;
         public virtual T Value => value;
         public virtual T DefaultValue => defaultValue;
+        public virtual string StringValue => Kind == CleverTapVariableKind.DICTIONARY ? Json.Serialize(Value) : Value.ToString();
 
         public virtual void ValueChanged() {
             if (OnValueChanged != null) {
