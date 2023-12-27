@@ -895,8 +895,9 @@ return jsonDict;
     [clevertap syncVariables];
 }
 
-- (void)syncVariables:(BOOL)isProduction {
-    [clevertap syncVariables:isProduction];
+- (void)syncVariables:(BOOL)isProduction 
+{
+	[clevertap syncVariables:isProduction];
 }
 
 - (void)fetchVariables:(int) callbackId

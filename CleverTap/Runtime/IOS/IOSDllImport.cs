@@ -248,7 +248,6 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_syncVariables();
 
         [DllImport("__Internal")]
-<<<<<<< HEAD
         internal static extern void CleverTap_syncVariablesProduction(bool isProduction);
 
         [DllImport("__Internal")]
@@ -263,13 +262,8 @@ namespace CleverTapSDK.IOS {
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_clearInAppResources(bool expiredOnly);
-
+        
         #endregion
-=======
-        internal static extern void CleverTap_fetchVariables(int callbackId);
-
-        #endregion
->>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
     }
 }
 #endif

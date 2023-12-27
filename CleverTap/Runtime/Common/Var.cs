@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-﻿using CleverTapSDK.Constants;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Common {
-=======
-﻿namespace CleverTapSDK.Common {
->>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
     internal interface IVar {
         string Name { get; }
         string Kind { get; }
@@ -30,10 +26,7 @@ namespace CleverTapSDK.Common {
         public virtual string Name => name;
         public virtual T Value => value;
         public virtual T DefaultValue => defaultValue;
-<<<<<<< HEAD
         public virtual string StringValue => Kind == CleverTapVariableKind.DICTIONARY ? Json.Serialize(Value) : Value.ToString();
-=======
->>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
 
         public virtual void ValueChanged() {
             if (OnValueChanged != null) {

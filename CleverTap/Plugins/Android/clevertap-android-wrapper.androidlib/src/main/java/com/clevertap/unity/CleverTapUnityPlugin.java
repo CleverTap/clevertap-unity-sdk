@@ -755,11 +755,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public String getVariableValue(String variableName) {
         Object value = clevertap.getVariableValue(variableName);
-        if (value == null) {
-            return null;
-        }
-        
-        return (value instanceof Map) ? new JSONObject((Map<?, ?>) value).toString() : value.toString();
+		if (value == null) {
+			return null;
+		}
+		
+		return (value instanceof Map) ? new JSONObject((Map<?, ?>) value).toString() : value.toString();
     }
 
     public void syncVariables() {

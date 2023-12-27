@@ -7,12 +7,9 @@ namespace CleverTapSDK.Android {
         internal override void SyncVariables() =>
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("syncVariables");
 
-<<<<<<< HEAD
         internal override void SyncVariables(bool isProduction) =>
             SyncVariables();
 
-=======
->>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
         internal override void FetchVariables(int callbackId) =>
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchVariables", callbackId);
 
