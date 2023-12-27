@@ -45,6 +45,8 @@ namespace CleverTapSDK.Common {
 
         public event CleverTapCallbackDelegate OnVariablesChanged;
 
+        public event CleverTapCallbackDelegate OnOneTimeVariablesChanged;
+
         #endregion
 
         #region Default - Callback Methods
@@ -248,6 +250,11 @@ namespace CleverTapSDK.Common {
             CleverTapLogger.Log("Unity received variables changed");
             if (OnVariablesChanged != null) {
                 OnVariablesChanged();
+            }
+
+            if (OnOneTimeVariablesChanged != null) {
+                OnOneTimeVariablesChanged();
+                OnOneTimeVariablesChanged = null;
             }
         }
 

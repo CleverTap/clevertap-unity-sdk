@@ -894,6 +894,10 @@ return jsonDict;
     [clevertap syncVariables];
 }
 
+- (void)syncVariables:(BOOL)isProduction {
+	[clevertap syncVariables:isProduction];
+}
+
 - (void)fetchVariables:(int) callbackId
 {
     [clevertap fetchVariables:^(BOOL success) {
@@ -956,9 +960,9 @@ return jsonDict;
     id value = [clevertap getVariableValue:name];
     
     // Check if value is not nil and is serializable to JSON
-    if (value && [NSJSONSerialization isValidJSONObject:value]) {
+    if (value) {
         NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value options:0 error:&error];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value options:NSUTF8StringEncoding error:&error];
 
         if (!jsonData) {
             NSLog(@"Error serializing JSON: %@", error);

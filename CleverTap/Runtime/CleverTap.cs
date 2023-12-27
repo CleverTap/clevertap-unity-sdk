@@ -121,6 +121,11 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnVariablesChanged -= value;
         }
 
+        public static event CleverTapCallbackDelegate OnOneTimeVariablesChanged {
+            add => cleverTapCallbackHandler.OnOneTimeVariablesChanged += value;
+            remove => cleverTapCallbackHandler.OnOneTimeVariablesChanged -= value;
+        }
+
         #endregion
 
         #region Methods - CleverTap Platform Bindings
@@ -425,6 +430,9 @@ namespace CleverTapSDK {
 
         public static void SyncVariables() => 
             cleverTapVariable.SyncVariables();
+
+        public static void SyncVariables(bool isProduction) =>
+            cleverTapVariable.SyncVariables(isProduction);
 
         public static void FetchVariables(Action<bool> isSucessCallback) => 
             cleverTapVariable.FetchVariables(isSucessCallback);
