@@ -254,6 +254,13 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_fetchVariables(int callbackId);
 
         #endregion
+
+        #region InApps
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_fetchInApps(int callbackId);
+
+        #endregion
     }
 }
 #endif

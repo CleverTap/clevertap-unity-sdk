@@ -10,6 +10,7 @@ namespace CleverTapSDK {
         private static CleverTapCallbackHandler cleverTapCallbackHandler = BindingFactory.CleverTapBinding.CallbackHandler;
         private static CleverTapPlatformBindings cleverTapBinding = BindingFactory.CleverTapBinding;
         private static CleverTapPlatformVariable cleverTapVariable = VariableFactory.CleverTapVariable;
+        private static CleverTapPlatformInApps cleverTapInApps = InAppsFactory.CleverTapInApps;
 
         #region Constants - CleverTap Version
 
@@ -436,6 +437,13 @@ namespace CleverTapSDK {
 
         public static void FetchVariables(Action<bool> isSucessCallback) => 
             cleverTapVariable.FetchVariables(isSucessCallback);
+
+        #endregion
+
+        #region Methods - CleverTap Platform InApps
+
+        public static void FetchInApps(Action<bool> isSucessCallback) =>
+            cleverTapInApps.FetchInApps(isSucessCallback);
 
         #endregion
     }
