@@ -147,5 +147,7 @@
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue;
 - (NSString *)getVariableValue:(NSString *)name;
 
+#pragma mark - InApps
+- (void)fetchInApps:(int)callbackId;
 
 @end

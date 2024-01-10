@@ -615,3 +615,8 @@ void CleverTap_fetchVariables(int callbackId)
 {
     [[CleverTapUnityManager sharedInstance] fetchVariables:callbackId];
 }
+
+void CleverTap_fetchInApps(int callbackId)
+{
+    [[CleverTapUnityManager sharedInstance] fetchInApps:callbackId];
+}
