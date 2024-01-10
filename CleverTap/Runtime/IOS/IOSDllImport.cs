@@ -248,7 +248,7 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_syncVariables();
 
         [DllImport("__Internal")]
-        internal static extern void CleverTap_syncVariables(bool isProduction);
+        internal static extern void CleverTap_syncVariablesProduction(bool isProduction);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_fetchVariables(int callbackId);
