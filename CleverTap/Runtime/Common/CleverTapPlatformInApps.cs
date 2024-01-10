@@ -23,5 +23,7 @@ namespace CleverTapSDK.Common {
         }
 
         internal abstract void FetchInApps(int callbackId);
+
+        internal abstract void ClearInAppResources(bool expiredOnly);
     }
 }
