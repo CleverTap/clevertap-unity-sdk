@@ -5,6 +5,11 @@ namespace CleverTapSDK.Android {
     internal class AndroidPlatformInApps : CleverTapPlatformInApps {
         internal override void FetchInApps(int callbackId) =>
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchInApps", callbackId);
+
+        internal override void ClearInAppResources(bool expiredOnly)
+        {
+            // TODO: implement
+        }
     }
 }
 #endif

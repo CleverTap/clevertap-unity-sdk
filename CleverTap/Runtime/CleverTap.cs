@@ -445,6 +445,9 @@ namespace CleverTapSDK {
         public static void FetchInApps(Action<bool> isSucessCallback) =>
             cleverTapInApps.FetchInApps(isSucessCallback);
 
+        public static void ClearInAppResources(bool expiredOnly) =>
+            cleverTapInApps.ClearInAppResources(expiredOnly);
+
         #endregion
     }
 }

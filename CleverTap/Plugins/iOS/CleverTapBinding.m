@@ -557,7 +557,7 @@ BOOL CleverTap_getFeatureFlag(const char* key, const BOOL defaultValue) {
 }
 
 
-#pragma mark - In App Controls
+#pragma mark - In-App Controls
 
 void CleverTap_suspendInAppNotifications() {
     [[CleverTapUnityManager sharedInstance] suspendInAppNotifications];
@@ -616,7 +616,13 @@ void CleverTap_fetchVariables(int callbackId)
     [[CleverTapUnityManager sharedInstance] fetchVariables:callbackId];
 }
 
+#pragma mark - Client-side In-Apps
 void CleverTap_fetchInApps(int callbackId)
 {
     [[CleverTapUnityManager sharedInstance] fetchInApps:callbackId];
+}
+
+void CleverTap_clearInAppResources(const BOOL expiredOnly)
+{
+    [[CleverTapUnityManager sharedInstance] clearInAppResources:expiredOnly];
 }
