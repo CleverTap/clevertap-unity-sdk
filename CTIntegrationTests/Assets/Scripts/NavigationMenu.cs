@@ -9,6 +9,7 @@ public class NavigationMenu : MonoBehaviour {
     public Button Login;
     public Button Dates;
     public Button Variables;
+    public Button InApps;
 
     public List<GameObject> Panels = new List<GameObject>();
 
@@ -16,10 +17,12 @@ public class NavigationMenu : MonoBehaviour {
         Login.onClick.AddListener(didTapLoginButton);
         Dates.onClick.AddListener(didTapDatesButton);
         Variables.onClick.AddListener(didTapVariablesButton);
+        InApps.onClick.AddListener(didTapInAppButton);
 
         Panels.Add(GameObject.Find("Login"));
         Panels.Add(GameObject.Find("Dates"));
         Panels.Add(GameObject.Find("Variables"));
+        Panels.Add(GameObject.Find("InApps"));
 
         DisableAllPanels();
         var loginPanel = FindPanel("Login");
@@ -27,6 +30,7 @@ public class NavigationMenu : MonoBehaviour {
 
         Dates.gameObject.SetActive(false);
         Variables.gameObject.SetActive(false);
+        InApps.gameObject.SetActive(false);
     }
 
     public void didTapLoginButton() {
@@ -45,6 +49,7 @@ public class NavigationMenu : MonoBehaviour {
         Login.gameObject.SetActive(false);
         Dates.gameObject.SetActive(true);
         Variables.gameObject.SetActive(true);
+        InApps.gameObject.SetActive(true);
 
         DisableAllPanels();
         didTapDatesButton();
@@ -66,6 +71,13 @@ public class NavigationMenu : MonoBehaviour {
         variablesPanel.GetComponent<Variables>().Restore();
     }
 
+    public void didTapInAppButton() {
+        DisableAllPanels();
+
+        var inAppPanel = FindPanel("InApps");
+        Enable(inAppPanel);
+        inAppPanel.GetComponent<InAppsUI>().Restore();
+    }
     private void Enable(GameObject panel) {
         if (panel != null)
             Panels.SingleOrDefault(p => p == panel)?.SetActive(true);
