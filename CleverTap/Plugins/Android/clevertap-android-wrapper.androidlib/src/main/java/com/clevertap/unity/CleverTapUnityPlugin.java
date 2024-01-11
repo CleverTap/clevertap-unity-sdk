@@ -803,6 +803,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         });
 	}
 
+   /**
+     * Deletes all images and gifs which are preloaded for inapps in cs mode
+     *
+     * @param expiredOnly to clear only assets which will not be needed further for inapps
+     */
+	public void clearInAppResources(bool expiredOnly) {
+		clevertap.clearInAppResources(expiredOnly)
+	}
+
     //Native Display Units
     public String getAllDisplayUnits() {
         try {
