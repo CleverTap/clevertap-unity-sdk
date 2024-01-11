@@ -8,6 +8,10 @@ namespace CleverTapSDK.Native {
             CleverTapLogger.LogError("CleverTap Error: SyncVariables is not supported for this platform.");
         }
 
+        internal override void SyncVariables(bool isProduction) {
+            CleverTapLogger.LogError("CleverTap Error: SyncVariables is not supported for this platform.");
+        }
+
         internal override void FetchVariables(int callbackId) {
             CleverTapLogger.LogError("CleverTap Error: FetchVariables is not supported for this platform.");
         }
