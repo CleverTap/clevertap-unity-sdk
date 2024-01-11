@@ -58,7 +58,7 @@ public class Variables : MonoBehaviour {
         Var<double> var_double = CleverTap.Define("var_double", 55.999d);
         Var<short> var_short = CleverTap.Define("var_short", (short)1);
         Var<long> var_long = CleverTap.Define("var_long", (long)64);
-
+        Var<long> var_long2 = CleverTap.Define("var_long_test", (long)999);
         // Groups
         Var<string> varHello = CleverTap.Define("var.hello", "hello, group");
 
@@ -108,6 +108,7 @@ public class Variables : MonoBehaviour {
 
     private void SyncVariables() {
         CleverTap.SyncVariables();
+        
     }
 
     private void FetchVariables() {
@@ -118,6 +119,7 @@ public class Variables : MonoBehaviour {
     }
 
     private void PrintVariables() {
+        
         Var<int> var1 = CleverTap.Define("var1", 1);
         Debug.Log($"Name: {var1.Name}, Value: {var1.Value}");
         Debug.Log($"Name: {var1.Name} {var1.DefaultValue}, Value: {var1.Value}");
@@ -158,6 +160,11 @@ public class Variables : MonoBehaviour {
         Debug.Log($"Name: {var_long.Name}, Value: {var_long.Value}");
         Debug.Log($"Name: {var_long.Name} {var_long.DefaultValue}, Value: {var_long.Value}");
 
+        Var<long> var_long_test = CleverTap.Define("var_long_test", (long)64);
+        Debug.Log($"Name: {var_long_test.Name}, Value: {var_long_test.Value}");
+        Debug.Log($"Name: {var_long_test.Name} {var_long_test.DefaultValue}, Value: {var_long_test.Value}");
+
+
         Var<Dictionary<string, object>> var_dict = CleverTap.Define("var_dict", new Dictionary<string, object>() {
             { "nested_string", "hello, nested" },
             { "nested_double", 10.5d },
@@ -187,6 +194,11 @@ public class Variables : MonoBehaviour {
         });
         Debug.Log($"Name: {var_dict_complex.Name}, Value: {Json.Serialize(var_dict_complex.Value)}");
         Debug.Log($"Name: {var_dict_complex.Name} {Json.Serialize(var_dict_complex.DefaultValue["nested_string"])}, Value: {Json.Serialize(var_dict_complex.Value["nested_string"])}");
+        CleverTap.FetchInApps((status)=>{
+            Debug.LogError("****FetchInApps"+status);
+        });
+         Debug.LogError("****ClearInAppResources");
+        CleverTap.ClearInAppResources(true);
     }
 
     private void OnVariablesChanged() {
