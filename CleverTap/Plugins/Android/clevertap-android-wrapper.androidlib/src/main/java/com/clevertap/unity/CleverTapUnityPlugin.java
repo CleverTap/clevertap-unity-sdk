@@ -808,8 +808,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
      *
      * @param expiredOnly to clear only assets which will not be needed further for inapps
      */
-	public void clearInAppResources(bool expiredOnly) {
-		clevertap.clearInAppResources(expiredOnly)
+    public void clearInAppResources(boolean expiredOnly) {
+		clevertap.clearInAppResources(expiredOnly);
 	}
 
     //Native Display Units
