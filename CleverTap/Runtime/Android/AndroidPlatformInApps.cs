@@ -8,7 +8,7 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchInApps", callbackId);
         
         internal override void ClearInAppResources(bool expiredOnly) =>
-            CleverTapAndroidJNI.CleverTapJNIInstance.Call(METHOD_CLEAR_INAPP_RESOURCES);
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call(METHOD_CLEAR_INAPP_RESOURCES,expiredOnly);
         
    }
 }
