@@ -11,6 +11,7 @@ public class Variables : MonoBehaviour
     public VerticalLayoutGroup VerticalLayoutGroup;
 
     private GameObject _fetchButton;
+    private static bool VariablesDefined = false;
 
     // Variables
     Var<string> var_string;
@@ -140,6 +141,8 @@ public class Variables : MonoBehaviour
         var_double.OnValueChanged += Var_double_OnValueChanged;
         var_short.OnValueChanged += Var_short_OnValueChanged;
         var_long.OnValueChanged += Var_long_OnValueChanged;
+
+        VariablesDefined = true;
     }
 
     private void SyncVariables()
@@ -161,6 +164,12 @@ public class Variables : MonoBehaviour
 
     private void PrintVariables()
     {
+        if (!VariablesDefined)
+        {
+            Debug.LogWarning("Define variables first.");
+            return;
+        }
+        
         Var<int> var1 = CleverTap.Define("var1", 1);
         Debug.Log($"Name: {var1.Name}, Default Value:  {var1.DefaultValue}, Value: {var1.Value}");
 

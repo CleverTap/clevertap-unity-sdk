@@ -44,14 +44,17 @@ public class InAppsUI : MonoBehaviour {
         return button;
     }
 
-    private void FetchInApps() {
-        CleverTap.FetchInApps((status)=>{
-            Debug.Log("Fetch InApps Status"+status);
+    private void FetchInApps()
+    {
+        CleverTap.FetchInApps((status) =>
+        {
+            Debug.Log($"Fetch InApps completed with status: {status}");
         });
     }
 
-    private void ClearInAppResources() {
-         Debug.Log("Clear InApp Resources");
+    private void ClearInAppResources()
+    {
+        Debug.Log("Clear InApp Resources");
         CleverTap.ClearInAppResources(false);
     }
 }
