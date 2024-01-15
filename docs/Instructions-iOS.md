@@ -4,7 +4,7 @@ iOS dependencies are added using CocoaPods Podfile. After exporting the project 
 
 1. Set your account Id, token, and region, as well as personalization and IDFV settings in the CleverTap Settings **Assets** > **CleverTap Settings**
 
-![CleverTap iOS Settings](docs/images/clevertap_ios_settings.png  "CleverTap iOS Settings")
+![CleverTap iOS Settings](/docs/images/clevertap_ios_settings.png  "CleverTap iOS Settings")
 
 This is needed so the CleverTap Post Processor script can add those settings automatically in the `Info.plist` file.
 
@@ -14,7 +14,7 @@ This is needed so the CleverTap Post Processor script can add those settings aut
 
 2. Set up [EDM4U](<>) plugin to install CocoaPods automatically. Go to **Assets** > **External Dependency Manager** > **iOS Resolver** > **Settings**. You can also install manually using `pod install`.
 
-![iOS Resolver Settings](docs/images/ios_resolver_settings.jpg  "iOS Resolver Settings")
+![iOS Resolver Settings](/docs/images/ios_resolver_settings.png  "iOS Resolver Settings")
 
 2. Open the `.xcworkspace` project.
 3. To enable Push Notifications, ensure to add the Push Notifications capability to your Xcode project.  

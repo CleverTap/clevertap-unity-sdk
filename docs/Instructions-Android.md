@@ -2,7 +2,7 @@
 
 1. Go to **File** > **Build Settings** > **Android** > **Player Settings** > **Publishing Settings** > **Build**. Enable _.gradle templates_ and _custom AndroidManifest_. EDM4U populates the _Custom Main Gradle Template_ and _Gradle Properties Template_ with the required Android dependencies.
 
-![Android Build Settings](docs/images/android_settings.jpg  "Android Build Settings")
+![Android Build Settings](/docs/images/android_settings.png  "Android Build Settings")
 
 2. Once you enable the custom Android Manifest, ensure to add additional configurations to enable Push Notifications and override the default `UnityActivity`. Add your Bundle Identifier, FCM Sender ID, CleverTap Account ID, CleverTap Token, and Deep Link URL scheme (if applicable):
 
