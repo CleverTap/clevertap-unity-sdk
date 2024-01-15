@@ -20,21 +20,19 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 ## 🛠 Installation and Setup #
 
-# Install
-
 You can install the CleverTap Unity SDK using the `.unitypackage` Unity package or as a local package through Unity Package Manager (UPM).
 
-# Import the CleverTap Unity Package
+### Import the CleverTap Unity Package
 
 1. Download the latest version of the CleverTap Unity package. Import the `.unitypackage` into your Unity Project. **Go to Assets** > **Import Package** > **Custom Package**. 
 2. Add the **PlayServiceResolver** and the **ExternalDependencyManager** folders. These folders will install the **EDM4U** plugin, which automatically adds all the Android and iOS dependencies when building your project.
 3. Ensure that the scripts inside the `Editor` folder are added (`AndroidPostImport`, `CleverTapPostBuildProcessor.` and the other scripts). The `AndroidPostImport` script sets up `clevertap-android-wrapper` library for Android. `CleverTapPostBuildProcessor` helps iOS setup.
 
-## Import the CleverTap Unity Package as a Local Dependency
+### Import the CleverTap Unity Package as a Local Dependency
 
 Clone the latest release version of CleverTap Unity SDK. The SDK can be imported as a local package through the Unity Package Manager.
 
-## Set Up the Unity SDK
+### Set Up the Unity SDK
 
 CleverTap API can be accessed anywhere in your project by simply calling the static `CleverTap` class. _No_ need to create `GameObject` or attach _any_ script. The SDK handles the following: 
 
@@ -51,13 +49,7 @@ CleverTap.LaunchWithCredentialsForRegion({YOUR_CLEVERTAP_ACCOUNT_ID}, {YOUR_CLEV
 CleverTap.EnablePersonalization();
 ```
 
-### iOS Instructions
-iOS specific setup is described in the [iOS Instructions](/docs/Instructions-iOS.md)
-
-### Android Instructions
-Android specific setup is described in the [Android Instructions](/docs/Instructions-Android.md)
-
-## Callbacks
+#### Callbacks
 
 Add an event listener for a callback directly through the `CleverTap` static events.
 
@@ -66,6 +58,15 @@ CleverTap.OnCleverTapDeepLinkCallback += YOUR_CALLBACK_METHOD;
 CleverTap.OnCleverTapProfileInitializedCallback += YOUR_CALLBACK_METHOD;  
 CleverTap.OnCleverTapProfileUpdatesCallback += YOUR_CALLBACK_METHOD;
 ```
+
+### iOS Instructions
+
+iOS specific setup is described in the [iOS Instructions](/docs/Instructions-iOS.md)
+
+### Android Instructions
+
+Android specific setup is described in the [Android Instructions](/docs/Instructions-Android.md)
+
 
 ## 💻 Example Usage #
 
