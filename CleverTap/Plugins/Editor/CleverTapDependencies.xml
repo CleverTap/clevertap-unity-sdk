@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependencies>
     <iosPods>
-<<<<<<< HEAD
         <iosPod name="CleverTap-iOS-SDK" version="6.0.0" minTargetSdk="9.0" />
-=======
-        <iosPod name="CleverTap-iOS-SDK" version="5.2.1" minTargetSdk="9.0" />
->>>>>>> 58f5a2b (Feature/sdk 3323/variables bindings (#54))
     </iosPods>
 </dependencies>
