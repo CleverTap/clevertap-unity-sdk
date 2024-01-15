@@ -275,5 +275,19 @@ namespace CleverTapSDK.Common {
         }
 
         #endregion
+
+        #region Default - Variables Callbacks
+
+        public virtual void CleverTapInAppsFetched(string message) {
+            CleverTapLogger.Log("unity received InApps fetched response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+            try {
+                JSONClass json = (JSONClass)JSON.Parse(message);
+                InAppsFactory.CleverTapInApps.InAppsFetched(json["callbackId"].AsInt, json["isSuccess"].AsBool);
+            } catch {
+                CleverTapLogger.LogError("unable to parse json");
+            }
+        }
+
+        #endregion
     }
 }
