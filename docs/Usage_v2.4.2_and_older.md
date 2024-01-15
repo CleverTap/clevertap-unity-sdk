@@ -8,7 +8,7 @@
 ```
 Dictionary<string, string> props = new Dictionary<string, string>();
 props.Add("RegistrationSource", "Android");
-CleverTap.ProfilePush(props);
+CleverTapBinding.ProfilePush(props);
 ```
 #### Set Multi Values For Key 
 
@@ -16,28 +16,28 @@ CleverTap.ProfilePush(props);
 List<string> stringList = new List<string>();
 stringList.Add("one");
 stringList.Add("two");
-CleverTap.ProfileSetMultiValuesForKey("multiAndroid", stringList);
+CleverTapBinding.ProfileSetMultiValuesForKey("multiAndroid", stringList);
 ```
 #### Remove Multi Value For Key
 
 ```
 List<string> stringList2 = new List<string>();
 stringList2.Add("two");
-CleverTap.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
+CleverTapBinding.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
 ```
 #### Add Multi Value For Key
 ```
-CleverTap.ProfileAddMultiValueForKey("multiAndroid", "five");
+CleverTapBinding.ProfileAddMultiValueForKey("multiAndroid", "five");
 ```
 #### Increment a numerical value for a single-value profile property (if it exists)
 ```
-CleverTap.ProfileIncrementValueForKey("score", 10); // INTEGER PROFERTY
-CleverTap.ProfileIncrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
+CleverTapBinding.ProfileIncrementValueForKey("score", 10); // INTEGER PROFERTY
+CleverTapBinding.ProfileIncrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
 ```
 #### Decrement a numerical value for a single-value profile property (if it exists)
 ```
-CleverTap.ProfileDecrementValueForKey("score", 10); // INTEGER PROFERTY
-CleverTap.ProfileDecrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
+CleverTapBinding.ProfileDecrementValueForKey("score", 10); // INTEGER PROFERTY
+CleverTapBinding.ProfileDecrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
 ```
 #### Create a User profile when user logs in (On User Login)
 
@@ -45,12 +45,12 @@ CleverTap.ProfileDecrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
 Dictionary<string, string> newProps = new Dictionary<string, string>();
 newProps.Add("email", "test@test.com");
 newProps.Add("Identity", "123456");
-CleverTap.OnUserLogin(newProps);
+CleverTapBinding.OnUserLogin(newProps);
 ```
 #### Set Location to User Profile
 
 ```
-CleverTap.SetLocation(34.147785, -118.144516);
+CleverTapBinding.SetLocation(34.147785, -118.144516);
 ```
 
 ## User Events
@@ -58,7 +58,7 @@ CleverTap.SetLocation(34.147785, -118.144516);
 #### Record an event  
 
 ```
-CleverTap.RecordEvent("Button Clicked");
+CleverTapBinding.RecordEvent("Button Clicked");
 ```
 
 #### Record Charged event
@@ -85,7 +85,7 @@ List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
 items.Add(item);
 items.Add(item2);
 
-CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
+CleverTapBinding.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
 
 ```
 ## In-App Notifications
@@ -110,22 +110,22 @@ Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmp
 
 #### Suspend In-App Notifications  
 ```
-CleverTap.SuspendInAppNotifications();
+CleverTapBinding.SuspendInAppNotifications();
 ```
 #### Discard In-App Notifications  
 ```
-CleverTap.DiscardInAppNotifications();
+CleverTapBinding.DiscardInAppNotifications();
 ```
 #### Resume In-App Notifications  
 ```
-CleverTap.ResumeInAppNotifications();
+CleverTapBinding.ResumeInAppNotifications();
 ```
 
 ## App Inbox
 
 #### Initialize the CleverTap App Inbox Method
 ```
-CleverTap.InitializeInbox();
+CleverTapBinding.InitializeInbox();
 Debug.Log("InboxInit started");
 ```
 
@@ -135,7 +135,7 @@ Debug.Log("InboxInit started");
 ```
 void LaunchInbox()
 {
-    CleverTap.ShowAppInbox("");
+    CleverTapBinding.ShowAppInbox("");
 }
 ```
 
@@ -154,19 +154,19 @@ StyleConfig.Add("noMessageTextColor", "#FF0000");
 
 //Convert the Dictionary parameters to a string and pass it to `ShowAppInbox()`
 string jsonStr = JsonConvert.SerializeObject(StyleConfig, Formatting.Indented);
-CleverTap.ShowAppInbox(jsonStr);
+CleverTapBinding.ShowAppInbox(jsonStr);
 ```
 
 #### Dismiss the App Inbox
 
 ```
-CleverTap.DismissAppInbox();
+CleverTapBinding.DismissAppInbox();
 ```
 ## Enable Debugging
 
 #### Set Debug Level
 ```
-CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
+CleverTapBinding.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 ```
 
 ## Push Notifications
@@ -176,30 +176,30 @@ CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 ```
 void OnAndroidInit()
 {
-   CleverTap.LaunchWithCredentialsForRegion(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_REGION);
-   CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
+   CleverTapBinding.Initialize(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN);
+   CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 }	
 ```
 #### Delete Notification Channel
 
 ```
-CleverTap.DeleteNotificationChannel("YourChannelId");		
+CleverTapBinding.DeleteNotificationChannel("YourChannelId");		
 ```
 #### Creating a group notification channel
 
 ``` 
-CleverTap.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");		
+CleverTapBinding.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");		
 ```
 #### Delete a group notification channel
 
 ```
-CleverTap.DeleteNotificationChannelGroup("YourGroupId");			
+CleverTapBinding.DeleteNotificationChannelGroup("YourGroupId");			
 ```
 
 #### Create Notification
 
 ```
-CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
+CleverTapBinding.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 ```
 
 ## Push Primer
@@ -223,7 +223,7 @@ item.Add("btnBackgroundColor", "#0000FF");
 item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
 item.Add("btnBorderRadius", "2");
 item.Add("fallbackToSettings", true);
-CleverTap.PromptPushPrimer(item);
+CleverTapBinding.PromptPushPrimer(item);
 ```
 
 ### Alert Local In-App
@@ -235,7 +235,7 @@ item.Add("titleText", "Get Notified");
 item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
 item.Add("followDeviceOrientation", true);
 item.Add("fallbackToSettings", true);
-CleverTap.PromptPushPrimer(item);
+CleverTapBinding.PromptPushPrimer(item);
 ```
 
 ## Prompt to show hard notification permission dialog. 
@@ -243,12 +243,16 @@ CleverTap.PromptPushPrimer(item);
 ### false - does not fallback to app's notification settings if permission is denied
 
 ```
-CleverTap.PromptForPushPermission(false);
+CleverTapBinding.PromptForPushPermission(false);
 ```
 
 ### Returns a boolean to indicate whether notification permission is granted or not
 
 ```
-bool isPushPermissionGranted = CleverTap.IsPushPermissionGranted();
+bool isPushPermissionGranted = CleverTapBinding.IsPushPermissionGranted();
 ```
+
+### For more information,
+
+- [See included Starter Application](/example/CleverTapUnity.cs) 
 

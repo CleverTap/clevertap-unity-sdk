@@ -1,74 +1,122 @@
 ## 👨‍💻 Android Specific Instructions:
-- If you want to enable Push Notifications, be sure to add the Firebase Unity SDK to your app as described in the [Firebase Unity Setup Docs](https://firebase.google.com/docs/unity/setup)
-  
-> NOTE: On adding the Firebase Unity SDK it might cause your AndroidManifest.xml to be overriden. If that occurs, make sure to revert it your original manifest file.
 
-- Add latest `Play Services Resolver` package from [here](https://github.com/googlesamples/unity-jar-resolver).
+1. Go to **File** > **Build Settings** > **Android** > **Player Settings** > **Publishing Settings** > **Build**. Enable _.gradle templates_ and _custom AndroidManifest_. EDM4U populates the _Custom Main Gradle Template_ and _Gradle Properties Template_ with the required Android dependencies.
 
-- Run `Assets` > `Play Services Resolver` > `Android Resolver` > `Resolve Client Jars` from the Unity menu bar to install the required google play services and android support library dependencies.
+![Android Build Settings](docs/images/android_settings.jpg  "Android Build Settings")
 
-- Edit the `AndroidManifest.xml` file in `Assets/Plugins/Android` to add your Bundle Identifier, FCM Sender ID, CleverTap Account Id, CleverTap Token and Deep Link url scheme (if applicable): 
+2. Once you enable the custom Android Manifest, ensure to add additional configurations to enable Push Notifications and override the default `UnityActivity`. Add your Bundle Identifier, FCM Sender ID, CleverTap Account ID, CleverTap Token, and Deep Link URL scheme (if applicable):
 
-    ```
-    <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="YOUR_BUNDLE_IDENTIFIER" android:versionName="1.0" android:versionCode="1" android:installLocation="preferExternal"> <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
-    ```
-    ```
-    <meta-data
-        android:name="FCM_SENDER_ID"
-        android:value="id:YOUR_FCM_SENDER_ID"/>
-    
-    <meta-data
-        android:name="CLEVERTAP_ACCOUNT_ID"
-        android:value="Your CleverTap Account ID"/>
-        
-    <meta-data
-        android:name="CLEVERTAP_TOKEN"
-        android:value="Your CleverTap Account Token"/>
-    ```
+```xml
 
-    ```
-    <!-- Deep Links uncomment and replace YOUR_URL_SCHEME, if applicable, or remove if not supporting deep links-->
-    <!--
-        <intent-filter android:label="@string/app_name">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="YOUR_URL_SCHEME" />
-        </intent-filter>
-    -->  
-    ```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="YOUR_BUNDLE_IDENTIFIER"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="preferExternal"
+    android:versionCode="1"
+    android:versionName="1.0">
 
-- Add the following in the `AndroidManifest.xml` file, if not there already  - 
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
-    ```
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:glEsVersion="0x00020000" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch.distinct"
+        android:required="false" />
+
+    <application
+        android:debuggable="true"
+        android:icon="@drawable/app_icon"
+        android:isGame="true"
+        android:label="@string/app_name"
+        android:theme="@style/UnityThemeSelector">
+
+        <activity
+            android:name="com.clevertap.unity.CleverTapOverrideActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="fullSensor">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep Links uncomment and replace YOUR_URL_SCHEME, if applicable, or remove if not supporting deep links-->
+            <!--
+            <intent-filter android:label="@string/app_name">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="YOUR_URL_SCHEME" />
+            </intent-filter>
+            -->
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
+        </activity>
+
         <service
             android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-    ```
 
-- Add your `google-services.json` file to the Assets folder of the project.
+        <service
+            android:name="com.clevertap.android.sdk.pushnotification.CTNotificationIntentService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.clevertap.PUSH_EVENT" />
+            </intent-filter>
+        </service>
 
-- To enable A/B UI editor, edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapBinding.cs` and `CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true)` call just before getting the clevertap instance.
+        <meta-data
+            android:name="FCM_SENDER_ID"
+            android:value="id:YOUR_FCM_SENDER_ID" />
 
-**Code snippet for the same:**
+        <meta-data
+            android:name="CLEVERTAP_ACCOUNT_ID"
+            android:value="Your CleverTap Account ID" />
 
+        <meta-data
+            android:name="CLEVERTAP_TOKEN"
+            android:value="Your CleverTap Account Token" />
+
+    </application>
+
+</manifest>
 ```
-public static AndroidJavaObject CleverTap {
-        get {
-            if (clevertap == null) {
-                AndroidJavaObject context = unityCurrentActivity.Call<AndroidJavaObject>("getApplicationContext");
-                
-                //set the UI editor flag before getting the Clevertap instance, defaults to false.
-                CleverTapAPI.CallStatic("setUIEditorConnectionEnabled", true);
-                
-                clevertap = CleverTapAPI.CallStatic<AndroidJavaObject>("getInstance", context);
-            }
-            return clevertap;
-        }
-    }
+
+3. Add your `google-services.json` file to the project's **Assets** folder.
+4. Build your app or Android project.
+
+# Initialize CleverTap SDK
+
+```csharp
+// Initialize CleverTap
+CleverTap.LaunchWithCredentialsForRegion({YOUR_CLEVERTAP_ACCOUNT_ID}, {YOUR_CLEVERTAP_ACCOUNT_TOKEN}, {CLEVERTAP_ACCOUNT_REGION});
+// Enable personalization
+CleverTap.EnablePersonalization();
 ```
-- Build your app or Android project as usual.
+
