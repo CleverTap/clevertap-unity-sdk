@@ -8,7 +8,7 @@ namespace CleverTapSDK.IOS {
             IOSDllImport.CleverTap_syncVariables();
 
         internal override void SyncVariables(bool isProduction) =>
-            IOSDllImport.CleverTap_syncVariables(isProduction);
+            IOSDllImport.CleverTap_syncVariablesProduction(isProduction);
 
         internal override void FetchVariables(int callbackId) =>
             IOSDllImport.CleverTap_fetchVariables(callbackId);
