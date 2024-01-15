@@ -9,15 +9,13 @@ You can define variables using the CleverTap Unity SDK. When you define a variab
 Currently, CleverTap SDK supports the following variable types:
 
 - string
-- boolean
+- bool
 - byte
 - short
 - int
 - long
-- char
 - float
 - double
-- decimal
 
 # Define Variables
 
