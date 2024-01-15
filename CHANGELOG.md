@@ -15,7 +15,6 @@ Version 3.0.0 *(15 Jan, 2024)*
     - iOS Settings are configured from Assets -> CleverTap Settings
 - CleverTap SDK uses EDM4U for dependency management
 
-
 Version 2.4.2 *(24 October, 2023)*
 -------------------------------------------
 - Profile APIs support for multiple data types
