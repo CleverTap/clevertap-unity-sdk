@@ -7,7 +7,6 @@ namespace CleverTapSDK.Private
     {
         internal const string ITEM_NAME = "Assets/CleverTap Settings";
         private static readonly string windowName = "CleverTap Settings";
-        private static readonly string settingsPath = "Assets/CleverTapSettings.asset";
 
         private CleverTapSettings settings;
 
@@ -25,43 +24,52 @@ namespace CleverTapSDK.Private
 
         private void OnGUI()
         {
+            if (settings == null)
+            {
+                GUILayout.Label("Error loading settings", EditorStyles.boldLabel);
+                return;
+            }
+
             GUILayout.Label(windowName, EditorStyles.boldLabel);
 
-            // Input text fields
             settings.CleverTapAccountId = EditorGUILayout.TextField("CleverTapAccountId", settings.CleverTapAccountId);
             settings.CleverTapAccountToken = EditorGUILayout.TextField("CleverTapAccountToken", settings.CleverTapAccountToken);
             settings.CleverTapAccountRegion = EditorGUILayout.TextField("CleverTapAccountRegion", settings.CleverTapAccountRegion);
 
-            // Checkboxes
             settings.CleverTapEnablePersonalization = EditorGUILayout.Toggle("CleverTapEnablePersonalization", settings.CleverTapEnablePersonalization);
             settings.CleverTapDisableIDFV = EditorGUILayout.Toggle("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
 
-            // Save button
             if (GUILayout.Button("Save Settings"))
             {
-                // Save settings to EditorPrefs
                 SaveCleverTapSettings();
-
                 Debug.Log($"{windowName} saved!");
             }
         }
 
         private static CleverTapSettings LoadCleverTapSettings()
         {
-            // Load settings from .asset file
-            CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
-
-            if (settings == null)
+            try
             {
-                Debug.Log("Asset not found. Creating asset.");
-                // Create a new instance if it doesn't exist
-                settings = CreateInstance<CleverTapSettings>();
-                AssetDatabase.CreateAsset(settings, settingsPath);
-                AssetDatabase.SaveAssets();
-                // Refresh the database to make sure the new asset is recognized
-                AssetDatabase.Refresh();
+                // Load settings from .asset file
+                CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
+
+                if (settings == null)
+                {
+                    Debug.Log("Asset not found. Creating asset.");
+                    // Create a new instance if it doesn't exist
+                    settings = CreateInstance<CleverTapSettings>();
+                    AssetDatabase.CreateAsset(settings, CleverTapSettings.settingsPath);
+                    AssetDatabase.SaveAssets();
+                    // Refresh the database to make sure the new asset is recognized
+                    AssetDatabase.Refresh();
+                }
+                return settings;
             }
-            return settings;
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
+                return null;
+            }
         }
 
         private void SaveCleverTapSettings()
