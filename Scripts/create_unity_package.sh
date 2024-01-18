@@ -78,6 +78,7 @@ fi
 echo "📦 Creating CleverTapSDK.unitypackage, this may take a minute."
 $UNITY_BIN -gvh_disable \
 -nographics \
+-ct-export \
 -projectPath $PROJECT \
 -force-free -quit -batchmode -logFile exportlog.txt \
 -importPackage $PROJECT/external-dependency-manager-latest.unitypackage \
