@@ -21,6 +21,7 @@ echo $ORIGINAL_ANDROID_LIB_FOLDER_PATH
 # Rename the folder
 if [ -d "$ORIGINAL_ANDROID_LIB_FOLDER_PATH" ]; then
     mv "$ORIGINAL_ANDROID_LIB_FOLDER_PATH" "$RENAMED_ANDROID_LIB_FOLDER_PATH"
+    mv "$ORIGINAL_ANDROID_LIB_FOLDER_PATH.meta" "$RENAMED_ANDROID_LIB_FOLDER_PATH.meta"
 else
     echo "Original folder not found!"
     exit 1
@@ -78,6 +79,7 @@ fi
 echo "📦 Creating CleverTapSDK.unitypackage, this may take a minute."
 $UNITY_BIN -gvh_disable \
 -nographics \
+-ct-export \
 -projectPath $PROJECT \
 -force-free -quit -batchmode -logFile exportlog.txt \
 -importPackage $PROJECT/external-dependency-manager-latest.unitypackage \
@@ -90,3 +92,4 @@ rm $SYMBOLIC_LINK_PATH
 
 # Revert the folder name back to original after the build
 mv "$RENAMED_ANDROID_LIB_FOLDER_PATH" "$ORIGINAL_ANDROID_LIB_FOLDER_PATH"
+mv "$RENAMED_ANDROID_LIB_FOLDER_PATH.meta" "$ORIGINAL_ANDROID_LIB_FOLDER_PATH.meta"

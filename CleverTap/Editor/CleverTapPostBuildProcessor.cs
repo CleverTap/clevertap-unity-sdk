@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEditor;
+using UnityEngine;
 
 namespace CleverTapSDK.Private
 {
@@ -53,48 +54,60 @@ namespace CleverTapSDK.Private
 		public static void OnPostProcessBuild(BuildTarget target, string path)
 		{
 			if (target == BuildTarget.iOS)
-			{
-				string projPath = PBXProject.GetPBXProjectPath(path);
-				PBXProject proj = new PBXProject();
-				proj.ReadFromString(File.ReadAllText(projPath));
+            {
+                IOSPostProcess(path);
+            }
+        }
+
+        private static void IOSPostProcess(string path)
+        {
+            string projPath = PBXProject.GetPBXProjectPath(path);
+            PBXProject proj = new PBXProject();
+            proj.ReadFromString(File.ReadAllText(projPath));
 
 #if UNITY_2019_3_OR_NEWER
-				var projectTarget = proj.GetUnityFrameworkTargetGuid();
+            var projectTarget = proj.GetUnityFrameworkTargetGuid();
 #else
 			      var projectTarget = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
 #endif
 
-				// Add linker flags
-				proj.AddBuildProperty(projectTarget, "OTHER_LDFLAGS", "-ObjC");
+            // Add linker flags
+            proj.AddBuildProperty(projectTarget, "OTHER_LDFLAGS", "-ObjC");
 
-				File.WriteAllText(projPath, proj.WriteToString());
+            File.WriteAllText(projPath, proj.WriteToString());
 
-				// Update plist
-				string plistPath = path + "/Info.plist";
-				PlistDocument plist = new PlistDocument();
-				plist.ReadFromString(File.ReadAllText(plistPath));
+            // Update plist
+            string plistPath = path + "/Info.plist";
+            PlistDocument plist = new PlistDocument();
+            plist.ReadFromString(File.ReadAllText(plistPath));
 
-                // Get root
-                PlistElementDict rootDict = plist.root;
+            // Get root
+            PlistElementDict rootDict = plist.root;
 
-                IOSConfigSettings iOSConfig = IOSConfigSettings.Load();
-                // write CleverTapAccountID and CleverTapToken
-                rootDict.SetString("CleverTapAccountID", iOSConfig.CleverTapAccountId);
-				rootDict.SetString("CleverTapToken", iOSConfig.CleverTapAccountToken);
-				rootDict.SetString("CleverTapRegion", iOSConfig.CleverTapAccountRegion);
+            CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
+            if (settings != null)
+            {
+                rootDict.SetString("CleverTapAccountID", settings.CleverTapAccountId);
+                rootDict.SetString("CleverTapToken", settings.CleverTapAccountToken);
+                rootDict.SetString("CleverTapRegion", settings.CleverTapAccountRegion);
+                rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
 
-				// Write Disable IDFV Flag
-				rootDict.SetBoolean("CleverTapDisableIDFV", iOSConfig.CleverTapDisableIDFV);
+                // Write to file
+                File.WriteAllText(plistPath, plist.WriteToString());
+            }
+            else
+            {
+                Debug.Log($"CleverTapSettings have not been set.\n" +
+                    $"Please update them from {CleverTapSettingsWindow.ITEM_NAME} or " +
+                    $"set them manually in the project Info.plist.");
+            }
 
-				// Write to file
-				File.WriteAllText(plistPath, plist.WriteToString());
+            // Update AppController
+            bool personalizationEnabled = settings == null || settings.CleverTapEnablePersonalization;
+            InsertCodeIntoControllerClass(path, personalizationEnabled);
+        }
 
-				// Update AppController
-				InsertCodeIntoControllerClass(path, iOSConfig.CleverTapEnablePersonalization);
-			}
-		}
-
-		private static void InsertCodeIntoControllerClass(string projectPath, bool personalizationEnabled)
+        private static void InsertCodeIntoControllerClass(string projectPath, bool personalizationEnabled)
 		{
 			string filepath = projectPath + PATH_CONTROLLER;
 			string[] methodSignatures = { SIGNATURE_PUSH_TOKEN, SIGNATURE_URL, SIGNATURE_NOTIF_LOCAL, SIGNATURE_NOTIF_REMOTE, SIGNATURE_NOTIF_REMOTE_BG };
