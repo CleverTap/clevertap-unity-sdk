@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using System;
 using System.Linq;
 using UnityEditor;
