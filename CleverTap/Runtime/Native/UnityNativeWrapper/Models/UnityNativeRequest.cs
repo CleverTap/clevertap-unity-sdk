@@ -17,6 +17,7 @@ namespace CleverTapSDK.Native {
         internal UnityNativeRequest(string path, string method, Dictionary<string, string> addtionalProperties = null) {
             _path = path;
             _method = method;
+            _addtionalProperties = addtionalProperties;
         }
 
         internal Dictionary<string, string> Parameters => _parameters;
@@ -26,27 +27,27 @@ namespace CleverTapSDK.Native {
         internal List<IUnityNativeResponseInterceptor> ResponseInterceptors => _responseInterceptors;
         internal Dictionary<string, string> AddtionalProperties => _addtionalProperties;
 
-        internal UnityNativeRequest ApplyParameters(Dictionary<string, string> parameters) {
+        internal UnityNativeRequest SetParameters(Dictionary<string, string> parameters) {
             _parameters = parameters;
             return this;
         }
 
-        internal UnityNativeRequest ApplyHeaders(Dictionary<string, string> headers) {
+        internal UnityNativeRequest SetHeaders(Dictionary<string, string> headers) {
             _headers = headers;
             return this;
         }
 
-        internal UnityNativeRequest ApplyAuthorization(KeyValuePair<string, string>? authorization) {
+        internal UnityNativeRequest SetAuthorization(KeyValuePair<string, string>? authorization) {
             _authorization = authorization;
             return this;
         }
 
-        internal UnityNativeRequest ApplyRequestInterceptors(List<IUnityNativeRequestInterceptor> requestInterceptors) {
+        internal UnityNativeRequest SetRequestInterceptors(List<IUnityNativeRequestInterceptor> requestInterceptors) {
             _requestInterceptors = requestInterceptors;
             return this;
         }
 
-        internal UnityNativeRequest ApplyResponseInterceptors(List<IUnityNativeResponseInterceptor> responseInterceptors) {
+        internal UnityNativeRequest SetResponseInterceptors(List<IUnityNativeResponseInterceptor> responseInterceptors) {
             _responseInterceptors = responseInterceptors;
             return this;
         }

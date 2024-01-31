@@ -27,22 +27,22 @@ namespace CleverTapSDK.Native {
             return this;
         }
 
-        internal UnityNativeNetworkEngine ApplyHeaders(Dictionary<string, string> headers) {
+        internal UnityNativeNetworkEngine SetHeaders(Dictionary<string, string> headers) {
             _headers = headers;
             return this;
         }
 
-        internal UnityNativeNetworkEngine ApplyAuthorization(KeyValuePair<string, string>? authorization) {
+        internal UnityNativeNetworkEngine SetAuthorization(KeyValuePair<string, string>? authorization) {
             _authorization = authorization;
             return this;
         }
 
-        internal UnityNativeNetworkEngine ApplyRequestInterceptors(List<IUnityNativeRequestInterceptor> requestInterceptors) {
+        internal UnityNativeNetworkEngine SetRequestInterceptors(List<IUnityNativeRequestInterceptor> requestInterceptors) {
             _requestInterceptors = requestInterceptors;
             return this;
         }
 
-        internal UnityNativeNetworkEngine ApplyResponseInterceptors(List<IUnityNativeResponseInterceptor> responseInterceptors) {
+        internal UnityNativeNetworkEngine SetResponseInterceptors(List<IUnityNativeResponseInterceptor> responseInterceptors) {
             _responseInterceptors = responseInterceptors;
             return this;
         }

@@ -9,7 +9,7 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativeEventBuilder _eventBuilder;
         private readonly UnityNativeDatabaseStore _databaseStore;
 
-        private bool isAppLaunched = false;
+        private bool _isAppLaunched = false;
 
         internal UnityNativeWrapper()
         {
@@ -18,14 +18,14 @@ namespace CleverTapSDK.Native {
             _eventBuilder = new UnityNativeEventBuilder(_sessionManager);
             _databaseStore = new UnityNativeDatabaseStore();
             UnityNativeNetworkEngine.Instance
-                .ApplyHeaders(new Dictionary<string, string>())
-                .ApplyAuthorization(null)
-                .ApplyRequestInterceptors(new List<IUnityNativeRequestInterceptor>())
-                .ApplyResponseInterceptors(new List<IUnityNativeResponseInterceptor>());
+                .SetHeaders(new Dictionary<string, string>())
+                .SetAuthorization(null)
+                .SetRequestInterceptors(new List<IUnityNativeRequestInterceptor>())
+                .SetResponseInterceptors(new List<IUnityNativeResponseInterceptor>());
         }
 
         internal void LaunchWithCredentials(string accountID, string token, string region = null) {
-            isAppLaunched = true;
+            _isAppLaunched = true;
         }
         
         internal void OnUserLogin(Dictionary<string, object> properties) {
