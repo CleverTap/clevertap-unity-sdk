@@ -17,11 +17,6 @@ namespace CleverTapSDK.Native {
             _preferenceManager = new UnityNativePreferenceManager(_sessionManager);
             _eventBuilder = new UnityNativeEventBuilder(_sessionManager);
             _databaseStore = new UnityNativeDatabaseStore();
-            UnityNativeNetworkEngine.Instance
-                .SetHeaders(new Dictionary<string, string>())
-                .SetAuthorization(null)
-                .SetRequestInterceptors(new List<IUnityNativeRequestInterceptor>())
-                .SetResponseInterceptors(new List<IUnityNativeResponseInterceptor>());
         }
 
         internal void LaunchWithCredentials(string accountID, string token, string region = null) {
