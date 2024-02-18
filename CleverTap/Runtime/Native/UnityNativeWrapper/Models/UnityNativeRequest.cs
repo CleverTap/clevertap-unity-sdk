@@ -1,4 +1,5 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
+using System;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
@@ -7,28 +8,42 @@ namespace CleverTapSDK.Native {
         private readonly string _path;
         private readonly string _method;
 
-        private Dictionary<string, string> _parameters;
-        private Dictionary<string, string> _headers;
+        private int? _timeout;
+        private IReadOnlyList<KeyValuePair<string, string>> _queryParameters;
+        private string _requestBody;
+        private IReadOnlyDictionary<string, string> _headers;
         private KeyValuePair<string, string>? _authorization;
-        private List<IUnityNativeRequestInterceptor> _requestInterceptors;
-        private List<IUnityNativeResponseInterceptor> _responseInterceptors;
-        private Dictionary<string, string> _addtionalProperties;
+        private IReadOnlyList<IUnityNativeRequestInterceptor> _requestInterceptors;
+        private IReadOnlyList<IUnityNativeResponseInterceptor> _responseInterceptors;
+        private IReadOnlyDictionary<string, string> _addtionalProperties;
 
         internal UnityNativeRequest(string path, string method, Dictionary<string, string> addtionalProperties = null) {
             _path = path;
-            _method = method;
+            _method = method?.ToUpper();
             _addtionalProperties = addtionalProperties;
         }
 
-        internal Dictionary<string, string> Parameters => _parameters;
-        internal Dictionary<string, string> Headers => _headers;
+        internal int? Timeout => _timeout;
+        internal IReadOnlyList<KeyValuePair<string, string>> QueryParameters => _queryParameters;
+        internal string RequestBody => _requestBody;
+        internal IReadOnlyDictionary<string, string> Headers => _headers;
         internal KeyValuePair<string, string>? Authorization => _authorization;
-        internal List<IUnityNativeRequestInterceptor> RequestInterceptors => _requestInterceptors;
-        internal List<IUnityNativeResponseInterceptor> ResponseInterceptors => _responseInterceptors;
-        internal Dictionary<string, string> AddtionalProperties => _addtionalProperties;
+        internal IReadOnlyList<IUnityNativeRequestInterceptor> RequestInterceptors => _requestInterceptors;
+        internal IReadOnlyList<IUnityNativeResponseInterceptor> ResponseInterceptors => _responseInterceptors;
+        internal IReadOnlyDictionary<string, string> AddtionalProperties => _addtionalProperties;
 
-        internal UnityNativeRequest SetParameters(Dictionary<string, string> parameters) {
-            _parameters = parameters;
+        internal UnityNativeRequest SetTimeout(int? timeout) {
+            _timeout = timeout;
+            return this;
+        }
+
+        internal UnityNativeRequest SetQueryParameters(List<KeyValuePair<string, string>> parameters) {
+            _queryParameters = parameters;
+            return this;
+        }
+
+        internal UnityNativeRequest SetRequestBody(string requestBody) {
+            _requestBody = requestBody;
             return this;
         }
 
@@ -53,9 +68,50 @@ namespace CleverTapSDK.Native {
         }
 
         internal UnityWebRequest BuildRequest(string baseURI) {
-            // TODO: combine baseURI and path to get full route
-            // Create UnityWebRequest and add parameters based on method (query if GET and body if POST)
-            return new UnityWebRequest("Route", "POST");
+            var uri = BuildURI(baseURI);
+
+            UnityWebRequest request;
+            if (_method == "GET") {
+                request = UnityWebRequest.Get(uri);
+            }
+            else if (_method == "POST") {
+                request = UnityWebRequest.Post(uri, _requestBody, "application/json; charset=utf-8");
+            }
+            else {
+                throw new NotSupportedException("Http method is not supported");
+            }
+
+            if (_headers?.Count > 0) {
+                foreach (var header in _headers) {
+                    request.SetRequestHeader(header.Key, header.Value);
+                }
+            }
+
+            if (_authorization.HasValue) {
+                request.SetRequestHeader(_authorization.Value.Key, _authorization.Value.Value);
+            }
+
+            if (_timeout != null) {
+                request.timeout = _timeout.Value;
+            }
+
+            return request;
+        }
+
+        private Uri BuildURI(string baseURI) {
+            var uriString = baseURI + _path;
+
+            if (_queryParameters?.Count > 0) {
+                uriString += "?";
+                for (int i = 0; i < _queryParameters.Count; i++) {
+                    uriString += $"{_queryParameters[i].Key}={_queryParameters[i].Value}";
+                    if (i != _queryParameters.Count - 1) {
+                        uriString += "&";
+                    }
+                }
+            }
+
+            return new Uri(uriString);
         }
     }
 }
