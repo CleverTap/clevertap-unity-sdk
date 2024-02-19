@@ -3,19 +3,29 @@ using System;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEvent {
-        private readonly long _timestamp;
+        private readonly int? _id;
         private readonly UnityNativeEventType _eventType;
         private readonly string _jsonContent;
+        private readonly long _timestamp;
 
-        public UnityNativeEvent(UnityNativeEventType eventType, string jsonContent) {
-            _timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        public UnityNativeEvent(int id, UnityNativeEventType eventType, string jsonContent, long? timestamp = null) {
+            _id = id;
             _eventType = eventType;
             _jsonContent = jsonContent;
+            _timestamp = timestamp ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
 
-        internal long Timestamp => _timestamp;
+        public UnityNativeEvent(UnityNativeEventType eventType, string jsonContent, long? timestamp = null) {
+            _id = null;
+            _eventType = eventType;
+            _jsonContent = jsonContent;
+            _timestamp = timestamp ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
+
+        internal int? Id => _id;
         internal UnityNativeEventType EventType => _eventType;
         internal string JsonContent => _jsonContent;
+        internal long Timestamp => _timestamp;
     }
 }
 #endif

@@ -58,6 +58,9 @@ namespace CleverTapSDK.Native {
             return this;
         }
 
+        internal bool IsNetworkReachable => 
+            Application.internetReachability != NetworkReachability.NotReachable;
+
         internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request) {
             if (request == null) {
                 return null;

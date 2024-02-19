@@ -6,6 +6,7 @@ namespace CleverTapSDK.Native {
         private readonly Guid _sessionId;
         private readonly long _startTimestamp;
         
+        private bool _isAppLaunched;
         private long _lastUpdateTimestamp;
         private string _userIdentity;
 
@@ -19,6 +20,7 @@ namespace CleverTapSDK.Native {
         
         internal Guid SessionId => _sessionId;
         internal long StartTimestamp => _startTimestamp;
+        internal bool isAppLaunched => _isAppLaunched;
         internal long LastUpdateTimestamp => _lastUpdateTimestamp;
         internal string UserIdentity => _userIdentity;
 
