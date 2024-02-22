@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 
 namespace CleverTapSDK.Native {
+    internal delegate void EventStored(UnityNativeEvent newEvent);
+
     internal class UnityNativeDatabaseStore {
+
+        internal event EventStored OnEventStored;
+
         internal UnityNativeDatabaseStore() {
             // TODO : Check if database is already initialized
             // if (check if database is initialized)
@@ -10,17 +15,23 @@ namespace CleverTapSDK.Native {
             InitilazeDatabase();
         }
 
-        internal List<UnityNativeEvent> GetEvents(UnityNativeEventType eventType, long fromTimestamp, int limit = 49) {
-            // TODO : Implement logic that will fetch events from database table from timestamp up to limit(49) by eventType
+        internal List<UnityNativeEvent> GetEvents() {
             return new List<UnityNativeEvent>();
         }
 
-        internal void AddEvent(UnityNativeEventType eventType, UnityNativeEvent @event) {
-            // TODO : Implement logic for inserting event to database table based on eventType
+        internal void AddEvent(UnityNativeEvent newEvent) {
+            // TODO : Implement logic for inserting event to database table based on newEvent.EventType
+
+            var dbEventId = 1;
+            var storedEvent = new UnityNativeEvent(dbEventId, newEvent.EventType, newEvent.JsonContent, newEvent.Timestamp);
+
+            if (OnEventStored != null) {
+                OnEventStored(storedEvent);
+            }
         }
 
-        internal void DeleteEvents(UnityNativeEventType eventType, long toTimestamp) {
-            // TODO : Implement logic for deleting events from database table between from and now timestamp by eventType
+        internal void DeleteEvents(List<UnityNativeEvent> eventsToRemove) {
+            // TODO : Implement logic for deleting events from database table
         }
 
         private void InitilazeDatabase() {

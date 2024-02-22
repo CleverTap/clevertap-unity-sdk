@@ -8,8 +8,7 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativePreferenceManager _preferenceManager;
         private readonly UnityNativeEventBuilder _eventBuilder;
         private readonly UnityNativeDatabaseStore _databaseStore;
-
-        private bool _isAppLaunched = false;
+        private readonly UnityNativeEventQueueManager _eventEventQueueManager;
 
         internal UnityNativeWrapper()
         {
@@ -17,16 +16,17 @@ namespace CleverTapSDK.Native {
             _preferenceManager = new UnityNativePreferenceManager(_sessionManager);
             _eventBuilder = new UnityNativeEventBuilder(_sessionManager);
             _databaseStore = new UnityNativeDatabaseStore();
+            _eventEventQueueManager = new UnityNativeEventQueueManager(_sessionManager, _databaseStore);
         }
 
         internal void LaunchWithCredentials(string accountID, string token, string region = null) {
-            _isAppLaunched = true;
+
         }
         
         internal void OnUserLogin(Dictionary<string, object> properties) {
             _sessionManager.UpdateSessionUserIdentity("TODO");
             var @event = _eventBuilder.GenerateEvent(UnityNativeEventType.ProfileEvent, new { eventName = "OnUserLogin", properties = properties });
-            _databaseStore.AddEvent(UnityNativeEventType.ProfileEvent, @event);
+            _databaseStore.AddEvent(@event);
         }
         internal void ProfilePush(Dictionary<string, object> properties) {
 
