@@ -25,6 +25,8 @@ Temp/
 Obj/
 UnityGenerated/
 Library/
+/[Uu]ser[Ss]ettings/
+/[Ff]ile[Cc]ontent[Ii]ndex/
 *.pyc
  
 # ===================================== #
