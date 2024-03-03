@@ -5,24 +5,32 @@ namespace CleverTapSDK.Native {
     internal class UnityNativeSession {
         private readonly Guid _sessionId;
         private readonly long _startTimestamp;
+        private readonly bool _isFirstSession;
         
         private bool _isAppLaunched;
         private long _lastUpdateTimestamp;
         private string _userIdentity;
 
-        internal UnityNativeSession(string userIdentity = null)
+        internal UnityNativeSession(bool isFirstSession = false, string userIdentity = null)
         {
             _sessionId = Guid.NewGuid();
             _startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            _isFirstSession = isFirstSession;
+            _isAppLaunched = false;
             _lastUpdateTimestamp = _startTimestamp;
             _userIdentity = userIdentity;
         }
         
         internal Guid SessionId => _sessionId;
         internal long StartTimestamp => _startTimestamp;
+        internal bool IsFirstSession => _isFirstSession;
         internal bool isAppLaunched => _isAppLaunched;
         internal long LastUpdateTimestamp => _lastUpdateTimestamp;
         internal string UserIdentity => _userIdentity;
+
+        internal void SetIsAppLaunched(bool isAppLaunched) {
+            _isAppLaunched = isAppLaunched;
+        }
 
         internal long UpdateTimestamp() {
             _lastUpdateTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();

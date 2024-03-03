@@ -24,7 +24,7 @@ namespace CleverTapSDK.Native {
                 case UnityNativeEventType.ProfileEvent:
                     _userEventsQueue.QueueEvent(newEvent);
                     break;
-                case UnityNativeEventType.RaisedEvent:
+                case UnityNativeEventType.RecordEvent:
                     _recordEventsQueue.QueueEvent(newEvent);
                     break;
                 default:

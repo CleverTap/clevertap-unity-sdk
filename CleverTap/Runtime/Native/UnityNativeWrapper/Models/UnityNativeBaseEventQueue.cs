@@ -19,7 +19,7 @@ namespace CleverTapSDK.Native {
 
         internal virtual event EventTimerTick OnEventTimerTick;
 
-        public UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 0) {
+        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 0) {
             this.queueLimit = queueLimit;
             this.defaultTimerInterval = defaultTimerInterval;
             timer = new Timer();

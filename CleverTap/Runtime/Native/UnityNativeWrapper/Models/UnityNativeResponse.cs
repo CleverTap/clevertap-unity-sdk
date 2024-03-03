@@ -10,7 +10,7 @@ namespace CleverTapSDK.Native {
         private string _content;
         private string _errorMessage;
 
-        public UnityNativeResponse(UnityNativeRequest request, HttpStatusCode statusCode, Dictionary<string, string> headers, string content, string errorMessage = null) {
+        internal UnityNativeResponse(UnityNativeRequest request, HttpStatusCode statusCode, Dictionary<string, string> headers, string content, string errorMessage = null) {
             _request = request;
             _statusCode = statusCode;
             _headers = headers;
