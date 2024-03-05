@@ -19,10 +19,11 @@ namespace CleverTapSDK.Native {
 
         internal virtual event EventTimerTick OnEventTimerTick;
 
-        public UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 0) {
+        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 0) {
             this.queueLimit = queueLimit;
             this.defaultTimerInterval = defaultTimerInterval;
             timer = new Timer();
+            timer.AutoReset = false;
             timer.Elapsed += OnTimerTick;
 
             eventsQueue = new Queue<List<UnityNativeEvent>>();
@@ -57,6 +58,7 @@ namespace CleverTapSDK.Native {
         protected virtual void ResetAndStartTimer(bool retry = false) {
             if (retryCount == 0) {
                 timer.Stop();
+                timer.AutoReset = false;
                 timer.Interval = defaultTimerInterval;
                 timer.Start();
                 return;
@@ -64,7 +66,8 @@ namespace CleverTapSDK.Native {
 
             if (retry) {
                 timer.Stop();
-                timer.Interval = 2 ^ (retryCount % 10);
+                timer.AutoReset = false;
+                timer.Interval = (2 ^ (retryCount % 10)) * 1000;
                 timer.Start();
             }
         }
@@ -72,6 +75,7 @@ namespace CleverTapSDK.Native {
         protected virtual void StopTimer() {
             timer.Stop();
             timer.Interval = defaultTimerInterval;
+            timer.AutoReset = false;
         }
     }
 }

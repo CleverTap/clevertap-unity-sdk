@@ -4,9 +4,9 @@ namespace CleverTapSDK.Native {
         PageEvent = 1,
         PingEvent = 2, 
         ProfileEvent = 3,
-        RaisedEvent = 4,
+        RecordEvent = 4,
         DataEvent = 5,
-        NVEvent = 6,
+        NotificiationViewEvent = 6,
         FetchEvent = 7
     }
 }

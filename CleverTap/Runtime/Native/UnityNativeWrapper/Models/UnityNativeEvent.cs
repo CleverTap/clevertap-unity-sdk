@@ -8,14 +8,14 @@ namespace CleverTapSDK.Native {
         private readonly string _jsonContent;
         private readonly long _timestamp;
 
-        public UnityNativeEvent(int id, UnityNativeEventType eventType, string jsonContent, long? timestamp = null) {
+        internal UnityNativeEvent(int id, UnityNativeEventType eventType, string jsonContent, long? timestamp = null) {
             _id = id;
             _eventType = eventType;
             _jsonContent = jsonContent;
             _timestamp = timestamp ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
 
-        public UnityNativeEvent(UnityNativeEventType eventType, string jsonContent, long? timestamp = null) {
+        internal UnityNativeEvent(UnityNativeEventType eventType, string jsonContent, long? timestamp = null) {
             _id = null;
             _eventType = eventType;
             _jsonContent = jsonContent;

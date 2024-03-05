@@ -4,14 +4,12 @@ using System.Threading.Tasks;
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventQueueManager {
         private readonly UnityNativeDatabaseStore _databaseStore;
-        private readonly UnityNativeSessionManager _sessionManager;
 
         private readonly UnityNativeBaseEventQueue _userEventsQueue;
         private readonly UnityNativeBaseEventQueue _recordEventsQueue;
 
-        internal UnityNativeEventQueueManager(UnityNativeSessionManager sessionManager, UnityNativeDatabaseStore databaseStore) {
+        internal UnityNativeEventQueueManager(UnityNativeDatabaseStore databaseStore) {
             _databaseStore = databaseStore;
-            _sessionManager = sessionManager;
             _databaseStore.OnEventStored += OnDatabaseEventStored;
             _userEventsQueue = new UnityNativeUserEventQueue();
             _userEventsQueue.OnEventTimerTick += OnUserEventTimerTick;
@@ -24,7 +22,7 @@ namespace CleverTapSDK.Native {
                 case UnityNativeEventType.ProfileEvent:
                     _userEventsQueue.QueueEvent(newEvent);
                     break;
-                case UnityNativeEventType.RaisedEvent:
+                case UnityNativeEventType.RecordEvent:
                     _recordEventsQueue.QueueEvent(newEvent);
                     break;
                 default:
