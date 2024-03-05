@@ -31,7 +31,7 @@ namespace CleverTapSDK.Native {
                 customFields.Add(key, value);
             }
             
-            return new UnityNativeEventBuilderResult<UnityNativePushEventResult>(eventValidationResultsWithErrors, new UnityNativePushEventResult(null, null));
+            return new UnityNativeEventBuilderResult<UnityNativePushEventResult>(eventValidationResultsWithErrors, new UnityNativePushEventResult(systemFields, customFields));
         }
 
         private UnityNativeEventBuilderResult<Dictionary<string, object>> CleanObjectDictonary(Dictionary<string, object> objectDictonary) {

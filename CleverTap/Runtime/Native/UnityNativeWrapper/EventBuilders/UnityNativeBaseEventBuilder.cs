@@ -1,7 +1,6 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventBuilder {
@@ -21,10 +20,9 @@ namespace CleverTapSDK.Native {
                     break;
                 case UnityNativeEventType.RecordEvent:
                     eventData.Add(UnityNativeConstants.Event.EVENT_TYPE, UnityNativeConstants.Event.EVENT_TYPE_EVENT);
-                    // pai
                     if (!string.IsNullOrEmpty(UnityNativeDeviceManager.Instance.DeviceInfo.BundleId)) {
-                        eventData.Add(UnityNativeConstants.Event.BUNDLE_IDENTIFIER, UnityNativeDeviceManager.Instance.DeviceInfo);
-                    }
+                        eventData.Add(UnityNativeConstants.Event.BUNDLE_IDENTIFIER, UnityNativeDeviceManager.Instance.DeviceInfo.BundleId);
+                    }   
                     break;
                 default:
                     // NOT Supported YET
@@ -119,11 +117,9 @@ namespace CleverTapSDK.Native {
         }
         internal Dictionary<string, object> BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
             var eventData = BuildEvent(eventType, eventDetails);
-            var appFields = BuildAppFields();
+            eventData.Add(UnityNativeConstants.Event.EVENT_DATA, BuildAppFields());
 
-            return new List<Dictionary<string, object>>() { eventData, appFields }
-                .SelectMany(dict => dict)
-                .ToDictionary(pair => pair.Key, pair => pair.Value);
+            return eventData;
         }
     }
 }

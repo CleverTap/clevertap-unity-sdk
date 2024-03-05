@@ -6,6 +6,7 @@ namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
         internal static class SDK {
             internal const string VERSION = "3.0.0";
+            internal const string REVISION = "30000";
         }
         internal static class Profile {
             internal const string NAME = "userName";
@@ -156,6 +157,17 @@ namespace CleverTapSDK.Native {
 
                 return RESTRICTED_NAMES.Select(rn => rn.ToLower()).Any(rn => rn == name.ToLower());
             }
+        }
+        internal static class Network {
+            internal const string CT_BASE_URL = "https://clevertap-prod.com";
+            internal const string CT_TEMP_URL = "https://sk1-clevertap-prod.com"; // remove this
+            internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
+            internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
+
+            internal const string QUERY_OS = "os";
+            internal const string QUERY_SKD_REVISION = "os";
+            internal const string QUERY_ACCOUNT_ID = "z";
+            internal const string QUERY_CURRENT_TIMESTAMP = "ts";
         }
     }
 }

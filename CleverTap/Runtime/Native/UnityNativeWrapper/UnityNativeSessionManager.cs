@@ -25,14 +25,6 @@ namespace CleverTapSDK.Native {
             }
         }
 
-        internal Guid GetSessionId() {
-            if (IsSessionExpired()) {
-                _currentSession = new UnityNativeSession(userIdentity: _currentSession.UserIdentity);
-            }
-
-            return _currentSession.SessionId;
-        }
-
         internal bool IsFirstSession() {
             return _currentSession.IsFirstSession;
         }
@@ -42,20 +34,8 @@ namespace CleverTapSDK.Native {
             return 1;
         }
 
-        public void SetIsAppLaunched(bool isAppLaunched) {
-            _currentSession.SetIsAppLaunched(isAppLaunched);
-        }
-
         internal long GetLastSessionLength() {
             return DateTimeOffset.UtcNow.ToUnixTimeSeconds() - _currentSession.StartTimestamp;
-        }
-
-        internal string GetSessionUserIdentity() {
-            if (IsSessionExpired()) {
-                _currentSession = new UnityNativeSession(userIdentity: _currentSession.UserIdentity);
-            }
-
-            return _currentSession.UserIdentity;
         }
 
         internal void UpdateSessionUserIdentity(string userIdentity) {

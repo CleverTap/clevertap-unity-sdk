@@ -15,7 +15,5 @@ namespace CleverTapSDK.Native {
 
         internal UnityNativeDeviceInfo DeviceInfo => _deviceInfo;
     }
-
-    
 }
 #endif

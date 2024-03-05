@@ -86,11 +86,11 @@ namespace CleverTapSDK.Native {
 
         private string GetOSName() {
             var operatingSystem = SystemInfo.operatingSystem?.ToLower();
-            if (operatingSystem?.Contains("winodws") == true) {
+            if (operatingSystem?.ToLower().Contains("windows") == true) {
                 return "Windows";
             }
 
-            if (operatingSystem?.Contains("macos") == true) {
+            if (operatingSystem?.ToLower().Contains("macos") == true) {
                 return "MacOS";
             }
 
