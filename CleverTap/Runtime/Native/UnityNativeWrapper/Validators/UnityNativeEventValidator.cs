@@ -6,197 +6,161 @@ using System.Text.RegularExpressions;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventValidator {
-
-        private const int MAX_KEY_CHARS = 120;
-        private const int MAX_VALUE_CHARS = 1024;
-        private const int MAX_VALUE_PROPERTY_ARRAY_COUNT = 100;
-
-        private readonly IReadOnlyList<string> _notAllowedKeyCharacters = new List<string>() { ".", ":", "$", "'", "\"", "\\" };
-        private readonly IReadOnlyList<string> _notAllowedValueCharacters = new List<string>() { "'", "\"", "\\" };
-
-        internal bool CleanEventName(string eventName, out string cleanEventName) {
+        internal UnityNativeValidationResult CleanEventName(string eventName, out string cleanEventName) {
             cleanEventName = eventName;
             if (string.IsNullOrWhiteSpace(cleanEventName)) {
-                return false;
+                return new UnityNativeValidationResult();
             }
 
-            cleanEventName = ReplaceNotAllowedCharacters(cleanEventName, _notAllowedKeyCharacters);
-            if (cleanEventName == string.Empty) {
-                return false;
+            cleanEventName = ReplaceNotAllowedCharacters(cleanEventName, UnityNativeConstants.Validator.KEY_NOT_ALLOWED_CHARS);
+            if (cleanEventName.Length > UnityNativeConstants.Validator.MAX_KEY_CHARS) {
+                cleanEventName = cleanEventName.Substring(0, UnityNativeConstants.Validator.MAX_KEY_CHARS);
+                return new UnityNativeValidationResult(510, $"{cleanEventName}... exceeded the limit of {UnityNativeConstants.Validator.MAX_KEY_CHARS} characters. Trimmed");
             }
 
-            if (cleanEventName.Length > MAX_KEY_CHARS) {
-                cleanEventName = cleanEventName.Substring(0, MAX_KEY_CHARS);
-                //     NSString *errStr = [NSString stringWithFormat:@"%@%@", name, [NSString stringWithFormat:@"... exceeded the limit of %d characters. Trimmed", kMaxKeyChars]];
-                //     [vr setErrorDesc:errStr];
-                //     [vr setErrorCode:510];
-                return false;
+            if (string.IsNullOrWhiteSpace(cleanEventName)) {
+                return new UnityNativeValidationResult(512, "Event name is empty.");
             }
 
-            return true;
+            return new UnityNativeValidationResult();
         }
 
-        internal bool CleanObjectKey(string objectKey, out string cleanObjectKey) {
+        internal UnityNativeValidationResult CleanObjectKey(string objectKey, out string cleanObjectKey) {
             cleanObjectKey = objectKey;
             if (string.IsNullOrWhiteSpace(cleanObjectKey)) {
-                return false;
+                return new UnityNativeValidationResult();
             }
 
-            cleanObjectKey = ReplaceNotAllowedCharacters(cleanObjectKey, _notAllowedKeyCharacters);
-
-            return true;
-        }
-
-        internal bool CleanMultiValuePropertyKey(string multiValuePropertyKey, out string cleanMultiValuePropertyKey) {
-            if (!CleanObjectKey(multiValuePropertyKey, out cleanMultiValuePropertyKey)) {
-                return true;
+            cleanObjectKey = ReplaceNotAllowedCharacters(cleanObjectKey, UnityNativeConstants.Validator.KEY_NOT_ALLOWED_CHARS);
+            if (cleanObjectKey.Length > UnityNativeConstants.Validator.MAX_VALUE_CHARS) {
+                cleanObjectKey = cleanObjectKey.Substring(0, UnityNativeConstants.Validator.MAX_VALUE_CHARS);
+                return new UnityNativeValidationResult(520, $"{cleanObjectKey}... exceeds the limit of {UnityNativeConstants.Validator.MAX_KEY_CHARS} characters. Trimmed");
             }
 
-            return UnityNativeConstants.Profile.IsKeyKnownProfileField(cleanMultiValuePropertyKey);
+            if (string.IsNullOrWhiteSpace(cleanObjectKey)) {
+                return new UnityNativeValidationResult(512, "Object key name is empty.");
+            }
+
+            return new UnityNativeValidationResult();
         }
 
-        internal bool CleanMultiValuePropertyValue(string multiValuePropertyValue, out string cleanMultiValuePropertyValue) {
-            cleanMultiValuePropertyValue = multiValuePropertyValue;
+        internal UnityNativeValidationResult CleanMultiValuePropertyKey(string multiValuePropertyKey, out string cleanMultiValuePropertyKey) {
+            var validationResult = CleanObjectKey(multiValuePropertyKey, out cleanMultiValuePropertyKey);
+            if (!validationResult.IsSuccess) {
+                return validationResult;
+            }
+
+            if (UnityNativeConstants.Profile.IsKeyKnownProfileField(cleanMultiValuePropertyKey)) {
+                return new UnityNativeValidationResult(523, $"{cleanMultiValuePropertyKey} is a restricted key for multi-value properties. Operation aborted.");
+            }
+
+            return new UnityNativeValidationResult();
+        }
+
+        internal UnityNativeValidationResult CleanMultiValuePropertyValue(string multiValuePropertyValue, out string cleanMultiValuePropertyValue) {
             return CleanProperyValue(multiValuePropertyValue, out cleanMultiValuePropertyValue);
         }
 
-        internal bool CleanMultiValuePropertyArray(List<string> multiValuePropertyArray, out List<string> cleanMultiValuePropertyArray) {
+        internal UnityNativeValidationResult CleanMultiValuePropertyArray(List<string> multiValuePropertyArray, out List<string> cleanMultiValuePropertyArray, string key) {
             cleanMultiValuePropertyArray = multiValuePropertyArray;
             if (multiValuePropertyArray == null || multiValuePropertyArray.Count == 0) {
-                return true;
+                return new UnityNativeValidationResult();
             }
 
-            if (cleanMultiValuePropertyArray.Count > MAX_VALUE_PROPERTY_ARRAY_COUNT) {
-                cleanMultiValuePropertyArray = cleanMultiValuePropertyArray.Take(MAX_VALUE_PROPERTY_ARRAY_COUNT).ToList();
-                //     NSString *errStr = [NSString stringWithFormat:@"Multi value user property for key %@ exceeds the limit of %d items. Trimmed", key, kMaxMultiValuePropertyArrayCount];
-                //     [vr setErrorDesc:errStr];
-                //     [vr setErrorCode:521];
-                return false;
+            if (cleanMultiValuePropertyArray.Count > UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT) {
+                cleanMultiValuePropertyArray = cleanMultiValuePropertyArray.Take(UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT).ToList();
+                return new UnityNativeValidationResult(521,
+                    $"Multi value user property for key {key} exceeds the limit of {UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT} items. Trimmed");
             }
 
-            return true;
+            return new UnityNativeValidationResult();
         }
 
-        internal bool CleanObjectValue(object objectValue, out object cleanObjectValue, bool isForProfile = false) {
+        internal UnityNativeValidationResult CleanObjectValue(object objectValue, out object cleanObjectValue, bool isForProfile = false) {
             cleanObjectValue = objectValue;
-            if (cleanObjectValue == null) {
-                return true;
-            }
-
-            if (IsAnyNumbericType(objectValue)) {
-                return true;
+            if (cleanObjectValue == null || IsAnyNumericType(objectValue)) {
+                return new UnityNativeValidationResult();
             }
 
             if (cleanObjectValue is string) {
-                var objectValueString = (string)cleanObjectValue;
-                var cleanObjectValueString = objectValueString;
-                var result = CleanProperyValue(cleanObjectValueString, out cleanObjectValueString);
+                var validationResult = CleanProperyValue((string)cleanObjectValue, out var cleanObjectValueString);
                 cleanObjectValue = cleanObjectValueString;
-                return result;
+                return validationResult;
             }
 
             if (IsAnyDateType(objectValue)) {
-                var objectValueDate = (DateTimeOffset)cleanObjectValue;
-                var cleanObjectValueUnixDate = objectValueDate.ToUnixTimeSeconds().ToString("$D_%d");
-                cleanObjectValue = cleanObjectValueUnixDate;
-                return true;
+                cleanObjectValue = ((DateTimeOffset)cleanObjectValue).ToUnixTimeSeconds().ToString("$D_%d");
+                return new UnityNativeValidationResult();
             }
 
-            // Allow only for profile
             if (isForProfile && cleanObjectValue is IEnumerable<string>) {
-                if ((cleanObjectValue as IEnumerable<string>).Count() > MAX_VALUE_PROPERTY_ARRAY_COUNT) {
-                    //NSString* errStr = [NSString stringWithFormat:@"Invalid user profile property array count: %lu; max is: %d", (unsigned long)values.count, kMaxMultiValuePropertyArrayCount];
-                    //             [vr setErrorDesc:errStr];
-                    //             [vr setErrorCode:521];
-                    return false;
-                }
-                return true;
+                var cleanObjectValueArray = cleanObjectValue as IEnumerable<string>;
+                if (cleanObjectValueArray.Count() > UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT) {
+                    return new UnityNativeValidationResult(521,
+                        $"Invalid user profile property array count: {cleanObjectValueArray.Count()}; max is {UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT}");
+                } 
             }
 
-            return false;
+            return new UnityNativeValidationResult();
         }
 
-        internal bool IsRestrictedName(string eventName) {
-            if (string.IsNullOrEmpty(eventName))
-                return false;
-
-            var restrictedNames = new List<string>() {
-                "Notification Sent", "Notification Viewed", "Notification Clicked",
-                "UTM Visited", "App Launched", "Stayed", "App Uninstalled",
-                "wzrk_d", "wzrk_fetch", "SCCampaignOptOut", "Geocluster Entered", "Geocluster Exited"
-            };
-
-            if (restrictedNames.Select(rn => rn.ToLower()).Any(rn => rn == eventName.ToLower())) {
-                // [error setErrorCode:513];
-                // NSString *errStr = [NSString stringWithFormat:@"%@%@", name, @" is a restricted event name. Last event aborted."]
-                return true;
+        internal UnityNativeValidationResult IsRestrictedName(string eventName) {
+            if (string.IsNullOrEmpty(eventName)) {
+                return new UnityNativeValidationResult();
             }
 
-            return false;
+            if (UnityNativeConstants.Validator.IsRestrictedName(eventName)) {
+                return new UnityNativeValidationResult(513, $"{eventName} is restricted event name. Last event aborted.");
+            }
+
+            return new UnityNativeValidationResult();
         }
 
-        internal bool IsDiscardedEvent(string eventName) {
-            // for (NSString *x in discardedEvents)
-            //     if ([name.lowercaseString isEqualToString:x.lowercaseString]) {
-            //         // The event name is discarded
-            //         CTValidationResult *error = [[CTValidationResult alloc] init];
-            //         [error setErrorCode:513];
-            //         NSString *errStr = [NSString stringWithFormat:@"%@%@%@", name, @" is a discarded event, dropping event: ", name];
-            //         [error setErrorDesc:errStr];
-            //         return true;
-            //     }
-            // return false;
-
-            return false;
-        }
-
-        internal void SetDiscardedEvents(List<string> eventNames) {
-
-        }
-
-        // Check this when user enable and specifiy custom cleverTapId
         internal bool IsValidCleverTapId(string cleverTapId) {
+            // This method is used to check if user custom clverTapId is valid
+            
+            if (string.IsNullOrEmpty(cleverTapId)) {
+                // Log? -> ex. CleverTapUseCustomId has been specified to true in config but custom CleverTap ID is null or empty.
+                return false;
+            }
+                
+            if (cleverTapId.Length > 64) {
+                // Log? -> ex. Custom CleverTap ID is greater than 64 characters
+                return false;
 
-            if (string.IsNullOrEmpty(cleverTapId))
-                // Log ex. CleverTapUseCustomId has been specified to true in config but custom CleverTap ID is null or empty.
-                return false;
-            if (cleverTapId.Length > 64)
-                // Log ex. Custom CleverTap ID is greater than 64 characters
-                return false;
+            }
 
             // TODO : Check if this work properly
             var allowedCharactersRegex = @"[=|<>;+.A-Za-z0-9()!:$@_-]*";
-            if (!Regex.IsMatch(cleverTapId, allowedCharactersRegex))
-                // Log ex. Custom CleverTap ID cannot contain special characters apart from (, ), !, :, @, $, _, and -
+            if (!Regex.IsMatch(cleverTapId, allowedCharactersRegex)) {
+                // Log? -> ex. Custom CleverTap ID cannot contain special characters apart from (, ), !, :, @, $, _, and -
                 return false;
+            }
 
             return true;
         }
 
-        private bool CleanProperyValue(string propertyValue, out string cleanProperyValue) {
+        private UnityNativeValidationResult CleanProperyValue(string propertyValue, out string cleanProperyValue) {
             cleanProperyValue = propertyValue;
             if (string.IsNullOrWhiteSpace(cleanProperyValue)) {
-                return true;
+                return new UnityNativeValidationResult();
             }
 
-            cleanProperyValue = ReplaceNotAllowedCharacters(cleanProperyValue, _notAllowedValueCharacters, toLower: true);
-            if (cleanProperyValue.Length > MAX_VALUE_CHARS) {
-                cleanProperyValue = cleanProperyValue.Substring(0, MAX_VALUE_CHARS);
-                //     NSString *errStr = [NSString stringWithFormat:@"%@%@", value, [NSString stringWithFormat:@"... exceeds the limit of %d characters. Trimmed", kMaxValueChars]];
-                //     [vr setErrorDesc:errStr];
-                //     [vr setErrorCode:521];
-                return false;
+            cleanProperyValue = ReplaceNotAllowedCharacters(cleanProperyValue, UnityNativeConstants.Validator.VALUE_NOT_ALLOWED_CHARS, toLower: true);
+            if (cleanProperyValue.Length > UnityNativeConstants.Validator.MAX_VALUE_CHARS) {
+                cleanProperyValue = cleanProperyValue.Substring(0, UnityNativeConstants.Validator.MAX_VALUE_CHARS);
+                return new UnityNativeValidationResult(521, $"{cleanProperyValue}... exceeds the limit of {UnityNativeConstants.Validator.MAX_VALUE_CHARS} characters. Trimmed");
             }
 
-            return true;
+            return new UnityNativeValidationResult();
         }
 
         private string ReplaceNotAllowedCharacters(string str, IReadOnlyList<string> notAllowedCharacters, bool trim = true, bool toLower = false) {
-            var newStr = str;
             if (string.IsNullOrWhiteSpace(str)) {
-                return newStr;
+                return str;
             }
 
+            var newStr = str;
             foreach (var notAllowedCharacter in notAllowedCharacters) {
                 newStr = newStr.Replace(notAllowedCharacter, "");
             }
@@ -211,7 +175,7 @@ namespace CleverTapSDK.Native {
             return o is DateTime || o is DateTimeOffset;
         }
 
-        private bool IsAnyNumbericType(object o) {
+        private bool IsAnyNumericType(object o) {
             return o is short || o is int || o is long ||
                    o is float || o is double || o is decimal;
         }

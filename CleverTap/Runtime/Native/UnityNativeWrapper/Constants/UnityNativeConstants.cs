@@ -1,39 +1,67 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
+        internal static class SDK {
+            internal const string VERSION = "3.0.0";
+        }
         internal static class Profile {
-            internal const string NAME = "Name";
-            internal const string EMAIL = "Email";
-            internal const string EDUCATION = "Education";
-            internal const string MARRIED = "Married";
-            internal const string DATE_OF_BIRTH = "DOB";
-            internal const string BIRTHDAY = "Birthday";
-            internal const string EMPLOYED = "Employed";
-            internal const string GENDER = "Gender";
-            internal const string PHONE = "Phone";
-            internal const string AGE = "Age";
+            internal const string NAME = "userName";
+            internal const string EMAIL = "userEmail";
+            internal const string EDUCATION = "userEducation";
+            internal const string MARRIED = "userMarried";
+            internal const string DATE_OF_BIRTH = "userDOB";
+            internal const string BIRTHDAY = "userBirthday";
+            internal const string EMPLOYED = "userEmployed";
+            internal const string GENDER = "userGender";
+            internal const string PHONE = "userPhone";
+            internal const string AGE = "userAge";
 
             internal static bool IsKeyKnownProfileField(string key) {
                 if (string.IsNullOrWhiteSpace(key)) {
                     return false;
                 }
 
-                var knownProfileFields = new List<string>() { 
-                    NAME.ToLower(), 
-                    EMAIL.ToLower(), 
-                    EDUCATION.ToLower(), 
-                    MARRIED.ToLower(), 
-                    DATE_OF_BIRTH.ToLower(), 
-                    BIRTHDAY.ToLower(), 
-                    EMPLOYED.ToLower(), 
-                    GENDER.ToLower(), 
-                    PHONE.ToLower(), 
-                    AGE.ToLower() 
-                };
+                return GetKnownProfileFieldForKey(key) != null;
+            }
 
-                return knownProfileFields.Contains(key.Trim().ToLower());
+            internal static string GetKnownProfileFieldForKey(string key) {
+                if (string.IsNullOrEmpty(key)) {
+                    return null;
+                }
+
+                var keyLwc = key.Trim().ToLower();
+                if (keyLwc == NAME.ToLower() || keyLwc == "name") {
+                    return NAME;
+                }
+                if (keyLwc == EMAIL.ToLower() || keyLwc == "email") {
+                    return EMAIL;
+                }
+                if (keyLwc == EDUCATION.ToLower() || keyLwc == "education") {
+                    return EDUCATION;
+                }
+                if (keyLwc == DATE_OF_BIRTH.ToLower() || keyLwc == "dob") {
+                    return DATE_OF_BIRTH;
+                }
+                if (keyLwc == BIRTHDAY.ToLower() || keyLwc == "birthday") {
+                    return BIRTHDAY;
+                }
+                if (keyLwc == EMPLOYED.ToLower() || keyLwc == "employed") {
+                    return EMPLOYED;
+                }
+                if (keyLwc == GENDER.ToLower() || keyLwc == "gender") {
+                    return GENDER;
+                }
+                if (keyLwc == PHONE.ToLower() || keyLwc == "phone") {
+                    return PHONE;
+                }
+                if (keyLwc == AGE.ToLower() || keyLwc == "age") {
+                    return AGE;
+                }
+
+                return null;
             }
         }
         internal static class Event
@@ -46,6 +74,8 @@ namespace CleverTapSDK.Native {
             internal const string EVENT_CHARGED_ITEMS = "Items";
 
             internal const string EVENT_TYPE = "type";
+            internal const string EVENT_TYPE_PROFILE = "profile";
+            internal const string EVENT_TYPE_EVENT = "event";
             internal const string UNIX_EPOCH_TIME = "ep";
             internal const string SESSION = "s";
             internal const string SCREEN_COUNT = "pg";
@@ -85,6 +115,47 @@ namespace CleverTapSDK.Native {
             internal const string RUNNING_INSIDE_APP_EXTENSION = "appex";
             internal const string LOCALE_IDENTIFIER = "locale";
             internal const string WV_INIT = "wv_init";
+        }
+        internal static class EventMeta {
+            internal const string TYPE = "type";
+            internal const string TYPE_NAME = "meta";
+            internal const string APPLICATION_FIELDS = "af";
+            internal const string GUID = "g";
+            internal const string ACCOUNT_ID = "id";
+            internal const string ACCOUNT_TOKEN = "tk";
+            internal const string STORED_DEVICE_TOKEN = "ddnd";
+            internal const string FIRST_REQUEST_IN_SESSION = "frs";
+            internal const string FIRST_REQUEST_TIMESTAMP = "f_ts";
+            internal const string LAST_REQUEST_TIMESTAMP = "l_ts";
+            internal const string DEBUG_LEVEL = "debug";
+            
+            internal const string SOURCE = "us";
+            internal const string MEDIUM = "um";
+            internal const string CAMPAIGN = "campaign";
+            internal const string REF = "ref";
+            internal const string WZRK_REF = "wzrk_ref";
+        }
+        internal static class Validator {
+            internal const int MAX_KEY_CHARS = 120;
+            internal const int MAX_VALUE_CHARS = 1024;
+            internal const int MAX_VALUE_PROPERTY_ARRAY_COUNT = 100;
+
+            internal static readonly IReadOnlyList<string> KEY_NOT_ALLOWED_CHARS = new List<string> { ".", ":", "$", "'", "\"", "\\" };
+            internal static readonly IReadOnlyList<string> VALUE_NOT_ALLOWED_CHARS = new List<string> { "'", "\"", "\\" };
+
+            internal static readonly IReadOnlyList<string> RESTRICTED_NAMES = new List<string>() {
+                "Notification Sent", "Notification Viewed", "Notification Clicked",
+                "UTM Visited", "App Launched", "Stayed", "App Uninstalled",
+                "wzrk_d", "wzrk_fetch", "SCCampaignOptOut", "Geocluster Entered", "Geocluster Exited"
+            };
+
+            internal static bool IsRestrictedName(string name) {
+                if (string.IsNullOrEmpty(name)) {
+                    return false;
+                }
+
+                return RESTRICTED_NAMES.Select(rn => rn.ToLower()).Any(rn => rn == name.ToLower());
+            }
         }
     }
 }

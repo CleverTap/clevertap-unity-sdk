@@ -1,13 +1,13 @@
 #if !UNITY_IOS && !UNITY_ANDROID
+using CleverTapSDK.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace CleverTapSDK.Native {
 
     internal class UnityNativeRecordEventQueue : UnityNativeBaseEventQueue {
-
         private List<UnityNativeEvent> eventsDuringFlushProccess;
 
         internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1000) : base(queueLimit, defaultTimerInterval) {
@@ -37,7 +37,7 @@ namespace CleverTapSDK.Native {
                     var events = eventsQueue.Peek();
 
                     // Refactor this
-                    var metaEvent = "{}";
+                    var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
                     var jsonContent = "[";
                     jsonContent += metaEvent;
                     foreach (var json in events.Select(e => jsonContent)) {

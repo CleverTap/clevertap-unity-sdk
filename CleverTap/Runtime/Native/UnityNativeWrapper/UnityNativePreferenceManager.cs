@@ -5,12 +5,11 @@ using UnityEngine;
 namespace CleverTapSDK.Native {
     // TODO: This class probbably need to have more access
     internal class UnityNativePreferenceManager {
-        private readonly UnityNativeSessionManager _sessionManager;
 
         private List<string> _sessionKeys = new List<string>();
 
-        internal UnityNativePreferenceManager(UnityNativeSessionManager sessionManager) {
-            _sessionManager = sessionManager;
+        internal UnityNativePreferenceManager() {
+
         }
 
         internal void GetSessionPreff(string key) {

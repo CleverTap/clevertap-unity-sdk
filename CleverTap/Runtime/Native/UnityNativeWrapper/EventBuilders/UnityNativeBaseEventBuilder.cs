@@ -1,38 +1,129 @@
 #if !UNITY_IOS && !UNITY_ANDROID
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CleverTapSDK.Native {
-    internal class UnityNativeBaseEventBuilder {
-        protected readonly UnityNativeSessionManager _sessionManager;
-        protected readonly UnityNativeEventValidator _eventValidator;
+    internal class UnityNativeEventBuilder {
 
-        internal UnityNativeBaseEventBuilder(UnityNativeSessionManager sessionManager) {
-            sessionManager = _sessionManager;
-            _eventValidator = new UnityNativeEventValidator();
-        }
+        internal UnityNativeEventBuilder() { }
 
-        protected Dictionary<string, object> CleanObjectDictonary(Dictionary<string, object> objectDictonary, bool isForProfile = false /*, Action<string, string> onErrorHandler*/) {
-            var cleanObjectDictonary = new Dictionary<string, object>();
-            foreach (var (key, value) in objectDictonary) {
-                if (string.IsNullOrWhiteSpace(key)) {
-                    // Log error
-                    continue;
-                }
-
-                if (!_eventValidator.CleanObjectKey(key, out var cleanKey)) {
-                    // Log error
-                    continue;
-                }
-
-                if (!_eventValidator.CleanObjectValue(value, out var cleanValue, isForProfile)) {
-                    // Log erorr
-                    continue;
-                }
-
-                cleanObjectDictonary.Add(cleanKey, cleanValue);
+        internal Dictionary<string, object> BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
+            var isMuted = false; // TODO
+            if (isMuted) {
+                return null;
+            }
+                
+            var eventData = new Dictionary<string, object>(eventDetails);
+            switch (eventType) {
+                case UnityNativeEventType.ProfileEvent:
+                    eventData.Add(UnityNativeConstants.Event.EVENT_TYPE, UnityNativeConstants.Event.EVENT_TYPE_PROFILE);
+                    break;
+                case UnityNativeEventType.RecordEvent:
+                    eventData.Add(UnityNativeConstants.Event.EVENT_TYPE, UnityNativeConstants.Event.EVENT_TYPE_EVENT);
+                    // pai
+                    if (!string.IsNullOrEmpty(UnityNativeDeviceManager.Instance.DeviceInfo.BundleId)) {
+                        eventData.Add(UnityNativeConstants.Event.BUNDLE_IDENTIFIER, UnityNativeDeviceManager.Instance.DeviceInfo);
+                    }
+                    break;
+                default:
+                    // NOT Supported YET
+                    throw new NotImplementedException();
             }
 
-            return cleanObjectDictonary;
+            var currentSession = UnityNativeSessionManager.Instance.CurrentSession;
+
+            eventData.Add(UnityNativeConstants.Event.UNIX_EPOCH_TIME, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            eventData.Add(UnityNativeConstants.Event.SESSION, currentSession.SessionId);
+            eventData.Add(UnityNativeConstants.Event.SCREEN_COUNT, UnityNativeSessionManager.Instance.GetScreenCount());
+            eventData.Add(UnityNativeConstants.Event.LAST_SESSION_LENGTH_SECONDS, UnityNativeSessionManager.Instance.GetLastSessionLength());
+            eventData.Add(UnityNativeConstants.Event.IS_FIRST_SESSION, UnityNativeSessionManager.Instance.IsFirstSession());
+            // Check if this is needed
+            eventData.Add("n", "_bg");
+
+            return eventData;
+        }
+        internal Dictionary<string, object> BuildAppFields() {
+            var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
+
+            var data = new Dictionary<string, object>();
+
+            data.Add(UnityNativeConstants.Event.APP_VERSION, deviceInfo.AppVersion);
+            data.Add(UnityNativeConstants.Event.BUILD, deviceInfo.AppBuild);
+            data.Add(UnityNativeConstants.Event.SDK_VERSION, deviceInfo.SdkVersion);
+
+            if (!string.IsNullOrEmpty(deviceInfo.Model)) {
+                data.Add(UnityNativeConstants.Event.MODEL, deviceInfo.Model);
+            }
+
+            if (!string.IsNullOrEmpty(deviceInfo.Manufacturer)) {
+                data.Add(UnityNativeConstants.Event.MANUFACTURER, deviceInfo.Manufacturer);
+            }
+
+            data.Add(UnityNativeConstants.Event.OS_VERSION, deviceInfo.OsVersion);
+
+            if (!string.IsNullOrEmpty(deviceInfo.Carrier)) {
+                data.Add(UnityNativeConstants.Event.CARRIER, deviceInfo.Carrier);
+            }
+
+            // Check this
+            var useIp = false;
+            data.Add(UnityNativeConstants.Event.USE_IP, useIp);
+            if (useIp) {
+                // Check network Type
+                //data.Add(UnityNativeConstants.Event.NETWORK_TYPE, "")
+
+                data.Add(UnityNativeConstants.Event.CONNECTED_TO_WIFI, deviceInfo.Wifi);
+            }
+
+            // Check this
+            var runningInsideAppExtension = false;
+            if (runningInsideAppExtension) {
+                data.Add(UnityNativeConstants.Event.RUNNING_INSIDE_APP_EXTENSION, 1);
+            }
+
+            data.Add(UnityNativeConstants.Event.OS_NAME, deviceInfo.OsName);
+            data.Add(UnityNativeConstants.Event.SCREEN_WIDTH, deviceInfo.DeviceWidth);
+            data.Add(UnityNativeConstants.Event.SCREEN_HEIGHT, deviceInfo.DeviceHeight);
+
+            if (!string.IsNullOrEmpty(deviceInfo.CountryCode)) {
+                data.Add(UnityNativeConstants.Event.COUNTRY_CODE, deviceInfo.CountryCode);
+            }
+
+            if (!string.IsNullOrEmpty(deviceInfo.Locale)) {
+                data.Add(UnityNativeConstants.Event.LOCALE_IDENTIFIER, deviceInfo.Locale);
+            }
+
+            // sslpin
+            //data.Add(UnityNativeConstants.Event.SSL_PINNING, false);
+
+            // Check this
+            //string proxyDomain = null;
+            //if (!string.IsNullOrEmpty(proxyDomain)) {
+            //    data.Add(UnityNativeConstants.Event.PROXY_DOMAIN, proxyDomain);
+            //}
+
+            // Check this
+            //string spikyProxyDomain = null;
+            //if (!string.IsNullOrEmpty(spikyProxyDomain)) {
+            //    data.Add(UnityNativeConstants.Event.SPIKY_PROXY_DOMAIN, spikyProxyDomain);
+            //}
+
+            // Check this
+            bool wv_init = false;
+            if (wv_init) {
+                data.Add(UnityNativeConstants.Event.WV_INIT, true);
+            }
+
+            return data;
+        }
+        internal Dictionary<string, object> BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
+            var eventData = BuildEvent(eventType, eventDetails);
+            var appFields = BuildAppFields();
+
+            return new List<Dictionary<string, object>>() { eventData, appFields }
+                .SelectMany(dict => dict)
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
     }
 }

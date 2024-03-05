@@ -3,12 +3,26 @@ using System;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSessionManager {
+        private static readonly Lazy<UnityNativeSessionManager> instance = new Lazy<UnityNativeSessionManager>(() => new UnityNativeSessionManager());
+        
         private const long SESSION_LENGTH_SECONDS = 20 * 60;
-
+        
         private UnityNativeSession _currentSession;
 
-        internal UnityNativeSessionManager() {
+        private UnityNativeSessionManager() {
             _currentSession = new UnityNativeSession(isFirstSession: true);
+        }
+
+        internal static UnityNativeSessionManager Instance => instance.Value;
+
+        public UnityNativeSession CurrentSession {
+            get {
+                if (IsSessionExpired()) {
+                    _currentSession = new UnityNativeSession(userIdentity: _currentSession.UserIdentity);
+                }
+
+                return _currentSession;
+            }
         }
 
         internal Guid GetSessionId() {
@@ -24,12 +38,8 @@ namespace CleverTapSDK.Native {
         }
 
         internal int GetScreenCount() {
-            // TODO: Implement this if needed
+            // TODO: Implement if needed
             return 1;
-        }
-
-        public bool IsAppLaunched() {
-            return _currentSession.isAppLaunched;
         }
 
         public void SetIsAppLaunched(bool isAppLaunched) {
