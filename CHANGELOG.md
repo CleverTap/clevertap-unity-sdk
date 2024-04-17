@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+Version 3.0.0 *(15 Jan, 2024)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v6.0.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev6.0.0)
+- Updated to [CleverTap iOS SDK v6.0.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/6.0.0)
+- Support `DateTime` objects for `ProfilePush`, `OnUserLogin`, `RecordEvent` and `RecordChargedEventWithDetailsAndItems`
+- Support for [Product Experiences - Remote Config/Variables](docs/Variables.md)  
+- Unity Package Manager support
+- CleverTap structure and interface changes:
+    - Use the static `CleverTap.cs` methods. 
+    - `CleverTapBinding.cs` and `CleveTapUnity.cs` are now obsolete. They are still usable with minor changes but will be removed in the future.
+    - Improved mechanism to handle callbacks - add an event listener for a callback directly through the `CleverTap` static events. _No need_ to set all callbacks in the `CleverTapUnity.cs` _anymore_.
+    - iOS Settings are configured from Assets -> CleverTap Settings
+- CleverTap SDK uses EDM4U for dependency management
+
 Version 2.4.2 *(24 October, 2023)*
 -------------------------------------------
 - Profile APIs support for multiple data types
