@@ -33,10 +33,6 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compileOnly fileTree('libs')
     implementation 'com.clevertap.android:clevertap-android-sdk:6.2.1'
