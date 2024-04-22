@@ -33,10 +33,6 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compileOnly fileTree('libs')
 
