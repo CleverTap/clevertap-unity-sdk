@@ -1,4 +1,4 @@
-﻿using CleverTapSDK.Constants;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Common {
