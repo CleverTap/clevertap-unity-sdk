@@ -1,5 +1,5 @@
 #if !UNITY_IOS && !UNITY_ANDROID
-using UnityEditor;
+using System;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
@@ -109,7 +109,7 @@ namespace CleverTapSDK.Native {
         }
 
         private string GenerateDeviceId() {
-            var guid = GUID.Generate().ToString();
+            var guid = Guid.NewGuid().ToString();
             return "-" + guid.Replace("-", "").Trim().ToLower();
         }
     }

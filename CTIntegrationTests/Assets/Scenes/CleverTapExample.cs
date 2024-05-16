@@ -22,16 +22,16 @@ public class CleverTapExample : MonoBehaviour {
     void OnInit() {
         DontDestroyOnLoad(gameObject);
 
-        CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
-        CleverTap.OnCleverTapProfileInitializedCallback += CleverTapProfileInitializedCallback;
-        CleverTap.OnCleverTapProfileUpdatesCallback += CleverTapProfileUpdatesCallback;
-        CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
+        //CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
+       // CleverTap.OnCleverTapProfileInitializedCallback += CleverTapProfileInitializedCallback;
+       // CleverTap.OnCleverTapProfileUpdatesCallback += CleverTapProfileUpdatesCallback;
+       // CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
         CleverTap.OnCleverTapInitCleverTapIdCallback += CleverTapInitCleverTapIdCallback;
-        CleverTap.OnCleverTapInAppNotificationDismissedCallback += CleverTapInAppNotificationDismissedCallback;
-        CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapInAppNotificationShowCallback;
-        CleverTap.OnCleverTapOnPushPermissionResponseCallback += CleverTapOnPushPermissionResponseCallback;
-        CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapInAppNotificationButtonTapped;
-        CleverTap.OnCleverTapInboxDidInitializeCallback += CleverTapInboxDidInitializeCallback;
+       // CleverTap.OnCleverTapInAppNotificationDismissedCallback += CleverTapInAppNotificationDismissedCallback;
+        //CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapInAppNotificationShowCallback;
+        //CleverTap.OnCleverTapOnPushPermissionResponseCallback += CleverTapOnPushPermissionResponseCallback;
+        //CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapInAppNotificationButtonTapped;
+        /* CleverTap.OnCleverTapInboxDidInitializeCallback += CleverTapInboxDidInitializeCallback;
         CleverTap.OnCleverTapInboxMessagesDidUpdateCallback += CleverTapInboxMessagesDidUpdateCallback;
         CleverTap.OnCleverTapInboxCustomExtrasButtonSelect += CleverTapInboxCustomExtrasButtonSelect;
         CleverTap.OnCleverTapInboxItemClicked += CleverTapInboxItemClicked;
@@ -40,7 +40,8 @@ public class CleverTapExample : MonoBehaviour {
         CleverTap.OnCleverTapProductConfigActivated += CleverTapProductConfigActivated;
         CleverTap.OnCleverTapProductConfigInitialized += CleverTapProductConfigInitialized;
         CleverTap.OnCleverTapFeatureFlagsUpdated += CleverTapFeatureFlagsUpdated;
-        CleverTap.OnVariablesChanged += CleverTapVariablesChanged;
+         */
+         //ÞˀCleverTap.OnVariablesChanged += CleverTapVariablesChanged;
 
         //Disable CleverTap unity logger
         //CleverTap.SetLogLevel(LogLevel.None);
@@ -58,7 +59,7 @@ public class CleverTapExample : MonoBehaviour {
         OnAndroidInit();
 #endif
 
-        // set to true to stop sending events to CleverTap
+        //TODO: set to true to stop sending events to CleverTap
         CleverTap.SetOptOut(false);
         // set to true to enable Device Network information to be sent to CleverTap
         CleverTap.EnableDeviceNetworkInfoReporting(true);
@@ -66,49 +67,11 @@ public class CleverTapExample : MonoBehaviour {
             CleverTap.EnablePersonalization();
         }
 
-        //app inbox
-        CleverTap.InitializeInbox();
-        Debug.Log("InboxInit started");
-
+       
         CleverTap.RecordEvent("Test Unity Event");
         //Invoke("LaunchInbox",30.0f);
 
-        //Push primer APIs usage
-        //Half-Interstial Local InApp
-        Dictionary<string, object> item = new Dictionary<string, object> {
-            { "inAppType", "half-interstitial" },
-            { "titleText", "Get Notified" },
-            { "messageText", "Please enable notifications on your device to use Push Notifications." },
-            { "followDeviceOrientation", true },
-            { "positiveBtnText", "Allow" },
-            { "negativeBtnText", "Cancel" },
-            { "backgroundColor", "#FFFFFF" },
-            { "btnBorderColor", "#0000FF" },
-            { "titleTextColor", "#0000FF" },
-            { "messageTextColor", "#000000" },
-            { "btnTextColor", "#FFFFFF" },
-            { "btnBackgroundColor", "#0000FF" },
-            { "imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png" },
-            { "btnBorderRadius", "2" },
-            { "fallbackToSettings", true }
-        };
-        CleverTap.PromptPushPrimer(item);
-
-        //Alert Local InApp
-        //Dictionary<string, object> item2 = new Dictionary<string, object>() {
-        //    { "inAppType", "half-interstitial" },
-        //    {"titleText", "Get Notified" },
-        //    {"messageText", "Please enable notifications on your device to use Push Notifications." },
-        //    {"followDeviceOrientation", true },
-        //    { "fallbackToSettings", true }
-        //};
-        //CleverTap.PromptPushPrimer(item2);
-
-        /*Prompt to show hard notification permission dialog
-          true - fallbacks to app's notification settings if permission is denied
-          false - does not fallback to app's notification settings if permission is denied
-        */
-        CleverTap.PromptForPushPermission(false);
+        
     }
 
     /* --------------------------------------------------------------------------------

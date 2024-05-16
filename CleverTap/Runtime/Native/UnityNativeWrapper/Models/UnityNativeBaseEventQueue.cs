@@ -1,9 +1,7 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
-using UnityEditor.PackageManager.Requests;
 
 namespace CleverTapSDK.Native {
 
@@ -22,7 +20,7 @@ namespace CleverTapSDK.Native {
 
         internal virtual event EventTimerTick OnEventTimerTick;
 
-        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 0) {
+        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) {
             this.queueLimit = queueLimit;
             this.defaultTimerInterval = defaultTimerInterval;
             timer = new Timer(this.defaultTimerInterval);

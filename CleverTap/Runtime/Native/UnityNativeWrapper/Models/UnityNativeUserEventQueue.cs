@@ -10,7 +10,7 @@ namespace CleverTapSDK.Native {
     internal class UnityNativeUserEventQueue : UnityNativeBaseEventQueue {
         private List<UnityNativeEvent> eventsDuringFlushProccess;
 
-        internal UnityNativeUserEventQueue(int queueLimit = 49, int defaultTimerInterval = 0) : base(queueLimit, defaultTimerInterval) {
+        internal UnityNativeUserEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) {
             eventsDuringFlushProccess = new List<UnityNativeEvent>();
         }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CleverTapSDK.Utilities;
 //TODO: confirm all validators and interceptors 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventValidator {
@@ -89,7 +90,17 @@ namespace CleverTapSDK.Native {
             }
 
             if (IsAnyDateType(objectValue)) {
-                cleanObjectValue = ((DateTimeOffset)cleanObjectValue).ToUnixTimeSeconds().ToString("$D_%d");
+                string dateFormat = "dd-MM-yyyy HH:mm:ss";
+
+                if (DateTimeOffset.TryParseExact(cleanObjectValue.ToString(), dateFormat, null, System.Globalization.DateTimeStyles.None, out DateTimeOffset dateTimeOffset))
+                {
+                    cleanObjectValue = dateTimeOffset.ToUnixTimeSeconds().ToString("$D_%d");
+                    Console.WriteLine(cleanObjectValue); // Output the result
+                }
+                else
+                {
+                    Console.WriteLine("The provided value is not a valid date and time.");
+                }
                 return new UnityNativeValidationResult();
             }
 
