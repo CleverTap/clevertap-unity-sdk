@@ -62,7 +62,10 @@ namespace CleverTapSDK.Native {
                     .SetQueryParameters(queryParameters);
 
                     var response = await UnityNativeNetworkEngine.Instance.ExecuteRequest(request);
-                    if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
+
+                    bool processHeaders = UnityNativeNetworkEngine.Instance.ProcessIncomingHeaders(response);
+
+                    if (processHeaders && response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
                     {
                         proccesedEvents.AddRange(events);
                         retryCount = 0;

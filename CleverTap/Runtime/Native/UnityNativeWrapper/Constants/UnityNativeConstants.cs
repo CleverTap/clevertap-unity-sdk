@@ -1,4 +1,5 @@
 #if !UNITY_IOS && !UNITY_ANDROID
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -164,6 +165,7 @@ namespace CleverTapSDK.Native {
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
+            internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
 
             internal const string QUERY_OS = "os";
             internal const string QUERY_SKD_REVISION = "os";

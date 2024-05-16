@@ -18,6 +18,7 @@ namespace CleverTapSDK.Native {
         });
 
         private string _baseURI;
+        private bool _mute;
         private int? _timeout;
         private IReadOnlyDictionary<string, string> _headers;
         private KeyValuePair<string, string>? _authorization;
@@ -39,6 +40,14 @@ namespace CleverTapSDK.Native {
             _timeout = timeout;
             return this;
         }
+
+        internal UnityNativeNetworkEngine SetMute(bool mute)
+        {
+            _mute = mute;
+            return this;
+        }
+
+        internal bool IsMuted() { return _mute; }
 
         internal UnityNativeNetworkEngine SetHeaders(Dictionary<string, string> headers) {
             _headers = headers;
@@ -84,17 +93,32 @@ namespace CleverTapSDK.Native {
 
             if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
             {
-                if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_NAME))
-                {
-                    _baseURI = response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
-                    return true;
-                }
+                return ProcessIncomingHeaders(response);
             }
 
             return false;
         }
 
-        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request) {
+        internal bool ProcessIncomingHeaders(UnityNativeResponse response)
+        {
+            if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_MUTE))
+            {
+                _mute = bool.Parse(response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_MUTE]);
+                if (_mute)
+                    return false;
+            }
+
+            if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_NAME))
+            {
+                _baseURI = response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
+            }
+
+            return true;
+        }
+
+
+        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request)
+        {
             if (request == null) {
                 return null;
             }

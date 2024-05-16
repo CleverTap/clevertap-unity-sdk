@@ -76,7 +76,7 @@ namespace CleverTapSDK.Native {
                 request = UnityWebRequest.Get(uri);
             }
             else if (_method == UnityNativeConstants.Network.REQUEST_POST) {
-                request = UnityWebRequest.PostWwwForm(uriString, _requestBody);
+                request = UnityWebRequest.Post(uriString, _requestBody);
                 request.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
             }
             else {

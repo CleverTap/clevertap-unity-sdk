@@ -8,8 +8,8 @@ namespace CleverTapSDK.Native {
         internal UnityNativeEventBuilder() { }
 
         internal Dictionary<string, object> BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
-            var isMuted = false; // TODO
-            if (isMuted) {
+           
+            if (UnityNativeNetworkEngine.Instance.IsMuted()) {
                 return null;
             }
                 
