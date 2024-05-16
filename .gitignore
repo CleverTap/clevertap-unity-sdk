@@ -25,6 +25,10 @@ Temp/
 Obj/
 UnityGenerated/
 Library/
+UserSettings/
+FileContentIndex/
+*.vsidx
+*.dwlt
 *.pyc
  
 # ===================================== #
