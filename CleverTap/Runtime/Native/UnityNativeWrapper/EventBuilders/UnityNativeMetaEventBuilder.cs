@@ -16,10 +16,11 @@ namespace CleverTapSDK.Native {
             metaDetails.Add(UnityNativeConstants.EventMeta.APPLICATION_FIELDS, new UnityNativeEventBuilder().BuildAppFields());
             metaDetails.Add(UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId);
             metaDetails.Add(UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken);
-            //metaDetails.Add(UnityNativeConstants.EventMeta.STORED_DEVICE_TOKEN, null); Add this implementation if needed
+            //TODO: metaDetails.Add(UnityNativeConstants.EventMeta.STORED_DEVICE_TOKEN, null); Add this implementation if needed
             metaDetails.Add(UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, UnityNativeSessionManager.Instance.IsFirstSession());
             metaDetails.Add(UnityNativeConstants.EventMeta.FIRST_REQUEST_TIMESTAMP, DateTimeOffset.UtcNow.ToUnixTimeSeconds()); // Add this implementation
             metaDetails.Add(UnityNativeConstants.EventMeta.LAST_REQUEST_TIMESTAMP, DateTimeOffset.UtcNow.ToUnixTimeSeconds()); // Add this implementation
+           // TODO: 
             //metaDetails.Add(UnityNativeConstants.EventMeta.DEBUG_LEVEL, 3); // Add this implementation if needed
             //metaDetails.Add(UnityNativeConstants.EventMeta.SOURCE, null); // Add this implementation if needed
             //metaDetails.Add(UnityNativeConstants.EventMeta.MEDIUM, null); // Add this implementation if needed

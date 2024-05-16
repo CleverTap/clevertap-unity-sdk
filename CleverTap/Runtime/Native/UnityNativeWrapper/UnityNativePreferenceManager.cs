@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
-    // TODO: This class probbably need to have more access
-    internal class UnityNativePreferenceManager {
+        internal class UnityNativePreferenceManager {
 
         private List<string> _sessionKeys = new List<string>();
 

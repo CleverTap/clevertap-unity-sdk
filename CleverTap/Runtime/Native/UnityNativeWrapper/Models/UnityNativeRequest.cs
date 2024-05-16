@@ -68,14 +68,16 @@ namespace CleverTapSDK.Native {
         }
 
         internal UnityWebRequest BuildRequest(string baseURI) {
-            var uri = BuildURI(baseURI);
+            Uri uri = BuildURI(baseURI);
+            string uriString = uri.ToString();
 
             UnityWebRequest request;
-            if (_method == "GET") {
+            if (_method == UnityNativeConstants.Network.REQUEST_GET) {
                 request = UnityWebRequest.Get(uri);
             }
-            else if (_method == "POST") {
-                request = UnityWebRequest.Post(uri, _requestBody, "application/json; charset=utf-8");
+            else if (_method == UnityNativeConstants.Network.REQUEST_POST) {
+                request = UnityWebRequest.PostWwwForm(uriString, _requestBody);
+                request.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
             }
             else {
                 throw new NotSupportedException("Http method is not supported");

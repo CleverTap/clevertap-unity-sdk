@@ -1,6 +1,7 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
 
+
 namespace CleverTapSDK.Native {
     internal class UnityNativeEvent {
         private readonly int? _id;
@@ -20,6 +21,14 @@ namespace CleverTapSDK.Native {
             _eventType = eventType;
             _jsonContent = jsonContent;
             _timestamp = timestamp ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
+
+        internal UnityNativeEvent(int id,UnityNativeEventDBEntry eventDBEntry)
+        {
+            _id = id;
+            _eventType = eventDBEntry.EventType;
+            _jsonContent = eventDBEntry.JsonContent;
+            _timestamp = eventDBEntry.Timestamp;
         }
 
         internal int? Id => _id;

@@ -24,6 +24,7 @@ namespace CleverTapSDK.Native {
         private readonly bool _wifi;
         private readonly string _locale;
 
+//TODO: test and log info for MAC, windows and WEBGl
         internal UnityNativeDeviceInfo() {
             _sdkVersion = UnityNativeConstants.SDK.VERSION;
             _appVersion = UnityNativeConstants.SDK.VERSION; // Check where to get this

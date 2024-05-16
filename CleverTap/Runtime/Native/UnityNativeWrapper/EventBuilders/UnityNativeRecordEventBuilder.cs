@@ -50,7 +50,7 @@ namespace CleverTapSDK.Native {
             }
 
             if (items.Count > 50) {
-                // Log error?
+                // TODO: Log error?
             }
 
             var eventDetails = new Dictionary<string, object>();

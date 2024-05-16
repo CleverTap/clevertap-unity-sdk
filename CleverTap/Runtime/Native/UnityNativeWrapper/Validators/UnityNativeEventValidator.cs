@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+//TODO: confirm all validators and interceptors 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventValidator {
         internal UnityNativeValidationResult CleanEventName(string eventName, out string cleanEventName) {

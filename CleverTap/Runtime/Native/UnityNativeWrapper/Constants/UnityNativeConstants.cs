@@ -163,11 +163,18 @@ namespace CleverTapSDK.Native {
             internal const string CT_TEMP_URL = "https://sk1-clevertap-prod.com"; // remove this
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
+            internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
 
             internal const string QUERY_OS = "os";
             internal const string QUERY_SKD_REVISION = "os";
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
+
+            internal const string REQUEST_POST = "POST";
+            internal const string REQUEST_GET = "GET";
+            internal const string REQUEST_PATH_RECORD = "a1";
+            internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
+            internal const string REQUEST_PATH_HAND_SHAKE = "hello";
         }
     }
 }
