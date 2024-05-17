@@ -22,15 +22,16 @@ namespace CleverTapSDK.Native {
                 eventValidationResultsWithErrors.AddRange(cleanObjectDictonaryValidationResult.ValidationResults.Where(vr => !vr.IsSuccess));
             }
 
+
+            var profile = new Dictionary<string, object>();
             foreach (var (key, value) in allEventFields) {
                 if (UnityNativeConstants.Profile.IsKeyKnownProfileField(key)) {
-                    systemFields.Add(UnityNativeConstants.Profile.GetKnownProfileFieldForKey(key), value);
+                    profile.Add(UnityNativeConstants.Profile.GetKnownProfileFieldForKey(key), value);
                     continue;
-                }
-
-                customFields.Add(key, value);
+                }                
             }
-            
+
+            customFields.Add("profile", profile);
             return new UnityNativeEventBuilderResult<UnityNativePushEventResult>(eventValidationResultsWithErrors, new UnityNativePushEventResult(systemFields, customFields));
         }
 

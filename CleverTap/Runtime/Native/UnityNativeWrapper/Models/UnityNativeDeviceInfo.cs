@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeDeviceInfo {
-        private readonly string _sdkVersion;
+        private readonly long _sdkVersion;
         private readonly string _appVersion;
         private readonly string _appBuild;
         private readonly string _bundleId;
@@ -27,8 +27,8 @@ namespace CleverTapSDK.Native {
 //TODO: test and log info for MAC, windows and WEBGl
         internal UnityNativeDeviceInfo() {
             _sdkVersion = UnityNativeConstants.SDK.VERSION;
-            _appVersion = UnityNativeConstants.SDK.VERSION; // Check where to get this
-            _appBuild = UnityNativeConstants.SDK.VERSION; // Check where to get this
+            _appVersion = Application.version; // Check where to get this
+            _appBuild = Application.productName; // Check where to get this
             _bundleId = "123456789"; // Check if we need this and how to get
             _osName = GetOSName(); // Only suppport for Windows and MacOS
             _osVersion = SystemInfo.operatingSystem;
@@ -47,7 +47,7 @@ namespace CleverTapSDK.Native {
             _locale = "xx_XX"; // Check if we need this and how to get
         }
 
-        internal string SdkVersion => _sdkVersion;
+        internal long SdkVersion => _sdkVersion;
 
         internal string AppVersion => _appVersion;
 
@@ -86,7 +86,8 @@ namespace CleverTapSDK.Native {
         internal string Locale => _locale;
 
         private string GetOSName() {
-            var operatingSystem = SystemInfo.operatingSystem?.ToLower();
+            var operatingSystem = SystemInfo.operatingSystem?.ToLower().Replace(" ", "");
+
             if (operatingSystem?.ToLower().Contains("windows") == true) {
                 return "Windows";
             }

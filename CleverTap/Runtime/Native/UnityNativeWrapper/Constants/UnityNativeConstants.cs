@@ -5,15 +5,15 @@ using System.Linq;
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
         internal static class SDK {
-            internal const string VERSION = "3.0.0";
+            internal const long VERSION = 3000;
             internal const string REVISION = "30000";
         }
         internal static class Profile {
-            internal const string NAME = "userName";
-            internal const string EMAIL = "userEmail";
+            internal const string NAME = "name";
+            internal const string EMAIL = "email";
             internal const string EDUCATION = "userEducation";
             internal const string MARRIED = "userMarried";
-            internal const string DATE_OF_BIRTH = "userDOB";
+            internal const string DATE_OF_BIRTH = "DOB";
             internal const string BIRTHDAY = "userBirthday";
             internal const string EMPLOYED = "userEmployed";
             internal const string GENDER = "userGender";
@@ -167,7 +167,7 @@ namespace CleverTapSDK.Native {
             internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
 
             internal const string QUERY_OS = "os";
-            internal const string QUERY_SKD_REVISION = "os";
+            internal const string QUERY_SKD_REVISION = "t";
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
 

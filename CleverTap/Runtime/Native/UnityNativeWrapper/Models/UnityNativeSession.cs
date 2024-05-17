@@ -3,7 +3,7 @@ using System;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSession {
-        private readonly Guid _sessionId;
+        private readonly long _sessionId;
         private readonly long _startTimestamp;
         private readonly bool _isFirstSession;
         
@@ -13,7 +13,7 @@ namespace CleverTapSDK.Native {
 
         internal UnityNativeSession(bool isFirstSession = false, string userIdentity = null)
         {
-            _sessionId = Guid.NewGuid();
+            _sessionId =  DateTime.Now.Millisecond / 1000;
             _startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             _isFirstSession = isFirstSession;
             _isAppLaunched = false;
@@ -21,7 +21,7 @@ namespace CleverTapSDK.Native {
             _userIdentity = userIdentity;
         }
         
-        internal Guid SessionId => _sessionId;
+        internal long SessionId => _sessionId;
         internal long StartTimestamp => _startTimestamp;
         internal bool IsFirstSession => _isFirstSession;
         internal bool isAppLaunched => _isAppLaunched;

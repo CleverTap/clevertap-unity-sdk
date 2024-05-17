@@ -20,11 +20,8 @@ namespace CleverTapSDK.Native {
         protected int retryCount = 0;
         protected bool isInFlushProcess = false;
         protected Queue<List<UnityNativeEvent>> eventsQueue;
-        protected List<UnityNativeEvent> lastEventsInQueue;
         protected abstract string RequestPath { get; }
         internal virtual event EventTimerTick OnEventTimerTick;
-
-        private List<UnityNativeEvent> eventsDuringFlushProccess;
 
 
         internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) {
@@ -33,21 +30,18 @@ namespace CleverTapSDK.Native {
             timer = new Timer(this.defaultTimerInterval);
             timer.AutoReset = false;
             timer.Elapsed += OnTimerTick;
-
             eventsQueue = new Queue<List<UnityNativeEvent>>();
-            lastEventsInQueue = new List<UnityNativeEvent>();
-            eventsQueue.Enqueue(lastEventsInQueue);
         }
 
-        internal virtual void QueueEvent(UnityNativeEvent newEvent) {
-            if (lastEventsInQueue == null || lastEventsInQueue.Count == queueLimit || eventsQueue.Count == 0) {
-                if (lastEventsInQueue == null)
-                    lastEventsInQueue = new List<UnityNativeEvent>();
-                lastEventsInQueue.Add(newEvent);
-                eventsQueue.Enqueue(lastEventsInQueue);
-            } else if (lastEventsInQueue.Count < queueLimit) {
-                lastEventsInQueue.Add(newEvent);
+        internal virtual void QueueEvent(UnityNativeEvent newEvent)
+        {
+            if (eventsQueue.Count == 0 || eventsQueue.Peek().Count == queueLimit)
+            {
+                eventsQueue.Enqueue(new List<UnityNativeEvent>());
             }
+
+            eventsQueue.Peek().Add(newEvent);
+            ResetAndStartTimer();
         }
 
         internal virtual void QueueEvents(List<UnityNativeEvent> newEvents) {
@@ -81,7 +75,7 @@ namespace CleverTapSDK.Native {
             {
                 try
                 {
-                    var events = eventsQueue.Peek();
+                    var events = eventsQueue.Dequeue();
                     var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
@@ -102,17 +96,16 @@ namespace CleverTapSDK.Native {
                         .SetQueryParameters(queryParameters);
 
                     var response = await executeRequest(request);
-                    bool processHeaders = UnityNativeNetworkEngine.Instance.ProcessIncomingHeaders(response);
-
-                    if (processHeaders && response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
+                    
+                    if (CanProcessEventResponse(response))
                     {
                         proccesedEvents.AddRange(events);
-                        lastEventsInQueue.Clear();
-                        eventsQueue.Dequeue();
                         retryCount = 0;
                     }
                     else
                     {
+                        //ReEnque events in case of error
+                        QueueEvents(events);
                         OnEventError();
                     }
                 }
@@ -125,8 +118,7 @@ namespace CleverTapSDK.Native {
             }
 
             isInFlushProcess = false;
-            QueueEvents(eventsDuringFlushProccess);
-            eventsDuringFlushProccess.Clear();
+          
             if (eventsQueue.Any())
             {
                 ResetAndStartTimer();
@@ -139,12 +131,12 @@ namespace CleverTapSDK.Native {
             return proccesedEvents;
         }
 
+        protected abstract bool CanProcessEventResponse(UnityNativeResponse response);
+       
         protected void OnEventError()
         {
             retryCount++;
             isInFlushProcess = false;
-            QueueEvents(eventsDuringFlushProccess);
-            eventsDuringFlushProccess.Clear();
             ResetAndStartTimer();
         }
 

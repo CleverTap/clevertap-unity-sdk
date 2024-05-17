@@ -151,7 +151,7 @@ namespace CleverTapSDK.Native {
             var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_HAND_SHAKE, UnityNativeConstants.Network.REQUEST_GET);
             var response = await ExecuteRequest(request);
 
-            if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
+            if (response.IsSuccess())
             {
                 return ProcessIncomingHeaders(response);
             }
@@ -223,7 +223,10 @@ namespace CleverTapSDK.Native {
                 }
             }
 
+            
+
             var response = await SendRequest(request);
+            CleverTapLogger.Log($"Response: content: {response.Content} headers: {Json.Serialize(response.Headers)}");
 
             // Intercept reponse before retuning
             if (request.ResponseInterceptors?.Count > 0)
@@ -297,7 +300,7 @@ namespace CleverTapSDK.Native {
 
             try {
                 var unityWebRequest = request.BuildRequest(_baseURI);
-
+                CleverTapLogger.Log($"Sending POST Request data: {request.RequestBody}");
                 // Workaround for async
                 var unityWebRequestAsyncOperation = unityWebRequest.SendWebRequest();
                 while (!unityWebRequestAsyncOperation.isDone) {
@@ -313,10 +316,10 @@ namespace CleverTapSDK.Native {
                     responseFailureCount++;
                 }
 
+            
                 switch (unityWebRequest.result)
                 {
                     case UnityWebRequest.Result.Success:
-                        CleverTapLogger.Log("Sucess");
                         return new UnityNativeResponse(request, (HttpStatusCode)unityWebRequest.responseCode, unityWebRequest.GetResponseHeaders(), unityWebRequest.downloadHandler.text);
 
                     case UnityWebRequest.Result.ConnectionError:

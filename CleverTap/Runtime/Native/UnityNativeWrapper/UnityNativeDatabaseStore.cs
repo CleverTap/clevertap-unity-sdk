@@ -29,6 +29,7 @@ namespace CleverTapSDK.Native {
             var dbEventId = dataService.Insert(new UnityNativeEventDBEntry(newEvent.EventType, newEvent.JsonContent, newEvent.Timestamp));
             var storedEvent = new UnityNativeEvent(dbEventId, newEvent.EventType, newEvent.JsonContent, newEvent.Timestamp);
 
+            CleverTapLogger.Log($"Event added to Queue id: {dbEventId} type: {newEvent.EventType} jsonContent: {newEvent.JsonContent}");
             if (OnEventStored != null) {
                 OnEventStored(storedEvent);
             }
@@ -42,17 +43,18 @@ namespace CleverTapSDK.Native {
                 return;
             }
 
+            CleverTapLogger.Log("Adding Cache events to processing queue from Database");
+
             List<UnityNativeEventDBEntry> entries = dataService.GetAllEntries<UnityNativeEventDBEntry>();
 
             foreach (var entry in entries)
             {
                 if (OnEventStored != null)
                 {
+                    CleverTapLogger.Log($"Event added to Queue id: {entry.Id} type: {entry.EventType} jsonContent: {entry.JsonContent}");
                     OnEventStored(new UnityNativeEvent(entry.Id, entry));
                 }
-            }
-
-            CleverTapLogger.Log("Cache events added to processing queue from Database");
+            }            
         }
 
         internal void DeleteEvents(List<UnityNativeEvent> eventsToRemove) {

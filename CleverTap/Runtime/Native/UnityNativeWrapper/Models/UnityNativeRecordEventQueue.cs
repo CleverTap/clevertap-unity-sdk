@@ -1,9 +1,5 @@
 #if !UNITY_IOS && !UNITY_ANDROID
-using CleverTapSDK.Utilities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace CleverTapSDK.Native {
@@ -15,8 +11,9 @@ namespace CleverTapSDK.Native {
         internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) {
             eventsDuringFlushProccess = new List<UnityNativeEvent>();
         }
+        internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) { }
 
-        protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_USER_VARIABLES;
+        protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_RECORD;
 
         internal override async Task<List<UnityNativeEvent>> FlushEvents()
         {
@@ -31,6 +28,10 @@ namespace CleverTapSDK.Native {
 
             base.QueueEvent(recordEvent);
             ResetAndStartTimer();
+        protected override bool CanProcessEventResponse(UnityNativeResponse response)
+        {
+            bool processHeaders = UnityNativeNetworkEngine.Instance.ProcessIncomingHeaders(response);
+            return processHeaders && response.IsSuccess();
         }
     }
 }

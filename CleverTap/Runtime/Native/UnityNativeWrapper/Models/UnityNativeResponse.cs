@@ -23,6 +23,11 @@ namespace CleverTapSDK.Native {
         internal Dictionary<string, string> Headers => _headers;
         internal string Content => _content;
         internal string ErrorMessage => _errorMessage;
+
+        internal bool IsSuccess()
+        {
+            return _statusCode >= HttpStatusCode.OK && _statusCode <= HttpStatusCode.Accepted;
+        }
     }
 }
 #endif

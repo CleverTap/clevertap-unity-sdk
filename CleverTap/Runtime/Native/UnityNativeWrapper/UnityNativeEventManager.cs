@@ -67,8 +67,11 @@ namespace CleverTapSDK.Native {
             // Flush / Remove all existing events
             // Reset session
             // Get info for user if exsits
-            UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(false);
-            RecordAppLaunch();
+            if (!UnityNativeSessionManager.Instance.CurrentSession.isAppLaunched)
+            {
+                UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(false);
+                RecordAppLaunch();
+            }
 
             //Processing Stored Events On App Launch
             ProcessStoredEvents();
@@ -153,6 +156,11 @@ namespace CleverTapSDK.Native {
             var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
             var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+
+            var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
+            var allEventsJson = new List<string> { metaEvent , evt.JsonContent };
+            var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
+
             var queryParameters = new List<KeyValuePair<string, string>> {
                         new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
                         new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, UnityNativeConstants.SDK.REVISION),
@@ -160,19 +168,12 @@ namespace CleverTapSDK.Native {
                         new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
                     };
 
-            var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_USER_VARIABLES, UnityNativeConstants.Network.REQUEST_POST)
-            .SetRequestBody(evt.JsonContent)
+            var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_RECORD, UnityNativeConstants.Network.REQUEST_POST)
+            .SetRequestBody(jsonContent)
             .SetQueryParameters(queryParameters);
 
             var response = await UnityNativeNetworkEngine.Instance.ExecuteRequest(request);
-            if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
-            {
-                Success?.Invoke(true);
-            }
-            else
-            {
-                Success?.Invoke(false);
-            }
+            Success?.Invoke(response.IsSuccess());
         }
 
         private void StoreEvent(UnityNativeEvent evt) {

@@ -76,9 +76,8 @@ namespace CleverTapSDK.Native {
                 request = UnityWebRequest.Get(uri);
             }
             else if (_method == UnityNativeConstants.Network.REQUEST_POST) {
-                CleverTapLogger.Log("Sending POST Request URI:" + uri + " data: " + _requestBody);
                 request = UnityWebRequest.Post(uri, _requestBody, "application/json");
-
+                
             }
             else {
                 throw new NotSupportedException("Http method is not supported");
