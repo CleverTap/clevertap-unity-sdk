@@ -58,7 +58,6 @@ namespace CleverTapSDK.Native {
             _context.Post(async _ => {
                 try
                 {
-                    CleverTapLogger.Log("Execute request");
                     var result = await function();
                     tcs.SetResult(result);
 

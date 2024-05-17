@@ -4015,6 +4015,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00994be123c6841dc8784f2c36f0f6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  largeCheckboxChecked: {fileID: 2800000, guid: 7a501a5ac0ec349498d53fa5f0fc420e, type: 3}
+  largeCheckboxUnchecked: {fileID: 2800000, guid: 84ddaea2e5ffe4e39b047c3ac81704be, type: 3}
 --- !u!114 &1804136601
 MonoBehaviour:
   m_ObjectHideFlags: 0
