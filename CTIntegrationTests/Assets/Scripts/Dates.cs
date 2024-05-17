@@ -29,6 +29,9 @@ public class Dates : MonoBehaviour {
 
         var recordChargedEventWithDetailsAndItemsButton = AddButton("RecordChargedEventWithDetailsAndItems", "Record Charged Event With Details And Items");
         recordChargedEventWithDetailsAndItemsButton.GetComponent<Button>().onClick.AddListener(RecordChargedEventWithDetailsAndItems);
+
+        var customEventsButton = AddButton("CustomEvents", "Try custom events");
+        customEventsButton.GetComponent<Button>().onClick.AddListener(RecordCustomeEvents);
     }
 
     private GameObject AddButton(string name, string text) {
@@ -77,5 +80,16 @@ public class Dates : MonoBehaviour {
             }
         };
         CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
+    }
+
+    public GameObject CustomEventsParent;
+
+    public void CloseCustomEventPanel()
+    {
+        CustomEventsParent.SetActive(false);
+    }
+    private void RecordCustomeEvents()
+    {
+        CustomEventsParent.SetActive(true);
     }
 }

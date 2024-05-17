@@ -79,13 +79,6 @@ namespace CleverTapSDK.Native {
                 CleverTapLogger.Log("Sending POST Request URI:" + uri + " data: " + _requestBody);
                 request = UnityWebRequest.Post(uri, _requestBody, "application/json");
 
-                //byte[] bodyRaw = Encoding.UTF8.GetBytes(_requestBody);
-                // request = new UnityWebRequest(uri.ToString(), "POST");
-                //request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                //request.downloadHandler = new DownloadHandlerBuffer();
-                //request.SetRequestHeader("Content-Type", "application/json");
-
-                ////request.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
             }
             else {
                 throw new NotSupportedException("Http method is not supported");
