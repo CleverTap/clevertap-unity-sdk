@@ -4,19 +4,80 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeNetworkEngine : MonoBehaviour {
+        private SynchronizationContext _context;
+        private void Awake()
+        {
+            _context = SynchronizationContext.Current;
+        }
+
+        public Task RunOnMainThread(Action action)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            _context.Post(_ => {
+                try
+                {
+                    action();
+                    tcs.SetResult(true);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }, null);
+            return tcs.Task;
+        }
+
+        public Task<T> RunOnMainThread<T>(Func<T> function)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            _context.Post(_ => {
+                try
+                {
+                    var result = function();
+                    tcs.SetResult(result);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }, null);
+
+            return tcs.Task;
+        }
+
+        public Task<T> RunOnMainThread<T>(Func<Task<T>> function)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            _context.Post(async _ => {
+                try
+                {
+                    CleverTapLogger.Log("Execute request");
+                    var result = await function();
+                    tcs.SetResult(result);
+
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }, null);
+            return tcs.Task;
+        }
+
         private static readonly Lazy<UnityNativeNetworkEngine> _instance = new Lazy<UnityNativeNetworkEngine>(() => {
             var gameObject = new GameObject("UnityNativeNetworkEngine");
             gameObject.AddComponent<UnityNativeNetworkEngine>();
             DontDestroyOnLoad(gameObject);
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         });
-
+        
         private string _baseURI;
         private bool _mute;
         private int? _timeout;
@@ -110,7 +171,7 @@ namespace CleverTapSDK.Native {
 
             if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_NAME))
             {
-                _baseURI = response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
+                _baseURI = "https://" + response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
             }
 
             return true;
@@ -119,26 +180,30 @@ namespace CleverTapSDK.Native {
 
         internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request)
         {
-            if (request == null) {
-                return null;
-            }
-
-            if (NeedHandshakeForDomain())
+            return await RunOnMainThread(async () =>
             {
-                bool success = await InitHandShake();
-                if (success)
+                if (request == null)
                 {
-                    return await ExecuteRequestAfterHandshake(request);
+                    return null;
+                }
+
+                if (NeedHandshakeForDomain())
+                {
+                    bool success = await InitHandShake();
+                    if (success)
+                    {
+                        return await ExecuteRequestAfterHandshake(request);
+                    }
+                    else
+                    {
+                        return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
+                    }
                 }
                 else
                 {
-                    return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
+                    return await ExecuteRequestAfterHandshake(request);
                 }
-            }
-            else
-            {
-                return await ExecuteRequestAfterHandshake(request);
-            }
+            });
         }
 
         private async Task<UnityNativeResponse> ExecuteRequestAfterHandshake(UnityNativeRequest request)
@@ -224,8 +289,9 @@ namespace CleverTapSDK.Native {
         }
 
         private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request) {
-           //TODO: Add ping mechanism for network checks later
-           if (Application.internetReachability == NetworkReachability.NotReachable) {
+            //TODO: Add ping mechanism for network checks later
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
                 CleverTapLogger.LogError("Internet connection is not reachable!");
                 return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
             }
@@ -251,6 +317,7 @@ namespace CleverTapSDK.Native {
                 switch (unityWebRequest.result)
                 {
                     case UnityWebRequest.Result.Success:
+                        CleverTapLogger.Log("Sucess");
                         return new UnityNativeResponse(request, (HttpStatusCode)unityWebRequest.responseCode, unityWebRequest.GetResponseHeaders(), unityWebRequest.downloadHandler.text);
 
                     case UnityWebRequest.Result.ConnectionError:
@@ -271,7 +338,7 @@ namespace CleverTapSDK.Native {
                 }
 
             } catch (Exception ex) {
-                CleverTapLogger.LogError("Failed");
+                CleverTapLogger.LogError("Failed: "+ex.Message+" stcak"+ex.StackTrace+" "+ex.Data);
                 return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, ex.Message);
             }
         }

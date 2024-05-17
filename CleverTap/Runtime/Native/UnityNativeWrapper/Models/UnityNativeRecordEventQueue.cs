@@ -12,7 +12,7 @@ namespace CleverTapSDK.Native {
 
         private List<UnityNativeEvent> eventsDuringFlushProccess;
 
-        internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1000) : base(queueLimit, defaultTimerInterval) {
+        internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) {
             eventsDuringFlushProccess = new List<UnityNativeEvent>();
         }
 
@@ -38,11 +38,12 @@ namespace CleverTapSDK.Native {
             {
                 try
                 {
+                    CleverTapLogger.Log("Flushing events");
                     var events = eventsQueue.Peek();
 
                     var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
-                    allEventsJson.AddRange(events.Select(e => Json.Serialize(e)));
+                    allEventsJson.AddRange(events.Select(e => e.JsonContent));
                     var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
 
 
@@ -60,14 +61,15 @@ namespace CleverTapSDK.Native {
                     var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_RECORD, UnityNativeConstants.Network.REQUEST_POST)
                     .SetRequestBody(jsonContent)
                     .SetQueryParameters(queryParameters);
-
                     var response = await UnityNativeNetworkEngine.Instance.ExecuteRequest(request);
-
+                     
                     bool processHeaders = UnityNativeNetworkEngine.Instance.ProcessIncomingHeaders(response);
 
                     if (processHeaders && response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= HttpStatusCode.Accepted)
                     {
                         proccesedEvents.AddRange(events);
+                        lastEventsInQueue.Clear();
+                        eventsQueue.Dequeue();
                         retryCount = 0;
                     }
                     else
@@ -78,6 +80,7 @@ namespace CleverTapSDK.Native {
                 catch (Exception ex)
                 {
                     OnEventError();
+                    CleverTapLogger.Log(ex.Message);
                     return proccesedEvents;
                 }
             }

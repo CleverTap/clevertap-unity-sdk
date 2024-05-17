@@ -40,9 +40,7 @@ namespace CleverTapSDK.Native {
             UnityNativeNetworkEngine.Instance
                 .SetHeaders(new Dictionary<string, string>() {
                     { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, accountInfo.AccountId },
-                    { UnityNativeConstants.Network.HEADER_ACCOUNT_TOKEN_NAME, accountInfo.AccountToken }})
-                .SetBaseURI(UnityNativeConstants.Network.CT_TEMP_URL); // Remove this when hello ep is introduced
-
+                    { UnityNativeConstants.Network.HEADER_ACCOUNT_TOKEN_NAME, accountInfo.AccountToken }});
             UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(true);
             var eventDetails = new Dictionary<string, object> {
                 { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_APP_LUNACH }
@@ -116,7 +114,7 @@ namespace CleverTapSDK.Native {
 
         #region Private
 
-        private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = false)
+        private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true)
         {
             if (!UnityNativeSessionManager.Instance.CurrentSession.isAppLaunched)
             {

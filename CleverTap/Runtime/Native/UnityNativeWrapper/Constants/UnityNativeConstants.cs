@@ -1,5 +1,4 @@
 #if !UNITY_IOS && !UNITY_ANDROID
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -174,6 +173,7 @@ namespace CleverTapSDK.Native {
 
             internal const string REQUEST_POST = "POST";
             internal const string REQUEST_GET = "GET";
+           
             internal const string REQUEST_PATH_RECORD = "a1";
             internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";

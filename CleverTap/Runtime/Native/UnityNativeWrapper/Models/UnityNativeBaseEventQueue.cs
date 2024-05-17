@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Timers;
+using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
 
@@ -11,7 +12,7 @@ namespace CleverTapSDK.Native {
 
         protected readonly int queueLimit;
         protected readonly int defaultTimerInterval;
-        protected readonly Timer timer;
+        protected Timer timer;
 
         protected int retryCount = 0;
         protected bool isInFlushProcess = false;
@@ -29,11 +30,14 @@ namespace CleverTapSDK.Native {
 
             eventsQueue = new Queue<List<UnityNativeEvent>>();
             lastEventsInQueue = new List<UnityNativeEvent>();
+            eventsQueue.Enqueue(lastEventsInQueue);
         }
 
         internal virtual void QueueEvent(UnityNativeEvent newEvent) {
-            if (lastEventsInQueue == null || lastEventsInQueue.Count == queueLimit) {
-                lastEventsInQueue = new List<UnityNativeEvent>() { newEvent };
+            if (lastEventsInQueue == null || lastEventsInQueue.Count == queueLimit || eventsQueue.Count == 0) {
+                if (lastEventsInQueue == null)
+                    lastEventsInQueue = new List<UnityNativeEvent>();
+                lastEventsInQueue.Add(newEvent);
                 eventsQueue.Enqueue(lastEventsInQueue);
             } else if (lastEventsInQueue.Count < queueLimit) {
                 lastEventsInQueue.Add(newEvent);
@@ -49,6 +53,7 @@ namespace CleverTapSDK.Native {
         internal abstract Task<List<UnityNativeEvent>> FlushEvents();
 
         protected virtual void OnTimerTick(object sender, ElapsedEventArgs e) {
+            CleverTapLogger.Log("Timer TICK");
             if (OnEventTimerTick != null) {
                 OnEventTimerTick();
             }
@@ -57,26 +62,36 @@ namespace CleverTapSDK.Native {
         }
 
         protected virtual void ResetAndStartTimer(bool retry = false) {
+            CleverTapLogger.Log("ResetAndStartTimer");
             if (retryCount == 0) {
-                timer.Stop();
+                StopTimer();
+                timer = new Timer();
                 timer.AutoReset = false;
+                timer.Elapsed += OnTimerTick;
                 timer.Interval = defaultTimerInterval;
                 timer.Start();
                 return;
             }
 
             if (retry) {
-                timer.Stop();
+                StopTimer();
+                timer = new Timer();
                 timer.AutoReset = false;
+                timer.Elapsed += OnTimerTick;
                 timer.Interval = (2 ^ (retryCount % 10)) * 1000;
                 timer.Start();
             }
         }
 
         protected virtual void StopTimer() {
-            timer.Stop();
-            timer.Interval = defaultTimerInterval;
-            timer.AutoReset = false;
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Elapsed -= OnTimerTick;
+                timer.Dispose();
+                timer = null;
+            }
+
         }
     }
 }

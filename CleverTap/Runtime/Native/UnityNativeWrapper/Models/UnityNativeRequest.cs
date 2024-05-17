@@ -1,6 +1,8 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
+using System.Text;
+using CleverTapSDK.Utilities;
 using UnityEngine.Networking;
 
 namespace CleverTapSDK.Native {
@@ -69,15 +71,21 @@ namespace CleverTapSDK.Native {
 
         internal UnityWebRequest BuildRequest(string baseURI) {
             Uri uri = BuildURI(baseURI);
-            string uriString = uri.ToString();
-
             UnityWebRequest request;
             if (_method == UnityNativeConstants.Network.REQUEST_GET) {
                 request = UnityWebRequest.Get(uri);
             }
             else if (_method == UnityNativeConstants.Network.REQUEST_POST) {
-                request = UnityWebRequest.Post(uriString, _requestBody);
-                request.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
+                CleverTapLogger.Log("Sending POST Request URI:" + uri + " data: " + _requestBody);
+                request = UnityWebRequest.Post(uri, _requestBody, "application/json");
+
+                //byte[] bodyRaw = Encoding.UTF8.GetBytes(_requestBody);
+                // request = new UnityWebRequest(uri.ToString(), "POST");
+                //request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                //request.downloadHandler = new DownloadHandlerBuffer();
+                //request.SetRequestHeader("Content-Type", "application/json");
+
+                ////request.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
             }
             else {
                 throw new NotSupportedException("Http method is not supported");
@@ -101,7 +109,7 @@ namespace CleverTapSDK.Native {
         }
 
         private Uri BuildURI(string baseURI) {
-            var uriString = baseURI + _path;
+            var uriString = baseURI +"/"+ _path;
 
             if (_queryParameters?.Count > 0) {
                 uriString += "?";
