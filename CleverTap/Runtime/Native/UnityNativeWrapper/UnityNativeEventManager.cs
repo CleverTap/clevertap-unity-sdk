@@ -94,6 +94,15 @@ namespace CleverTapSDK.Native {
                 eventBuilderResult.EventResult.CustomFields 
             }.SelectMany(d => d).ToDictionary(d => d.Key, d => d.Value);
 
+            Dictionary<string, object> profile = (Dictionary<string, object>)eventDetails["profile"];
+            foreach (var key in properties.Keys)
+            {
+                if (!eventDetails.ContainsKey(key) && !profile.ContainsKey(key))
+                {
+                    profile.Add(key, properties[key]);
+                }
+            }
+            eventDetails["profile"] = profile;
             return BuildEvent(UnityNativeEventType.ProfileEvent, eventDetails);
         }
 
