@@ -51,8 +51,7 @@ namespace CleverTapSDK.Native {
             {
                 UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(isPushed);
             });
-        } 
-
+        }
         #endregion
 
         #region Profile Events
@@ -67,11 +66,7 @@ namespace CleverTapSDK.Native {
             // Flush / Remove all existing events
             // Reset session
             // Get info for user if exsits
-            if (!UnityNativeSessionManager.Instance.CurrentSession.isAppLaunched)
-            {
-                UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(false);
-                RecordAppLaunch();
-            }
+            RecordAppLaunch();
 
             //Processing Stored Events On App Launch
             ProcessStoredEvents();
@@ -89,9 +84,9 @@ namespace CleverTapSDK.Native {
                 return null;
             }
 
-            var eventDetails = new List<IDictionary<string, object>>() { 
-                eventBuilderResult.EventResult.SystemFields, 
-                eventBuilderResult.EventResult.CustomFields 
+            var eventDetails = new List<IDictionary<string, object>>() {
+                eventBuilderResult.EventResult.SystemFields,
+                eventBuilderResult.EventResult.CustomFields
             }.SelectMany(d => d).ToDictionary(d => d.Key, d => d.Value);
 
             Dictionary<string, object> profile = (Dictionary<string, object>)eventDetails["profile"];
@@ -106,6 +101,25 @@ namespace CleverTapSDK.Native {
             return BuildEvent(UnityNativeEventType.ProfileEvent, eventDetails);
         }
 
+        internal UnityNativeEvent ProfilePush(string key, object value, string command)
+        {
+            if (key == null || value == null || command == null)
+            {
+                return null;
+            }
+
+            var commandObj = new Dictionary<string, object>
+            {
+                { command, value }
+            };
+
+            var properties = new Dictionary<string, object>
+            {
+                { key, commandObj }
+            };
+
+            return ProfilePush(properties);
+        }
         #endregion
 
         #region Record Events

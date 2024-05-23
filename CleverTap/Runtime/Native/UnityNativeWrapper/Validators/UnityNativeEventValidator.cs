@@ -94,7 +94,7 @@ namespace CleverTapSDK.Native {
 
                 if (DateTimeOffset.TryParseExact(cleanObjectValue.ToString(), dateFormat, null, System.Globalization.DateTimeStyles.None, out DateTimeOffset dateTimeOffset))
                 {
-                    cleanObjectValue = dateTimeOffset.ToUnixTimeSeconds().ToString("$D_%d");
+                    cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
                     Console.WriteLine(cleanObjectValue); // Output the result
                 }
                 else

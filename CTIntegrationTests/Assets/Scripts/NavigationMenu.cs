@@ -11,6 +11,7 @@ public class NavigationMenu : MonoBehaviour {
     public Button Dates;
     public Button Variables;
     public Button InApps;
+    public Button ResetId;
 
     public List<GameObject> Panels = new List<GameObject>();
 
@@ -20,6 +21,7 @@ public class NavigationMenu : MonoBehaviour {
         Variables.onClick.AddListener(didTapVariablesButton);
         InApps.onClick.AddListener(didTapInAppButton);
         Events.onClick.AddListener(didTapEventsButton);
+        ResetId.onClick.AddListener(resetDeviceId);
 
         Panels.Add(GameObject.Find("Login"));
         Panels.Add(GameObject.Find("Dates"));
@@ -89,7 +91,12 @@ public class NavigationMenu : MonoBehaviour {
         Enable(eventsPanel);
         eventsPanel.GetComponent<EventsUI>().Restore();
     }
-    
+
+    public void resetDeviceId()
+    {
+        PlayerPrefs.DeleteKey(SystemInfo.deviceUniqueIdentifier);
+    }
+
     private void Enable(GameObject panel) {
         if (panel != null)
             Panels.SingleOrDefault(p => p == panel)?.SetActive(true);

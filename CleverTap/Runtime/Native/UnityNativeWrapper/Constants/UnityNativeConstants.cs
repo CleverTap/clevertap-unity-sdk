@@ -1,4 +1,5 @@
 #if !UNITY_IOS && !UNITY_ANDROID
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,7 @@ namespace CleverTapSDK.Native {
         internal static class SDK {
             internal const long VERSION = 3000;
             internal const string REVISION = "30000";
+            internal const string DEVICE_ID = "device_id";
         }
         internal static class Profile {
             internal const string NAME = "name";
@@ -14,6 +16,7 @@ namespace CleverTapSDK.Native {
             internal const string EDUCATION = "userEducation";
             internal const string MARRIED = "userMarried";
             internal const string DATE_OF_BIRTH = "DOB";
+            internal const string SOME_DATE = "SomeDate";
             internal const string BIRTHDAY = "userBirthday";
             internal const string EMPLOYED = "userEmployed";
             internal const string GENDER = "userGender";
@@ -60,6 +63,10 @@ namespace CleverTapSDK.Native {
                 }
                 if (keyLwc == AGE.ToLower() || keyLwc == "age") {
                     return AGE;
+                }
+                if (keyLwc == SOME_DATE.ToLower() || keyLwc == "someDate")
+                {
+                    return "SomeDate";
                 }
 
                 return null;
@@ -177,6 +184,15 @@ namespace CleverTapSDK.Native {
             internal const string REQUEST_PATH_RECORD = "a1";
             internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
+        }
+
+        internal static class Commands
+        {
+            internal const string COMMAND_REMOVE = "$remove";
+            internal const string COMMAND_ADD = "$add";
+            internal const string COMMAND_SET = "$set";
+            internal const string COMMAND_INCREMENT = "$incr";
+            internal const string COMMAND_DECREMENT = "$decr";
         }
     }
 }
