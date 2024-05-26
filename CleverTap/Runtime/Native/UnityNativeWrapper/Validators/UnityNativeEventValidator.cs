@@ -1,9 +1,11 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CleverTapSDK.Utilities;
+
 //TODO: confirm all validators and interceptors 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventValidator {
@@ -90,16 +92,16 @@ namespace CleverTapSDK.Native {
             }
 
             if (IsAnyDateType(objectValue)) {
-                string dateFormat = "dd-MM-yyyy HH:mm:ss";
-
-                if (DateTimeOffset.TryParseExact(cleanObjectValue.ToString(), dateFormat, null, System.Globalization.DateTimeStyles.None, out DateTimeOffset dateTimeOffset))
+                try
                 {
+                    string dateFormat = "dd/MM/yyyy HH:mm:ss";
+                    DateTime dateTime = DateTime.ParseExact(cleanObjectValue.ToString(), dateFormat, CultureInfo.InvariantCulture);
+                    DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime, TimeSpan.Zero); // Adjust to your timezone if necessary
                     cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
-                    Console.WriteLine(cleanObjectValue); // Output the result
                 }
-                else
+                catch (FormatException)
                 {
-                    Console.WriteLine("The provided value is not a valid date and time.");
+                    CleverTapLogger.Log("The provided value is not a valid date and time.");
                 }
                 return new UnityNativeValidationResult();
             }

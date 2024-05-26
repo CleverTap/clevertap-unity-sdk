@@ -8,7 +8,7 @@ namespace CleverTapSDK.Native {
     internal class UnityNativeDatabaseStore {
 
         internal event EventStored OnEventStored;
-        private UnityDataService dataService;
+        private IDataService dataService;
 
         internal UnityNativeDatabaseStore(string databaseName) {
             InitilazeDatabase(databaseName);
@@ -20,7 +20,7 @@ namespace CleverTapSDK.Native {
 
         internal void AddEvent(UnityNativeEvent newEvent) {
 
-            if(newEvent == null || newEvent.JsonContent == null || dataService == null || dataService.GetConnection() == null)
+            if(newEvent == null || newEvent.JsonContent == null || dataService == null)
             {
                 CleverTapLogger.LogError("Database not intiallised");
                 return;
@@ -37,7 +37,7 @@ namespace CleverTapSDK.Native {
 
         internal void AddEventsFromDB()
         {
-            if (dataService == null || dataService.GetConnection() == null)
+            if (dataService == null)
             {
                 CleverTapLogger.LogError("Database not intiallised");
                 return;
@@ -46,7 +46,7 @@ namespace CleverTapSDK.Native {
             CleverTapLogger.Log("Adding Cache events to processing queue from Database");
 
             List<UnityNativeEventDBEntry> entries = dataService.GetAllEntries<UnityNativeEventDBEntry>();
-
+           
             foreach (var entry in entries)
             {
                 if (OnEventStored != null)
@@ -59,7 +59,7 @@ namespace CleverTapSDK.Native {
 
         internal void DeleteEvents(List<UnityNativeEvent> eventsToRemove) {
 
-            if (dataService == null || dataService.GetConnection() == null)
+            if (dataService == null)
             {
                 CleverTapLogger.LogError("Database not intiallised");
                 return;
@@ -77,9 +77,9 @@ namespace CleverTapSDK.Native {
 
         private void InitilazeDatabase(string databaseName)
         {
-            if (dataService == null || dataService.GetConnection() == null)
+            if (dataService == null)
             {   
-                dataService = new UnityDataService(databaseName);
+                dataService = DataServiceFactory.CreateDataService(databaseName);
                 CleverTapLogger.Log("Database connection created");
             }
 

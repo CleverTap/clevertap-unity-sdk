@@ -1,21 +1,23 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Timers;
 using CleverTapSDK.Utilities;
+using UnityEngine;
 
-namespace CleverTapSDK.Native {
+namespace CleverTapSDK.Native
+{
 
     internal delegate void EventTimerTick();
 
-    internal abstract class UnityNativeBaseEventQueue {
+    internal abstract class UnityNativeBaseEventQueue
+    {
 
         protected readonly int queueLimit;
         protected readonly int defaultTimerInterval;
-        protected Timer timer;
+        private Coroutine timerCoroutine;
 
         protected int retryCount = 0;
         protected bool isInFlushProcess = false;
@@ -23,13 +25,10 @@ namespace CleverTapSDK.Native {
         protected abstract string RequestPath { get; }
         internal virtual event EventTimerTick OnEventTimerTick;
 
-
-        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) {
+        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1)
+        {
             this.queueLimit = queueLimit;
             this.defaultTimerInterval = defaultTimerInterval;
-            timer = new Timer(this.defaultTimerInterval);
-            timer.AutoReset = false;
-            timer.Elapsed += OnTimerTick;
             eventsQueue = new Queue<List<UnityNativeEvent>>();
         }
 
@@ -44,20 +43,20 @@ namespace CleverTapSDK.Native {
             ResetAndStartTimer();
         }
 
-        internal virtual void QueueEvents(List<UnityNativeEvent> newEvents) {
-            foreach (var newEvent in newEvents) {
+        internal virtual void QueueEvents(List<UnityNativeEvent> newEvents)
+        {
+            foreach (var newEvent in newEvents)
+            {
                 QueueEvent(newEvent);
             }
         }
 
         internal abstract Task<List<UnityNativeEvent>> FlushEvents();
 
-        protected virtual void OnTimerTick(object sender, ElapsedEventArgs e) {
+        protected virtual void OnTimerTick()
+        {
             CleverTapLogger.Log("Timer TICK");
-            if (OnEventTimerTick != null) {
-                OnEventTimerTick();
-            }
-
+            OnEventTimerTick?.Invoke();
             StopTimer();
         }
 
@@ -96,7 +95,7 @@ namespace CleverTapSDK.Native {
                         .SetQueryParameters(queryParameters);
 
                     var response = await executeRequest(request);
-                    
+
                     if (CanProcessEventResponse(response))
                     {
                         proccesedEvents.AddRange(events);
@@ -104,7 +103,7 @@ namespace CleverTapSDK.Native {
                     }
                     else
                     {
-                        //ReEnque events in case of error
+                        // Re-enqueue events in case of error
                         QueueEvents(events);
                         OnEventError();
                     }
@@ -118,7 +117,7 @@ namespace CleverTapSDK.Native {
             }
 
             isInFlushProcess = false;
-          
+
             if (eventsQueue.Any())
             {
                 ResetAndStartTimer();
@@ -132,7 +131,7 @@ namespace CleverTapSDK.Native {
         }
 
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);
-       
+
         protected void OnEventError()
         {
             retryCount++;
@@ -140,7 +139,8 @@ namespace CleverTapSDK.Native {
             ResetAndStartTimer();
         }
 
-        protected virtual void ResetAndStartTimer(bool retry = false) {
+        protected virtual void ResetAndStartTimer(bool retry = false)
+        {
             CleverTapLogger.Log("ResetAndStartTimer");
             if (retryCount == 0)
             {
@@ -148,32 +148,32 @@ namespace CleverTapSDK.Native {
                 return;
             }
 
-            if (retry) {
-                RestartTimer((2 ^ (retryCount % 10)) * 1000);
-                
+            if (retry)
+            {
+                RestartTimer((Mathf.Pow(2, retryCount % 10)) * 1000);
             }
         }
 
-        private void RestartTimer(double duration)
+        private void RestartTimer(float duration)
         {
             StopTimer();
-
-            timer = new Timer();
-            timer.AutoReset = false;
-            timer.Elapsed += OnTimerTick;
-            timer.Interval = duration;
-            timer.Start();
+            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
+            CleverTapLogger.Log("Timer Restarted");
         }
 
-        protected virtual void StopTimer() {
-            if (timer != null)
-            {
-                timer.Stop();
-                timer.Elapsed -= OnTimerTick;
-                timer.Dispose();
-                timer = null;
-            }
+        private IEnumerator TimerCoroutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            OnTimerTick();
+        }
 
+        protected virtual void StopTimer()
+        {
+            if (timerCoroutine != null)
+            {
+                MonoHelper.Instance.StopCoroutine(timerCoroutine);
+                timerCoroutine = null;
+            }
         }
     }
 }
