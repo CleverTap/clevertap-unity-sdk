@@ -160,7 +160,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    static private void handlePushNotification(final JSONObject data) {
+    public static private void handlePushNotification(final JSONObject data) {
         final String json = data.toString();
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PUSH_OPENED_CALLBACK, json);
     }
