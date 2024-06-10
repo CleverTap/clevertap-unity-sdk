@@ -114,7 +114,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
     }
 
-    static void handleIntent(Intent intent, Activity activity) {
+    public static void handleIntent(Intent intent, Activity activity) {
         if (intent == null) {
             return;
         }
@@ -160,12 +160,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public static private void handlePushNotification(final JSONObject data) {
+    private static void handlePushNotification(final JSONObject data) {
         final String json = data.toString();
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PUSH_OPENED_CALLBACK, json);
     }
 
-    static private void handleDeepLink(final Uri data) {
+    private static void handleDeepLink(final Uri data) {
         final String json = data.toString();
         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_DEEP_LINK_CALLBACK, json);
     }
