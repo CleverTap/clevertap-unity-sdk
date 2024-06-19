@@ -169,7 +169,7 @@ namespace CleverTapSDK.Native {
             internal const string CT_BASE_URL = "https://clevertap-prod.com";
             internal const string CT_TEMP_URL = "https://sk1-clevertap-prod.com"; // remove this
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
-            internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
+            internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Passcode";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
             internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
 
