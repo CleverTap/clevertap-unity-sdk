@@ -168,7 +168,7 @@ namespace CleverTapSDK.Native {
         internal static class Network {
             internal const string CT_BASE_URL = "sk1-staging-25.clevertap-prod.com";// "clevertap-prod.com";
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
-            internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Passcode";
+            internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
             internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
 
