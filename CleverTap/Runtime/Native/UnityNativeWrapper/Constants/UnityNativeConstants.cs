@@ -6,8 +6,8 @@ using System.Linq;
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
         internal static class SDK {
-            internal const long VERSION = 3000;
             internal const string REVISION = "30000";
+            internal const string VERSION = "3.0.0";
             internal const string DEVICE_ID = "device_id";
         }
         internal static class Profile {
@@ -166,8 +166,7 @@ namespace CleverTapSDK.Native {
             }
         }
         internal static class Network {
-            internal const string CT_BASE_URL = "https://clevertap-prod.com";
-            internal const string CT_TEMP_URL = "https://sk1-clevertap-prod.com"; // remove this
+            internal const string CT_BASE_URL = "sk1-staging-25.clevertap-prod.com";// "clevertap-prod.com";
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Passcode";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
@@ -178,10 +177,15 @@ namespace CleverTapSDK.Native {
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
 
-            internal const string REQUEST_POST = "POST";
+       
             internal const string REQUEST_GET = "GET";
-           
+#if UNITY_WEBGL && !UNITY_EDITOR
+            internal const string REQUEST_POST = "POST";
             internal const string REQUEST_PATH_RECORD = "a1";
+#else
+            internal const string REQUEST_POST = "POST";
+            internal const string REQUEST_PATH_RECORD = "a1";
+#endif
             internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
         }
