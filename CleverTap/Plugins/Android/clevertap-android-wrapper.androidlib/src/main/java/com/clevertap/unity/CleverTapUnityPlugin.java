@@ -103,8 +103,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_VARIABLE_VALUE_CHANGED = "CleverTapVariableValueChanged";
 
     private static final String CLEVERTAP_VARIABLES_FETCHED = "CleverTapVariablesFetched";
-    
-    private static final String CLEVERTAP_INAPPS_FETCHED = "CleverTapInAppsFetched";
+	
+	private static final String CLEVERTAP_INAPPS_FETCHED = "CleverTapInAppsFetched";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -300,6 +300,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     public void setPushToken(String token, String region, String type) {
         if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.FCM)) {
             clevertap.pushFcmRegistrationId(token, true);
+        } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.XPS)) {
+            clevertap.pushXiaomiRegistrationId(token, region,true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.BPS)) {
             clevertap.pushBaiduRegistrationId(token, true);
         } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.HPS)) {
@@ -755,11 +757,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     public String getVariableValue(String variableName) {
         Object value = clevertap.getVariableValue(variableName);
-        if (value == null) {
-            return null;
-        }
-        
-        return (value instanceof Map) ? new JSONObject((Map<?, ?>) value).toString() : value.toString();
+		if (value == null) {
+			return null;
+		}
+		
+		return (value instanceof Map) ? new JSONObject((Map<?, ?>) value).toString() : value.toString();
     }
 
     public void syncVariables() {
@@ -782,10 +784,10 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             }
         });
     }
-    
-    // InApps   
-    public void fetchInApps(final int callbackId) {
-        clevertap.fetchInApps(new FetchInAppsCallback() {
+	
+	// InApps	
+	public void fetchInApps(final int callbackId) {
+		clevertap.fetchInApps(new FetchInAppsCallback() {
             @Override
             public void onInAppsFetched(boolean isSuccess) {
                 JSONObject json = new JSONObject();
@@ -799,7 +801,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPPS_FETCHED, json.toString());
             }
         });
-    }
+	}
 
    /**
      * Deletes all images and gifs which are preloaded for inapps in cs mode
@@ -807,8 +809,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
      * @param expiredOnly to clear only assets which will not be needed further for inapps
      */
     public void clearInAppResources(boolean expiredOnly) {
-        clevertap.clearInAppResources(expiredOnly);
-    }
+		clevertap.clearInAppResources(expiredOnly);
+	}
 
     //Native Display Units
     public String getAllDisplayUnits() {
