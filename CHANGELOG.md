@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 3.2.0 *(24 June, 2024)*
+-------------------------------------------
+- Added native support for Webgl, Mac and Windows platform
+
 Version 3.1.0 *(24 April, 2024)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v6.2.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev6.2.1)
