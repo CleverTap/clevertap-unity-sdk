@@ -6,8 +6,8 @@ using System.Linq;
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
         internal static class SDK {
-            internal const string REVISION = "30000";
-            internal const string VERSION = "3.0.0";
+            internal const string REVISION = "30200";
+            internal const string VERSION = "3.2.0";
             internal const string DEVICE_ID = "device_id";
         }
         internal static class Profile {
