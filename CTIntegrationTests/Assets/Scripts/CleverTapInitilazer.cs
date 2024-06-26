@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class CleverTapTest : MonoBehaviour
 {
+    public string CLEVERTAP_ACCOUNT_ID = "67Z-RRK-696Z";
+    public string CLEVETAP_ACCOUNT_TOKEN = "WFK-ISB-OXUL";
+    public string CLEVERTAP_REGION_CODE = "sk1";
     void Awake() {
         DontDestroyOnLoad(gameObject);
         
         CleverTap.SetLogLevel(LogLevel.Debug);
         CleverTap.SetDebugLevel(4);
-        CleverTap.LaunchWithCredentialsForRegion(GetId(), "012-b64", "sk1");
+        CleverTap.LaunchWithCredentialsForRegion(CLEVERTAP_ACCOUNT_ID,CLEVETAP_ACCOUNT_TOKEN , CLEVERTAP_REGION_CODE);
         CleverTap.SetOptOut(false);
     }
 
-    string GetId()
-    {
-        return PlayerPrefs.GetString("clever_tap_id", "468-RZW-ZK6Z");
-    }
 }

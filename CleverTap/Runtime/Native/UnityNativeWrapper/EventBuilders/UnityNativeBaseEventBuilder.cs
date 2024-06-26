@@ -1,6 +1,7 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventBuilder {
@@ -48,7 +49,7 @@ namespace CleverTapSDK.Native {
 
             data.Add(UnityNativeConstants.Event.APP_VERSION, deviceInfo.AppVersion);
             data.Add(UnityNativeConstants.Event.BUILD, deviceInfo.AppBuild);
-            data.Add(UnityNativeConstants.Event.SDK_VERSION, deviceInfo.SdkVersion);
+            data.Add(UnityNativeConstants.Event.SDK_VERSION, Regex.Replace(deviceInfo.SdkVersion, "[^0-9]", "0"));
 
             if (!string.IsNullOrEmpty(deviceInfo.Model)) {
                 data.Add(UnityNativeConstants.Event.MODEL, deviceInfo.Model);

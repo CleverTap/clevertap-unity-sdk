@@ -78,6 +78,7 @@ namespace CleverTapSDK.Native {
         });
         
         private string _baseURI;
+        private string _region;
         private bool _mute;
         private int? _timeout;
         private IReadOnlyDictionary<string, string> _headers;
@@ -87,12 +88,20 @@ namespace CleverTapSDK.Native {
 
         private int responseFailureCount;
 
+        
+
         private UnityNativeNetworkEngine() { }
 
         internal static UnityNativeNetworkEngine Instance => _instance.Value;
 
         internal UnityNativeNetworkEngine SetBaseURI(string baseUri) {
-            _baseURI = baseUri;
+            _baseURI = "https://" + baseUri;
+            return this;
+        }
+
+        internal UnityNativeNetworkEngine SetRegion(string region)
+        {
+            _region = region;
             return this;
         }
 
@@ -142,12 +151,18 @@ namespace CleverTapSDK.Native {
                 SetBaseURI(null);
             }
 
+            if(_region != null)
+            {
+                SetBaseURI( UnityNativeConstants.Network.CT_BASE_URL);
+                return false;
+            }
+
             return _baseURI == null || needHandshakeDueToFailure; 
         }
 
         internal async Task<bool> InitHandShake()
         {
-            _baseURI = UnityNativeConstants.Network.CT_BASE_URL;
+            SetBaseURI(UnityNativeConstants.Network.CT_BASE_URL);
             var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_HAND_SHAKE, UnityNativeConstants.Network.REQUEST_GET);
             var response = await ExecuteRequest(request);
 
@@ -170,7 +185,7 @@ namespace CleverTapSDK.Native {
 
             if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_NAME))
             {
-                _baseURI = "https://" + response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
+                SetBaseURI(response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME]);
             }
 
             return true;
@@ -300,7 +315,6 @@ namespace CleverTapSDK.Native {
 
             try {
                 var unityWebRequest = request.BuildRequest(_baseURI);
-                CleverTapLogger.Log($"Sending POST Request data: {request.RequestBody}");
                 // Workaround for async
                 var unityWebRequestAsyncOperation = unityWebRequest.SendWebRequest();
                 while (!unityWebRequestAsyncOperation.isDone) {
@@ -323,15 +337,15 @@ namespace CleverTapSDK.Native {
                         return new UnityNativeResponse(request, (HttpStatusCode)unityWebRequest.responseCode, unityWebRequest.GetResponseHeaders(), unityWebRequest.downloadHandler.text);
 
                     case UnityWebRequest.Result.ConnectionError:
-                        CleverTapLogger.LogError("Failed");
+                        CleverTapLogger.LogError("Failed ConnectionError");
                         return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
 
                     case UnityWebRequest.Result.ProtocolError:
-                        CleverTapLogger.LogError("Failed");
+                        CleverTapLogger.LogError("Failed ProtocolError");
                         return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
 
                     case UnityWebRequest.Result.DataProcessingError:
-                        CleverTapLogger.LogError("Failed");
+                        CleverTapLogger.LogError("Failed Data Processing");
                         return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Failed to Process Data");
 
                     default:

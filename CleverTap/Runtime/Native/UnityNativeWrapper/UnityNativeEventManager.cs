@@ -21,8 +21,10 @@ namespace CleverTapSDK.Native {
 
         #region Launch
 
-        internal void LaunchWithCredentials(string accountID, string token, string region = null) {
+        internal void LaunchWithCredentials(string accountID, string token, string region = null)
+        {
             UnityNativeAccountManager.Instance.SetAccountInfo(accountID, token, region);
+            UnityNativeNetworkEngine.Instance.SetRegion(region);
             RecordAppLaunch();
         }
 
