@@ -1,6 +1,7 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeUserEventQueue : UnityNativeBaseEventQueue {
@@ -16,6 +17,7 @@ namespace CleverTapSDK.Native {
 
         protected override bool CanProcessEventResponse(UnityNativeResponse response)
         {
+            CleverTapLogger.Log("CanProcessEventResponse"+response.IsSuccess());
             return response.IsSuccess();
         }
     }
