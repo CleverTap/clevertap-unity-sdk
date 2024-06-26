@@ -1,22 +1,26 @@
 #if !UNITY_IOS && !UNITY_ANDROID
-using SQLite4Unity3d;
 using System;
+using SQLite4Unity3d;
 using UnityEngine;
 
 namespace CleverTapSDK.Native
 {
-    [System.Serializable]
+    [Serializable]
     internal class UnityNativeEventDBEntry
     {
-        //[PrimaryKey, AutoIncrement]
+//#if UNITY_WEBGL && !UNITY_EDITOR
         public int Id;
-        public UnityNativeEventType EventType;  // Changed from property to public field
-        public string JsonContent;  // Changed from property to public field
-        public long Timestamp;  // Changed from property to public field
+//#else
+//        [PrimaryKey, AutoIncrement]
+//        public int Id { get; set; }
+//#endif
+
+        public UnityNativeEventType EventType { get; set; }
+        public string JsonContent { get; set; }
+        public long Timestamp { get; set; }
 
         public UnityNativeEventDBEntry()
         {
-
         }
 
         public UnityNativeEventDBEntry(UnityNativeEventType eventType, string jsonContent, long timestamp)

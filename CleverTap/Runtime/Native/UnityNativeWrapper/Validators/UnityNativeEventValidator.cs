@@ -92,18 +92,29 @@ namespace CleverTapSDK.Native {
             }
 
             if (IsAnyDateType(objectValue)) {
-                try
+                string[] dateFormats = { "dd-MM-yyyy HH:mm:ss", "dd/MM/yyyy HH:mm:ss" };
+                string cleanObjectValueStr = cleanObjectValue.ToString();
+                DateTimeOffset dateTimeOffset = default; // Initialize with a default value
+
+                bool isParsed = false;
+                foreach (string dateFormat in dateFormats)
                 {
-                    string dateFormat = "dd/MM/yyyy HH:mm:ss";
-                    DateTime dateTime = DateTime.ParseExact(cleanObjectValue.ToString(), dateFormat, CultureInfo.InvariantCulture);
-                    DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime, TimeSpan.Zero); // Adjust to your timezone if necessary
-                    cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
+                    if (DateTimeOffset.TryParseExact(cleanObjectValueStr, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeOffset))
+                    {
+                        isParsed = true;
+                        break;
+                    }
                 }
-                catch (FormatException)
+
+                if (isParsed)
+                {
+                    cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
+                    Console.WriteLine(cleanObjectValue); // Output the result for debugging
+                }
+                else
                 {
                     CleverTapLogger.Log("The provided value is not a valid date and time.");
                 }
-                return new UnityNativeValidationResult();
             }
 
             if (isForProfile && cleanObjectValue is IEnumerable<string>) {
