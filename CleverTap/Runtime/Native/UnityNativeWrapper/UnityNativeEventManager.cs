@@ -42,7 +42,8 @@ namespace CleverTapSDK.Native {
             UnityNativeNetworkEngine.Instance
                 .SetHeaders(new Dictionary<string, string>() {
                     { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, accountInfo.AccountId },
-                    { UnityNativeConstants.Network.HEADER_ACCOUNT_TOKEN_NAME, accountInfo.AccountToken }});
+                    // { UnityNativeConstants.Network.HEADER_ACCOUNT_TOKEN_NAME, accountInfo.AccountToken }
+                    });
             UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(true);
             var eventDetails = new Dictionary<string, object> {
                 { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_APP_LUNACH }

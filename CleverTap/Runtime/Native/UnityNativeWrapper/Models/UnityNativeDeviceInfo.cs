@@ -100,18 +100,21 @@ namespace CleverTapSDK.Native {
         }
 
         private string GetDeviceId() {
-            var deviceId = PlayerPrefs.GetString(SystemInfo.deviceUniqueIdentifier);
+            var deviceId = PlayerPrefs.GetString( UnityNativeConstants.SDK.DEVICE_ID,null);
             if (string.IsNullOrEmpty(deviceId)) {
                 deviceId = GenerateDeviceId();
-                PlayerPrefs.SetString(SystemInfo.deviceUniqueIdentifier, deviceId);
+                PlayerPrefs.SetString(UnityNativeConstants.SDK.DEVICE_ID, deviceId);
             }
 
             return deviceId;
         }
 
         private string GenerateDeviceId() {
-            var guid = Guid.NewGuid().ToString();
-            return "-" + guid.Replace("-", "").Trim().ToLower();
+            string id = SystemInfo.deviceUniqueIdentifier;
+            if (string.IsNullOrEmpty(id) || id.Length < 6) {
+                id = Guid.NewGuid().ToString();
+            }
+            return "-" + id.Replace("-", "").Trim().ToLower();
         }
     }
 }
