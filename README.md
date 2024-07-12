@@ -67,6 +67,9 @@ iOS specific setup is described in the [iOS Instructions](/docs/Instructions-iOS
 
 Android specific setup is described in the [Android Instructions](/docs/Instructions-Android.md)
 
+### WebGL Instructions
+
+WebGL specific setup is described in the [WebGL Instructions](/docs/Instructions-WebGL.md)
 
 ## 💻 Example Usage #
 
