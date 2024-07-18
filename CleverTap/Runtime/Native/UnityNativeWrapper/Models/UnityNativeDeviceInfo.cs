@@ -26,6 +26,7 @@ namespace CleverTapSDK.Native {
 
 //TODO: test and log info for MAC, windows and WEBGl
         internal UnityNativeDeviceInfo() {
+            InitializeDeviceId();
             _sdkVersion = UnityNativeConstants.SDK.VERSION;
             _appVersion = Application.version; // Check where to get this
             _appBuild = Application.productName; // Check where to get this
@@ -99,19 +100,45 @@ namespace CleverTapSDK.Native {
             return "Unknown";
         }
 
-        private string GetDeviceId() {
-            var deviceId = PlayerPrefs.GetString(SystemInfo.deviceUniqueIdentifier);
-            if (string.IsNullOrEmpty(deviceId)) {
-                deviceId = GenerateDeviceId();
-                PlayerPrefs.SetString(SystemInfo.deviceUniqueIdentifier, deviceId);
-            }
-
-            return deviceId;
+        private string GetDeviceId()
+        {
+            return PlayerPrefs.GetString(GetDeviceIdStorageKey(), null);
         }
 
-        private string GenerateDeviceId() {
-            var guid = Guid.NewGuid().ToString();
-            return "-" + guid.Replace("-", "").Trim().ToLower();
+        public void ForceNewDeviceID()
+        {
+            string newDeviceID = GenerateGuid();
+            ForceUpdateDeviceId(newDeviceID);
+        }
+
+        public void ForceUpdateDeviceId(string id)
+        {
+            PlayerPrefs.SetString(GetDeviceIdStorageKey(), id);
+        }
+
+        private string GenerateGuid()
+        {
+            return UnityNativeConstants.SDK.GUID_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
+        }
+
+        private string GetDeviceIdStorageKey()
+        {
+            return UnityNativeConstants.SDK.DEVICE_ID_TAG + ":" + UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+        }
+
+        private bool ValidateCleverTapID(string cleverTapID)
+        {
+            // Add your validation logic here
+            return !string.IsNullOrEmpty(cleverTapID);
+        }
+
+        private void InitializeDeviceId()
+        {
+            string storedDeviceId = GetDeviceId();
+            if (string.IsNullOrEmpty(storedDeviceId))
+            {
+                ForceNewDeviceID();
+            }
         }
     }
 }

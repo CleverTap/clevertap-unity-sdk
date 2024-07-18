@@ -88,8 +88,6 @@ namespace CleverTapSDK.Native {
 
         private int responseFailureCount;
 
-        
-
         private UnityNativeNetworkEngine() { }
 
         internal static UnityNativeNetworkEngine Instance => _instance.Value;
