@@ -20,6 +20,8 @@ namespace CleverTapSDK.Native {
         private void OnDatabaseEventStored(UnityNativeEvent newEvent) {
             switch (newEvent.EventType) {
                 case UnityNativeEventType.ProfileEvent:
+                    _recordEventsQueue.QueueEvent(newEvent);
+                    break;
                 case UnityNativeEventType.RecordEvent:
                     _recordEventsQueue.QueueEvent(newEvent);
                     break;
@@ -44,6 +46,11 @@ namespace CleverTapSDK.Native {
         private async Task FlushRecordEvents() {
             var flushedEvents = await _recordEventsQueue.FlushEvents();
             _databaseStore.DeleteEvents(flushedEvents);
+        }
+
+        public async void FlushQueue(){
+            await FlushUserEvents();
+            await FlushRecordEvents();
         }
     }
 }

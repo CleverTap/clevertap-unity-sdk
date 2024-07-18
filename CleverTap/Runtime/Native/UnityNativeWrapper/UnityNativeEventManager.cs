@@ -12,11 +12,14 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativePreferenceManager _preferenceManager;
         private readonly UnityNativeDatabaseStore _databaseStore;
         private readonly UnityNativeEventQueueManager _eventQueueManager;
-
-        internal UnityNativeEventManager() {
+        private readonly UnityNativeDeviceInfo _deviceInfo;
+       
+        internal UnityNativeEventManager()
+        {
             _preferenceManager = new UnityNativePreferenceManager();
             _databaseStore = new UnityNativeDatabaseStore(NATIVE_EVENTS_DB_CACHE);
             _eventQueueManager = new UnityNativeEventQueueManager(_databaseStore);
+            _deviceInfo = new UnityNativeDeviceInfo();
         }
 
         #region Launch
@@ -59,28 +62,117 @@ namespace CleverTapSDK.Native {
 
         #region Profile Events
 
-        internal UnityNativeEvent OnUserLogin(Dictionary<string, object> properties) {
-            if (properties == null || properties.Count == 0) {
+        internal UnityNativeEvent OnUserLogin(Dictionary<string, object> profile) {
+            if (profile == null || profile.Count == 0) {
                 return null;
             }
 
-            // TODO : 
-            // Check if user is already login
-            // Flush / Remove all existing events
-            // Reset session
-            // Get info for user if exsits
-            RecordAppLaunch();
+            return _OnUserLogin(profile);
+        }
 
-            //Processing Stored Events On App Launch
-            ProcessStoredEvents();
+        private readonly HashSet<string> IdentityKeys = new HashSet<string>(){UnityNativeConstants.Profile.EMAIL,UnityNativeConstants.Profile.IDENTITY};
+		private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
+			try {
+				string currentGUID = _deviceInfo.DeviceId;
+				bool haveIdentifier = false;
+				string cachedGUID = null;
 
-            return ProfilePush(properties);
+				foreach (var key in profile.Keys) {
+					var value = profile[key];
+					if (IdentityKeys.Contains(key)) {
+						string identifier = value?.ToString();
+						if (!string.IsNullOrEmpty(identifier)) {
+							haveIdentifier = true;
+							cachedGUID = GetGUIDForIdentifier(key, identifier);
+							if (cachedGUID != null) {
+								break;
+							}
+						}
+					}
+				}
+				//new profile
+				if (!haveIdentifier || IsAnonymousUser()) {
+					return ProfilePush(profile);
+				}
+				//Same Profile
+				if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
+					return ProfilePush(profile);
+				}
+
+				SwitchOrCreateProfile(profile, cachedGUID);
+			} catch (Exception e) {
+				CleverTapLogger.LogError("onUserLogin failed: " + e);
+			}
+
+			return null;
+		}
+
+		private bool IsAnonymousUser()
+        {
+            return string.IsNullOrEmpty(_preferenceManager.GetUserIdentities());
+        }
+
+        private string GetGUIDForIdentifier(string key, string identifier)
+        {
+            return _preferenceManager.GetGUIDForIdentifier(key,identifier);
+        }
+
+        private void SwitchOrCreateProfile(Dictionary<string, object> profile, string cacheGuid)
+        {
+            try
+            {
+                CleverTapLogger.Log($"asyncProfileSwitchUser:[profile {profile} with Cached GUID {(cacheGuid != null ? cacheGuid : "NULL")}");
+
+                ProcessStoredEvents();
+               // UnityNativeLoginInfoProvider.Instance.ClearUser();
+                //UnityNativeSessionManager.Instance.ClearSession();
+                //old profile switch
+                if (cacheGuid != null)
+                {
+                    _deviceInfo.ForceUpdateDeviceId(cacheGuid);
+                   // _callbackManager.NotifyUserProfileInitialized(cacheGuid);
+                }
+                else
+                {
+                    _deviceInfo.ForceNewDeviceID();
+                }
+
+                //_callbackManager.NotifyUserProfileInitialized(_deviceInfo.DeviceId);
+                //_deviceInfo.SetCurrentUserOptOutStateFromStorage();
+               
+                RecordAppLaunch();
+
+                if (profile != null)
+                {
+                    ProfilePush(profile);
+                }
+
+                //foreach (var callback in _callbackManager.GetChangeUserCallbackList())
+                {
+                 //   callback.OnChangeUser(_deviceInfo.DeviceId, _config.AccountId);
+                }
+            }
+            catch (Exception e)
+            {
+                CleverTapLogger.LogError("Reset Profile error: " + e);
+            }
         }
 
         internal UnityNativeEvent ProfilePush(Dictionary<string, object> properties) {
             if (properties == null || properties.Count == 0) {
                 return null;
             }
+            //Updating Identity 
+            foreach (var key in properties.Keys)
+                {
+                    var value = properties[key];
+                    if (IdentityKeys.Contains(key)){
+                        string identifier = value?.ToString();
+                        if (!string.IsNullOrEmpty(identifier)){
+                            _preferenceManager.SetGUIDForIdentifier(_deviceInfo.DeviceId,key,identifier);
+                        }
+                    }
+                }
 
             var eventBuilderResult = new UnityNativeProfileEventBuilder().BuildPushEvent(properties);
             if (eventBuilderResult.EventResult.SystemFields == null || eventBuilderResult.EventResult.CustomFields == null) {
