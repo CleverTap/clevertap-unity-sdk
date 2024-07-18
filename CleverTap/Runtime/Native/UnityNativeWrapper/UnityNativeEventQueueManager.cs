@@ -45,6 +45,11 @@ namespace CleverTapSDK.Native {
             var flushedEvents = await _recordEventsQueue.FlushEvents();
             _databaseStore.DeleteEvents(flushedEvents);
         }
+
+        public async void FlushQueue(){
+            await FlushUserEvents();
+            await FlushRecordEvents();
+        }
     }
 }
 #endif

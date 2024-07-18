@@ -12,11 +12,14 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativePreferenceManager _preferenceManager;
         private readonly UnityNativeDatabaseStore _databaseStore;
         private readonly UnityNativeEventQueueManager _eventQueueManager;
-
-        internal UnityNativeEventManager() {
+        private readonly UnityNativeDeviceInfo _deviceInfo;
+       
+        internal UnityNativeEventManager()
+        {
             _preferenceManager = new UnityNativePreferenceManager();
             _databaseStore = new UnityNativeDatabaseStore(NATIVE_EVENTS_DB_CACHE);
             _eventQueueManager = new UnityNativeEventQueueManager(_databaseStore);
+            _deviceInfo = new UnityNativeDeviceInfo();
         }
 
         #region Launch
