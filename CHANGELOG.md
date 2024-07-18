@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+Version 3.2.0 *(24 June, 2024)*
+-------------------------------------------
+- Added native support for Webgl, Mac and Windows platform
+
+Version 3.1.0 *(24 April, 2024)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v6.2.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev6.2.1)
+- Updated to [CleverTap iOS SDK v6.2.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/6.2.1)
+- Added privacy manifests support for iOS.
+- Supports Android 14, made it compliant with Android 14 requirements. Details [here](https://developer.android.com/about/versions/14/summary)
+- Upgrades AGP to 8.2.2 for building the SDK and adds related consumer proguard rules
+- Deprecates Xiaomi public methods as we are sunsetting SDK. Details [here](https://dev.mi.com/distribute/doc/details?pId=1555).
+
 Version 3.0.0 *(15 Jan, 2024)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v6.0.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev6.0.0)

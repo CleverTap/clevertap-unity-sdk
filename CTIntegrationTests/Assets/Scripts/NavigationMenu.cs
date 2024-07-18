@@ -15,6 +15,8 @@ public class NavigationMenu : MonoBehaviour {
 
     public List<GameObject> Panels = new List<GameObject>();
 
+    public string CTID { get; private set; }
+
     void Start() {
         Login.onClick.AddListener(didTapLoginButton);
         Dates.onClick.AddListener(didTapDatesButton);
@@ -36,6 +38,22 @@ public class NavigationMenu : MonoBehaviour {
         Dates.gameObject.SetActive(false);
         Variables.gameObject.SetActive(false);
         InApps.gameObject.SetActive(false);
+
+        
+#if UNITY_ANDROID
+       CleverTap.OnCleverTapInitCleverTapIdCallback += CleverTap_OnCleverTapInitCleverTapIdCallback;
+#elif UNITY_IOS
+        CTID = CleverTap.ProfileGetCleverTapID();
+#else
+    CTID = CleverTap.GetCleverTapID();
+#endif
+    }
+
+    private void CleverTap_OnCleverTapInitCleverTapIdCallback(string message)
+    {
+        var messageJson = JsonUtility.FromJson<Dictionary<string, object>>(message);
+        CTID = messageJson["cleverTapID"]?.ToString();
+        Debug.Log($"[Demo] CT_ID : {CTID}");
     }
 
     public void didTapLoginButton() {
@@ -50,6 +68,7 @@ public class NavigationMenu : MonoBehaviour {
             { "DOB", new DateTime(2003, 02, 01) },
             { "SomeDate", DateTime.Now }
         });
+        Debug.Log($"[Demo] CT_ID : {CTID}");
 
         Login.gameObject.SetActive(false);
         Dates.gameObject.SetActive(false);
@@ -94,7 +113,10 @@ public class NavigationMenu : MonoBehaviour {
 
     public void resetDeviceId()
     {
-        PlayerPrefs.DeleteKey(SystemInfo.deviceUniqueIdentifier);
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteKey("device_id");
+        PlayerPrefs.Save();
+        Debug.Log("RESET ID"+CleverTap.GetCleverTapID());
     }
 
     private void Enable(GameObject panel) {

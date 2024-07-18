@@ -5,10 +5,19 @@ using System.Linq;
 
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
+      
+
         internal static class SDK {
-            internal const string REVISION = "30000";
-            internal const string VERSION = "3.0.0";
+            internal const string REVISION = "30200";
+            internal const string VERSION = "3.2.0";
             internal const string DEVICE_ID = "device_id";
+
+            internal const string DEVICE_ID_TAG = "deviceId";
+            internal const string GUID_PREFIX =  "__g";
+            internal const string FALLBACK_ID_TAG = "fallbackId";
+            internal const string ERROR_PROFILE_PREFIX = "__i";
+            internal const string CACHED_GUIDS_KEY = "cachedGUIDsKey";
+
         }
         internal static class Profile {
             internal const string NAME = "name";
@@ -22,7 +31,7 @@ namespace CleverTapSDK.Native {
             internal const string GENDER = "userGender";
             internal const string PHONE = "userPhone";
             internal const string AGE = "userAge";
-
+            internal const string IDENTITY = "Identity";
             internal static bool IsKeyKnownProfileField(string key) {
                 if (string.IsNullOrWhiteSpace(key)) {
                     return false;

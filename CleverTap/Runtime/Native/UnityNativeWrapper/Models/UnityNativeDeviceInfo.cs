@@ -2,116 +2,161 @@
 using System;
 using UnityEngine;
 
-namespace CleverTapSDK.Native {
-    internal class UnityNativeDeviceInfo {
-        private readonly string _sdkVersion;
-        private readonly string _appVersion;
-        private readonly string _appBuild;
-        private readonly string _bundleId;
-        private readonly string _osName;
-        private readonly string _osVersion;
-        private readonly string _manufacturer;
-        private readonly string _model;
-        private readonly string _carrier;
-        private readonly string _countryCode;
-        private readonly string _timeZone;
-        private readonly string _radio;
-        private readonly string _vendorIdentifier;
-        private readonly string _deviceWidth;
-        private readonly string _deviceHeight;
-        private readonly string _deviceId;
-        private readonly string _library;
-        private readonly bool _wifi;
-        private readonly string _locale;
+namespace CleverTapSDK.Native
+{
+    internal class UnityNativeDeviceInfo
+    {
+        private readonly object deviceIDLock = new object();
+        private string _deviceId;
 
-//TODO: test and log info for MAC, windows and WEBGl
-        internal UnityNativeDeviceInfo() {
-            _sdkVersion = UnityNativeConstants.SDK.VERSION;
-            _appVersion = Application.version; // Check where to get this
-            _appBuild = Application.productName; // Check where to get this
-            _bundleId = "123456789"; // Check if we need this and how to get
-            _osName = GetOSName(); // Only suppport for Windows and MacOS
-            _osVersion = SystemInfo.operatingSystem;
-            _manufacturer = SystemInfo.deviceModel; // Check if we need this and is it correct
-            _model = SystemInfo.deviceModel; // Check if we need this
-            _carrier = null; // Check if we need this and how to get
-            _countryCode = null; // Check if we need this and how to get
-            _timeZone = null; // Check if we need this and how to get
-            _radio = null; // Check if we need this and how to get
-            _vendorIdentifier = null; // Check if we need this and how to get
-            _deviceWidth = Screen.width.ToString(); // Check if we need this and is it correct
-            _deviceHeight = Screen.height.ToString(); // Check if we need this and is it correct
-            _deviceId = GetDeviceId();
-            _library = null; // Check if we need this and how to get
-            _wifi = false; // Check if we need this and how to get
-            _locale = "xx_XX"; // Check if we need this and how to get
+        public UnityNativeDeviceInfo()
+        {
+            InitializeDeviceId();
         }
 
-        internal string SdkVersion => _sdkVersion;
+        internal string SdkVersion => UnityNativeConstants.SDK.VERSION;
+        internal string AppVersion => Application.version;
+        internal string AppBuild => Application.productName;
+        internal string BundleId => Application.identifier;
+        internal string OsName => GetOSName();
+        internal string OsVersion => SystemInfo.operatingSystem;
+        internal string Manufacturer => SystemInfo.deviceModel;
+        internal string Model => SystemInfo.deviceModel;
+        internal string Carrier => null; // Not applicable for non-mobile platforms
+        internal string CountryCode => GetCountryCode();
+        internal string TimeZone => System.TimeZoneInfo.Local.StandardName;
+        internal string Radio => null; // Not applicable for non-mobile platforms
+        internal string VendorIdentifier => SystemInfo.deviceUniqueIdentifier;
+        internal string DeviceWidth => Screen.width.ToString();
+        internal string DeviceHeight => Screen.height.ToString();
+        internal string Library => null; // Not applicable or define as needed
+        internal bool Wifi => GetNetworkConnectionType();
+        internal string Locale => System.Globalization.CultureInfo.CurrentCulture.Name;
 
-        internal string AppVersion => _appVersion;
+        internal string DeviceId
+        {
+            get
+            {
+                return GetDeviceId() ?? GenerateFallbackDeviceId();
+            }
+        }
 
-        internal string AppBuild => _appBuild;
+        private string GetDeviceId()
+        {
+            lock (deviceIDLock)
+            {
+                
+                {
+                    return PlayerPrefs.GetString(GetDeviceIdStorageKey(), null);
+                }
+            }
+        }
 
-        internal string BundleId => _bundleId;
+        public void ForceNewDeviceID()
+        {
+            string newDeviceID = GenerateGuid();
+            ForceUpdateDeviceId(newDeviceID);
+        }
 
-        internal string OsName => _osName;
+        public void ForceUpdateCustomCleverTapID(string cleverTapID)
+        {
+            //if (ValidateCleverTapID(cleverTapID))
+            //{
+              //  ForceUpdateDeviceId(UnityNativeConstants.CUSTOM_CLEVERTAP_ID_PREFIX + cleverTapID);
+            //}
+            //else
+            {
+                GenerateFallbackDeviceId();
+            }
+        }
 
-        internal string OsVersion => _osVersion;
+        public void ForceUpdateDeviceId(string id)
+        {
+            lock (deviceIDLock)
+            {
+                PlayerPrefs.SetString(GetDeviceIdStorageKey(), id);
+            }
+        }
 
-        internal string Manufacturer => _manufacturer;
+        private string GenerateFallbackDeviceId()
+        {
+            string fallbackDeviceId = UnityNativeConstants.SDK.ERROR_PROFILE_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
+            if (!string.IsNullOrEmpty(fallbackDeviceId))
+            {
+                UpdateFallbackId(fallbackDeviceId);
+            }
+            return fallbackDeviceId;
+        }
 
-        internal string Model => _model;
+        private void UpdateFallbackId(string fallbackId)
+        {
+            PlayerPrefs.SetString(GetFallbackIdStorageKey(), fallbackId);
+        }
 
-        internal string Carrier => _carrier;
+        private string GenerateGuid()
+        {
+            return UnityNativeConstants.SDK.GUID_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
+        }
 
-        internal string CountryCode => _countryCode;
+        private string GetDeviceIdStorageKey()
+        {
+            return UnityNativeConstants.SDK.DEVICE_ID_TAG + ":" + UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+        }
 
-        internal string TimeZone => _timeZone;
+        private string GetFallbackIdStorageKey()
+        {
+            return UnityNativeConstants.SDK.FALLBACK_ID_TAG + ":" + UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+        }
 
-        internal string Radio => _radio;
+        private bool ValidateCleverTapID(string cleverTapID)
+        {
+            // Add your validation logic here
+            return !string.IsNullOrEmpty(cleverTapID);
+        }
 
-        internal string VendorIdentifier => _vendorIdentifier;
+        public bool IsErrorDeviceId() {
+            return GetDeviceId() != null && GetDeviceId().StartsWith(UnityNativeConstants.SDK.ERROR_PROFILE_PREFIX);
+        }
+        private void InitializeDeviceId()
+        {
+            // Initialize the Device ID logic similar to Java code
+            string storedDeviceId = GetDeviceId();
+            if (string.IsNullOrEmpty(storedDeviceId))
+            {
+                // Handle custom CleverTap ID initialization
+                ForceNewDeviceID();
+            }
+        }
 
-        internal string DeviceWidth => _deviceWidth;
-
-        internal string DeviceHeight => _deviceHeight;
-
-        internal string DeviceId => _deviceId;
-
-        internal string Library => _library;
-
-        internal bool Wifi => _wifi;
-
-        internal string Locale => _locale;
-
-        private string GetOSName() {
+        private string GetOSName()
+        {
             var operatingSystem = SystemInfo.operatingSystem?.ToLower().Replace(" ", "");
 
-            if (operatingSystem?.ToLower().Contains("windows") == true) {
+            if (operatingSystem?.ToLower().Contains("windows") == true)
+            {
                 return "Windows";
             }
 
-            if (operatingSystem?.ToLower().Contains("macos") == true) {
+            if (operatingSystem?.ToLower().Contains("macos") == true)
+            {
                 return "MacOS";
             }
 
             return "Unknown";
         }
 
-        private string GetDeviceId() {
-            var deviceId = PlayerPrefs.GetString(SystemInfo.deviceUniqueIdentifier);
-            if (string.IsNullOrEmpty(deviceId)) {
-                deviceId = GenerateDeviceId();
-                PlayerPrefs.SetString(SystemInfo.deviceUniqueIdentifier, deviceId);
-            }
-
-            return deviceId;
+        private string GetCountryCode()
+        {
+            return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName;
         }
 
-        private string GenerateDeviceId() {
-            var guid = Guid.NewGuid().ToString();
-            return "-" + guid.Replace("-", "").Trim().ToLower();
+        private bool GetNetworkConnectionType()
+        {
+            if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

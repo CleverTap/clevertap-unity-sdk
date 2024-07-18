@@ -83,12 +83,7 @@ namespace CleverTapSDK.Native {
 
         internal override string GetCleverTapID()
         {
-            if (!PlayerPrefs.HasKey(UnityNativeConstants.SDK.DEVICE_ID))
-            {
-                generateDeviceId();
-            }
-
-            return PlayerPrefs.GetString(UnityNativeConstants.SDK.DEVICE_ID);
+           return UnityNativeDeviceManager.Instance.DeviceInfo.DeviceId;
         }
 
         private void generateDeviceId()
@@ -96,6 +91,7 @@ namespace CleverTapSDK.Native {
             var guid = Guid.NewGuid().ToString();
             string id = "-" + guid.Replace("-", "").Trim().ToLower();
             PlayerPrefs.SetString(UnityNativeConstants.SDK.DEVICE_ID,id);
+            Debug.Log("Generated CT ID"+ PlayerPrefs.GetString(UnityNativeConstants.SDK.DEVICE_ID));
         }
     }
 }
