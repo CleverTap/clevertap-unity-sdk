@@ -26,7 +26,6 @@ namespace CleverTapSDK.Native {
 
 //TODO: test and log info for MAC, windows and WEBGl
         internal UnityNativeDeviceInfo() {
-            InitializeDeviceId();
             _sdkVersion = UnityNativeConstants.SDK.VERSION;
             _appVersion = Application.version; // Check where to get this
             _appBuild = Application.productName; // Check where to get this
@@ -42,7 +41,6 @@ namespace CleverTapSDK.Native {
             _vendorIdentifier = null; // Check if we need this and how to get
             _deviceWidth = Screen.width.ToString(); // Check if we need this and is it correct
             _deviceHeight = Screen.height.ToString(); // Check if we need this and is it correct
-            _deviceId = GetDeviceId();
             _library = null; // Check if we need this and how to get
             _wifi = false; // Check if we need this and how to get
             _locale = "xx_XX"; // Check if we need this and how to get
@@ -102,6 +100,8 @@ namespace CleverTapSDK.Native {
 
         private string GetDeviceId()
         {
+            if (!PlayerPrefs.HasKey(GetDeviceIdStorageKey()))
+                ForceNewDeviceID();
             return PlayerPrefs.GetString(GetDeviceIdStorageKey(), null);
         }
 
