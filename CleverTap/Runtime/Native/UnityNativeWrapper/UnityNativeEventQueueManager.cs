@@ -20,7 +20,7 @@ namespace CleverTapSDK.Native {
         private void OnDatabaseEventStored(UnityNativeEvent newEvent) {
             switch (newEvent.EventType) {
                 case UnityNativeEventType.ProfileEvent:
-                    _recordEventsQueue.QueueEvent(newEvent);
+                    _userEventsQueue.QueueEvent(newEvent);
                     break;
                 case UnityNativeEventType.RecordEvent:
                     _recordEventsQueue.QueueEvent(newEvent);

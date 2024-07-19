@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace CleverTapSDK.Native
 {
-    [Serializable]
     internal class UnityNativeEventDBEntry
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
