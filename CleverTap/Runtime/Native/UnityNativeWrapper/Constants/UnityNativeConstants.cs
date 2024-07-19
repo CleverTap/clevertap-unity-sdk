@@ -13,7 +13,7 @@ namespace CleverTapSDK.Native {
             internal const string DEVICE_ID = "device_id";
 
             internal const string DEVICE_ID_TAG = "deviceId";
-            internal const string GUID_PREFIX =  "__g";
+            internal const string WEBGL_GUID_PREFIX =  "__u";
             internal const string CACHED_GUIDS_KEY = "cachedGUIDsKey";
 
         }

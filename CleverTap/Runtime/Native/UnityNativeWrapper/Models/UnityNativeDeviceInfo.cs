@@ -122,7 +122,7 @@ namespace CleverTapSDK.Native {
 
         private string GenerateGuid()
         {
-            return UnityNativeConstants.SDK.GUID_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
+            return UnityNativeConstants.SDK.WEBGL_GUID_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
         }
 
         private string GetDeviceIdStorageKey()
