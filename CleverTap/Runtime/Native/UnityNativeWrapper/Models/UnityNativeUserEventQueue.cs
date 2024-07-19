@@ -8,7 +8,7 @@ namespace CleverTapSDK.Native {
 
         internal UnityNativeUserEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) { }
 
-        protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_USER_VARIABLES;
+        protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_RECORD;
 
         internal override async Task<List<UnityNativeEvent>> FlushEvents()
         {
