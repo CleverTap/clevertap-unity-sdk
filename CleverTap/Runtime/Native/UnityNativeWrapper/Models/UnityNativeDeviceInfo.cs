@@ -76,13 +76,17 @@ namespace CleverTapSDK.Native {
 
         internal string DeviceHeight => _deviceHeight;
 
-        internal string DeviceId => _deviceId;
-
         internal string Library => _library;
 
         internal bool Wifi => _wifi;
 
         internal string Locale => _locale;
+
+        internal string DeviceId {
+            get {
+                return GetDeviceId();
+            }
+        }
 
         private string GetOSName() {
             var operatingSystem = SystemInfo.operatingSystem?.ToLower().Replace(" ", "");
