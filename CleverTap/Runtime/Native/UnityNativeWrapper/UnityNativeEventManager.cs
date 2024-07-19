@@ -70,7 +70,7 @@ namespace CleverTapSDK.Native {
             return _OnUserLogin(profile);
         }
 
-        private readonly HashSet<string> IdentityKeys = new HashSet<string>(){UnityNativeConstants.Profile.EMAIL,UnityNativeConstants.Profile.IDENTITY};
+        private readonly HashSet<string> IdentityKeys = new HashSet<string>(){UnityNativeConstants.Profile.EMAIL.ToLower(),UnityNativeConstants.Profile.IDENTITY.ToLower()};
 		private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
 			try {
 				string currentGUID = _deviceInfo.DeviceId;
@@ -79,7 +79,7 @@ namespace CleverTapSDK.Native {
 
 				foreach (var key in profile.Keys) {
 					var value = profile[key];
-					if (IdentityKeys.Contains(key)) {
+					if (IdentityKeys.Contains(key.ToLower())) {
 						string identifier = value?.ToString();
 						if (!string.IsNullOrEmpty(identifier)) {
 							haveIdentifier = true;
@@ -166,7 +166,7 @@ namespace CleverTapSDK.Native {
             foreach (var key in properties.Keys)
                 {
                     var value = properties[key];
-                    if (IdentityKeys.Contains(key)){
+                    if (IdentityKeys.Contains(key.ToLower())){
                         string identifier = value?.ToString();
                         if (!string.IsNullOrEmpty(identifier)){
                             _preferenceManager.SetGUIDForIdentifier(_deviceInfo.DeviceId,key,identifier);
