@@ -8,12 +8,12 @@ namespace CleverTapSDK.Native
     [Serializable]
     internal class UnityNativeEventDBEntry
     {
-//#if UNITY_WEBGL && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
         public int Id;
-//#else
-//        [PrimaryKey, AutoIncrement]
-//        public int Id { get; set; }
-//#endif
+#else
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+#endif
 
         public UnityNativeEventType EventType { get; set; }
         public string JsonContent { get; set; }

@@ -1,7 +1,7 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
-using Unity.Plastic.Newtonsoft.Json;
+using CleverTapSDK.Utilities;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
@@ -40,9 +40,9 @@ namespace CleverTapSDK.Native {
                 return null;
            }
            string identKey = string.Format("{0}_{1}",key,identifier);
-           Dictionary<string,string> cachedValues = JsonConvert.DeserializeObject<Dictionary<string,string>>(cachedIdentities) as Dictionary<string,string>;
-           if(cachedValues.ContainsKey(identKey)){
-                cachedGUID = cachedValues[identKey];   
+            Dictionary<string, object> cachedValues = Json.Deserialize(cachedIdentities) as Dictionary<string, object>;
+            if (cachedValues.ContainsKey(identKey)){
+                cachedGUID = cachedValues[identKey].ToString();   
            }
            return cachedGUID;
         }
@@ -59,15 +59,15 @@ namespace CleverTapSDK.Native {
         /// <param name="identifier"> identifier value like abc@efg.com or 1212sdsk</param>
         public void SetGUIDForIdentifier(string guid,string key,string identifier){
             string cachedIdentities = GetUserIdentities();
-            Dictionary<string,string> cachedValues = null;
-            if(string.IsNullOrEmpty(cachedIdentities)){
-                cachedValues = new Dictionary<string, string>();
+            Dictionary<string, object> cachedValues;
+            if (string.IsNullOrEmpty(cachedIdentities)){
+                cachedValues = new Dictionary<string, object>();
            }else
-                cachedValues = JsonConvert.DeserializeObject<Dictionary<string,string>>(cachedIdentities) as Dictionary<string,string>;
+                cachedValues = Json.Deserialize(cachedIdentities) as Dictionary<string,object>;
 
             cachedValues[string.Format("{0}_{1}",key,identifier)] = guid;
             PlayerPrefs.SetString(UnityNativeConstants.SDK.CACHED_GUIDS_KEY+UnityNativeAccountManager.Instance.AccountInfo.AccountId,
-                JsonConvert.SerializeObject(cachedValues));
+                Json.Serialize(cachedValues));
          
         }
     }

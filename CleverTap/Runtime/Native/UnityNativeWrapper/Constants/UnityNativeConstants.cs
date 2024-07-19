@@ -14,8 +14,6 @@ namespace CleverTapSDK.Native {
 
             internal const string DEVICE_ID_TAG = "deviceId";
             internal const string GUID_PREFIX =  "__g";
-            internal const string FALLBACK_ID_TAG = "fallbackId";
-            internal const string ERROR_PROFILE_PREFIX = "__i";
             internal const string CACHED_GUIDS_KEY = "cachedGUIDsKey";
 
         }
