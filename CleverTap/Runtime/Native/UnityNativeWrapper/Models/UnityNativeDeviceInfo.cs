@@ -41,7 +41,6 @@ namespace CleverTapSDK.Native {
             _vendorIdentifier = null; // Check if we need this and how to get
             _deviceWidth = Screen.width.ToString(); // Check if we need this and is it correct
             _deviceHeight = Screen.height.ToString(); // Check if we need this and is it correct
-            _deviceId = GetDeviceId();
             _library = null; // Check if we need this and how to get
             _wifi = false; // Check if we need this and how to get
             _locale = "xx_XX"; // Check if we need this and how to get
@@ -77,13 +76,17 @@ namespace CleverTapSDK.Native {
 
         internal string DeviceHeight => _deviceHeight;
 
-        internal string DeviceId => _deviceId;
-
         internal string Library => _library;
 
         internal bool Wifi => _wifi;
 
         internal string Locale => _locale;
+
+        internal string DeviceId {
+            get {
+                return GetDeviceId();
+            }
+        }
 
         private string GetOSName() {
             var operatingSystem = SystemInfo.operatingSystem?.ToLower().Replace(" ", "");
@@ -99,22 +102,47 @@ namespace CleverTapSDK.Native {
             return "Unknown";
         }
 
-        private string GetDeviceId() {
-            var deviceId = PlayerPrefs.GetString( UnityNativeConstants.SDK.DEVICE_ID,null);
-            if (string.IsNullOrEmpty(deviceId)) {
-                deviceId = GenerateDeviceId();
-                PlayerPrefs.SetString(UnityNativeConstants.SDK.DEVICE_ID, deviceId);
-            }
-
-            return deviceId;
+        private string GetDeviceId()
+        {
+            if (!PlayerPrefs.HasKey(GetDeviceIdStorageKey()))
+                ForceNewDeviceID();
+            return PlayerPrefs.GetString(GetDeviceIdStorageKey(), null);
         }
 
-        private string GenerateDeviceId() {
-            string id = SystemInfo.deviceUniqueIdentifier;
-            if (string.IsNullOrEmpty(id) || id.Length < 6) {
-                id = Guid.NewGuid().ToString();
+        public void ForceNewDeviceID()
+        {
+            string newDeviceID = GenerateGuid();
+            ForceUpdateDeviceId(newDeviceID);
+        }
+
+        public void ForceUpdateDeviceId(string id)
+        {
+            PlayerPrefs.SetString(GetDeviceIdStorageKey(), id);
+        }
+
+        private string GenerateGuid()
+        {
+            return UnityNativeConstants.SDK.WEBGL_GUID_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
+        }
+
+        private string GetDeviceIdStorageKey()
+        {
+            return UnityNativeConstants.SDK.DEVICE_ID_TAG + ":" + UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+        }
+
+        private bool ValidateCleverTapID(string cleverTapID)
+        {
+            // Add your validation logic here
+            return !string.IsNullOrEmpty(cleverTapID);
+        }
+
+        private void InitializeDeviceId()
+        {
+            string storedDeviceId = GetDeviceId();
+            if (string.IsNullOrEmpty(storedDeviceId))
+            {
+                ForceNewDeviceID();
             }
-            return "-" + id.Replace("-", "").Trim().ToLower();
         }
     }
 }
