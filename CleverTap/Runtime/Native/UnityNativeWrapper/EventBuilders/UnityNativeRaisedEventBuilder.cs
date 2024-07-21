@@ -4,8 +4,8 @@ using System.Linq;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
-    internal class UnityNativeRecordEventBuilder {
-        internal UnityNativeRecordEventBuilder() { }
+    internal class UnityNativeRaisedEventBuilder {
+        internal UnityNativeRaisedEventBuilder() { }
 
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> Build(string eventName, Dictionary<string, object> properties = null) {
             var eventValidator = new UnityNativeEventValidator();

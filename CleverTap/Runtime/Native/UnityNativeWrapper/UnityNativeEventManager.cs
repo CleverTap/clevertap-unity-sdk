@@ -56,7 +56,7 @@ namespace CleverTapSDK.Native {
                 { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_APP_LUNACH }
             };
 
-            UnityNativeEvent @event = BuildEventWithAppFields(UnityNativeEventType.RecordEvent, eventDetails, false);
+            UnityNativeEvent @event = BuildEventWithAppFields(UnityNativeEventType.RaisedEvent, eventDetails, false);
             StoreEvent(@event);
             _eventQueueManager.FlushQueues();
         }
@@ -259,9 +259,9 @@ namespace CleverTapSDK.Native {
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeRecordEventBuilder().Build(eventName, properties);
+            var eventBuilderResult = new UnityNativeRaisedEventBuilder().Build(eventName, properties);
             var eventDetails = eventBuilderResult.EventResult;
-            return BuildEvent(UnityNativeEventType.RecordEvent, eventDetails);
+            return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
 
         internal UnityNativeEvent RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
@@ -273,9 +273,9 @@ namespace CleverTapSDK.Native {
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeRecordEventBuilder().BuildChargedEvent(details, items);
+            var eventBuilderResult = new UnityNativeRaisedEventBuilder().BuildChargedEvent(details, items);
             var eventDetails = eventBuilderResult.EventResult;
-            return BuildEvent(UnityNativeEventType.RecordEvent, eventDetails);
+            return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
 
         #endregion
