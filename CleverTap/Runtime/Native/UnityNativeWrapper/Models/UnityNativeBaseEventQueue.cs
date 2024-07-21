@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleverTapSDK.Utilities;
 using UnityEngine;
+using CleverTapSDK.Common;
 
 namespace CleverTapSDK.Native
 {
