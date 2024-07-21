@@ -5,9 +5,9 @@ namespace CleverTapSDK.Native {
     internal class UnityNativeWrapper {        
         private readonly UnityNativeEventManager _eventManager;
 
-        internal UnityNativeWrapper()
+        internal UnityNativeWrapper(UnityNativeCallbackHandler callbackHandler)
         {
-            _eventManager = new UnityNativeEventManager();
+            _eventManager = new UnityNativeEventManager(callbackHandler);
         }
 
         internal void LaunchWithCredentials(string accountID, string token, string region = null) {

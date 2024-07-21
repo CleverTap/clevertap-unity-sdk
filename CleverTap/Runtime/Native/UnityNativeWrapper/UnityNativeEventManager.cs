@@ -1,9 +1,9 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using CleverTapSDK.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventManager {
@@ -13,40 +13,38 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativeDatabaseStore _databaseStore;
         private readonly UnityNativeEventQueueManager _eventQueueManager;
         private readonly UnityNativeDeviceInfo _deviceInfo;
-       
-        internal UnityNativeEventManager()
-        {
+        private readonly UnityNativeCallbackHandler _callbackHandler;
+
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) {
             _preferenceManager = new UnityNativePreferenceManager();
             _databaseStore = new UnityNativeDatabaseStore(NATIVE_EVENTS_DB_CACHE);
             _eventQueueManager = new UnityNativeEventQueueManager(_databaseStore);
             _deviceInfo = new UnityNativeDeviceInfo();
+            _callbackHandler = callbackHandler;
         }
 
         #region Launch
 
-        internal void LaunchWithCredentials(string accountID, string token, string region = null)
-        {
+        internal void LaunchWithCredentials(string accountID, string token, string region = null) {
             UnityNativeAccountManager.Instance.SetAccountInfo(accountID, token, region);
             UnityNativeNetworkEngine.Instance.SetRegion(region);
             RecordAppLaunch();
+            NotifyUserProfileInitialized();
         }
 
         internal void RecordAppLaunch() {
-            if (UnityNativeSessionManager.Instance.CurrentSession.isAppLaunched) {
+            if (UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched) {
                 return;
             }
 
             var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
             if (string.IsNullOrEmpty(accountInfo.AccountId) || string.IsNullOrEmpty(accountInfo.AccountToken)) {
-                // Log error?
-                throw new ArgumentNullException("accountId || accountToken");
+                throw new ArgumentNullException("Cannot record App Launched. AccountId and/or AccountToken are not set.");
             }
 
-            UnityNativeNetworkEngine.Instance
-                .SetHeaders(new Dictionary<string, string>() {
-                    { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, accountInfo.AccountId },
-                    // { UnityNativeConstants.Network.HEADER_ACCOUNT_TOKEN_NAME, accountInfo.AccountToken }
-                    });
+            UnityNativeNetworkEngine.Instance.SetHeaders(new Dictionary<string, string>() {
+                { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, accountInfo.AccountId },
+            });
             UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(true);
             var eventDetails = new Dictionary<string, object> {
                 { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_APP_LUNACH }
@@ -62,6 +60,12 @@ namespace CleverTapSDK.Native {
 
         #region Profile Events
 
+        private readonly HashSet<string> IdentityKeys = new HashSet<string>() {
+            UnityNativeConstants.Profile.EMAIL.ToLower(),
+            UnityNativeConstants.Profile.IDENTITY.ToLower(),
+            UnityNativeConstants.Profile.PHONE.ToLower()
+        };
+
         internal UnityNativeEvent OnUserLogin(Dictionary<string, object> profile) {
             if (profile == null || profile.Count == 0) {
                 return null;
@@ -70,17 +74,16 @@ namespace CleverTapSDK.Native {
             return _OnUserLogin(profile);
         }
 
-        private readonly HashSet<string> IdentityKeys = new HashSet<string>(){UnityNativeConstants.Profile.EMAIL.ToLower(),UnityNativeConstants.Profile.IDENTITY.ToLower()};
-		private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
+        private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
 			try {
 				string currentGUID = _deviceInfo.DeviceId;
 				bool haveIdentifier = false;
 				string cachedGUID = null;
 
 				foreach (var key in profile.Keys) {
-					var value = profile[key];
 					if (IdentityKeys.Contains(key.ToLower())) {
-						string identifier = value?.ToString();
+                        var value = profile[key];
+                        string identifier = value?.ToString();
 						if (!string.IsNullOrEmpty(identifier)) {
 							haveIdentifier = true;
 							cachedGUID = GetGUIDForIdentifier(key, identifier);
@@ -90,66 +93,64 @@ namespace CleverTapSDK.Native {
 						}
 					}
 				}
-				//new profile
+
+				// No Identifier or anonymous
 				if (!haveIdentifier || IsAnonymousUser()) {
-					return ProfilePush(profile);
+                    CleverTapLogger.Log($"OnUserLogin: No identifier OR device is anonymous, associating profile with current user profile: {currentGUID}");
+                    return ProfilePush(profile);
 				}
-				//Same Profile
+				// Same Profile
 				if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
-					return ProfilePush(profile);
+                    CleverTapLogger.Log($"OnUserLogin: Profile maps to current device id {currentGUID}, using current user profile.");
+                    return ProfilePush(profile);
 				}
 
+                // New Profile
 				SwitchOrCreateProfile(profile, cachedGUID);
 			} catch (Exception e) {
-				CleverTapLogger.LogError("onUserLogin failed: " + e);
+				CleverTapLogger.LogError("OnUserLogin failed: " + e);
 			}
 
 			return null;
 		}
 
-		private bool IsAnonymousUser()
-        {
+		private bool IsAnonymousUser() {
             return string.IsNullOrEmpty(_preferenceManager.GetUserIdentities());
         }
 
-        private string GetGUIDForIdentifier(string key, string identifier)
-        {
+        private string GetGUIDForIdentifier(string key, string identifier) {
             return _preferenceManager.GetGUIDForIdentifier(key,identifier);
         }
 
-        private void SwitchOrCreateProfile(Dictionary<string, object> profile, string cacheGuid)
-        {
+        private void SwitchOrCreateProfile(Dictionary<string, object> profile, string cacheGuid) {
             try
             {
-                CleverTapLogger.Log($"asyncProfileSwitchUser:[profile {profile} with Cached GUID {(cacheGuid != null ? cacheGuid : "NULL")}");
+                CleverTapLogger.Log($"asyncProfileSwitchUser:[profile {string.Join(Environment.NewLine, profile)}]" +
+                    $" with Cached GUID {(cacheGuid != null ? cacheGuid : "NULL")}");
 
+                // Add all events and flush queue
                 ProcessStoredEvents();
-               // UnityNativeLoginInfoProvider.Instance.ClearUser();
-                //UnityNativeSessionManager.Instance.ClearSession();
-                //old profile switch
+                _eventQueueManager.FlushQueue();
+
+                // Reset the session
+                UnityNativeSessionManager.Instance.ResetSession();
+
                 if (cacheGuid != null)
                 {
                     _deviceInfo.ForceUpdateDeviceId(cacheGuid);
-                   // _callbackManager.NotifyUserProfileInitialized(cacheGuid);
                 }
                 else
                 {
                     _deviceInfo.ForceNewDeviceID();
                 }
 
-                //_callbackManager.NotifyUserProfileInitialized(_deviceInfo.DeviceId);
-                //_deviceInfo.SetCurrentUserOptOutStateFromStorage();
-               
+                NotifyUserProfileInitialized();
+
                 RecordAppLaunch();
 
                 if (profile != null)
                 {
                     ProfilePush(profile);
-                }
-
-                //foreach (var callback in _callbackManager.GetChangeUserCallbackList())
-                {
-                 //   callback.OnChangeUser(_deviceInfo.DeviceId, _config.AccountId);
                 }
             }
             catch (Exception e)
@@ -158,21 +159,32 @@ namespace CleverTapSDK.Native {
             }
         }
 
+        internal void NotifyUserProfileInitialized() {
+            var eventInfo = new Dictionary<string, string> {
+                { "CleverTapID",  _deviceInfo.DeviceId },
+                { "CleverTapAccountID", UnityNativeAccountManager.Instance.AccountInfo.AccountId }
+            };
+            _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
+        }
+
         internal UnityNativeEvent ProfilePush(Dictionary<string, object> properties) {
             if (properties == null || properties.Count == 0) {
                 return null;
             }
-            //Updating Identity 
+
+            // Updating Identity 
             foreach (var key in properties.Keys)
+            {
+                if (IdentityKeys.Contains(key.ToLower()))
                 {
                     var value = properties[key];
-                    if (IdentityKeys.Contains(key.ToLower())){
-                        string identifier = value?.ToString();
-                        if (!string.IsNullOrEmpty(identifier)){
-                            _preferenceManager.SetGUIDForIdentifier(_deviceInfo.DeviceId,key,identifier);
-                        }
+                    string identifier = value?.ToString();
+                    if (!string.IsNullOrEmpty(identifier))
+                    {
+                        _preferenceManager.SetGUIDForIdentifier(_deviceInfo.DeviceId, key, identifier);
                     }
                 }
+            }
 
             var eventBuilderResult = new UnityNativeProfileEventBuilder().BuildPushEvent(properties);
             if (eventBuilderResult.EventResult.SystemFields == null || eventBuilderResult.EventResult.CustomFields == null) {
@@ -196,8 +208,7 @@ namespace CleverTapSDK.Native {
             return BuildEvent(UnityNativeEventType.ProfileEvent, eventDetails);
         }
 
-        internal UnityNativeEvent ProfilePush(string key, object value, string command)
-        {
+        internal UnityNativeEvent ProfilePush(string key, object value, string command) {
             if (key == null || value == null || command == null)
             {
                 return null;
@@ -235,10 +246,10 @@ namespace CleverTapSDK.Native {
 
         #region Private
 
-        private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true)
-        {
-            if (!UnityNativeSessionManager.Instance.CurrentSession.isAppLaunched)
+        private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
+            if (!UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched)
             {
+                CleverTapLogger.LogError("Record App Launched first");
                 return null;
             }
 
@@ -252,10 +263,10 @@ namespace CleverTapSDK.Native {
             return @event;
         }
 
-        private UnityNativeEvent BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true)
-        {
-            if (!UnityNativeSessionManager.Instance.CurrentSession.isAppLaunched)
+        private UnityNativeEvent BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
+            if (!UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched)
             {
+                CleverTapLogger.LogError("Record App Launched first");
                 return null;
             }
 
@@ -269,8 +280,7 @@ namespace CleverTapSDK.Native {
             return @event;
         }
 
-        private async void PushEvent(UnityNativeEvent evt,Action<bool> Success)
-        {
+        private async void PushEvent(UnityNativeEvent evt,Action<bool> Success) {
             var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
             var allEventsJson = new List<string> { metaEvent , evt.JsonContent };
             var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
@@ -284,16 +294,18 @@ namespace CleverTapSDK.Native {
             CleverTapLogger.Log($"{GetType().Name}: Executing request with body: {jsonContent} " +
     $"and query parameters: [{string.Join(", ", queryParameters.Select(kv => $"{kv.Key}: {kv.Value}"))}]");
 
+            UnityNativeSessionManager.Instance.UpdateSessionTimestamp();
+
             var response = await UnityNativeNetworkEngine.Instance.ExecuteRequest(request);
             Success?.Invoke(response.IsSuccess());
         }
 
         private void StoreEvent(UnityNativeEvent evt) {
+            UnityNativeSessionManager.Instance.UpdateSessionTimestamp();
             _databaseStore.AddEvent(evt);
         }
 
-        private void ProcessStoredEvents()
-        {
+        private void ProcessStoredEvents() {
             _databaseStore.AddEventsFromDB();
         }
 
