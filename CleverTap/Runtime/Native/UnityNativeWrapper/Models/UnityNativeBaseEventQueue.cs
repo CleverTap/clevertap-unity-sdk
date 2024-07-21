@@ -10,12 +10,10 @@ using CleverTapSDK.Common;
 
 namespace CleverTapSDK.Native
 {
-
     internal delegate void EventTimerTick();
 
     internal abstract class UnityNativeBaseEventQueue
     {
-
         protected readonly int queueLimit;
         protected readonly int defaultTimerInterval;
         private Coroutine timerCoroutine;
@@ -81,19 +79,13 @@ namespace CleverTapSDK.Native
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
                     var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
 
-                    var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
-                    var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
-                    var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-                    var queryParameters = new List<KeyValuePair<string, string>> {
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, UnityNativeConstants.SDK.REVISION),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
-                    };
-
+                    var queryStringParameters = GetQueryStringParameters();
                     var request = new UnityNativeRequest(RequestPath, UnityNativeConstants.Network.REQUEST_POST)
                         .SetRequestBody(jsonContent)
-                        .SetQueryParameters(queryParameters);
+                        .SetQueryParameters(queryStringParameters);
+
+                    CleverTapLogger.Log($"{GetType().Name}: Sending request with body: {jsonContent} " +
+                        $"and query parameters: [{string.Join(", ", queryStringParameters.Select(kv => $"{kv.Key}: {kv.Value}"))}]");
 
                     var response = await executeRequest(request);
 
@@ -129,6 +121,27 @@ namespace CleverTapSDK.Native
             }
 
             return proccesedEvents;
+        }
+
+        internal static List<KeyValuePair<string, string>> GetQueryStringParameters()
+        {
+            var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
+            var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
+            if (deviceInfo == null || accountInfo == null)
+            {
+                CleverTapLogger.Log("Cannot generate query string parameters.");
+                return new List<KeyValuePair<string, string>>();
+            }
+
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            // Default Query String parameters
+            var queryParameters = new List<KeyValuePair<string, string>> {
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, deviceInfo.SdkVersion),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
+            };
+            return queryParameters;
         }
 
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);

@@ -271,24 +271,18 @@ namespace CleverTapSDK.Native {
 
         private async void PushEvent(UnityNativeEvent evt,Action<bool> Success)
         {
-            var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
-            var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-
             var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
             var allEventsJson = new List<string> { metaEvent , evt.JsonContent };
             var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
 
-            var queryParameters = new List<KeyValuePair<string, string>> {
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, UnityNativeConstants.SDK.REVISION),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
-                    };
+            var queryParameters = UnityNativeBaseEventQueue.GetQueryStringParameters();
 
             var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_RECORD, UnityNativeConstants.Network.REQUEST_POST)
             .SetRequestBody(jsonContent)
             .SetQueryParameters(queryParameters);
+
+            CleverTapLogger.Log($"{GetType().Name}: Executing request with body: {jsonContent} " +
+    $"and query parameters: [{string.Join(", ", queryParameters.Select(kv => $"{kv.Key}: {kv.Value}"))}]");
 
             var response = await UnityNativeNetworkEngine.Instance.ExecuteRequest(request);
             Success?.Invoke(response.IsSuccess());

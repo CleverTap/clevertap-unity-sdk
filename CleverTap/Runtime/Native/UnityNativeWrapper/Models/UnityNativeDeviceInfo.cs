@@ -26,7 +26,8 @@ namespace CleverTapSDK.Native {
 
 //TODO: test and log info for MAC, windows and WEBGl
         internal UnityNativeDeviceInfo() {
-            _sdkVersion = UnityNativeConstants.SDK.VERSION;
+            // Use the SDK Version Revision
+            _sdkVersion = CleverTapVersion.CLEVERTAP_SDK_REVISION;
             _appVersion = Application.version; // Check where to get this
             _appBuild = Application.productName; // Check where to get this
             _bundleId = "123456789"; // Check if we need this and how to get

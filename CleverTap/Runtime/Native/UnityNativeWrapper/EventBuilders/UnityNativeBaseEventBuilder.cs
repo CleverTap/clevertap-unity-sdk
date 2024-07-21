@@ -49,7 +49,7 @@ namespace CleverTapSDK.Native {
 
             data.Add(UnityNativeConstants.Event.APP_VERSION, deviceInfo.AppVersion);
             data.Add(UnityNativeConstants.Event.BUILD, deviceInfo.AppBuild);
-            data.Add(UnityNativeConstants.Event.SDK_VERSION, Regex.Replace(deviceInfo.SdkVersion, "[^0-9]", "0"));
+            data.Add(UnityNativeConstants.Event.SDK_VERSION, deviceInfo.SdkVersion);
 
             if (!string.IsNullOrEmpty(deviceInfo.Model)) {
                 data.Add(UnityNativeConstants.Event.MODEL, deviceInfo.Model);

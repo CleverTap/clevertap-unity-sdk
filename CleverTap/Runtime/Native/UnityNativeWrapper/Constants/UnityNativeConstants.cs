@@ -8,8 +8,6 @@ namespace CleverTapSDK.Native {
       
 
         internal static class SDK {
-            internal const string REVISION = "30200";
-            internal const string VERSION = "3.2.0";
             internal const string DEVICE_ID = "device_id";
 
             internal const string DEVICE_ID_TAG = "deviceId";
