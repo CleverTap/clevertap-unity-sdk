@@ -6,6 +6,7 @@ namespace CleverTapSDK.Native {
 
     internal class UnityNativeRecordEventQueue : UnityNativeBaseEventQueue {
 
+        protected override string QueueName => "RECORD_EVENTS";
 
         internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) { }
 
@@ -18,8 +19,7 @@ namespace CleverTapSDK.Native {
 
         protected override bool CanProcessEventResponse(UnityNativeResponse response)
         {
-            bool processHeaders = UnityNativeNetworkEngine.Instance.ProcessIncomingHeaders(response);
-            return processHeaders && response.IsSuccess();
+            return response.IsSuccess();
         }
     }
 }

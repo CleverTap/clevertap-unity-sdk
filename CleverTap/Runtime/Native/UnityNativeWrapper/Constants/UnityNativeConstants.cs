@@ -194,6 +194,8 @@ namespace CleverTapSDK.Native {
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
             internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
 
+            internal const int DEFAUL_REQUEST_TIMEOUT_SEC = 10;
+
             internal const string QUERY_OS = "os";
             internal const string QUERY_SKD_REVISION = "t";
             internal const string QUERY_ACCOUNT_ID = "z";

@@ -49,16 +49,16 @@ namespace CleverTapSDK.Native {
             UnityNativeNetworkEngine.Instance.SetHeaders(new Dictionary<string, string>() {
                 { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, accountInfo.AccountId },
             });
+
             UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(true);
+
             var eventDetails = new Dictionary<string, object> {
                 { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_APP_LUNACH }
             };
 
             UnityNativeEvent @event = BuildEventWithAppFields(UnityNativeEventType.RecordEvent, eventDetails, false);
-            PushEvent(@event, (isPushed) =>
-            {
-                UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(isPushed);
-            });
+            StoreEvent(@event);
+            _eventQueueManager.FlushQueues();
         }
         #endregion
 
@@ -142,7 +142,7 @@ namespace CleverTapSDK.Native {
 
                 // Add all events and flush queue
                 ProcessStoredEvents();
-                _eventQueueManager.FlushQueue();
+                _eventQueueManager.FlushQueues();
 
                 // Reset the session
                 UnityNativeSessionManager.Instance.ResetSession();
@@ -317,23 +317,6 @@ namespace CleverTapSDK.Native {
                 StoreEvent(@event);
             }
             return @event;
-        }
-
-        private async void PushEvent(UnityNativeEvent evt,Action<bool> Success) {
-            var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
-            var allEventsJson = new List<string> { metaEvent , evt.JsonContent };
-            var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
-
-            var queryParameters = UnityNativeBaseEventQueue.GetQueryStringParameters();
-
-            var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_RECORD, UnityNativeConstants.Network.REQUEST_POST)
-            .SetRequestBody(jsonContent)
-            .SetQueryParameters(queryParameters);
-
-            UnityNativeSessionManager.Instance.UpdateSessionTimestamp();
-
-            var response = await UnityNativeNetworkEngine.Instance.ExecuteRequest(request);
-            Success?.Invoke(response.IsSuccess());
         }
 
         private void StoreEvent(UnityNativeEvent evt) {

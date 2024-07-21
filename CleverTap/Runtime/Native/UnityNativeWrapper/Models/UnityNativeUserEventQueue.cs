@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 namespace CleverTapSDK.Native {
     internal class UnityNativeUserEventQueue : UnityNativeBaseEventQueue {
 
+        protected override string QueueName => "USER_EVENTS";
+
         internal UnityNativeUserEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) { }
 
         protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_RECORD;

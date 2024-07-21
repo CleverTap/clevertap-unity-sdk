@@ -24,6 +24,8 @@ namespace CleverTapSDK.Native
         protected abstract string RequestPath { get; }
         internal virtual event EventTimerTick OnEventTimerTick;
 
+        protected abstract string QueueName { get; }
+
         internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1)
         {
             this.queueLimit = queueLimit;
@@ -68,11 +70,13 @@ namespace CleverTapSDK.Native
             isInFlushProcess = true;
             var proccesedEvents = new List<UnityNativeEvent>();
 
-            while (eventsQueue.Count > 0)
+            bool willRetry = false;
+            List<UnityNativeEvent> events = new List<UnityNativeEvent>();
+            while (eventsQueue.Count > 0 && !willRetry)
             {
                 try
                 {
-                    var events = eventsQueue.Dequeue();
+                    events = eventsQueue.Dequeue();
                     var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
@@ -93,14 +97,17 @@ namespace CleverTapSDK.Native
                     else
                     {
                         // Re-enqueue events in case of error
+                        willRetry = true;
                         QueueEvents(events);
                         OnEventError();
                     }
                 }
                 catch (Exception ex)
                 {
+                    willRetry = true;
+                    QueueEvents(events);
                     OnEventError();
-                    CleverTapLogger.Log(ex.Message);
+                    CleverTapLogger.Log($"Exception: {ex.Message}, Stack Trace: {ex.StackTrace}");
                     return proccesedEvents;
                 }
             }
@@ -146,7 +153,7 @@ namespace CleverTapSDK.Native
         {
             retryCount++;
             isInFlushProcess = false;
-            ResetAndStartTimer();
+            ResetAndStartTimer(true);
         }
 
         protected virtual void ResetAndStartTimer(bool retry = false)
@@ -159,7 +166,9 @@ namespace CleverTapSDK.Native
 
             if (retry)
             {
-                RestartTimer((Mathf.Pow(2, retryCount % 10)) * 1000);
+                float delay = Mathf.Pow(2, retryCount % 10);
+                CleverTapLogger.Log($"Will retry sending events from queue {QueueName} in {delay}s.");
+                RestartTimer(delay);
             }
         }
 

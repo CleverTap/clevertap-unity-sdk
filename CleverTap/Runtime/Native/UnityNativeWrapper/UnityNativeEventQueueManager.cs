@@ -1,5 +1,6 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System.Threading.Tasks;
+using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventQueueManager {
@@ -30,6 +31,12 @@ namespace CleverTapSDK.Native {
             }
         }
 
+        internal async void FlushQueues() {
+            CleverTapLogger.Log("Flushing queues");
+            await FlushUserEvents();
+            await FlushRecordEvents();
+        }
+
         private async void OnUserEventTimerTick() {
             await FlushUserEvents();
         }
@@ -39,18 +46,15 @@ namespace CleverTapSDK.Native {
         }
 
         private async Task FlushUserEvents() {
+            CleverTapLogger.Log("Flushing user events");
             var flushedEvents = await _userEventsQueue.FlushEvents();
             _databaseStore.DeleteEvents(flushedEvents);
         }
 
         private async Task FlushRecordEvents() {
+            CleverTapLogger.Log("Flushing record events");
             var flushedEvents = await _recordEventsQueue.FlushEvents();
             _databaseStore.DeleteEvents(flushedEvents);
-        }
-
-        public async void FlushQueue(){
-            await FlushUserEvents();
-            await FlushRecordEvents();
         }
     }
 }
