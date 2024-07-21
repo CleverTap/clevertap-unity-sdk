@@ -5,6 +5,15 @@ using System.Linq;
 
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
+
+        internal static string GetStorageKeyWithAccountId(string suffix) {
+            string accountId = UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+            if (string.IsNullOrEmpty(accountId))
+            {
+                throw new ArgumentNullException("Trying to get access storage key without account Id.");
+            }
+            return $"{accountId}:{suffix}";
+        }
       
         internal static class SDK {
             internal const string DEVICE_ID = "device_id";
@@ -178,7 +187,8 @@ namespace CleverTapSDK.Native {
         }
 
         internal static class Network {
-            internal const string CT_BASE_URL = "clevertap-prod.com"; //"sk1-staging-25.clevertap-prod.com";// "clevertap-prod.com";
+            internal const string CT_BASE_URL = "clevertap-prod.com";
+            internal const string REDIRECT_DOMAIN_KEY = "CLTAP_REDIRECT_DOMAIN_KEY";
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
@@ -189,7 +199,6 @@ namespace CleverTapSDK.Native {
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
 
-       
             internal const string REQUEST_GET = "GET";
 #if UNITY_WEBGL && !UNITY_EDITOR
             internal const string REQUEST_POST = "POST";

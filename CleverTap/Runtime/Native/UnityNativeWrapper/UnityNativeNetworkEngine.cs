@@ -147,12 +147,22 @@ namespace CleverTapSDK.Native {
             if (needHandshakeDueToFailure)
             {
                 SetBaseURI(null);
+                SetRedirectDomain(null);
             }
 
-            if(_region != null)
+            if (!string.IsNullOrEmpty(_region))
             {
-                SetBaseURI( UnityNativeConstants.Network.CT_BASE_URL);
+                string region = _region.Trim().ToLower();
+                string uri = $"{region}.{UnityNativeConstants.Network.CT_BASE_URL}";
+                CleverTapLogger.Log($"Setting domain name with region: {uri}");
+                SetBaseURI(uri);
                 return false;
+            }
+
+            string domain = GetRedirectDomain();
+            if (!string.IsNullOrEmpty(domain))
+            {
+                SetBaseURI(domain);
             }
 
             return _baseURI == null || needHandshakeDueToFailure; 
@@ -172,8 +182,7 @@ namespace CleverTapSDK.Native {
             return false;
         }
 
-        internal bool ProcessIncomingHeaders(UnityNativeResponse response)
-        {
+        internal bool ProcessIncomingHeaders(UnityNativeResponse response) {
             if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_MUTE))
             {
                 _mute = bool.Parse(response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_MUTE]);
@@ -183,15 +192,31 @@ namespace CleverTapSDK.Native {
 
             if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_NAME))
             {
-                SetBaseURI(response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME]);
+                string newDomain = response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
+                if (!string.IsNullOrEmpty(newDomain)) {
+                    CleverTapLogger.Log($"Setting new domain name: {newDomain}");
+                    SetBaseURI(newDomain);
+                    SetRedirectDomain(newDomain);
+                }
             }
 
             return true;
         }
 
+        internal void SetRedirectDomain(string newDomain) {
+            if (newDomain == null)
+            {
+                PlayerPrefs.DeleteKey(UnityNativeConstants.GetStorageKeyWithAccountId(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY));
+                return;
+            }
+            PlayerPrefs.SetString(UnityNativeConstants.GetStorageKeyWithAccountId(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY), newDomain);
+        }
 
-        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request)
-        {
+        internal string GetRedirectDomain() {
+            return PlayerPrefs.GetString(UnityNativeConstants.GetStorageKeyWithAccountId(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY));
+        }
+
+        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request) {
             return await RunOnMainThread(async () =>
             {
                 if (request == null)
@@ -218,8 +243,7 @@ namespace CleverTapSDK.Native {
             });
         }
 
-        private async Task<UnityNativeResponse> ExecuteRequestAfterHandshake(UnityNativeRequest request)
-        {
+        private async Task<UnityNativeResponse> ExecuteRequestAfterHandshake(UnityNativeRequest request) {
             if (request == null)
             {
                 return null;
@@ -236,10 +260,13 @@ namespace CleverTapSDK.Native {
                 }
             }
 
-            
-
             var response = await SendRequest(request);
             CleverTapLogger.Log($"Response: content: {response.Content} headers: {Json.Serialize(response.Headers)}");
+
+            if (response.IsSuccess())
+            {
+                ProcessIncomingHeaders(response);
+            }
 
             // Intercept reponse before retuning
             if (request.ResponseInterceptors?.Count > 0)
@@ -339,7 +366,7 @@ namespace CleverTapSDK.Native {
                         return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
 
                     case UnityWebRequest.Result.ProtocolError:
-                        CleverTapLogger.LogError("Failed ProtocolError");
+                        CleverTapLogger.LogError($"Failed ProtocolError: {(HttpStatusCode)unityWebRequest.responseCode}, error: {unityWebRequest.downloadHandler.text}, request: {request.RequestBody}");
                         return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
 
                     case UnityWebRequest.Result.DataProcessingError:
