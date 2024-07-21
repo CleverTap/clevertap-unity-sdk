@@ -11,9 +11,9 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativeWrapper _unityNativeWrapper;
        
         internal UnityNativePlatformBinding() {
-            CallbackHandler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>(CleverTapGameObjectName.UNITY_NATIVE_CALLBACK_HANDLER);
-            _unityNativeWrapper = new UnityNativeWrapper();
-            CleverTapLogger.Log("Start: no-op CleverTap binding for non iOS/Android.");
+            UnityNativeCallbackHandler handler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>(CleverTapGameObjectName.UNITY_NATIVE_CALLBACK_HANDLER);
+            CallbackHandler = handler;
+            _unityNativeWrapper = new UnityNativeWrapper(handler);
         }
 
         internal override void LaunchWithCredentials(string accountID, string token) {
@@ -44,53 +44,45 @@ namespace CleverTapSDK.Native {
         internal override void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
             _unityNativeWrapper.RecordChargedEventWithDetailsAndItems(details, items);
         }
-
       
-        internal override void ProfileAddMultiValuesForKey(string key, List<string> values)
-        {
+        internal override void ProfileAddMultiValuesForKey(string key, List<string> values) {
             _unityNativeWrapper.ProfilePush(key, values, UnityNativeConstants.Commands.COMMAND_ADD);
         }
 
-        internal override void ProfileSetMultiValuesForKey(string key, List<string> values)
-        {
+        internal override void ProfileSetMultiValuesForKey(string key, List<string> values) {
             _unityNativeWrapper.ProfilePush(key, values, UnityNativeConstants.Commands.COMMAND_SET);
         }
 
-        internal override void ProfileRemoveMultiValuesForKey(string key, List<string> values)
-        {
+        internal override void ProfileRemoveMultiValuesForKey(string key, List<string> values) {
             _unityNativeWrapper.ProfilePush(key, values, UnityNativeConstants.Commands.COMMAND_REMOVE);
         }
 
-        internal override void ProfileIncrementValueForKey(string key, double val)
-        {
+        internal override void ProfileIncrementValueForKey(string key, double val) {
             _unityNativeWrapper.ProfilePush(key, val, UnityNativeConstants.Commands.COMMAND_INCREMENT);
         }
 
-        internal override void ProfileIncrementValueForKey(string key, int val)
-        {
+        internal override void ProfileIncrementValueForKey(string key, int val) {
             _unityNativeWrapper.ProfilePush(key, val, UnityNativeConstants.Commands.COMMAND_INCREMENT);
         }
 
-        internal override void ProfileDecrementValueForKey(string key, double val)
-        {
+        internal override void ProfileDecrementValueForKey(string key, double val) {
             _unityNativeWrapper.ProfilePush(key, val, UnityNativeConstants.Commands.COMMAND_DECREMENT);
         }
 
-        internal override void ProfileDecrementValueForKey(string key, int val)
-        {
+        internal override void ProfileDecrementValueForKey(string key, int val) {
             _unityNativeWrapper.ProfilePush(key, val, UnityNativeConstants.Commands.COMMAND_DECREMENT);
         }
 
-        internal override string GetCleverTapID()
-        {
+        internal override string GetCleverTapID() {
            return UnityNativeDeviceManager.Instance.DeviceInfo.DeviceId;
         }
 
-        private void generateDeviceId()
-        {
-            var guid = Guid.NewGuid().ToString();
-            string id = "-" + guid.Replace("-", "").Trim().ToLower();
-            PlayerPrefs.SetString(UnityNativeConstants.SDK.DEVICE_ID,id);
+        internal override string ProfileGetCleverTapID() {
+            return GetCleverTapID();
+        }
+
+        internal override void EnableDeviceNetworkInfoReporting(bool enabled) {
+            UnityNativeDeviceManager.Instance.DeviceInfo.EnableNetworkInfoReporting = enabled;
         }
     }
 }
