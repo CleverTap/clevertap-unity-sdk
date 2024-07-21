@@ -1,13 +1,16 @@
 #if !UNITY_IOS && !UNITY_ANDROID
+using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventManager {
         private static readonly string NATIVE_EVENTS_DB_CACHE = "NativeEventsDbCache";
+        private static readonly int DEFER_EVENT_SECONDS = 2;
 
         private readonly UnityNativePreferenceManager _preferenceManager;
         private readonly UnityNativeDatabaseStore _databaseStore;
@@ -28,6 +31,7 @@ namespace CleverTapSDK.Native {
         internal void LaunchWithCredentials(string accountID, string token, string region = null) {
             UnityNativeAccountManager.Instance.SetAccountInfo(accountID, token, region);
             UnityNativeNetworkEngine.Instance.SetRegion(region);
+            UnityNativeSessionManager.Instance.InitializeSession();
             RecordAppLaunch();
             NotifyUserProfileInitialized();
         }
@@ -68,6 +72,14 @@ namespace CleverTapSDK.Native {
 
         internal UnityNativeEvent OnUserLogin(Dictionary<string, object> profile) {
             if (profile == null || profile.Count == 0) {
+                return null;
+            }
+
+            if (ShouldDeferEvent(() =>
+            {
+                OnUserLogin(profile);
+            }))
+            {
                 return null;
             }
 
@@ -172,6 +184,14 @@ namespace CleverTapSDK.Native {
                 return null;
             }
 
+            if (ShouldDeferEvent(() =>
+            {
+                ProfilePush(properties);
+            }))
+            {
+                return null;
+            }
+
             // Updating Identity 
             foreach (var key in properties.Keys)
             {
@@ -231,12 +251,28 @@ namespace CleverTapSDK.Native {
         #region Record Events
 
         internal UnityNativeEvent RecordEvent(string eventName, Dictionary<string, object> properties = null) {
+            if (ShouldDeferEvent(() =>
+            {
+                RecordEvent(eventName, properties);
+            }))
+            {
+                return null;
+            }
+
             var eventBuilderResult = new UnityNativeRecordEventBuilder().Build(eventName, properties);
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RecordEvent, eventDetails);
         }
 
         internal UnityNativeEvent RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
+            if (ShouldDeferEvent(() =>
+            {
+                RecordChargedEventWithDetailsAndItems(details, items);
+            }))
+            {
+                return null;
+            }
+
             var eventBuilderResult = new UnityNativeRecordEventBuilder().BuildChargedEvent(details, items);
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RecordEvent, eventDetails);
@@ -246,13 +282,22 @@ namespace CleverTapSDK.Native {
 
         #region Private
 
-        private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
+        private bool ShouldDeferEvent(Action action) {
             if (!UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched)
             {
-                CleverTapLogger.LogError("Record App Launched first");
-                return null;
+                CleverTapLogger.Log($"App Launched not yet processed, re-queuing event after {DEFER_EVENT_SECONDS}s.");
+                MonoHelper.Instance.StartCoroutine(DeferEventCoroutine(action));
+                return true;
             }
+            return false;
+        }
 
+        private IEnumerator DeferEventCoroutine(Action action) {
+            yield return new WaitForSeconds(DEFER_EVENT_SECONDS);
+            action();
+        }
+
+        private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
             var eventData = new UnityNativeEventBuilder().BuildEvent(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
@@ -264,12 +309,6 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEvent BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
-            if (!UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched)
-            {
-                CleverTapLogger.LogError("Record App Launched first");
-                return null;
-            }
-
             var eventData = new UnityNativeEventBuilder().BuildEventWithAppFields(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
@@ -290,9 +329,6 @@ namespace CleverTapSDK.Native {
             var request = new UnityNativeRequest(UnityNativeConstants.Network.REQUEST_PATH_RECORD, UnityNativeConstants.Network.REQUEST_POST)
             .SetRequestBody(jsonContent)
             .SetQueryParameters(queryParameters);
-
-            CleverTapLogger.Log($"{GetType().Name}: Executing request with body: {jsonContent} " +
-    $"and query parameters: [{string.Join(", ", queryParameters.Select(kv => $"{kv.Key}: {kv.Value}"))}]");
 
             UnityNativeSessionManager.Instance.UpdateSessionTimestamp();
 

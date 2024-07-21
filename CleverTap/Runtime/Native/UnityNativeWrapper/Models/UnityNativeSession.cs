@@ -4,20 +4,25 @@ using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSession {
-        private readonly long _sessionId;
-        private readonly bool _isFirstSession;
-        private readonly long _lastSessionLength;
+        private long _sessionId;
+        private bool _isFirstSession;
+        private long _lastSessionLength;
 
         private bool _isAppLaunched;
         private long _lastUpdateTimestamp;
 
         internal UnityNativeSession()
         {
+            _isAppLaunched = false;
+        }
+
+        internal void Initialize()
+        {
             long now = GetNow();
             _sessionId = now;
             _lastUpdateTimestamp = now;
-            _isAppLaunched = false;
 
+            // Use string to get/set long values in PlayerPrefs
             long lastSessionId = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), "0"));
             if (lastSessionId == 0)
             {
@@ -31,8 +36,10 @@ namespace CleverTapSDK.Native {
             }
 
             PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), _sessionId.ToString());
+            HasInitialized = true;
         }
-        
+
+        internal bool HasInitialized { get; private set; }
         internal long SessionId => _sessionId;
         internal long LastSessionLength => _lastSessionLength;
         internal bool IsFirstSession => _isFirstSession;

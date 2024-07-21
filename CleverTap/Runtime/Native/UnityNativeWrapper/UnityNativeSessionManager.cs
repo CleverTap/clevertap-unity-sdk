@@ -1,5 +1,6 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
+using System.Collections.Generic;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSessionManager {
@@ -17,16 +18,25 @@ namespace CleverTapSDK.Native {
 
         public UnityNativeSession CurrentSession {
             get {
-                if (IsSessionExpired()) {
-                    _currentSession = new UnityNativeSession();
+                if (_currentSession.HasInitialized && IsSessionExpired()) {
+                    ResetSession();
                 }
 
                 return _currentSession;
             }
         }
 
+        /// <summary>
+        /// Initializes the current session.
+        /// Requires AccountInfo to be set.
+        /// </summary>
+        internal void InitializeSession() {
+            CurrentSession.Initialize();
+        }
+
         internal void ResetSession() {
             _currentSession = new UnityNativeSession();
+            _currentSession.Initialize();
         }
 
         internal bool IsFirstSession() {
