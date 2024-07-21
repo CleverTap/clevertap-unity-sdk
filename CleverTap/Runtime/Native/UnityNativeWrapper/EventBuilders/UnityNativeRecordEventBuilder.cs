@@ -1,6 +1,7 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System.Collections.Generic;
 using System.Linq;
+using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeRecordEventBuilder {
@@ -50,7 +51,9 @@ namespace CleverTapSDK.Native {
             }
 
             if (items.Count > 50) {
-                // TODO: Log error?
+                CleverTapLogger.Log("Charged event contained more than 50 items.");
+                eventValidationResultsWithErrors.Add(new UnityNativeValidationResult(522, "Charged event contained more than 50 items."));
+                return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
             }
 
             var eventDetails = new Dictionary<string, object>();
