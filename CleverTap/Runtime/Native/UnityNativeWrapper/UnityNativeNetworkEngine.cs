@@ -340,6 +340,7 @@ namespace CleverTapSDK.Native {
 
             try {
                 var unityWebRequest = request.BuildRequest(_baseURI);
+                CleverTapLogger.Log("Sending web request");
                 // Workaround for async
                 var unityWebRequestAsyncOperation = unityWebRequest.SendWebRequest();
                 while (!unityWebRequestAsyncOperation.isDone) {
@@ -354,7 +355,6 @@ namespace CleverTapSDK.Native {
                 {
                     responseFailureCount++;
                 }
-
             
                 switch (unityWebRequest.result)
                 {

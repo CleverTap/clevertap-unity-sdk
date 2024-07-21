@@ -54,7 +54,6 @@ namespace CleverTapSDK.Native
 
         protected virtual void OnTimerTick()
         {
-            CleverTapLogger.Log("Timer TICK");
             OnEventTimerTick?.Invoke();
             StopTimer();
         }
@@ -83,9 +82,6 @@ namespace CleverTapSDK.Native
                     var request = new UnityNativeRequest(RequestPath, UnityNativeConstants.Network.REQUEST_POST)
                         .SetRequestBody(jsonContent)
                         .SetQueryParameters(queryStringParameters);
-
-                    CleverTapLogger.Log($"{GetType().Name}: Sending request with body: {jsonContent} " +
-                        $"and query parameters: [{string.Join(", ", queryStringParameters.Select(kv => $"{kv.Key}: {kv.Value}"))}]");
 
                     var response = await executeRequest(request);
 
@@ -155,7 +151,6 @@ namespace CleverTapSDK.Native
 
         protected virtual void ResetAndStartTimer(bool retry = false)
         {
-            CleverTapLogger.Log("ResetAndStartTimer");
             if (retryCount == 0)
             {
                 RestartTimer(defaultTimerInterval);
@@ -172,7 +167,6 @@ namespace CleverTapSDK.Native
         {
             StopTimer();
             timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
-            CleverTapLogger.Log("Timer Restarted");
         }
 
         private IEnumerator TimerCoroutine(float duration)

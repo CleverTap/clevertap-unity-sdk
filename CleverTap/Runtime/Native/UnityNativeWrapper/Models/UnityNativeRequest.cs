@@ -1,8 +1,10 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CleverTapSDK.Utilities;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CleverTapSDK.Native {
@@ -77,7 +79,6 @@ namespace CleverTapSDK.Native {
             }
             else if (_method == UnityNativeConstants.Network.REQUEST_POST) {
                 request = UnityWebRequest.Post(uri, _requestBody, "application/json");
-                
             }
             else {
                 throw new NotSupportedException("Http method is not supported");
@@ -96,6 +97,9 @@ namespace CleverTapSDK.Native {
             if (_timeout != null) {
                 request.timeout = _timeout.Value;
             }
+
+            CleverTapLogger.Log($"Build Request: {uri}, with body: {_requestBody}, " +
+                $"and query parameters: [{string.Join(", ", _queryParameters.Select(kv => $"{kv.Key}: {kv.Value}"))}]");
 
             return request;
         }
