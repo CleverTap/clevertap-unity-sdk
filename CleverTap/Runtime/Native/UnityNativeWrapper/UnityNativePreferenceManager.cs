@@ -76,7 +76,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal string GetStorageKey(string suffix) {
-            return $"{UnityNativeAccountManager.Instance.AccountInfo.AccountId}:{suffix}";
+            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
         }
 
         internal string GetKeyIdentifier(string key, string identifier) {
