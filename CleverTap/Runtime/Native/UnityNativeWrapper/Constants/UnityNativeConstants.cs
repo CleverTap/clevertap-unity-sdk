@@ -219,6 +219,7 @@ namespace CleverTapSDK.Native {
             internal const string COMMAND_SET = "$set";
             internal const string COMMAND_INCREMENT = "$incr";
             internal const string COMMAND_DECREMENT = "$decr";
+            internal const string COMMAND_DELETE = "$delete";
         }
     }
 }

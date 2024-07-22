@@ -33,6 +33,10 @@ namespace CleverTapSDK.Native {
             _unityNativeWrapper.ProfilePush(properties);
         }
 
+        internal override void ProfileRemoveValueForKey(string key) {
+            _unityNativeWrapper.ProfilePush(key, 1, UnityNativeConstants.Commands.COMMAND_DELETE);
+        }
+
         internal override void RecordEvent(string eventName) {
             _unityNativeWrapper.RecordEvent(eventName);
         }
