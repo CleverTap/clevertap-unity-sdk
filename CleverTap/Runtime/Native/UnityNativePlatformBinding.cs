@@ -53,6 +53,10 @@ namespace CleverTapSDK.Native {
             _unityNativeWrapper.ProfilePush(key, values, UnityNativeConstants.Commands.COMMAND_ADD);
         }
 
+        internal override void ProfileAddMultiValueForKey(string key, string val) {
+            ProfileAddMultiValuesForKey(key, new List<string> { val });
+        }
+
         internal override void ProfileSetMultiValuesForKey(string key, List<string> values) {
             _unityNativeWrapper.ProfilePush(key, values, UnityNativeConstants.Commands.COMMAND_SET);
         }
