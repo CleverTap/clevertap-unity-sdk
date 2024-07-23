@@ -16,6 +16,8 @@ namespace CleverTapSDK.Native {
             _userEventsQueue.OnEventTimerTick += OnUserEventTimerTick;
             _raisedEventsQueue = new UnityNativeRaisedEventQueue();
             _raisedEventsQueue.OnEventTimerTick += OnRaisedEventTimerTick;
+            // Add the events stored in the DB
+            _databaseStore.AddEventsFromDB();
         }
 
         private void OnDatabaseEventStored(UnityNativeEvent newEvent) {

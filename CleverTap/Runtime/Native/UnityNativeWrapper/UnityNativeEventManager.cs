@@ -105,9 +105,6 @@ namespace CleverTapSDK.Native {
 						}
 					}
 				}
-                // Add all events and flush queue
-                ProcessStoredEvents();
-                _eventQueueManager.FlushQueues();
 
 				// No Identifier or anonymous
 				if (!haveIdentifier || IsAnonymousUser()) {
@@ -142,6 +139,9 @@ namespace CleverTapSDK.Native {
             {
                 CleverTapLogger.Log($"asyncProfileSwitchUser:[profile {string.Join(Environment.NewLine, profile)}]" +
                     $" with Cached GUID {(cacheGuid != null ? cacheGuid : "NULL")}");
+
+                // Flush the queues
+                _eventQueueManager.FlushQueues();
 
                 // Reset the session
                 UnityNativeSessionManager.Instance.ResetSession();
@@ -321,10 +321,6 @@ namespace CleverTapSDK.Native {
         private void StoreEvent(UnityNativeEvent evt) {
             UnityNativeSessionManager.Instance.UpdateSessionTimestamp();
             _databaseStore.AddEvent(evt);
-        }
-
-        private void ProcessStoredEvents() {
-            _databaseStore.AddEventsFromDB();
         }
 
         #endregion
