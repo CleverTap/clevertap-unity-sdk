@@ -1,6 +1,5 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
-using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSession {
@@ -22,20 +21,19 @@ namespace CleverTapSDK.Native {
             _sessionId = now;
             _lastUpdateTimestamp = now;
 
-            // Use string to get/set long values in PlayerPrefs
-            long lastSessionId = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), "0"));
+            long lastSessionId = UnityNativePreferenceManager.Instance.GetLong(UnityNativeConstants.Session.SESSION_ID_KEY, 0);
             if (lastSessionId == 0)
             {
                 _isFirstSession = true;
             }
 
-            long lastSessionTime = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.LAST_SESSION_TIME), "0"));
+            long lastSessionTime = UnityNativePreferenceManager.Instance.GetLong(UnityNativeConstants.Session.LAST_SESSION_TIME_KEY, 0);
             if (lastSessionTime > 0)
             {
                 _lastSessionLength = lastSessionTime - lastSessionId;
             }
 
-            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), _sessionId.ToString());
+            UnityNativePreferenceManager.Instance.SetLong(UnityNativeConstants.Session.SESSION_ID_KEY, _sessionId);
             HasInitialized = true;
         }
 
@@ -52,13 +50,9 @@ namespace CleverTapSDK.Native {
 
         internal long UpdateTimestamp() {
             long now = GetNow();
-            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.LAST_SESSION_TIME), now.ToString());
+            UnityNativePreferenceManager.Instance.SetLong(UnityNativeConstants.Session.LAST_SESSION_TIME_KEY, now);
             _lastUpdateTimestamp = now;
             return _lastUpdateTimestamp;
-        }
-
-        internal string GetStorageKey(string suffix) {
-            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
         }
 
         internal long GetNow() {

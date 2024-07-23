@@ -205,14 +205,14 @@ namespace CleverTapSDK.Native {
         internal void SetRedirectDomain(string newDomain) {
             if (newDomain == null)
             {
-                PlayerPrefs.DeleteKey(UnityNativeConstants.GetStorageKeyWithAccountId(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY));
+                UnityNativePreferenceManager.Instance.DeleteKey(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY);
                 return;
             }
-            PlayerPrefs.SetString(UnityNativeConstants.GetStorageKeyWithAccountId(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY), newDomain);
+            UnityNativePreferenceManager.Instance.SetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, newDomain);
         }
 
         internal string GetRedirectDomain() {
-            return PlayerPrefs.GetString(UnityNativeConstants.GetStorageKeyWithAccountId(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY));
+            return UnityNativePreferenceManager.Instance.GetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, null);
         }
 
         internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request) {
