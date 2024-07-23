@@ -114,12 +114,12 @@ namespace CleverTapSDK.Native {
             return UnityNativePreferenceManager.Instance.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
         }
 
-        public void ForceNewDeviceID() {
+        internal void ForceNewDeviceID() {
             string newDeviceID = GenerateGuid();
             ForceUpdateDeviceId(newDeviceID);
         }
 
-        public void ForceUpdateDeviceId(string id) {
+        internal void ForceUpdateDeviceId(string id) {
             UnityNativePreferenceManager.Instance.SetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, id);
         }
 
