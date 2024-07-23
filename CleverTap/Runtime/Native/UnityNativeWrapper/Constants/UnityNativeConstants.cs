@@ -5,31 +5,45 @@ using System.Linq;
 
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
-      
 
+        internal static string GetStorageKeyWithAccountId(string suffix) {
+            string accountId = UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+            if (string.IsNullOrEmpty(accountId))
+            {
+                throw new ArgumentNullException("Trying to get access storage key without account Id.");
+            }
+            return $"{accountId}:{suffix}";
+        }
+      
         internal static class SDK {
-            internal const string REVISION = "30200";
-            internal const string VERSION = "3.2.0";
             internal const string DEVICE_ID = "device_id";
 
             internal const string DEVICE_ID_TAG = "deviceId";
-            internal const string WEBGL_GUID_PREFIX =  "__u";
+            internal const string UNITY_GUID_PREFIX =  "__u";
             internal const string CACHED_GUIDS_KEY = "cachedGUIDsKey";
-
         }
+
+        internal static class OSNames {
+            internal const string WINDOWS = "Windows";
+            internal const string MACOS = "MacOS";
+            internal const string UNKNOWN = "Unknown";
+        }
+
         internal static class Profile {
             internal const string NAME = "name";
             internal const string EMAIL = "email";
             internal const string EDUCATION = "userEducation";
             internal const string MARRIED = "userMarried";
             internal const string DATE_OF_BIRTH = "DOB";
-            internal const string SOME_DATE = "SomeDate";
             internal const string BIRTHDAY = "userBirthday";
             internal const string EMPLOYED = "userEmployed";
             internal const string GENDER = "userGender";
-            internal const string PHONE = "userPhone";
+            internal const string USER_PHONE = "userPhone";
             internal const string AGE = "userAge";
             internal const string IDENTITY = "Identity";
+            internal const string PHONE = "Phone";
+            internal const string NETWORK_INFO = "NetworkInfo";
+
             internal static bool IsKeyKnownProfileField(string key) {
                 if (string.IsNullOrWhiteSpace(key)) {
                     return false;
@@ -65,22 +79,23 @@ namespace CleverTapSDK.Native {
                 if (keyLwc == GENDER.ToLower() || keyLwc == "gender") {
                     return GENDER;
                 }
-                if (keyLwc == PHONE.ToLower() || keyLwc == "phone") {
-                    return PHONE;
+                if (keyLwc == USER_PHONE.ToLower() || keyLwc == "phone") {
+                    return USER_PHONE;
                 }
                 if (keyLwc == AGE.ToLower() || keyLwc == "age") {
                     return AGE;
-                }
-                if (keyLwc == SOME_DATE.ToLower() || keyLwc == "someDate")
-                {
-                    return "SomeDate";
                 }
 
                 return null;
             }
         }
-        internal static class Event
-        {
+
+        internal static class Session {
+            internal const string SESSION_ID = "sessionId";
+            internal const string LAST_SESSION_TIME = "lastSessionTime";
+        }
+
+        internal static class Event {
             internal const string EVENT_NAME = "evtName";
             internal const string EVENT_DATA = "evtData";
 
@@ -99,8 +114,6 @@ namespace CleverTapSDK.Native {
 
             internal const string GEO_FENCE_LOCATION = "gf";
             internal const string GEO_FENCE_SDK_VERSION = "gfSDKVersion";
-
-            internal const string BUNDLE_IDENTIFIER = "pai";
 
             internal const string APP_VERSION = "Version";
             internal const string BUILD = "Build";
@@ -127,10 +140,9 @@ namespace CleverTapSDK.Native {
 
             internal const string LIBRARY = "lib";
 
-            internal const string RUNNING_INSIDE_APP_EXTENSION = "appex";
             internal const string LOCALE_IDENTIFIER = "locale";
-            internal const string WV_INIT = "wv_init";
         }
+
         internal static class EventMeta {
             internal const string TYPE = "type";
             internal const string TYPE_NAME = "meta";
@@ -150,6 +162,7 @@ namespace CleverTapSDK.Native {
             internal const string REF = "ref";
             internal const string WZRK_REF = "wzrk_ref";
         }
+
         internal static class Validator {
             internal const int MAX_KEY_CHARS = 120;
             internal const int MAX_VALUE_CHARS = 1024;
@@ -172,19 +185,22 @@ namespace CleverTapSDK.Native {
                 return RESTRICTED_NAMES.Select(rn => rn.ToLower()).Any(rn => rn == name.ToLower());
             }
         }
+
         internal static class Network {
-            internal const string CT_BASE_URL = "sk1-staging-25.clevertap-prod.com";// "clevertap-prod.com";
+            internal const string CT_BASE_URL = "clevertap-prod.com";
+            internal const string REDIRECT_DOMAIN_KEY = "CLTAP_REDIRECT_DOMAIN_KEY";
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
             internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
+
+            internal const int DEFAUL_REQUEST_TIMEOUT_SEC = 10;
 
             internal const string QUERY_OS = "os";
             internal const string QUERY_SKD_REVISION = "t";
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
 
-       
             internal const string REQUEST_GET = "GET";
 #if UNITY_WEBGL && !UNITY_EDITOR
             internal const string REQUEST_POST = "POST";
@@ -197,13 +213,13 @@ namespace CleverTapSDK.Native {
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
         }
 
-        internal static class Commands
-        {
+        internal static class Commands {
             internal const string COMMAND_REMOVE = "$remove";
             internal const string COMMAND_ADD = "$add";
             internal const string COMMAND_SET = "$set";
             internal const string COMMAND_INCREMENT = "$incr";
             internal const string COMMAND_DECREMENT = "$decr";
+            internal const string COMMAND_DELETE = "$delete";
         }
     }
 }

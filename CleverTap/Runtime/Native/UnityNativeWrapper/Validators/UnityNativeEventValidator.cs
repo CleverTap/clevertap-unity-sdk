@@ -1,12 +1,8 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using CleverTapSDK.Utilities;
 
-//TODO: confirm all validators and interceptors 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventValidator {
         internal UnityNativeValidationResult CleanEventName(string eventName, out string cleanEventName) {
@@ -91,38 +87,29 @@ namespace CleverTapSDK.Native {
                 return validationResult;
             }
 
-            if (IsAnyDateType(objectValue)) {
-                string[] dateFormats = { "dd-MM-yyyy HH:mm:ss", "dd/MM/yyyy HH:mm:ss" };
-                string cleanObjectValueStr = cleanObjectValue.ToString();
-                DateTimeOffset dateTimeOffset = default; // Initialize with a default value
-
-                bool isParsed = false;
-                foreach (string dateFormat in dateFormats)
+            if (IsAnyDateType(objectValue))
+            {
+                DateTimeOffset dateTimeOffset;
+                if (objectValue is DateTimeOffset)
                 {
-                    if (DateTimeOffset.TryParseExact(cleanObjectValueStr, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeOffset))
-                    {
-                        isParsed = true;
-                        break;
-                    }
-                }
-
-                if (isParsed)
-                {
-                    cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
-                    Console.WriteLine(cleanObjectValue); // Output the result for debugging
+                    dateTimeOffset = (DateTimeOffset)objectValue;
                 }
                 else
                 {
-                    CleverTapLogger.Log("The provided value is not a valid date and time.");
+                    dateTimeOffset = new DateTimeOffset((DateTime)objectValue);
                 }
+
+                cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
             }
 
-            if (isForProfile && cleanObjectValue is IEnumerable<string>) {
+            if (isForProfile && cleanObjectValue is IEnumerable<string>)
+            {
                 var cleanObjectValueArray = cleanObjectValue as IEnumerable<string>;
-                if (cleanObjectValueArray.Count() > UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT) {
+                if (cleanObjectValueArray.Count() > UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT)
+                {
                     return new UnityNativeValidationResult(521,
                         $"Invalid user profile property array count: {cleanObjectValueArray.Count()}; max is {UnityNativeConstants.Validator.MAX_VALUE_PROPERTY_ARRAY_COUNT}");
-                } 
+                }
             }
 
             return new UnityNativeValidationResult();
@@ -138,30 +125,6 @@ namespace CleverTapSDK.Native {
             }
 
             return new UnityNativeValidationResult();
-        }
-
-        internal bool IsValidCleverTapId(string cleverTapId) {
-            // This method is used to check if user custom clverTapId is valid
-            
-            if (string.IsNullOrEmpty(cleverTapId)) {
-                // Log? -> ex. CleverTapUseCustomId has been specified to true in config but custom CleverTap ID is null or empty.
-                return false;
-            }
-                
-            if (cleverTapId.Length > 64) {
-                // Log? -> ex. Custom CleverTap ID is greater than 64 characters
-                return false;
-
-            }
-
-            // TODO : Check if this work properly
-            var allowedCharactersRegex = @"[=|<>;+.A-Za-z0-9()!:$@_-]*";
-            if (!Regex.IsMatch(cleverTapId, allowedCharactersRegex)) {
-                // Log? -> ex. Custom CleverTap ID cannot contain special characters apart from (, ), !, :, @, $, _, and -
-                return false;
-            }
-
-            return true;
         }
 
         private UnityNativeValidationResult CleanProperyValue(string propertyValue, out string cleanProperyValue) {

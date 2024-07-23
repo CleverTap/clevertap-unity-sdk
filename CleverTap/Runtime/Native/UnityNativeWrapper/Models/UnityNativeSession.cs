@@ -1,47 +1,68 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
+using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSession {
-        private readonly long _sessionId;
-        private readonly long _startTimestamp;
-        private readonly bool _isFirstSession;
-        
+        private long _sessionId;
+        private bool _isFirstSession;
+        private long _lastSessionLength;
+
         private bool _isAppLaunched;
         private long _lastUpdateTimestamp;
-        private string _userIdentity;
 
-        internal UnityNativeSession(bool isFirstSession = false, string userIdentity = null)
+        internal UnityNativeSession()
         {
-            _sessionId =  DateTime.Now.Millisecond / 1000;
-            _startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            _isFirstSession = isFirstSession;
             _isAppLaunched = false;
-            _lastUpdateTimestamp = _startTimestamp;
-            _userIdentity = userIdentity;
         }
-        
+
+        internal void Initialize()
+        {
+            long now = GetNow();
+            _sessionId = now;
+            _lastUpdateTimestamp = now;
+
+            // Use string to get/set long values in PlayerPrefs
+            long lastSessionId = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), "0"));
+            if (lastSessionId == 0)
+            {
+                _isFirstSession = true;
+            }
+
+            long lastSessionTime = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.LAST_SESSION_TIME), "0"));
+            if (lastSessionTime > 0)
+            {
+                _lastSessionLength = lastSessionTime - lastSessionId;
+            }
+
+            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), _sessionId.ToString());
+            HasInitialized = true;
+        }
+
+        internal bool HasInitialized { get; private set; }
         internal long SessionId => _sessionId;
-        internal long StartTimestamp => _startTimestamp;
+        internal long LastSessionLength => _lastSessionLength;
         internal bool IsFirstSession => _isFirstSession;
-        internal bool isAppLaunched => _isAppLaunched;
+        internal bool IsAppLaunched => _isAppLaunched;
         internal long LastUpdateTimestamp => _lastUpdateTimestamp;
-        internal string UserIdentity => _userIdentity;
 
         internal void SetIsAppLaunched(bool isAppLaunched) {
             _isAppLaunched = isAppLaunched;
         }
 
         internal long UpdateTimestamp() {
-            _lastUpdateTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long now = GetNow();
+            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.LAST_SESSION_TIME), now.ToString());
+            _lastUpdateTimestamp = now;
             return _lastUpdateTimestamp;
         }
 
-        internal void SetUserIdentity(string userIdentity) {
-            if (_userIdentity == null) {
-                _userIdentity = userIdentity;
-                UpdateTimestamp();
-            }
+        internal string GetStorageKey(string suffix) {
+            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
+        }
+
+        internal long GetNow() {
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
     }
 }

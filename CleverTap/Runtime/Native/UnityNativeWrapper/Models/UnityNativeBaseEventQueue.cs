@@ -6,15 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleverTapSDK.Utilities;
 using UnityEngine;
+using CleverTapSDK.Common;
 
 namespace CleverTapSDK.Native
 {
-
     internal delegate void EventTimerTick();
 
     internal abstract class UnityNativeBaseEventQueue
     {
-
         protected readonly int queueLimit;
         protected readonly int defaultTimerInterval;
         private Coroutine timerCoroutine;
@@ -24,6 +23,8 @@ namespace CleverTapSDK.Native
         protected Queue<List<UnityNativeEvent>> eventsQueue;
         protected abstract string RequestPath { get; }
         internal virtual event EventTimerTick OnEventTimerTick;
+
+        protected abstract string QueueName { get; }
 
         internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1)
         {
@@ -55,7 +56,6 @@ namespace CleverTapSDK.Native
 
         protected virtual void OnTimerTick()
         {
-            CleverTapLogger.Log("Timer TICK");
             OnEventTimerTick?.Invoke();
             StopTimer();
         }
@@ -70,29 +70,22 @@ namespace CleverTapSDK.Native
             isInFlushProcess = true;
             var proccesedEvents = new List<UnityNativeEvent>();
 
-            while (eventsQueue.Count > 0)
+            bool willRetry = false;
+            List<UnityNativeEvent> events = new List<UnityNativeEvent>();
+            while (eventsQueue.Count > 0 && !willRetry)
             {
                 try
                 {
-                    var events = eventsQueue.Dequeue();
+                    events = eventsQueue.Dequeue();
                     var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
                     var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
 
-                    var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
-                    var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
-                    var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-                    var queryParameters = new List<KeyValuePair<string, string>> {
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, UnityNativeConstants.SDK.REVISION),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
-                        new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
-                    };
-
+                    var queryStringParameters = GetQueryStringParameters();
                     var request = new UnityNativeRequest(RequestPath, UnityNativeConstants.Network.REQUEST_POST)
                         .SetRequestBody(jsonContent)
-                        .SetQueryParameters(queryParameters);
+                        .SetQueryParameters(queryStringParameters);
 
                     var response = await executeRequest(request);
 
@@ -104,14 +97,17 @@ namespace CleverTapSDK.Native
                     else
                     {
                         // Re-enqueue events in case of error
+                        willRetry = true;
                         QueueEvents(events);
                         OnEventError();
                     }
                 }
                 catch (Exception ex)
                 {
+                    willRetry = true;
+                    QueueEvents(events);
                     OnEventError();
-                    CleverTapLogger.Log(ex.Message);
+                    CleverTapLogger.Log($"Exception: {ex.Message}, Stack Trace: {ex.StackTrace}");
                     return proccesedEvents;
                 }
             }
@@ -130,18 +126,38 @@ namespace CleverTapSDK.Native
             return proccesedEvents;
         }
 
+        internal static List<KeyValuePair<string, string>> GetQueryStringParameters()
+        {
+            var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
+            var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
+            if (deviceInfo == null || accountInfo == null)
+            {
+                CleverTapLogger.Log("Cannot generate query string parameters.");
+                return new List<KeyValuePair<string, string>>();
+            }
+
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            // Default Query String parameters
+            var queryParameters = new List<KeyValuePair<string, string>> {
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, deviceInfo.SdkVersion),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
+            };
+            return queryParameters;
+        }
+
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);
 
         protected void OnEventError()
         {
             retryCount++;
             isInFlushProcess = false;
-            ResetAndStartTimer();
+            ResetAndStartTimer(true);
         }
 
         protected virtual void ResetAndStartTimer(bool retry = false)
         {
-            CleverTapLogger.Log("ResetAndStartTimer");
             if (retryCount == 0)
             {
                 RestartTimer(defaultTimerInterval);
@@ -150,7 +166,9 @@ namespace CleverTapSDK.Native
 
             if (retry)
             {
-                RestartTimer((Mathf.Pow(2, retryCount % 10)) * 1000);
+                float delay = Mathf.Pow(2, retryCount % 10);
+                CleverTapLogger.Log($"Will retry sending events from queue {QueueName} in {delay}s.");
+                RestartTimer(delay);
             }
         }
 
@@ -158,7 +176,6 @@ namespace CleverTapSDK.Native
         {
             StopTimer();
             timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
-            CleverTapLogger.Log("Timer Restarted");
         }
 
         private IEnumerator TimerCoroutine(float duration)

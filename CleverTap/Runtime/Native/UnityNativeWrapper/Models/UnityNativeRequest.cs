@@ -1,8 +1,10 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CleverTapSDK.Utilities;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CleverTapSDK.Native {
@@ -17,12 +19,13 @@ namespace CleverTapSDK.Native {
         private KeyValuePair<string, string>? _authorization;
         private IReadOnlyList<IUnityNativeRequestInterceptor> _requestInterceptors;
         private IReadOnlyList<IUnityNativeResponseInterceptor> _responseInterceptors;
-        private IReadOnlyDictionary<string, string> _addtionalProperties;
+        private IReadOnlyDictionary<string, string> _additionalProperties;
+        private bool _shouldRetry;
 
-        internal UnityNativeRequest(string path, string method, Dictionary<string, string> addtionalProperties = null) {
+        internal UnityNativeRequest(string path, string method, Dictionary<string, string> additionalProperties = null) {
             _path = path;
             _method = method?.ToUpper();
-            _addtionalProperties = addtionalProperties;
+            _additionalProperties = additionalProperties;
         }
 
         internal int? Timeout => _timeout;
@@ -32,7 +35,7 @@ namespace CleverTapSDK.Native {
         internal KeyValuePair<string, string>? Authorization => _authorization;
         internal IReadOnlyList<IUnityNativeRequestInterceptor> RequestInterceptors => _requestInterceptors;
         internal IReadOnlyList<IUnityNativeResponseInterceptor> ResponseInterceptors => _responseInterceptors;
-        internal IReadOnlyDictionary<string, string> AddtionalProperties => _addtionalProperties;
+        internal IReadOnlyDictionary<string, string> AdditionalProperties => _additionalProperties;
 
         internal UnityNativeRequest SetTimeout(int? timeout) {
             _timeout = timeout;
@@ -77,7 +80,6 @@ namespace CleverTapSDK.Native {
             }
             else if (_method == UnityNativeConstants.Network.REQUEST_POST) {
                 request = UnityWebRequest.Post(uri, _requestBody, "application/json");
-                
             }
             else {
                 throw new NotSupportedException("Http method is not supported");
@@ -96,6 +98,13 @@ namespace CleverTapSDK.Native {
             if (_timeout != null) {
                 request.timeout = _timeout.Value;
             }
+            else
+            {
+                request.timeout = UnityNativeConstants.Network.DEFAUL_REQUEST_TIMEOUT_SEC;
+            }
+
+            CleverTapLogger.Log($"Build Request: {uri}, with body: {_requestBody}, " +
+                $"and query parameters: [{Json.Serialize(_queryParameters)}]");
 
             return request;
         }

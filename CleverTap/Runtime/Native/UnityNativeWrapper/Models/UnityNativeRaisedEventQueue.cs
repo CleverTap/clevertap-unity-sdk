@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 
 namespace CleverTapSDK.Native {
 
-    internal class UnityNativeRecordEventQueue : UnityNativeBaseEventQueue {
+    internal class UnityNativeRaisedEventQueue : UnityNativeBaseEventQueue {
 
+        protected override string QueueName => "RAISED_EVENTS";
 
-        internal UnityNativeRecordEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) { }
+        internal UnityNativeRaisedEventQueue(int queueLimit = 49, int defaultTimerInterval = 1) : base(queueLimit, defaultTimerInterval) { }
 
         protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_RECORD;
 
@@ -18,8 +19,7 @@ namespace CleverTapSDK.Native {
 
         protected override bool CanProcessEventResponse(UnityNativeResponse response)
         {
-            bool processHeaders = UnityNativeNetworkEngine.Instance.ProcessIncomingHeaders(response);
-            return processHeaders && response.IsSuccess();
+            return response.IsSuccess();
         }
     }
 }
