@@ -71,7 +71,7 @@ namespace CleverTapSDK.Native {
 
         internal void UpdateSessionTimestamp() {
             if (IsSessionExpired()) {
-                _currentSession = new UnityNativeSession();
+                ResetSession();
             }
 
             _currentSession?.UpdateTimestamp();
