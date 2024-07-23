@@ -10,7 +10,6 @@ namespace CleverTapSDK.Native {
         private List<string> _sessionKeys = new List<string>();
 
         internal UnityNativePreferenceManager() {
-
         }
 
         internal void GetSessionPreff(string key) {
@@ -34,41 +33,54 @@ namespace CleverTapSDK.Native {
 
         internal string GetGUIDForIdentifier(string key, string identifier)
         {
-           string cachedGUID = null;
-           string cachedIdentities = GetUserIdentities();
-           if(string.IsNullOrEmpty(cachedIdentities)){
+            string cachedGUID = null;
+            string cachedIdentities = GetUserIdentities();
+            if (string.IsNullOrEmpty(cachedIdentities))
+            {
                 return null;
-           }
-           string identKey = string.Format("{0}_{1}",key,identifier);
+            }
+            string identKey = GetKeyIdentifier(key, identifier);
             Dictionary<string, object> cachedValues = Json.Deserialize(cachedIdentities) as Dictionary<string, object>;
-            if (cachedValues.ContainsKey(identKey)){
-                cachedGUID = cachedValues[identKey].ToString();   
-           }
-           return cachedGUID;
+            if (cachedValues.ContainsKey(identKey))
+            {
+                cachedGUID = cachedValues[identKey].ToString();
+            }
+            return cachedGUID;
         }
 
-        internal string GetUserIdentities()
-        {
-           return PlayerPrefs.GetString(UnityNativeConstants.SDK.CACHED_GUIDS_KEY+UnityNativeAccountManager.Instance.AccountInfo.AccountId,null);
+        internal string GetUserIdentities() {
+           return PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.SDK.CACHED_GUIDS_KEY), null);
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="guid">GUID</param>
         /// <param name="key">Key as in Email or Identity</param>
         /// <param name="identifier"> identifier value like abc@efg.com or 1212sdsk</param>
-        public void SetGUIDForIdentifier(string guid,string key,string identifier){
+        internal void SetGUIDForIdentifier(string guid, string key, string identifier) {
             string cachedIdentities = GetUserIdentities();
             Dictionary<string, object> cachedValues;
-            if (string.IsNullOrEmpty(cachedIdentities)){
+            if (string.IsNullOrEmpty(cachedIdentities))
+            {
                 cachedValues = new Dictionary<string, object>();
-           }else
-                cachedValues = Json.Deserialize(cachedIdentities) as Dictionary<string,object>;
+            }
+            else
+            {
+                cachedValues = Json.Deserialize(cachedIdentities) as Dictionary<string, object>;
+            }
 
-            cachedValues[string.Format("{0}_{1}",key,identifier)] = guid;
-            PlayerPrefs.SetString(UnityNativeConstants.SDK.CACHED_GUIDS_KEY+UnityNativeAccountManager.Instance.AccountInfo.AccountId,
+            cachedValues[GetKeyIdentifier(key, identifier)] = guid;
+            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.SDK.CACHED_GUIDS_KEY),
                 Json.Serialize(cachedValues));
-         
+        }
+
+        internal string GetStorageKey(string suffix) {
+            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
+        }
+
+        internal string GetKeyIdentifier(string key, string identifier) {
+            return string.Format("{0}_{1}", key, identifier);
         }
     }
 }

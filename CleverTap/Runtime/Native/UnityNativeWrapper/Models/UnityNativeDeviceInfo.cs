@@ -1,13 +1,14 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 using System;
 using UnityEngine;
+using CleverTapSDK.Constants;
 
 namespace CleverTapSDK.Native {
+
     internal class UnityNativeDeviceInfo {
         private readonly string _sdkVersion;
         private readonly string _appVersion;
         private readonly string _appBuild;
-        private readonly string _bundleId;
         private readonly string _osName;
         private readonly string _osVersion;
         private readonly string _manufacturer;
@@ -19,31 +20,28 @@ namespace CleverTapSDK.Native {
         private readonly string _vendorIdentifier;
         private readonly string _deviceWidth;
         private readonly string _deviceHeight;
-        private readonly string _deviceId;
         private readonly string _library;
-        private readonly bool _wifi;
+        private readonly int _wifi;
         private readonly string _locale;
 
-//TODO: test and log info for MAC, windows and WEBGl
         internal UnityNativeDeviceInfo() {
-            _sdkVersion = UnityNativeConstants.SDK.VERSION;
-            _appVersion = Application.version; // Check where to get this
-            _appBuild = Application.productName; // Check where to get this
-            _bundleId = "123456789"; // Check if we need this and how to get
+            _sdkVersion = CleverTapVersion.CLEVERTAP_SDK_REVISION; // Use the SDK Version Revision
+            _appVersion = Application.version;
+            _appBuild = Application.productName;
             _osName = GetOSName(); // Only suppport for Windows and MacOS
             _osVersion = SystemInfo.operatingSystem;
-            _manufacturer = SystemInfo.deviceModel; // Check if we need this and is it correct
-            _model = SystemInfo.deviceModel; // Check if we need this
-            _carrier = null; // Check if we need this and how to get
-            _countryCode = null; // Check if we need this and how to get
-            _timeZone = null; // Check if we need this and how to get
-            _radio = null; // Check if we need this and how to get
-            _vendorIdentifier = null; // Check if we need this and how to get
-            _deviceWidth = Screen.width.ToString(); // Check if we need this and is it correct
-            _deviceHeight = Screen.height.ToString(); // Check if we need this and is it correct
-            _library = null; // Check if we need this and how to get
-            _wifi = false; // Check if we need this and how to get
-            _locale = "xx_XX"; // Check if we need this and how to get
+            _manufacturer = SystemInfo.deviceModel;
+            _model = SystemInfo.deviceModel;
+            _carrier = null;
+            _countryCode = null;
+            _timeZone = null;
+            _radio = null;
+            _vendorIdentifier = null;
+            _deviceWidth = Screen.width.ToString();
+            _deviceHeight = Screen.height.ToString();
+            _library = null;
+            _wifi = -1;
+            _locale = null;
         }
 
         internal string SdkVersion => _sdkVersion;
@@ -51,8 +49,6 @@ namespace CleverTapSDK.Native {
         internal string AppVersion => _appVersion;
 
         internal string AppBuild => _appBuild;
-
-        internal string BundleId => _bundleId;
 
         internal string OsName => _osName;
 
@@ -76,73 +72,67 @@ namespace CleverTapSDK.Native {
 
         internal string DeviceHeight => _deviceHeight;
 
+        internal string DeviceId => GetDeviceId();
+
         internal string Library => _library;
 
-        internal bool Wifi => _wifi;
+        internal int Wifi => _wifi;
 
         internal string Locale => _locale;
 
-        internal string DeviceId {
-            get {
-                return GetDeviceId();
+        internal bool EnableNetworkInfoReporting {
+            get
+            {
+                return PlayerPrefs.GetInt(GetStorageKey(UnityNativeConstants.Profile.NETWORK_INFO), 0) == 1;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(GetStorageKey(UnityNativeConstants.Profile.NETWORK_INFO), value ? 1 : 0);
             }
         }
 
         private string GetOSName() {
             var operatingSystem = SystemInfo.operatingSystem?.ToLower().Replace(" ", "");
 
-            if (operatingSystem?.ToLower().Contains("windows") == true) {
-                return "Windows";
+            if (operatingSystem?.ToLower().Contains(UnityNativeConstants.OSNames.WINDOWS.ToLower()) == true) {
+                return UnityNativeConstants.OSNames.WINDOWS;
             }
 
-            if (operatingSystem?.ToLower().Contains("macos") == true) {
-                return "MacOS";
+            if (operatingSystem?.ToLower().Contains(UnityNativeConstants.OSNames.MACOS.ToLower()) == true) {
+                return UnityNativeConstants.OSNames.MACOS;
             }
 
-            return "Unknown";
+            return UnityNativeConstants.OSNames.UNKNOWN;
         }
 
-        private string GetDeviceId()
-        {
+        private string GetDeviceId() {
             if (!PlayerPrefs.HasKey(GetDeviceIdStorageKey()))
+            {
                 ForceNewDeviceID();
+            }
             return PlayerPrefs.GetString(GetDeviceIdStorageKey(), null);
         }
 
-        public void ForceNewDeviceID()
-        {
+        public void ForceNewDeviceID() {
             string newDeviceID = GenerateGuid();
             ForceUpdateDeviceId(newDeviceID);
         }
 
-        public void ForceUpdateDeviceId(string id)
-        {
+        public void ForceUpdateDeviceId(string id) {
             PlayerPrefs.SetString(GetDeviceIdStorageKey(), id);
         }
 
-        private string GenerateGuid()
-        {
-            return UnityNativeConstants.SDK.GUID_PREFIX + Guid.NewGuid().ToString().Replace("-", "");
+        private string GenerateGuid() {
+            string id = Guid.NewGuid().ToString().Replace("-", "");
+            return $"{UnityNativeConstants.SDK.UNITY_GUID_PREFIX}{id}";
         }
 
-        private string GetDeviceIdStorageKey()
-        {
-            return UnityNativeConstants.SDK.DEVICE_ID_TAG + ":" + UnityNativeAccountManager.Instance.AccountInfo.AccountId;
+        private string GetDeviceIdStorageKey() {
+            return GetStorageKey(UnityNativeConstants.SDK.DEVICE_ID_TAG);
         }
 
-        private bool ValidateCleverTapID(string cleverTapID)
-        {
-            // Add your validation logic here
-            return !string.IsNullOrEmpty(cleverTapID);
-        }
-
-        private void InitializeDeviceId()
-        {
-            string storedDeviceId = GetDeviceId();
-            if (string.IsNullOrEmpty(storedDeviceId))
-            {
-                ForceNewDeviceID();
-            }
+        internal string GetStorageKey(string suffix) {
+            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
         }
     }
 }

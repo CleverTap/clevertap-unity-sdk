@@ -35,8 +35,7 @@ namespace CleverTapSDK.Native {
             }
         }
 
-        internal void AddEventsFromDB()
-        {
+        internal void AddEventsFromDB() {
             if (dataService == null)
             {
                 CleverTapLogger.LogError("Database not intiallised");
@@ -46,26 +45,31 @@ namespace CleverTapSDK.Native {
             CleverTapLogger.Log("Adding Cache events to processing queue from Database");
 
             List<UnityNativeEventDBEntry> entries = dataService.GetAllEntries<UnityNativeEventDBEntry>();
-           
-            foreach (var entry in entries)
+
+            if (OnEventStored != null)
             {
-                if (OnEventStored != null)
+                foreach (var entry in entries)
                 {
                     CleverTapLogger.Log($"Event added to Queue id: {entry.Id} type: {entry.EventType} jsonContent: {entry.JsonContent}");
                     OnEventStored(new UnityNativeEvent(entry.Id, entry));
                 }
-            }            
+            }
         }
 
         internal void DeleteEvents(List<UnityNativeEvent> eventsToRemove) {
-
             if (dataService == null)
             {
                 CleverTapLogger.LogError("Database not intiallised");
                 return;
             }
-            
-            foreach(var events in eventsToRemove)
+
+            if (eventsToRemove == null)
+            {
+                CleverTapLogger.Log("No events to remove");
+                return;
+            }
+
+            foreach (var events in eventsToRemove)
             {
                 int id =  events.Id ?? -1;
                 if (id != -1)

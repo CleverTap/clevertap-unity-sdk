@@ -1,5 +1,6 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
+using System.Collections.Generic;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSessionManager {
@@ -10,58 +11,74 @@ namespace CleverTapSDK.Native {
         private UnityNativeSession _currentSession;
 
         private UnityNativeSessionManager() {
-            _currentSession = new UnityNativeSession(isFirstSession: true);
+            _currentSession = new UnityNativeSession();
         }
 
         internal static UnityNativeSessionManager Instance => instance.Value;
 
         public UnityNativeSession CurrentSession {
             get {
-                if (IsSessionExpired()) {
-                    _currentSession = new UnityNativeSession(userIdentity: _currentSession.UserIdentity);
+                if (_currentSession.HasInitialized && IsSessionExpired()) {
+                    ResetSession();
                 }
 
                 return _currentSession;
             }
         }
 
+        /// <summary>
+        /// Initializes the current session.
+        /// Requires AccountInfo to be set.
+        /// </summary>
+        internal void InitializeSession() {
+            CurrentSession.Initialize();
+        }
+
+        internal void ResetSession() {
+            _currentSession = new UnityNativeSession();
+            _currentSession.Initialize();
+        }
+
         internal bool IsFirstSession() {
             return _currentSession.IsFirstSession;
         }
 
+        /// <summary>
+        /// Used for Page events only.
+        /// Increment when RecordScreenView is called.
+        /// Not supported yet.
+        /// </summary>
+        /// <returns>The screens count.</returns>
         internal int GetScreenCount() {
-            // TODO: Implement if needed
             return 1;
         }
 
-        internal long GetLastSessionLength() {
-            return DateTimeOffset.UtcNow.ToUnixTimeSeconds() - _currentSession.StartTimestamp;
+        /// <summary>
+        /// The current screen name.
+        /// Equivalent to the current Activity name on Android
+        /// and the current ViewController on iOS.
+        /// Not supported yet.
+        /// </summary>
+        /// <returns>The name of the current screen.</returns>
+        internal string GetScreenName()
+        {
+            return string.Empty;
         }
 
-        internal void UpdateSessionUserIdentity(string userIdentity) {
-            if (IsSessionExpired()) {
-                _currentSession = new UnityNativeSession(userIdentity: _currentSession.UserIdentity);
-            }
-
-            if (_currentSession.UserIdentity == null) {
-                _currentSession.SetUserIdentity(userIdentity);
-                _currentSession.UpdateTimestamp();
-            } else if (_currentSession.UserIdentity != null && _currentSession.UserIdentity != userIdentity) {
-                _currentSession = new UnityNativeSession(userIdentity: userIdentity);
-            }
+        internal long GetLastSessionLength() {
+            return _currentSession.LastSessionLength;
         }
 
         internal void UpdateSessionTimestamp() {
             if (IsSessionExpired()) {
-                _currentSession = new UnityNativeSession(userIdentity: _currentSession.UserIdentity);
+                _currentSession = new UnityNativeSession();
             }
 
             _currentSession?.UpdateTimestamp();
         }
 
         private bool IsSessionExpired() {
-            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            return currentTimestamp - _currentSession.LastUpdateTimestamp > SESSION_LENGTH_SECONDS;
+            return _currentSession.GetNow() - _currentSession.LastUpdateTimestamp > SESSION_LENGTH_SECONDS;
         }
     }
 }
