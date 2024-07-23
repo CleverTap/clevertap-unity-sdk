@@ -109,14 +109,15 @@ namespace CleverTapSDK.Native {
                 ProcessStoredEvents();
                 _eventQueueManager.FlushQueues();
 
-				// No Identifier or anonymous
-				if (!haveIdentifier || IsAnonymousUser()) {
+                // No Identifier or anonymous
+                if (!haveIdentifier || IsAnonymousUser()) {
                     CleverTapLogger.Log($"OnUserLogin: No identifier OR device is anonymous, associating profile with current user profile: {currentGUID}");
                     return ProfilePush(profile);
 				}
 				// Same Profile
 				if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
                     CleverTapLogger.Log($"OnUserLogin: Profile maps to current device id {currentGUID}, using current user profile.");
+
                     return ProfilePush(profile);
 				}
 
