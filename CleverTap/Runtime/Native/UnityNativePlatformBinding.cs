@@ -82,7 +82,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal override string GetCleverTapID() {
-           return UnityNativeDeviceManager.Instance.DeviceInfo.DeviceId;
+            return _unityNativeWrapper.GetCleverTapID();
         }
 
         internal override string ProfileGetCleverTapID() {
@@ -90,7 +90,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal override void EnableDeviceNetworkInfoReporting(bool enabled) {
-            UnityNativeDeviceManager.Instance.DeviceInfo.EnableNetworkInfoReporting = enabled;
+            _unityNativeWrapper.EnableDeviceNetworkInfoReporting(enabled);
         }
     }
 }

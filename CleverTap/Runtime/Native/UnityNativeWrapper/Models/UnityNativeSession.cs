@@ -1,6 +1,5 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
 using System;
-using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSession {
@@ -11,35 +10,30 @@ namespace CleverTapSDK.Native {
         private bool _isAppLaunched;
         private long _lastUpdateTimestamp;
 
-        internal UnityNativeSession()
-        {
-            _isAppLaunched = false;
-        }
+        private readonly UnityNativePreferenceManager _preferenceManager;
 
-        internal void Initialize()
-        {
+        internal UnityNativeSession(string accountId) {
+            _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
+
             long now = GetNow();
             _sessionId = now;
             _lastUpdateTimestamp = now;
 
-            // Use string to get/set long values in PlayerPrefs
-            long lastSessionId = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), "0"));
+            long lastSessionId = _preferenceManager.GetLong(UnityNativeConstants.Session.SESSION_ID_KEY, 0);
             if (lastSessionId == 0)
             {
                 _isFirstSession = true;
             }
 
-            long lastSessionTime = long.Parse(PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.Session.LAST_SESSION_TIME), "0"));
+            long lastSessionTime = _preferenceManager.GetLong(UnityNativeConstants.Session.LAST_SESSION_TIME_KEY, 0);
             if (lastSessionTime > 0)
             {
                 _lastSessionLength = lastSessionTime - lastSessionId;
             }
 
-            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.SESSION_ID), _sessionId.ToString());
-            HasInitialized = true;
+            _preferenceManager.SetLong(UnityNativeConstants.Session.SESSION_ID_KEY, _sessionId);
         }
 
-        internal bool HasInitialized { get; private set; }
         internal long SessionId => _sessionId;
         internal long LastSessionLength => _lastSessionLength;
         internal bool IsFirstSession => _isFirstSession;
@@ -52,13 +46,9 @@ namespace CleverTapSDK.Native {
 
         internal long UpdateTimestamp() {
             long now = GetNow();
-            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.Session.LAST_SESSION_TIME), now.ToString());
+            _preferenceManager.SetLong(UnityNativeConstants.Session.LAST_SESSION_TIME_KEY, now);
             _lastUpdateTimestamp = now;
             return _lastUpdateTimestamp;
-        }
-
-        internal string GetStorageKey(string suffix) {
-            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
         }
 
         internal long GetNow() {

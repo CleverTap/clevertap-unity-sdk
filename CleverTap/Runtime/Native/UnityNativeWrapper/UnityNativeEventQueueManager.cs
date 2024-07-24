@@ -9,13 +9,15 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativeBaseEventQueue _userEventsQueue;
         private readonly UnityNativeBaseEventQueue _raisedEventsQueue;
 
-        internal UnityNativeEventQueueManager(UnityNativeDatabaseStore databaseStore) {
+        internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore) {
             _databaseStore = databaseStore;
             _databaseStore.OnEventStored += OnDatabaseEventStored;
-            _userEventsQueue = new UnityNativeUserEventQueue();
+            _userEventsQueue = new UnityNativeUserEventQueue(coreState, networkEngine);
             _userEventsQueue.OnEventTimerTick += OnUserEventTimerTick;
-            _raisedEventsQueue = new UnityNativeRaisedEventQueue();
+            _raisedEventsQueue = new UnityNativeRaisedEventQueue(coreState, networkEngine);
             _raisedEventsQueue.OnEventTimerTick += OnRaisedEventTimerTick;
+            // Add the events stored in the DB
+            _databaseStore.AddEventsFromDB();
         }
 
         private void OnDatabaseEventStored(UnityNativeEvent newEvent) {

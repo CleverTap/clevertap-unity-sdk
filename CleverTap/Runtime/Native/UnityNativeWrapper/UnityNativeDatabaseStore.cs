@@ -14,10 +14,6 @@ namespace CleverTapSDK.Native {
             InitilazeDatabase(databaseName);
         }
 
-        internal List<UnityNativeEvent> GetEvents() {
-            return new List<UnityNativeEvent>();
-        }
-
         internal void AddEvent(UnityNativeEvent newEvent) {
 
             if(newEvent == null || newEvent.JsonContent == null || dataService == null)
@@ -42,7 +38,7 @@ namespace CleverTapSDK.Native {
                 return;
             }
 
-            CleverTapLogger.Log("Adding Cache events to processing queue from Database");
+            CleverTapLogger.Log("Adding events to processing queue from Database");
 
             List<UnityNativeEventDBEntry> entries = dataService.GetAllEntries<UnityNativeEventDBEntry>();
 
