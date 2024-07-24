@@ -23,8 +23,10 @@ namespace CleverTapSDK.Native {
         private readonly string _library;
         private readonly int _wifi;
         private readonly string _locale;
+        private readonly UnityNativePreferenceManager _preferenceManager;
 
-        internal UnityNativeDeviceInfo() {
+        internal UnityNativeDeviceInfo(string accountId) {
+            _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
             _sdkVersion = CleverTapVersion.CLEVERTAP_SDK_REVISION; // Use the SDK Version Revision
             _appVersion = Application.version;
             _appBuild = Application.productName;
@@ -83,11 +85,11 @@ namespace CleverTapSDK.Native {
         internal bool EnableNetworkInfoReporting {
             get
             {
-                return UnityNativePreferenceManager.Instance.GetInt(UnityNativeConstants.Profile.NETWORK_INFO_KEY, 0) == 1;
+                return _preferenceManager.GetInt(UnityNativeConstants.Profile.NETWORK_INFO_KEY, 0) == 1;
             }
             set
             {
-                UnityNativePreferenceManager.Instance.SetInt(UnityNativeConstants.Profile.NETWORK_INFO_KEY, value ? 1 : 0);
+                _preferenceManager.SetInt(UnityNativeConstants.Profile.NETWORK_INFO_KEY, value ? 1 : 0);
             }
         }
 
@@ -106,12 +108,12 @@ namespace CleverTapSDK.Native {
         }
 
         private string GetDeviceId() {
-            string id = UnityNativePreferenceManager.Instance.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
+            string id = _preferenceManager.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
             if (id == null)
             {
                 ForceNewDeviceID();
             }
-            return UnityNativePreferenceManager.Instance.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
+            return _preferenceManager.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
         }
 
         internal void ForceNewDeviceID() {
@@ -120,7 +122,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal void ForceUpdateDeviceId(string id) {
-            UnityNativePreferenceManager.Instance.SetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, id);
+            _preferenceManager.SetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, id);
         }
 
         private string GenerateGuid() {

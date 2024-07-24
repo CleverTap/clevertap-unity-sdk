@@ -69,13 +69,6 @@ namespace CleverTapSDK.Native {
             }, null);
             return tcs.Task;
         }
-
-        private static readonly Lazy<UnityNativeNetworkEngine> _instance = new Lazy<UnityNativeNetworkEngine>(() => {
-            var gameObject = new GameObject("UnityNativeNetworkEngine");
-            gameObject.AddComponent<UnityNativeNetworkEngine>();
-            DontDestroyOnLoad(gameObject);
-            return gameObject.GetComponent<UnityNativeNetworkEngine>();
-        });
         
         private string _baseURI;
         private string _region;
@@ -88,9 +81,21 @@ namespace CleverTapSDK.Native {
 
         private int responseFailureCount;
 
-        private UnityNativeNetworkEngine() { }
+        private UnityNativePreferenceManager _preferenceManager;
 
-        internal static UnityNativeNetworkEngine Instance => _instance.Value;
+        private UnityNativeNetworkEngine() {
+        }
+
+        internal static UnityNativeNetworkEngine Create(string accountId)
+        {
+            var gameObject = new GameObject($"{accountId}_UnityNativeNetworkEngine");
+            gameObject.AddComponent<UnityNativeNetworkEngine>();
+            DontDestroyOnLoad(gameObject);
+
+            UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
+            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
+            return gameObject.GetComponent<UnityNativeNetworkEngine>();
+        }
 
         internal UnityNativeNetworkEngine SetBaseURI(string baseUri) {
             _baseURI = "https://" + baseUri;
@@ -205,14 +210,14 @@ namespace CleverTapSDK.Native {
         internal void SetRedirectDomain(string newDomain) {
             if (newDomain == null)
             {
-                UnityNativePreferenceManager.Instance.DeleteKey(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY);
+                _preferenceManager.DeleteKey(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY);
                 return;
             }
-            UnityNativePreferenceManager.Instance.SetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, newDomain);
+            _preferenceManager.SetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, newDomain);
         }
 
         internal string GetRedirectDomain() {
-            return UnityNativePreferenceManager.Instance.GetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, null);
+            return _preferenceManager.GetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, null);
         }
 
         internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request) {

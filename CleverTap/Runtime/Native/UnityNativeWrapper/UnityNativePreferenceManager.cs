@@ -1,5 +1,4 @@
 ﻿#if !UNITY_IOS && !UNITY_ANDROID
-using System;
 using System.Collections.Generic;
 using CleverTapSDK.Utilities;
 using UnityEngine;
@@ -7,10 +6,21 @@ using UnityEngine;
 namespace CleverTapSDK.Native {
         internal class UnityNativePreferenceManager {
 
-        internal static UnityNativePreferenceManager Instance => _instance.Value;
-        private static readonly Lazy<UnityNativePreferenceManager> _instance =
-            new Lazy<UnityNativePreferenceManager>(() => new UnityNativePreferenceManager());
+        private static Dictionary<string, UnityNativePreferenceManager> instances = new Dictionary<string, UnityNativePreferenceManager>();
 
+        private string _accountId;
+
+        internal UnityNativePreferenceManager(string accountId) {
+            _accountId = accountId;
+        }
+
+        internal static UnityNativePreferenceManager GetPreferenceManager(string accountId) {
+            if (!instances.ContainsKey(accountId))
+            {
+                instances[accountId] = new UnityNativePreferenceManager(accountId);
+            }
+            return instances[accountId];
+        }
 
         internal string GetString(string key, string defaultValue)
         {
@@ -108,7 +118,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal string GetStorageKey(string suffix) {
-            return $"CleverTap:{suffix}";
+            return $"{_accountId}:{suffix}";
         }
     }
 }

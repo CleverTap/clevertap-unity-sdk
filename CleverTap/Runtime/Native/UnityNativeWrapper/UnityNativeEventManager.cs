@@ -10,47 +10,62 @@ using UnityEngine;
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventManager {
         private static readonly string NATIVE_EVENTS_DB_CACHE = "NativeEventsDbCache";
-        private static readonly int DEFER_EVENT_SECONDS = 2;
+        private static readonly int DEFER_EVENT_UNTIL_APP_LAUNCHED_SECONDS = 2;
 
-        private readonly UnityNativePreferenceManager _preferenceManager;
-        private readonly UnityNativeDatabaseStore _databaseStore;
-        private readonly UnityNativeEventQueueManager _eventQueueManager;
-        private readonly UnityNativeDeviceInfo _deviceInfo;
-        private readonly UnityNativeCallbackHandler _callbackHandler;
+        private UnityNativePreferenceManager _preferenceManager;
+        private UnityNativeDatabaseStore _databaseStore;
+        private UnityNativeEventQueueManager _eventQueueManager;
+        private UnityNativeCallbackHandler _callbackHandler;
+        private UnityNativeCoreState _coreState;
+        private UnityNativeNetworkEngine _networkEngine;
+        private string _accountId;
+        private int _enableNetworkInfoReporting = -1;
 
         internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) {
-            _preferenceManager = new UnityNativePreferenceManager();
-            _databaseStore = new UnityNativeDatabaseStore(NATIVE_EVENTS_DB_CACHE);
-            _eventQueueManager = new UnityNativeEventQueueManager(_databaseStore);
-            _deviceInfo = new UnityNativeDeviceInfo();
             _callbackHandler = callbackHandler;
+        }
+
+        private void Initialize(string accountId, string token, string region = null)
+        {
+            _accountId = accountId;
+            UnityNativeAccountInfo accountInfo = new UnityNativeAccountInfo(accountId, token, region);
+            _coreState = new UnityNativeCoreState(accountInfo);
+
+            _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(_accountId);
+            _databaseStore = new UnityNativeDatabaseStore($"{_accountId}_{NATIVE_EVENTS_DB_CACHE}");
+            _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
+            _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
 
         #region Launch
 
-        internal void LaunchWithCredentials(string accountID, string token, string region = null) {
-            UnityNativeAccountManager.Instance.SetAccountInfo(accountID, token, region);
-            UnityNativeNetworkEngine.Instance.SetRegion(region);
-            UnityNativeSessionManager.Instance.InitializeSession();
+        internal void LaunchWithCredentials(string accountId, string token, string region = null) {
+            if (string.IsNullOrEmpty(accountId) || string.IsNullOrEmpty(token))
+            {
+                throw new ArgumentNullException("Cannot record App Launched. AccountId and/or AccountToken are not set.");
+            }
+
+            Initialize(accountId, token, region);
+            _networkEngine.SetRegion(region);
+            // Set enable network reporting before calling App Launched so location is updated
+            if (_enableNetworkInfoReporting > -1)
+            {
+                EnableDeviceNetworkInfoReporting(_enableNetworkInfoReporting == 1);
+            }
             RecordAppLaunch();
             NotifyUserProfileInitialized();
         }
 
         internal void RecordAppLaunch() {
-            if (UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched) {
+            if (_coreState.SessionManager.CurrentSession.IsAppLaunched) {
                 return;
             }
 
-            var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
-            if (string.IsNullOrEmpty(accountInfo.AccountId) || string.IsNullOrEmpty(accountInfo.AccountToken)) {
-                throw new ArgumentNullException("Cannot record App Launched. AccountId and/or AccountToken are not set.");
-            }
-
-            UnityNativeNetworkEngine.Instance.SetHeaders(new Dictionary<string, string>() {
-                { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, accountInfo.AccountId },
+            _networkEngine.SetHeaders(new Dictionary<string, string>() {
+                { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, _accountId },
             });
 
-            UnityNativeSessionManager.Instance.CurrentSession.SetIsAppLaunched(true);
+            _coreState.SessionManager.CurrentSession.SetIsAppLaunched(true);
 
             var eventDetails = new Dictionary<string, object> {
                 { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_APP_LUNACH }
@@ -88,7 +103,7 @@ namespace CleverTapSDK.Native {
 
         private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
 			try {
-				string currentGUID = _deviceInfo.DeviceId;
+				string currentGUID = _coreState.DeviceInfo.DeviceId;
 				bool haveIdentifier = false;
 				string cachedGUID = null;
 
@@ -144,15 +159,15 @@ namespace CleverTapSDK.Native {
                 _eventQueueManager.FlushQueues();
 
                 // Reset the session
-                UnityNativeSessionManager.Instance.ResetSession();
+                _coreState.SessionManager.ResetSession();
 
                 if (cacheGuid != null)
                 {
-                    _deviceInfo.ForceUpdateDeviceId(cacheGuid);
+                    _coreState.DeviceInfo.ForceUpdateDeviceId(cacheGuid);
                 }
                 else
                 {
-                    _deviceInfo.ForceNewDeviceID();
+                    _coreState.DeviceInfo.ForceNewDeviceID();
                 }
 
                 NotifyUserProfileInitialized();
@@ -172,8 +187,8 @@ namespace CleverTapSDK.Native {
 
         internal void NotifyUserProfileInitialized() {
             var eventInfo = new Dictionary<string, string> {
-                { "CleverTapID",  _deviceInfo.DeviceId },
-                { "CleverTapAccountID", UnityNativeAccountManager.Instance.AccountInfo.AccountId }
+                { "CleverTapID",  _coreState.DeviceInfo.DeviceId },
+                { "CleverTapAccountID", _accountId }
             };
             _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
         }
@@ -200,7 +215,7 @@ namespace CleverTapSDK.Native {
                     string identifier = value?.ToString();
                     if (!string.IsNullOrEmpty(identifier))
                     {
-                        _preferenceManager.SetGUIDForIdentifier(_deviceInfo.DeviceId, key, identifier);
+                        _preferenceManager.SetGUIDForIdentifier(_coreState.DeviceInfo.DeviceId, key, identifier);
                     }
                 }
             }
@@ -245,6 +260,23 @@ namespace CleverTapSDK.Native {
 
             return ProfilePush(properties);
         }
+
+        internal string GetCleverTapID() {
+            if (_coreState == null || _coreState.DeviceInfo == null) {
+                CleverTapLogger.LogError("Launch CleverTap before calling GetCleverTapID");
+                return string.Empty;
+            }
+            return _coreState.DeviceInfo.DeviceId;
+        }
+
+        internal void EnableDeviceNetworkInfoReporting(bool enabled) {
+            if (_coreState == null || _coreState.DeviceInfo == null)
+            {
+                _enableNetworkInfoReporting = enabled ? 1 : 0;
+                return;
+            }
+            _coreState.DeviceInfo.EnableNetworkInfoReporting = enabled;
+        }
         #endregion
 
         #region Record Events
@@ -282,9 +314,11 @@ namespace CleverTapSDK.Native {
         #region Private
 
         private bool ShouldDeferEvent(Action action) {
-            if (!UnityNativeSessionManager.Instance.CurrentSession.IsAppLaunched)
+            if (_coreState == null ||
+                _coreState.SessionManager == null ||
+                !_coreState.SessionManager.CurrentSession.IsAppLaunched)
             {
-                CleverTapLogger.Log($"App Launched not yet processed, re-queuing event after {DEFER_EVENT_SECONDS}s.");
+                CleverTapLogger.Log($"App Launched not yet processed, re-queuing event after {DEFER_EVENT_UNTIL_APP_LAUNCHED_SECONDS}s.");
                 MonoHelper.Instance.StartCoroutine(DeferEventCoroutine(action));
                 return true;
             }
@@ -292,12 +326,12 @@ namespace CleverTapSDK.Native {
         }
 
         private IEnumerator DeferEventCoroutine(Action action) {
-            yield return new WaitForSeconds(DEFER_EVENT_SECONDS);
+            yield return new WaitForSeconds(DEFER_EVENT_UNTIL_APP_LAUNCHED_SECONDS);
             action();
         }
 
         private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
-            var eventData = new UnityNativeEventBuilder().BuildEvent(eventType, eventDetails);
+            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine).BuildEvent(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
             if (storeEvent)
@@ -308,7 +342,7 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEvent BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
-            var eventData = new UnityNativeEventBuilder().BuildEventWithAppFields(eventType, eventDetails);
+            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine).BuildEventWithAppFields(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
             if (storeEvent)
@@ -319,7 +353,7 @@ namespace CleverTapSDK.Native {
         }
 
         private void StoreEvent(UnityNativeEvent evt) {
-            UnityNativeSessionManager.Instance.UpdateSessionTimestamp();
+            _coreState.SessionManager.UpdateSessionTimestamp();
             _databaseStore.AddEvent(evt);
         }
 

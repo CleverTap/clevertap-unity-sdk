@@ -35,11 +35,11 @@ namespace CleverTapSDK.Native {
         }
 
         internal string GetCleverTapID() {
-            return UnityNativeDeviceManager.Instance.DeviceInfo.DeviceId;
+            return _eventManager.GetCleverTapID();
         }
 
         internal void EnableDeviceNetworkInfoReporting(bool enabled) {
-            UnityNativeDeviceManager.Instance.DeviceInfo.EnableNetworkInfoReporting = enabled;
+            _eventManager.EnableDeviceNetworkInfoReporting(enabled);
         }
     }
 }
