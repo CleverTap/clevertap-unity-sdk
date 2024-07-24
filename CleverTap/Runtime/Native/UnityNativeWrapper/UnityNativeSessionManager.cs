@@ -4,21 +4,20 @@ using System.Collections.Generic;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeSessionManager {
-        private static readonly Lazy<UnityNativeSessionManager> instance = new Lazy<UnityNativeSessionManager>(() => new UnityNativeSessionManager());
-        
         private const long SESSION_LENGTH_SECONDS = 20 * 60;
         
         private UnityNativeSession _currentSession;
 
-        private UnityNativeSessionManager() {
-            _currentSession = new UnityNativeSession();
-        }
+        private string _accountId;
 
-        internal static UnityNativeSessionManager Instance => instance.Value;
+        internal UnityNativeSessionManager(string accountId) {
+            _accountId = accountId;
+            _currentSession = new UnityNativeSession(_accountId);
+        }
 
         public UnityNativeSession CurrentSession {
             get {
-                if (_currentSession.HasInitialized && IsSessionExpired()) {
+                if (IsSessionExpired()) {
                     ResetSession();
                 }
 
@@ -26,17 +25,8 @@ namespace CleverTapSDK.Native {
             }
         }
 
-        /// <summary>
-        /// Initializes the current session.
-        /// Requires AccountInfo to be set.
-        /// </summary>
-        internal void InitializeSession() {
-            CurrentSession.Initialize();
-        }
-
         internal void ResetSession() {
-            _currentSession = new UnityNativeSession();
-            _currentSession.Initialize();
+            _currentSession = new UnityNativeSession(_accountId);
         }
 
         internal bool IsFirstSession() {
@@ -71,7 +61,7 @@ namespace CleverTapSDK.Native {
 
         internal void UpdateSessionTimestamp() {
             if (IsSessionExpired()) {
-                _currentSession = new UnityNativeSession();
+                ResetSession();
             }
 
             _currentSession?.UpdateTimestamp();

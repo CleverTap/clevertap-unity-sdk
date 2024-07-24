@@ -14,20 +14,25 @@ namespace CleverTapSDK.Native
 
     internal abstract class UnityNativeBaseEventQueue
     {
+        internal virtual event EventTimerTick OnEventTimerTick;
         protected readonly int queueLimit;
         protected readonly int defaultTimerInterval;
-        private Coroutine timerCoroutine;
 
         protected int retryCount = 0;
         protected bool isInFlushProcess = false;
         protected Queue<List<UnityNativeEvent>> eventsQueue;
         protected abstract string RequestPath { get; }
-        internal virtual event EventTimerTick OnEventTimerTick;
-
         protected abstract string QueueName { get; }
 
-        internal UnityNativeBaseEventQueue(int queueLimit = 49, int defaultTimerInterval = 1)
+        protected UnityNativeCoreState coreState;
+        protected UnityNativeNetworkEngine networkEngine;
+
+        private Coroutine timerCoroutine;
+
+        internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
         {
+            this.coreState = coreState;
+            this.networkEngine = networkEngine;
             this.queueLimit = queueLimit;
             this.defaultTimerInterval = defaultTimerInterval;
             eventsQueue = new Queue<List<UnityNativeEvent>>();
@@ -77,7 +82,7 @@ namespace CleverTapSDK.Native
                 try
                 {
                     events = eventsQueue.Dequeue();
-                    var metaEvent = Json.Serialize(new UnityNativeMetaEventBuilder().BuildMeta());
+                    var metaEvent = Json.Serialize(BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
                     var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
@@ -126,10 +131,10 @@ namespace CleverTapSDK.Native
             return proccesedEvents;
         }
 
-        internal static List<KeyValuePair<string, string>> GetQueryStringParameters()
+        internal List<KeyValuePair<string, string>> GetQueryStringParameters()
         {
-            var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
-            var accountInfo = UnityNativeAccountManager.Instance.AccountInfo;
+            var deviceInfo = coreState.DeviceInfo;
+            var accountInfo = coreState.AccountInfo;
             if (deviceInfo == null || accountInfo == null)
             {
                 CleverTapLogger.Log("Cannot generate query string parameters.");
@@ -145,6 +150,24 @@ namespace CleverTapSDK.Native
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
             };
             return queryParameters;
+        }
+
+        internal Dictionary<string, object> BuildMeta()
+        {
+            var deviceInfo = coreState.DeviceInfo;
+            var accountInfo = coreState.AccountInfo;
+
+            var metaDetails = new Dictionary<string, object>
+            {
+                { UnityNativeConstants.EventMeta.GUID, deviceInfo.DeviceId },
+                { UnityNativeConstants.EventMeta.TYPE, UnityNativeConstants.EventMeta.TYPE_NAME },
+                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, new UnityNativeEventBuilder(coreState, networkEngine).BuildAppFields() },
+                { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
+                { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
+                { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() }
+            };
+
+            return metaDetails;
         }
 
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);

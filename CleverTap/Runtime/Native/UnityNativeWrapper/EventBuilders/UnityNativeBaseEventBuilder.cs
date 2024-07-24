@@ -6,11 +6,19 @@ using CleverTapSDK.Utilities;
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventBuilder {
 
-        internal UnityNativeEventBuilder() { }
+        private UnityNativeDeviceInfo _deviceInfo;
+        private UnityNativeSessionManager _sessionManager;
+        private UnityNativeNetworkEngine _networkEngine;
+
+        internal UnityNativeEventBuilder(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine) {
+            _deviceInfo = coreState.DeviceInfo;
+            _sessionManager = coreState.SessionManager;
+            _networkEngine = networkEngine;
+        }
 
         internal Dictionary<string, object> BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
            
-            if (UnityNativeNetworkEngine.Instance.IsMuted()) {
+            if (_networkEngine.IsMuted()) {
                 CleverTapLogger.Log("Not building event. CleverTap is Muted.");
                 return null;
             }
@@ -28,15 +36,15 @@ namespace CleverTapSDK.Native {
                     throw new NotImplementedException();
             }
 
-            var currentSession = UnityNativeSessionManager.Instance.CurrentSession;
+            var currentSession = _sessionManager.CurrentSession;
 
             eventData.Add(UnityNativeConstants.Event.UNIX_EPOCH_TIME, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             eventData.Add(UnityNativeConstants.Event.SESSION, currentSession.SessionId);
-            eventData.Add(UnityNativeConstants.Event.SCREEN_COUNT, UnityNativeSessionManager.Instance.GetScreenCount());
-            eventData.Add(UnityNativeConstants.Event.LAST_SESSION_LENGTH_SECONDS, UnityNativeSessionManager.Instance.GetLastSessionLength());
-            eventData.Add(UnityNativeConstants.Event.IS_FIRST_SESSION, UnityNativeSessionManager.Instance.IsFirstSession());
+            eventData.Add(UnityNativeConstants.Event.SCREEN_COUNT, _sessionManager.GetScreenCount());
+            eventData.Add(UnityNativeConstants.Event.LAST_SESSION_LENGTH_SECONDS, _sessionManager.GetLastSessionLength());
+            eventData.Add(UnityNativeConstants.Event.IS_FIRST_SESSION, _sessionManager.IsFirstSession());
 
-            string screenName = UnityNativeSessionManager.Instance.GetScreenName();
+            string screenName = _sessionManager.GetScreenName();
             if (!string.IsNullOrEmpty(screenName)) {
                 eventData.Add("n", screenName);
             }
@@ -45,7 +53,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal Dictionary<string, object> BuildAppFields() {
-            var deviceInfo = UnityNativeDeviceManager.Instance.DeviceInfo;
+            var deviceInfo = _deviceInfo;
 
             var data = new Dictionary<string, object>
             {

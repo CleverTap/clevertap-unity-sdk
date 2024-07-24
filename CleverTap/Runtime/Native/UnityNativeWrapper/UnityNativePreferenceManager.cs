@@ -6,14 +6,67 @@ using UnityEngine;
 namespace CleverTapSDK.Native {
         internal class UnityNativePreferenceManager {
 
-        private List<string> _sessionKeys = new List<string>();
+        private static Dictionary<string, UnityNativePreferenceManager> instances = new Dictionary<string, UnityNativePreferenceManager>();
 
-        internal UnityNativePreferenceManager() {
+        private string _accountId;
+
+        internal UnityNativePreferenceManager(string accountId) {
+            _accountId = accountId;
         }
 
-        internal void ClearAllPreffs() {
-            PlayerPrefs.DeleteAll();
-            _sessionKeys.Clear();
+        internal static UnityNativePreferenceManager GetPreferenceManager(string accountId) {
+            if (!instances.ContainsKey(accountId))
+            {
+                instances[accountId] = new UnityNativePreferenceManager(accountId);
+            }
+            return instances[accountId];
+        }
+
+        internal string GetString(string key, string defaultValue)
+        {
+            return PlayerPrefs.GetString(GetStorageKey(key), defaultValue);
+        }
+
+        internal void SetString(string key, string value)
+        {
+            PlayerPrefs.SetString(GetStorageKey(key), value);
+        }
+
+        internal float GetFloat(string key, float defaultValue)
+        {
+            return PlayerPrefs.GetFloat(GetStorageKey(key), defaultValue);
+        }
+
+        internal void SetFloat(string key, float value)
+        {
+            PlayerPrefs.SetFloat(GetStorageKey(key), value);
+        }
+
+        internal int GetInt(string key, int defaultValue)
+        {
+            return PlayerPrefs.GetInt(GetStorageKey(key), defaultValue);
+        }
+
+        internal void SetInt(string key, int value)
+        {
+            PlayerPrefs.SetInt(GetStorageKey(key), value);
+        }
+
+        internal long GetLong(string key, long defaultValue)
+        {
+            // Use string to get long values in PlayerPrefs
+            return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString()));
+        }
+
+        internal void SetLong(string key, long value)
+        {
+            // Use string to set long values in PlayerPrefs
+            PlayerPrefs.SetString(GetStorageKey(key), value.ToString());
+        }
+
+        internal void DeleteKey(string key)
+        {
+            PlayerPrefs.DeleteKey(GetStorageKey(key));
         }
 
         internal string GetGUIDForIdentifier(string key, string identifier)
@@ -34,7 +87,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal string GetUserIdentities() {
-           return PlayerPrefs.GetString(GetStorageKey(UnityNativeConstants.SDK.CACHED_GUIDS_KEY), null);
+           return GetString(UnityNativeConstants.SDK.CACHED_GUIDS_KEY, null);
         }
 
         /// <summary>
@@ -56,16 +109,16 @@ namespace CleverTapSDK.Native {
             }
 
             cachedValues[GetKeyIdentifier(key, identifier)] = guid;
-            PlayerPrefs.SetString(GetStorageKey(UnityNativeConstants.SDK.CACHED_GUIDS_KEY),
+            SetString(UnityNativeConstants.SDK.CACHED_GUIDS_KEY,
                 Json.Serialize(cachedValues));
-        }
-
-        internal string GetStorageKey(string suffix) {
-            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
         }
 
         internal string GetKeyIdentifier(string key, string identifier) {
             return string.Format("{0}_{1}", key, identifier);
+        }
+
+        internal string GetStorageKey(string suffix) {
+            return $"{_accountId}:{suffix}";
         }
     }
 }

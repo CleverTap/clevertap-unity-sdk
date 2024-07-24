@@ -23,8 +23,10 @@ namespace CleverTapSDK.Native {
         private readonly string _library;
         private readonly int _wifi;
         private readonly string _locale;
+        private readonly UnityNativePreferenceManager _preferenceManager;
 
-        internal UnityNativeDeviceInfo() {
+        internal UnityNativeDeviceInfo(string accountId) {
+            _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
             _sdkVersion = CleverTapVersion.CLEVERTAP_SDK_REVISION; // Use the SDK Version Revision
             _appVersion = Application.version;
             _appBuild = Application.productName;
@@ -83,11 +85,11 @@ namespace CleverTapSDK.Native {
         internal bool EnableNetworkInfoReporting {
             get
             {
-                return PlayerPrefs.GetInt(GetStorageKey(UnityNativeConstants.Profile.NETWORK_INFO), 0) == 1;
+                return _preferenceManager.GetInt(UnityNativeConstants.Profile.NETWORK_INFO_KEY, 0) == 1;
             }
             set
             {
-                PlayerPrefs.SetInt(GetStorageKey(UnityNativeConstants.Profile.NETWORK_INFO), value ? 1 : 0);
+                _preferenceManager.SetInt(UnityNativeConstants.Profile.NETWORK_INFO_KEY, value ? 1 : 0);
             }
         }
 
@@ -106,33 +108,26 @@ namespace CleverTapSDK.Native {
         }
 
         private string GetDeviceId() {
-            if (!PlayerPrefs.HasKey(GetDeviceIdStorageKey()))
+            string id = _preferenceManager.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
+            if (string.IsNullOrEmpty(id))
             {
                 ForceNewDeviceID();
             }
-            return PlayerPrefs.GetString(GetDeviceIdStorageKey(), null);
+            return _preferenceManager.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
         }
 
-        public void ForceNewDeviceID() {
+        internal void ForceNewDeviceID() {
             string newDeviceID = GenerateGuid();
             ForceUpdateDeviceId(newDeviceID);
         }
 
-        public void ForceUpdateDeviceId(string id) {
-            PlayerPrefs.SetString(GetDeviceIdStorageKey(), id);
+        internal void ForceUpdateDeviceId(string id) {
+            _preferenceManager.SetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, id);
         }
 
         private string GenerateGuid() {
             string id = Guid.NewGuid().ToString().Replace("-", "");
             return $"{UnityNativeConstants.SDK.UNITY_GUID_PREFIX}{id}";
-        }
-
-        private string GetDeviceIdStorageKey() {
-            return GetStorageKey(UnityNativeConstants.SDK.DEVICE_ID_TAG);
-        }
-
-        internal string GetStorageKey(string suffix) {
-            return UnityNativeConstants.GetStorageKeyWithAccountId(suffix);
         }
     }
 }

@@ -1,26 +1,14 @@
 #if !UNITY_IOS && !UNITY_ANDROID
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CleverTapSDK.Native {
     internal static class UnityNativeConstants {
-
-        internal static string GetStorageKeyWithAccountId(string suffix) {
-            string accountId = UnityNativeAccountManager.Instance.AccountInfo.AccountId;
-            if (string.IsNullOrEmpty(accountId))
-            {
-                throw new ArgumentNullException("Trying to get access storage key without account Id.");
-            }
-            return $"{accountId}:{suffix}";
-        }
       
         internal static class SDK {
-            internal const string DEVICE_ID = "device_id";
-
-            internal const string DEVICE_ID_TAG = "deviceId";
+            internal const string DEVICE_ID_KEY = "DEVICE_ID";
             internal const string UNITY_GUID_PREFIX =  "__u";
-            internal const string CACHED_GUIDS_KEY = "cachedGUIDsKey";
+            internal const string CACHED_GUIDS_KEY = "CACHED_GUIDS";
         }
 
         internal static class OSNames {
@@ -42,7 +30,7 @@ namespace CleverTapSDK.Native {
             internal const string AGE = "userAge";
             internal const string IDENTITY = "Identity";
             internal const string PHONE = "Phone";
-            internal const string NETWORK_INFO = "NetworkInfo";
+            internal const string NETWORK_INFO_KEY = "NETWORK_INFO";
 
             internal static bool IsKeyKnownProfileField(string key) {
                 if (string.IsNullOrWhiteSpace(key)) {
@@ -91,8 +79,8 @@ namespace CleverTapSDK.Native {
         }
 
         internal static class Session {
-            internal const string SESSION_ID = "sessionId";
-            internal const string LAST_SESSION_TIME = "lastSessionTime";
+            internal const string SESSION_ID_KEY = "SESSION_ID";
+            internal const string LAST_SESSION_TIME_KEY = "LAST_SESSION_TIME";
         }
 
         internal static class Event {

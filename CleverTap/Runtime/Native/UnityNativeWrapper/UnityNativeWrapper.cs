@@ -33,6 +33,14 @@ namespace CleverTapSDK.Native {
         internal void RecordChargedEventWithDetailsAndItems(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
             _eventManager.RecordChargedEventWithDetailsAndItems(details, items);
         }
+
+        internal string GetCleverTapID() {
+            return _eventManager.GetCleverTapID();
+        }
+
+        internal void EnableDeviceNetworkInfoReporting(bool enabled) {
+            _eventManager.EnableDeviceNetworkInfoReporting(enabled);
+        }
     }
 }
 #endif
