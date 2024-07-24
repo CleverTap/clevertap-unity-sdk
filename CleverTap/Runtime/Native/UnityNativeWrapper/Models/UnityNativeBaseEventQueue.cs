@@ -105,6 +105,8 @@ namespace CleverTapSDK.Native
                         willRetry = true;
                         QueueEvents(events);
                         OnEventError();
+                        CleverTapLogger.Log($"Error sending queue");
+                        return proccesedEvents;
                     }
                 }
                 catch (Exception ex)
@@ -176,23 +178,21 @@ namespace CleverTapSDK.Native
         {
             retryCount++;
             isInFlushProcess = false;
-            ResetAndStartTimer(true);
+            ResetAndStartTimer();
         }
 
-        protected virtual void ResetAndStartTimer(bool retry = false)
+        protected virtual void ResetAndStartTimer()
         {
+            CleverTapLogger.Log($"Calling {QueueName} ResetAndStartTimer, retryCount: {retryCount}");
             if (retryCount == 0)
             {
                 RestartTimer(defaultTimerInterval);
                 return;
             }
 
-            if (retry)
-            {
-                float delay = Mathf.Pow(2, retryCount % 10);
-                CleverTapLogger.Log($"Will retry sending events from queue {QueueName} in {delay}s.");
-                RestartTimer(delay);
-            }
+            float delay = Mathf.Pow(2, retryCount % 10);
+            CleverTapLogger.Log($"Will retry sending events from queue {QueueName} in {delay}s.");
+            RestartTimer(delay);
         }
 
         private void RestartTimer(float duration)
