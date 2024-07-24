@@ -109,7 +109,7 @@ namespace CleverTapSDK.Native {
 
         private string GetDeviceId() {
             string id = _preferenceManager.GetString(UnityNativeConstants.SDK.DEVICE_ID_KEY, null);
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 ForceNewDeviceID();
             }
