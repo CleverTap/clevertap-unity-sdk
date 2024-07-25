@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if !UNITY_IOS && !UNITY_ANDROID
 
 namespace CleverTapSDK.Native
 {
@@ -20,3 +20,4 @@ namespace CleverTapSDK.Native
         internal UnityNativeSessionManager SessionManager => _sessionManager;
     }
 }
+#endif
