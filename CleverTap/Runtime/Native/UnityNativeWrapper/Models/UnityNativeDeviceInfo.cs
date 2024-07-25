@@ -18,8 +18,8 @@ namespace CleverTapSDK.Native {
         private readonly string _timeZone;
         private readonly string _radio;
         private readonly string _vendorIdentifier;
-        private readonly string _deviceWidth;
-        private readonly string _deviceHeight;
+        private string _deviceWidth;
+        private string _deviceHeight;
         private readonly string _library;
         private readonly int _wifi;
         private readonly string _locale;
@@ -29,7 +29,7 @@ namespace CleverTapSDK.Native {
             _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
             _sdkVersion = CleverTapVersion.CLEVERTAP_SDK_REVISION; // Use the SDK Version Revision
             _appVersion = Application.version;
-            _appBuild = Application.productName;
+            _appBuild = Application.buildGUID;//Application.productName;
             _osName = GetOSName(); // Only suppport for Windows and MacOS
             _osVersion = SystemInfo.operatingSystem;
             _manufacturer = SystemInfo.deviceModel;
@@ -39,8 +39,8 @@ namespace CleverTapSDK.Native {
             _timeZone = null;
             _radio = null;
             _vendorIdentifier = null;
-            _deviceWidth = Screen.width.ToString();
-            _deviceHeight = Screen.height.ToString();
+            _deviceWidth = GetDeviceWidth();
+            _deviceHeight = GetDeviceHeight();
             _library = null;
             _wifi = -1;
             _locale = null;
@@ -128,6 +128,75 @@ namespace CleverTapSDK.Native {
         private string GenerateGuid() {
             string id = Guid.NewGuid().ToString().Replace("-", "");
             return $"{UnityNativeConstants.SDK.UNITY_GUID_PREFIX}{id}";
+        }
+
+        public string GetDeviceWidth() {
+            if (_deviceWidth == null) {
+                float dpi = Screen.dpi;
+                if (dpi == 0) {
+                    dpi = GetDefaultDPI();
+                }
+
+                float widthInPixels = Screen.width;
+                float widthInInches = widthInPixels / dpi;
+
+                _deviceWidth = string.Format("{0:F2}", widthInInches);
+            }
+
+            return _deviceWidth;
+        }
+
+        public string GetDeviceHeight() {
+            if (_deviceHeight == null) {
+                float dpi = Screen.dpi;
+                if (dpi == 0) {
+                    dpi = GetDefaultDPI();
+                }
+
+                float heightInPixels = Screen.height;
+                float heightInInches = heightInPixels / dpi;
+
+                _deviceHeight = string.Format("{0:F2}", heightInInches);
+            }
+
+            return _deviceHeight;
+        }
+
+        private float GetDefaultDPI() {
+            switch (Application.platform) {
+                case RuntimePlatform.IPhonePlayer:
+                    if (SystemInfo.deviceModel.Contains("iPad"))
+                        return 132f;
+                    else
+                        return 163f;
+
+                case RuntimePlatform.Android:
+                    return 160f;
+
+                case RuntimePlatform.OSXPlayer:
+                case RuntimePlatform.OSXEditor:
+                    return GetMacOSDPI();
+
+                case RuntimePlatform.WindowsPlayer:
+                case RuntimePlatform.WindowsEditor:
+                case RuntimePlatform.WebGLPlayer:
+                case RuntimePlatform.LinuxPlayer:
+                    return 96f;
+
+                default:
+                    return 96f;
+            }
+        }
+
+        private float GetMacOSDPI() {
+            if (SystemInfo.deviceModel.Contains("MacBookPro") ||
+                SystemInfo.deviceModel.Contains("iMac") ||
+                SystemInfo.deviceModel.Contains("MacBookAir"))
+            {
+                if (SystemInfo.graphicsDeviceName.Contains("Retina"))
+                    return 144f;
+            }
+            return 110f;
         }
     }
 }
