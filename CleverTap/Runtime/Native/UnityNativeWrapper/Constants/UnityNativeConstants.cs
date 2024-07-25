@@ -7,7 +7,8 @@ namespace CleverTapSDK.Native {
       
         internal static class SDK {
             internal const string DEVICE_ID_KEY = "DEVICE_ID";
-            internal const string UNITY_GUID_PREFIX =  "__u";
+            // TODO: Decide on the prefix together with the Platform team
+            internal const string UNITY_GUID_PREFIX = ""; // No Device prefix
             internal const string CACHED_GUIDS_KEY = "CACHED_GUIDS";
         }
 
