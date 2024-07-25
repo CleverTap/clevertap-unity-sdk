@@ -61,7 +61,6 @@ namespace CleverTapSDK.Native {
 
             if (eventsToRemove == null)
             {
-                CleverTapLogger.Log("No events to remove");
                 return;
             }
 

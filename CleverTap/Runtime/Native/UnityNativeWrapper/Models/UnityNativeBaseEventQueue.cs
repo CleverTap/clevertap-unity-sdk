@@ -67,13 +67,13 @@ namespace CleverTapSDK.Native
 
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
         {
+            var proccesedEvents = new List<UnityNativeEvent>();
             if (isInFlushProcess)
             {
-                return null;
+                return proccesedEvents;
             }
 
             isInFlushProcess = true;
-            var proccesedEvents = new List<UnityNativeEvent>();
 
             bool willRetry = false;
             List<UnityNativeEvent> events = new List<UnityNativeEvent>();

@@ -54,7 +54,7 @@ namespace CleverTapSDK.Native {
         }
 
         private async Task FlushRaisedEvents() {
-            CleverTapLogger.Log("Flushing record events");
+            CleverTapLogger.Log("Flushing raised events");
             var flushedEvents = await _raisedEventsQueue.FlushEvents();
             _databaseStore.DeleteEvents(flushedEvents);
         }
