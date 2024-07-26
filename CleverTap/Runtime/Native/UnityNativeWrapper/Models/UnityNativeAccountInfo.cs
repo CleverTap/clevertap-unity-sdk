@@ -1,4 +1,4 @@
-#if !UNITY_IOS && !UNITY_ANDROID
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 namespace CleverTapSDK.Native {
     internal class UnityNativeAccountInfo {
         private readonly string _accountId;

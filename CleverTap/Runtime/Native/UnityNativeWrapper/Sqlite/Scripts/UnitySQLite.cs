@@ -1,4 +1,4 @@
-#if !UNITY_IOS && !UNITY_ANDROID
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 //
 // Copyright (c) 2009-2012 Krueger Systems, Inc.
 // 

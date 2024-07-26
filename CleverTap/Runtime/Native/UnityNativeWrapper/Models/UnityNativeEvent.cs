@@ -1,6 +1,5 @@
-﻿#if !UNITY_IOS && !UNITY_ANDROID
+﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System;
-
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEvent {

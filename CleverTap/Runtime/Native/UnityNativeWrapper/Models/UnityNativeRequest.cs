@@ -1,4 +1,4 @@
-﻿#if !UNITY_IOS && !UNITY_ANDROID
+﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,6 @@ namespace CleverTapSDK.Native {
         private IReadOnlyList<IUnityNativeRequestInterceptor> _requestInterceptors;
         private IReadOnlyList<IUnityNativeResponseInterceptor> _responseInterceptors;
         private IReadOnlyDictionary<string, string> _additionalProperties;
-        private bool _shouldRetry;
 
         internal UnityNativeRequest(string path, string method, Dictionary<string, string> additionalProperties = null) {
             _path = path;

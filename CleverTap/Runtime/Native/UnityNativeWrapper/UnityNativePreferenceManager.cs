@@ -1,4 +1,4 @@
-﻿#if !UNITY_IOS && !UNITY_ANDROID
+﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
 using CleverTapSDK.Utilities;
 using UnityEngine;
