@@ -8,7 +8,7 @@ namespace CleverTapSDK.Native
     internal class UnityNativeEventDBEntry
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        public int Id;
+        public int Id { get; set; }
 #else
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
