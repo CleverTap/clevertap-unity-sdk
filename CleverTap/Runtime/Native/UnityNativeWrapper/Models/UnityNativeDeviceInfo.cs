@@ -30,7 +30,7 @@ namespace CleverTapSDK.Native {
             _sdkVersion = CleverTapVersion.CLEVERTAP_SDK_REVISION; // Use the SDK Version Revision
             _appVersion = Application.version;
             _appBuild = Application.buildGUID;//Application.productName;
-            _osName = GetOSName(); // Only suppport for Windows and MacOS
+            _osName = GetOSName();
             _osVersion = SystemInfo.operatingSystem;
             _manufacturer = SystemInfo.deviceModel;
             _model = SystemInfo.deviceModel;
@@ -94,17 +94,21 @@ namespace CleverTapSDK.Native {
         }
 
         private string GetOSName() {
-            var operatingSystem = SystemInfo.operatingSystem?.ToLower().Replace(" ", "");
-
-            if (operatingSystem?.ToLower().Contains(UnityNativeConstants.OSNames.WINDOWS.ToLower()) == true) {
-                return UnityNativeConstants.OSNames.WINDOWS;
-            }
-
-            if (operatingSystem?.ToLower().Contains(UnityNativeConstants.OSNames.MACOS.ToLower()) == true) {
-                return UnityNativeConstants.OSNames.MACOS;
-            }
-
-            return UnityNativeConstants.OSNames.UNKNOWN;
+#if UNITY_WEBGL
+            return UnityNativeConstants.OSNames.OTHERS;
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            return UnityNativeConstants.OSNames.MACOS;
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            return UnityNativeConstants.OSNames.WINDOWS;
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+            return UnityNativeConstants.OSNames.LINUX;
+#elif UNITY_IOS || UNITY_TVOS
+            return UnityNativeConstants.OSNames.IOS;
+#elif UNITY_ANDROID
+            return UnityNativeConstants.OSNames.ANDROID;
+#else
+            return UnityNativeConstants.OSNames.OTHERS;
+#endif
         }
 
         private string GetDeviceId() {

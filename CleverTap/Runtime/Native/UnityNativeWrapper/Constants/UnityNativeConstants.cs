@@ -7,15 +7,31 @@ namespace CleverTapSDK.Native {
       
         internal static class SDK {
             internal const string DEVICE_ID_KEY = "DEVICE_ID";
-            // TODO: Decide on the prefix together with the Platform team
-            internal const string UNITY_GUID_PREFIX = ""; // No Device prefix
             internal const string CACHED_GUIDS_KEY = "CACHED_GUIDS";
+#if UNITY_WEBGL
+            internal const string UNITY_GUID_PREFIX = ""; // No Device prefix
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            internal const string UNITY_GUID_PREFIX = "^";
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            internal const string UNITY_GUID_PREFIX = "~";
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+            internal const string UNITY_GUID_PREFIX = "#";
+#elif UNITY_IOS || UNITY_TVOS
+            internal const string UNITY_GUID_PREFIX = "-";
+#elif UNITY_ANDROID
+            internal const string UNITY_GUID_PREFIX = "__";
+#else
+            internal const string UNITY_GUID_PREFIX = ""; // No Device prefix
+#endif
         }
 
         internal static class OSNames {
             internal const string WINDOWS = "Windows";
             internal const string MACOS = "MacOS";
-            internal const string UNKNOWN = "Unknown";
+            internal const string OTHERS = "Others";
+            internal const string LINUX = "Linux";
+            internal const string IOS = "iOS";
+            internal const string ANDROID = "Android";
         }
 
         internal static class Profile {
