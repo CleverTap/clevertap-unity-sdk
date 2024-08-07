@@ -98,7 +98,7 @@ namespace CleverTapSDK.Common {
         }
 
         internal virtual string GetCleverTapID() {
-            return "testCleverTapID";
+            return string.Empty;
         }
 
         internal virtual JSONClass GetDisplayUnitForID(string unitID) {
@@ -174,15 +174,15 @@ namespace CleverTapSDK.Common {
         }
 
         internal virtual string ProfileGet(string key) {
-            return "test";
+            return string.Empty;
         }
 
         internal virtual string ProfileGetCleverTapAttributionIdentifier() {
-            return "testAttributionIdentifier";
+            return string.Empty;
         }
 
         internal virtual string ProfileGetCleverTapID() {
-            return "testCleverTapID";
+            return string.Empty;
         }
 
         internal virtual void ProfileIncrementValueForKey(string key, double val) {
