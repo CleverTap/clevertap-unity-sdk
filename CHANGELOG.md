@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 3.2.0 *(12 July, 2024)*
+Version 4.0.0 *(07 August, 2024)*
 -------------------------------------------
 - Added native support for WebGL, Mac and Windows platform
 
