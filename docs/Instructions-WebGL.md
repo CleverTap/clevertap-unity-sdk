@@ -1,9 +1,9 @@
 
-# Unity SDK WebGL Quick Start Guide (SDK v3.2.0)
+# Unity SDK WebGL Quick Start Guide (SDK v4.0.0)
 
 ## Overview
 
-This guide will help you install the CleverTap Unity SDK, track your first user event, and see this information in the CleverTap dashboard in less than ten minutes.
+This guide will help you install the CleverTap Unity SDK, track your first user event, and see this information in the CleverTap dashboard.
 
 ## Installation
 
@@ -44,7 +44,6 @@ CleverTap.EnablePersonalization();
 ```
 
 # Unity User Profiles
-
 
 ### Update User Profile (Push Profile)
 
@@ -118,8 +117,6 @@ CleverTap.ProfileDecrementValueForKey("minus_double", 3.5);
 ```
 
 For more detailed instructions, visit the [Unity User Profiles](https://developer.clevertap.com/docs/unity-user-profiles).
-
----
 
 # Unity User Events
 
