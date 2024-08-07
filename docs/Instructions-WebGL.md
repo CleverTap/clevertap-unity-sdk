@@ -60,22 +60,28 @@ CleverTap.ProfilePush(newProps);
 ### Set Multi Values for Key
 
 ```csharp
-List<string> stringList = new List<string> { "one", "two" };
-CleverTap.ProfileSetMultiValuesForKey("userProps", stringList);
+List<string> stringList = new List<string> { "India", "USA" };
+CleverTap.ProfileSetMultiValuesForKey("Visited Location", stringList);
 ```
 
 ### Remove Multi Value for Key
 
 ```csharp
-List<string> stringList = new List<string> { "two" };
-CleverTap.ProfileRemoveMultiValuesForKey("userProps", stringList);
+List<string> stringList = new List<string> { "India" };
+CleverTap.ProfileRemoveMultiValuesForKey("Visited Location", stringList);
+```
+
+### Add Multi Values for Key
+
+```csharp
+List<string> stringList = new List<string> { "India", "USA" };
+CleverTap.ProfileAddMultiValuesForKey("Visited Location", stringList);
 ```
 
 ### Add Multi Value for Key
 
 ```csharp
-List<string> stringList = new List<string> { "three", "four" };
-CleverTap.ProfileAddMultiValuesForKey("multiIOS", stringList);
+CleverTap.ProfileAddMultiValueForKey("Visited Location", "India");
 ```
 
 ### Create a User Profile on User Login
@@ -94,12 +100,6 @@ CleverTap.OnUserLogin(newProps);
 
 ```csharp
 string cleverTapID = CleverTap.ProfileGetCleverTapID();
-```
-
-### Set Location to User Profile
-
-```csharp
-CleverTap.SetLocation(34.147785, -118.144516);
 ```
 
 ### Increment a User Profile Property
@@ -160,14 +160,6 @@ item2.Add("Quantity", 1);
 items.Add(item2);
 
 CleverTap.RecordChargedEvent(chargedProps, items);
-```
-
-### Record Event with Multi-Value Properties
-
-```csharp
-CleverTap.Event.AddMultiValuesForKey("Visited Location", new List<string> { "India", "China" });
-CleverTap.Event.RemoveMultiValuesForKey("Visited Location", new List<string> { "China" });
-CleverTap.Event.SetMultiValuesForKey("Visited Location", new List<string> { "India", "China", "Australia" });
 ```
 
 For more detailed instructions, visit the [CleverTap Unity SDK Quick Start Guide](https://developer.clevertap.com/docs/unity-sdk-quick-start-guide-sdk-v300).
