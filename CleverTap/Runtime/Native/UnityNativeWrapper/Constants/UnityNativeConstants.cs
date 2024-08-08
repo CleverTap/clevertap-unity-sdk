@@ -8,6 +8,7 @@ namespace CleverTapSDK.Native {
         internal static class SDK {
             internal const string DEVICE_ID_KEY = "DEVICE_ID";
             internal const string UNITY_GUID_PREFIX =  "__u";
+
             internal const string CACHED_GUIDS_KEY = "CACHED_GUIDS";
         }
 
@@ -175,7 +176,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal static class Network {
-            internal const string CT_BASE_URL = "clevertap-prod.com";
+            internal const string CT_BASE_URL = "sk1-staging-25.clevertap-prod.com";//"clevertap-prod.com";
             internal const string REDIRECT_DOMAIN_KEY = "CLTAP_REDIRECT_DOMAIN_KEY";
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
