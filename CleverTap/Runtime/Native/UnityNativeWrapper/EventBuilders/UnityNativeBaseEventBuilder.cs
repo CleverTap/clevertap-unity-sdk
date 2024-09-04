@@ -9,11 +9,13 @@ namespace CleverTapSDK.Native {
         private UnityNativeDeviceInfo _deviceInfo;
         private UnityNativeSessionManager _sessionManager;
         private UnityNativeNetworkEngine _networkEngine;
-
-        internal UnityNativeEventBuilder(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine) {
+        private UnityNativeEventValidator _eventValidator;
+        
+        internal UnityNativeEventBuilder(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeEventValidator eventValidator) {
             _deviceInfo = coreState.DeviceInfo;
             _sessionManager = coreState.SessionManager;
             _networkEngine = networkEngine;
+            _eventValidator = eventValidator;
         }
 
         internal Dictionary<string, object> BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {

@@ -26,13 +26,14 @@ namespace CleverTapSDK.Native
 
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
-
+        protected UnityNativeEventValidator eventValidator;
         private Coroutine timerCoroutine;
 
-        internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
+        internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine,UnityNativeEventValidator eventValidator, int queueLimit = 49, int defaultTimerInterval = 1)
         {
             this.coreState = coreState;
             this.networkEngine = networkEngine;
+            this.eventValidator = eventValidator;
             this.queueLimit = queueLimit;
             this.defaultTimerInterval = defaultTimerInterval;
             eventsQueue = new Queue<List<UnityNativeEvent>>();
@@ -163,7 +164,7 @@ namespace CleverTapSDK.Native
             {
                 { UnityNativeConstants.EventMeta.GUID, deviceInfo.DeviceId },
                 { UnityNativeConstants.EventMeta.TYPE, UnityNativeConstants.EventMeta.TYPE_NAME },
-                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, new UnityNativeEventBuilder(coreState, networkEngine).BuildAppFields() },
+                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, new UnityNativeEventBuilder(coreState, networkEngine,eventValidator).BuildAppFields() },
                 { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() }

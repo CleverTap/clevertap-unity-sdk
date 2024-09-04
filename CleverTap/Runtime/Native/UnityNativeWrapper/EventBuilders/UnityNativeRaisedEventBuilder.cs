@@ -5,8 +5,11 @@ using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeRaisedEventBuilder {
-        internal UnityNativeRaisedEventBuilder() { }
-
+         private UnityNativeEventValidator _eventValidator;
+         internal UnityNativeRaisedEventBuilder(UnityNativeEventValidator eventValidator)
+        {
+            this._eventValidator = eventValidator;
+        }
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> Build(string eventName, Dictionary<string, object> properties = null) {
             var eventValidator = new UnityNativeEventValidator();
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();

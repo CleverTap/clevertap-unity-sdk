@@ -1,6 +1,6 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 namespace CleverTapSDK.Native {
-    internal class UnityNativeValidationResult {
+    public class UnityNativeValidationResult {
         // TODO : Consider converting errorCode into appropriate enumration(Enum)
         
         private readonly int? _errorCode;
