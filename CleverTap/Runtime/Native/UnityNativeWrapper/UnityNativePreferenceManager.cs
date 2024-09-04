@@ -1,5 +1,6 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
+using System.Globalization;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
@@ -64,6 +65,26 @@ namespace CleverTapSDK.Native {
             PlayerPrefs.SetString(GetStorageKey(key), value.ToString());
         }
 
+        public void SetDouble(string key, double value)
+        {
+            // Use string to set long values in PlayerPrefs
+            PlayerPrefs.SetString(GetStorageKey(key), value.ToString());
+        }
+        public double GetDouble(string key, double defaultValue)
+        {
+            return double.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
+        }
+        
+        public void SetBool(string key, bool value)
+        {
+            // Use bool to set int values in PlayerPrefs
+            PlayerPrefs.SetInt(GetStorageKey(key), value? 1 : 0);
+        }
+
+        public bool GetBool(string key, bool defaultValue)
+        {
+            return PlayerPrefs.GetInt(GetStorageKey(key), defaultValue? 1 : 0) == 1;
+        }
         internal void DeleteKey(string key)
         {
             PlayerPrefs.DeleteKey(GetStorageKey(key));
@@ -120,6 +141,8 @@ namespace CleverTapSDK.Native {
         internal string GetStorageKey(string suffix) {
             return $"{_accountId}:{suffix}";
         }
-    }
+
+      
+        }
 }
 #endif
