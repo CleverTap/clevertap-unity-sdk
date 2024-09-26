@@ -168,6 +168,11 @@ namespace CleverTapSDK.Native {
             internal const string REF = "ref";
             internal const string WZRK_REF = "wzrk_ref";
             internal const string DISCARDED_EVENT_JSON_KEY = "d_e";
+            
+            internal const string NAMESPACE_IJ = "IJ";
+            
+            internal const string KEY_I = "comms_i";
+            internal const string KEY_J = "comms_j";
         }
 
         internal static class Validator {

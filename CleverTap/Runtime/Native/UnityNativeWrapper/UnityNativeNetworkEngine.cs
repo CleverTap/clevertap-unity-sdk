@@ -303,6 +303,17 @@ namespace CleverTapSDK.Native {
                         }
                     }
                 }
+                
+                long i = GetI();
+                if (i > 0) {
+                    allHeaders.Add("_i", i+"");
+                }
+
+                long j = GetJ();
+                if (j > 0) {
+                    allHeaders.Add("_j", j+"");
+                }
+                
                 //Add ARP 
                 allHeaders = AddARP(allHeaders);
                 request.SetHeaders(allHeaders);
@@ -433,6 +444,30 @@ namespace CleverTapSDK.Native {
                 return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, ex.Message);
             }
         }
+
+        public long GetI()
+        {
+            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_I}:{_coreState.AccountInfo.AccountId}";
+            return _preferenceManager.GetLong( tempKey,0);
+        }
+        
+        public void SetI(long l)
+        {
+            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_I}:{_coreState.AccountInfo.AccountId}";
+            _preferenceManager.SetLong( tempKey,l);
+        }
+        
+        public long GetJ()
+        {
+            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_coreState.AccountInfo.AccountId}";
+            return _preferenceManager.GetLong( tempKey,0);
+        }
+        public void SetJ(long l)
+        {
+            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_coreState.AccountInfo.AccountId}";
+            _preferenceManager.SetLong( tempKey,l);
+        }
+        
     }
 }
 #endif
