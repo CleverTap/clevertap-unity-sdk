@@ -73,16 +73,41 @@ namespace CleverTapSDK.Common {
             }
         }
 
-        protected virtual Var<T> GetOrDefineVariable<T>(string name, T defaultValue) {
+        protected virtual Var<T> GetOrDefineVariable<T>(string name, T defaultValue)
+        {
+            // Check if the name is empty
+            if (string.IsNullOrEmpty(name))
+            {
+                CleverTapLogger.LogError("Empty name parameter provided.");
+                return null;
+            }
+
+            // Check if the name starts or ends with a "."
+            if (name.StartsWith(".") || name.EndsWith("."))
+            {
+                CleverTapLogger.LogError("Variable name starts or ends with a `.` which is not allowed: " + name);
+                return null;
+            }
+
+            // Check if the default value is null
+            if (defaultValue == null)
+            {
+                CleverTapLogger.LogError("Invalid Operation! Null values are not allowed as default values when defining the variable '" + name + "'.");
+                return null;
+            }
+
             var kindName = GetKindNameFromGenericType<T>();
-            if (string.IsNullOrEmpty(kindName)) {
+            if (string.IsNullOrEmpty(kindName))
+            {
                 CleverTapLogger.LogError("CleverTap Error: Default value for \"" + name + "\" not recognized or supported.");
                 return null;
             }
 
-            if (varCache.ContainsKey(name)) {
-                if (varCache[name].Kind != kindName) {
-                    CleverTapLogger.LogError("CleverTap Error: Variable " + "\"" + name + "\" was already defined with a different kind");
+            if (varCache.ContainsKey(name))
+            {
+                if (varCache[name].Kind != kindName)
+                {
+                    CleverTapLogger.LogError("CleverTap Error: Variable " + "\"" + name + "\" was already defined with a different kind.");
                     return null;
                 }
                 return (Var<T>)varCache[name];
