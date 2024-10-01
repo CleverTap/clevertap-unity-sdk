@@ -10,6 +10,6 @@ namespace CleverTapSDK.Android {
         internal override void ClearInAppResources(bool expiredOnly) =>
             CleverTapAndroidJNI.CleverTapJNIInstance.Call(METHOD_CLEAR_INAPP_RESOURCES,expiredOnly);
         
-    }
+   }
 }
 #endif

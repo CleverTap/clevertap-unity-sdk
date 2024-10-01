@@ -1,28 +1,21 @@
 ## 👩‍💻 iOS Specific Instructions:
-- If you want to enable Push Notifications, be sure to add the Push Notifications capability to your Xcode project.  
 
-    ![alt text](/example/images/push_entitle.jpg  "push notifications capability")
-    
-- Configure the Framework
-   - In Xcode, go to your Targets, under your app’s name
-   - Under General, Navigate to Frameworks, Libraries and Embedded Content, please ensure that **CleverTapSDK** and **SDWebImage** frameworks are marked as **Embed & Sign** and **Embedded** to your project.
-   
- ![alt text](/example/images/ct_xcode12.x_framework.png  "frameworks")
+iOS dependencies are added using CocoaPods Podfile. After exporting the project to XCode, you need to run `pod install`. This can be _automated_ by [EDM4U](https://github.com/googlesamples/unity-jar-resolver) plugin to be done on each export. You can always manually install pods by running `pod install` in the exported XCode project. Ensure to start `.xcworkspace` to build the game with dependencies.
 
-- Required for CleverTap Unity v2.1.0 or below: Add a run script to your build phases, In Xcode, go to your Targets, under your app’s name, select Build Phases after   embed frameworks, add a run script phase and set it to use `/bin/sh` and the [script found here](https://github.com/CleverTap/clevertap-unity-sdk/blob/master/Plugin/CleverTapUnity/iOS/strip.sh).
+1. Set your account Id, token, and region, as well as personalization and IDFV settings in the CleverTap Settings **Assets** > **CleverTap Settings**
 
-The script will look through your built application’s `Frameworks` folder and strip out the unnecessary simulator architectures from the CleverTakSDK.framework prior to archiving/submitting the app store.
+![CleverTap iOS Settings](/docs/images/clevertap_ios_settings.png  "CleverTap iOS Settings")
 
-  ![alt text](/example/images/ct_script_ios.jpg  "run script")
-  
+This is needed so the CleverTap Post Processor script can add those settings automatically in the `Info.plist` file.
 
-- Build and run your iOS project.
+> 📘 IDFV Usage for CleverTap ID
+> 
+> Starting from CleverTap Unity SDK 2.1.2, you can optionally disable the usage of IDFV for CleverTap ID. We recommend this for apps that send data from different iOS apps to a common CleverTap account. By default, the CleverTapDisableIDFV checkbox is cleared.
 
+2. Set up [EDM4U](<>) plugin to install CocoaPods automatically. Go to **Assets** > **External Dependency Manager** > **iOS Resolver** > **Settings**. You can also install manually using `pod install`.
 
-### CleverTap Disable IDFV Usage
+![iOS Resolver Settings](/docs/images/ios_resolver_settings.png  "iOS Resolver Settings")
 
-From CleverTap Unity SDK 2.1.2 onwards, you can disable the usage of IDFV by checking `CLEVERTAP_DISABLE_IDFV` as shown below 
-
- ![alt text](/docs/ct-ios-idfv.png  "CleverTapDisableIDFV")
-
-By default, the value of `CLEVERTAP_DISABLE_IDFV` is not checked which means CleverTap will continue to use the vendor identifier for the purpose of profile creation.
+2. Open the `.xcworkspace` project.
+3. To enable Push Notifications, ensure to add the Push Notifications capability to your Xcode project.  
+4. Build and run your iOS project.

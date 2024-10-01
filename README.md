@@ -20,25 +20,60 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 ## 🛠 Installation and Setup #
 
-1. Import the CleverTapUnityPlugin.unitypackage into your Unity Project (`Assets` > `Import Package` > `Custom Package`) or manually Copy `Plugin/CleverTapUnity` and `Plugin/Plugins/Android` (or copy the files in `Plugin/Plugins/Android` to your existing `Assets/Plugins/Android` directory) into the Assets directory of your Unity Project.
+You can install the CleverTap Unity SDK using the `.unitypackage` Unity package or as a local package through Unity Package Manager (UPM).
 
-2. Create an empty game object (GameObject -> Create Empty) and rename it `CleverTapUnity`. Add `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` as a component of the `CleverTapUnity GameObject`. 
+### Import the CleverTap Unity Package
 
-| NOTE: To receive the SDK callbacks the name of the game object must be `CleverTapUnity` |
-| --- |
+1. Download the latest version of the CleverTap Unity package. Import the `.unitypackage` into your Unity Project. **Go to Assets** > **Import Package** > **Custom Package**. 
+2. Add the **PlayServiceResolver** and the **ExternalDependencyManager** folders. These folders will install the **EDM4U** plugin, which automatically adds all the Android and iOS dependencies when building your project.
+3. Ensure that the scripts inside the `Editor` folder are added (`AndroidPostImport`, `CleverTapPostBuildProcessor.` and the other scripts). The `AndroidPostImport` script sets up `clevertap-android-wrapper` library for Android. `CleverTapPostBuildProcessor` helps iOS setup.
 
-   ![alt text](example/images/unity_gameobj.jpg  "unity game object")
+### Import the CleverTap Unity Package as a Local Dependency
 
-3. Select the `CleverTapUnity GameObject` you created in the Hierarchy pane and add your CleverTap settings inside the Inspector window. You must include your `CleverTap Account ID` and `CleverTap Account Token` from your [CleverTap Dashboard -> Settings](https://dashboard.clevertap.com/x/settings.html).
+Clone the latest release version of CleverTap Unity SDK. The SDK can be imported as a local package through the Unity Package Manager.
 
-4. Edit `Assets/CleverTapUnity/CleverTapUnity-Scripts/CleverTapUnity.cs` to add your calls to CleverTap SDK.  See usage examples in [example/CleverTapUnity.cs](example/CleverTapUnity.cs).  For more information check out our [documentation](https://developer.clevertap.com/docs "CleverTap Technical Documentation").
+### Set Up the Unity SDK
 
-5. For more details around setup check out Android Specific Instructions [here](docs/Instructions-Android.md) and iOS Specific Instructions [here](docs/Instructions-iOS.md).
+CleverTap API can be accessed anywhere in your project by simply calling the static `CleverTap` class. _No_ need to create `GameObject` or attach _any_ script. The SDK handles the following: 
+
+- Instantiation of platform-specific binding (iOS, Android, Native)
+- Creation of `GameObject`
+- Script attachment.
+
+You can view your `CleverTap Account ID` and `CleverTap Account Token` from the _CleverTap Dashboard -> Settings_.
+
+```csharp
+// Initialize CleverTap
+CleverTap.LaunchWithCredentialsForRegion({YOUR_CLEVERTAP_ACCOUNT_ID}, {YOUR_CLEVERTAP_ACCOUNT_TOKEN}, {CLEVERTAP_ACCOUNT_REGION});
+// Enable personalization
+CleverTap.EnablePersonalization();
+```
+
+#### Callbacks
+
+Add an event listener for a callback directly through the `CleverTap` static events.
+
+```csharp
+CleverTap.OnCleverTapDeepLinkCallback += YOUR_CALLBACK_METHOD;  
+CleverTap.OnCleverTapProfileInitializedCallback += YOUR_CALLBACK_METHOD;  
+CleverTap.OnCleverTapProfileUpdatesCallback += YOUR_CALLBACK_METHOD;
+```
+
+### iOS Instructions
+
+iOS specific setup is described in the [iOS Instructions](/docs/Instructions-iOS.md)
+
+### Android Instructions
+
+Android specific setup is described in the [Android Instructions](/docs/Instructions-Android.md)
+
+### WebGL Instructions
+
+WebGL specific setup is described in the [WebGL Instructions](/docs/Instructions-WebGL.md)
 
 ## 💻 Example Usage #
 
 - [See the CleverTap Unity Usage Documentation](/docs/Usage.md)
-- [See the included Example Project](/example) showing the integration of our Plugin
 
 ## 🆕 Changelog #
 

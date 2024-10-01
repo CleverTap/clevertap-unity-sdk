@@ -127,7 +127,7 @@
 
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue;
 
-#pragma mark - In App Controls
+#pragma mark - In-App Controls
 
 - (void)suspendInAppNotifications;
 - (void)discardInAppNotifications;
@@ -147,7 +147,8 @@
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue;
 - (NSString *)getVariableValue:(NSString *)name;
 
-#pragma mark - InApps
+#pragma mark - Client-side In-Apps
 - (void)fetchInApps:(int)callbackId;
+- (void)clearInAppResources:(BOOL)expiredOnly;
 
 @end

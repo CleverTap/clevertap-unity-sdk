@@ -220,12 +220,12 @@ static NSString * kCleverTapInAppsFetched = @"CleverTapInAppsFetched";
 }
 
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties {
-	NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
     [clevertap recordEvent:event withProps:attributes];
 }
 
 - (void)recordChargedEventWithDetails:(NSDictionary *)chargeDetails andItems:(NSArray *)items {
-	NSDictionary *details = cleverTap_convertDateValues(chargeDetails);
+    NSDictionary *details = cleverTap_convertDateValues(chargeDetails);
     [clevertap recordChargedEventWithDetails:details andItems:items];
 }
 
@@ -874,7 +874,7 @@ return jsonDict;
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
-#pragma mark - In App Controls
+#pragma mark - In-App Controls
 
 - (void)suspendInAppNotifications {
     [clevertap suspendInAppNotifications];
@@ -1000,7 +1000,7 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
     return dict;
 }
 
-#pragma mark - InApps
+#pragma mark - Client-side In-Apps
 - (void)fetchInApps:(int) callbackId
 {
     [clevertap fetchInApps:^(BOOL success) {
@@ -1012,6 +1012,11 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
         NSString* json = [self dictToJson:response];
         [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapInAppsFetched withMessage:json];
     }];
+}
+
+- (void)clearInAppResources:(BOOL)expiredOnly 
+{
+    [clevertap clearInAppResources:expiredOnly];
 }
 
 @end

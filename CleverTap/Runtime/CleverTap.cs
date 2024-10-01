@@ -447,6 +447,7 @@ namespace CleverTapSDK {
 
         public static void ClearInAppResources(bool expiredOnly) =>
             cleverTapInApps.ClearInAppResources(expiredOnly);
+
         #endregion
     }
 }
