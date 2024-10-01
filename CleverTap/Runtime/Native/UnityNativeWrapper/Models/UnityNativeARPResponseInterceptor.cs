@@ -4,9 +4,9 @@ using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
-namespace Native.UnityNativeWrapper.Models
+namespace CleverTapSDK.Native
 {
-    public class UnityNativeARPResponseInterceptor : IUnityNativeResponseInterceptor
+    internal class UnityNativeARPResponseInterceptor : IUnityNativeResponseInterceptor
     {
         private readonly UnityNativeEventValidator _eventValidator;
         private readonly string _accountId;
@@ -33,7 +33,7 @@ namespace Native.UnityNativeWrapper.Models
                         }
                         catch (Exception t)
                         {
-                            CleverTapLogger.Log("Error handling discarded events response: " + t.StackTrace);
+                            CleverTapLogger.Log("Failed to process ARP discarded events");
                         }
 
                         HandleARPUpdate(arp);
@@ -54,8 +54,9 @@ namespace Native.UnityNativeWrapper.Models
                 return;
 
             UnityNativePreferenceManager preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(_accountId);
-            Dictionary<string, object> oldARP = Json.Deserialize(preferenceManager.GetString(_namespaceARPKey, string.Empty)) as Dictionary<string, object>;
-            if (oldARP == null || oldARP.Count == 0)
+            Dictionary<string, object> currentARP = Json.Deserialize(preferenceManager.GetString(_namespaceARPKey, "{}")) as Dictionary<string, object>;
+            
+            if (currentARP == null || currentARP.Count == 0)
             {
                 preferenceManager.SetString(_namespaceARPKey, Json.Serialize(arp));
                 return;
@@ -69,22 +70,22 @@ namespace Native.UnityNativeWrapper.Models
                 switch (value)
                 {
                     case int i:
-                        oldARP[key] = i;
+                        currentARP[key] = i;
                         break;
                     case long l:
-                        oldARP[key] = l;
+                        currentARP[key] = l;
                         break;
                     case float f:
-                        oldARP[key] = f;
+                        currentARP[key] = f;
                         break;
                     case double d:
-                        oldARP[key] = d;
+                        currentARP[key] = d;
                         break;
                     case string s:
-                        oldARP[key] = s;
+                        currentARP[key] = s;
                         break;
                     case bool b:
-                        oldARP[key] = b;
+                        currentARP[key] = b;
                         break;
                     default:
                         CleverTapLogger.Log($"ARP update for key {key} rejected (invalid data type)");
@@ -92,7 +93,7 @@ namespace Native.UnityNativeWrapper.Models
                 }
             }
 
-            preferenceManager.SetString(_namespaceARPKey, Json.Serialize(oldARP));
+            preferenceManager.SetString(_namespaceARPKey, Json.Serialize(currentARP));
         }
 
 
@@ -107,8 +108,13 @@ namespace Native.UnityNativeWrapper.Models
             try
             {
                 var discardedEventsList = new List<string>();
-                if (Json.Deserialize(response[UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY].ToString()) is
-                    List<string> discardedEventsArray) discardedEventsList.AddRange(discardedEventsArray);
+                // Get the discarded event JSON from the response
+                string discardedEventsJson = response[UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY].ToString();
+                var discardedEventsArray = Json.Deserialize(discardedEventsJson) as List<string>;
+                if (discardedEventsArray != null)
+                {
+                    discardedEventsList.AddRange(discardedEventsArray);
+                }
                 if (_eventValidator != null)
                     _eventValidator.SetDiscardedEvents(discardedEventsList);
                 else

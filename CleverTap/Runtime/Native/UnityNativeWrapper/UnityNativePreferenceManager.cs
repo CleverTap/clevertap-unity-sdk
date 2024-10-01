@@ -59,32 +59,30 @@ namespace CleverTapSDK.Native {
             return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString()));
         }
 
-        internal void SetLong(string key, long value)
+        internal void SetLong(string key, string longValue)
         {
-            // Use string to set long values in PlayerPrefs
-            PlayerPrefs.SetString(GetStorageKey(key), value.ToString());
+            PlayerPrefs.SetString(GetStorageKey(key), longValue);
         }
 
-        public void SetDouble(string key, double value)
+        public void SetDouble(string key, string doubleValue)
         {
-            // Use string to set long values in PlayerPrefs
-            PlayerPrefs.SetString(GetStorageKey(key), value.ToString());
+            PlayerPrefs.SetString(GetStorageKey(key), doubleValue.ToString());
         }
+        
         public double GetDouble(string key, double defaultValue)
         {
             return double.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
         }
-        
-        public void SetBool(string key, bool value)
+        public void SetBool(string key, int value)
         {
-            // Use bool to set int values in PlayerPrefs
-            PlayerPrefs.SetInt(GetStorageKey(key), value? 1 : 0);
+            PlayerPrefs.SetInt(GetStorageKey(key), value);
         }
 
         public bool GetBool(string key, bool defaultValue)
         {
             return PlayerPrefs.GetInt(GetStorageKey(key), defaultValue? 1 : 0) == 1;
         }
+        
         internal void DeleteKey(string key)
         {
             PlayerPrefs.DeleteKey(GetStorageKey(key));
@@ -135,14 +133,13 @@ namespace CleverTapSDK.Native {
         }
 
         internal string GetKeyIdentifier(string key, string identifier) {
-            return string.Format("{0}_{1}", key, identifier);
+            return $"{key}_{identifier}";
         }
 
         internal string GetStorageKey(string suffix) {
             return $"{_accountId}:{suffix}";
         }
-
-      
-        }
+        
+    }
 }
 #endif

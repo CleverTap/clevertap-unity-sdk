@@ -10,7 +10,7 @@ namespace CleverTapSDK.Native {
         internal UnityNativeValidationResult CleanEventName(string eventName, out string cleanEventName) {
             cleanEventName = eventName;
             if (string.IsNullOrWhiteSpace(cleanEventName)) {
-                return new UnityNativeValidationResult();
+                return new UnityNativeValidationResult(510, "Event name is null or empty.");
             }
 
             cleanEventName = ReplaceNotAllowedCharacters(cleanEventName, UnityNativeConstants.Validator.KEY_NOT_ALLOWED_CHARS);
@@ -180,7 +180,7 @@ namespace CleverTapSDK.Native {
         {
             if (string.IsNullOrEmpty(eventName))
             {
-                return new UnityNativeValidationResult();
+                return new UnityNativeValidationResult(510, $"event name is null or empty.");
             }
 
             UnityNativeValidationResult error = new UnityNativeValidationResult();
