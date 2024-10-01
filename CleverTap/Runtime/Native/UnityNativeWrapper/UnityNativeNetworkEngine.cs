@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -345,10 +344,6 @@ namespace CleverTapSDK.Native {
         {
             string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
                 _coreState.AccountInfo.AccountId, _coreState.DeviceInfo.DeviceId);
-
-            if (string.IsNullOrEmpty(arpNamespaceKey))
-                return headers;
-
             var arpJson = _preferenceManager.GetString(arpNamespaceKey, string.Empty);
             if (string.IsNullOrEmpty(arpJson))
                 return headers;

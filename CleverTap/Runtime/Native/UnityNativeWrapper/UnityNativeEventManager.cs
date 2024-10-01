@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Native.UnityNativeWrapper.Models;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
@@ -232,7 +231,7 @@ namespace CleverTapSDK.Native {
                 }
             }
 
-            var eventBuilderResult = new UnityNativeProfileEventBuilder(_eventValidator).BuildPushEvent(properties);
+            var eventBuilderResult = new UnityNativeProfileEventBuilder().BuildPushEvent(properties);
             if (eventBuilderResult.EventResult.SystemFields == null || eventBuilderResult.EventResult.CustomFields == null) {
                 return null;
             }

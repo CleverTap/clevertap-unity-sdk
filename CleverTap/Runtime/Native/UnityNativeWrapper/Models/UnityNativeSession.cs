@@ -31,7 +31,7 @@ namespace CleverTapSDK.Native {
                 _lastSessionLength = lastSessionTime - lastSessionId;
             }
 
-            _preferenceManager.SetLong(UnityNativeConstants.Session.SESSION_ID_KEY, _sessionId);
+            _preferenceManager.SetLong(UnityNativeConstants.Session.SESSION_ID_KEY, _sessionId.ToString());
         }
 
         internal long SessionId => _sessionId;
@@ -46,7 +46,7 @@ namespace CleverTapSDK.Native {
 
         internal long UpdateTimestamp() {
             long now = GetNow();
-            _preferenceManager.SetLong(UnityNativeConstants.Session.LAST_SESSION_TIME_KEY, now);
+            _preferenceManager.SetLong(UnityNativeConstants.Session.LAST_SESSION_TIME_KEY, now.ToString());
             _lastUpdateTimestamp = now;
             return _lastUpdateTimestamp;
         }

@@ -22,6 +22,12 @@ namespace CleverTapSDK.Native {
                 eventValidationResultsWithErrors.Add(isRestrictedNameValidationResult);
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
             }
+            
+            var isDiscardedValidationResult = eventValidator.IsEventDiscarded(eventName);
+            if (!isDiscardedValidationResult.IsSuccess) {
+                eventValidationResultsWithErrors.Add(isDiscardedValidationResult);
+                return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
+            }
 
             var cleanEventNameValidationResult = eventValidator.CleanEventName(eventName, out var cleanEventName);
             if (!cleanEventNameValidationResult.IsSuccess) {
@@ -36,12 +42,12 @@ namespace CleverTapSDK.Native {
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, eventDetails);
             }
 
-            var cleanObjectDictonaryValidationResult = CleanObjectDictonary(properties);
-            if (cleanObjectDictonaryValidationResult.ValidationResults.Any(vr => !vr.IsSuccess)) {
-                eventValidationResultsWithErrors.AddRange(cleanObjectDictonaryValidationResult.ValidationResults.Where(vr => !vr.IsSuccess));
+            var cleanObjectDictionaryValidationResult = CleanObjectDictonary(properties);
+            if (cleanObjectDictionaryValidationResult.ValidationResults.Any(vr => !vr.IsSuccess)) {
+                eventValidationResultsWithErrors.AddRange(cleanObjectDictionaryValidationResult.ValidationResults.Where(vr => !vr.IsSuccess));
             }
 
-            eventDetails.Add(UnityNativeConstants.Event.EVENT_DATA, cleanObjectDictonaryValidationResult.EventResult);
+            eventDetails.Add(UnityNativeConstants.Event.EVENT_DATA, cleanObjectDictionaryValidationResult.EventResult);
 
             return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, eventDetails);
         }
