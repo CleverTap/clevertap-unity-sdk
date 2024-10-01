@@ -178,8 +178,7 @@ namespace CleverTapSDK.Native {
         internal static class Validator {
             internal const int MAX_KEY_CHARS = 120;
             internal const int MAX_VALUE_CHARS = 1024;
-            internal const int MAX_VALUE_PROPERTY_ARRAY_COUNT = 100;    
-            internal const int DISCARDED_EVENT_NAME = 17;
+            internal const int MAX_VALUE_PROPERTY_ARRAY_COUNT = 100;
             internal static readonly IReadOnlyList<string> KEY_NOT_ALLOWED_CHARS = new List<string> { ".", ":", "$", "'", "\"", "\\" };
             internal static readonly IReadOnlyList<string> VALUE_NOT_ALLOWED_CHARS = new List<string> { "'", "\"", "\\" };
 
