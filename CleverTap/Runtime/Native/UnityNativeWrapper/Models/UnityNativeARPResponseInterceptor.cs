@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
