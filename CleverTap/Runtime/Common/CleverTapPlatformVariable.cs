@@ -114,5 +114,7 @@ namespace CleverTapSDK.Common {
         internal abstract void SyncVariables(bool isProduction);
         internal abstract void FetchVariables(int callbackId);
         protected abstract Var<T> DefineVariable<T>(string name, string kind, T defaultValue);
+        protected abstract Var<string> DefineFileVariable(string name);
+
     }
 }

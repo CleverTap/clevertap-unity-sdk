@@ -21,6 +21,12 @@ namespace CleverTapSDK.Native {
             return null;
         }
 
+        protected override Var<string> DefineFileVariable(string name)
+        {
+            CleverTapLogger.LogError("CleverTap Error: Define file variable is not supported for this platform.");
+            return null;
+        }
+
         protected override Var<T> GetOrDefineVariable<T>(string name, T defaultValue) {
             CleverTapLogger.LogError("CleverTap Error: Define is not supported for this platform.");
             return null;
