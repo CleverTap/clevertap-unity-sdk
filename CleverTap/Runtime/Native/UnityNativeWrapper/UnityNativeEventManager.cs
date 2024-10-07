@@ -44,6 +44,7 @@ namespace CleverTapSDK.Native {
         {
             List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>();
             responseInterceptors.Add(new UnityNativeARPResponseInterceptor(_accountId,_coreState.DeviceInfo.DeviceId,_eventValidator));
+            responseInterceptors.Add(new UnityNativeMetadataResponseInterceptor(_accountId,_preferenceManager));
             _networkEngine.SetResponseInterceptors(responseInterceptors);
         }
         
