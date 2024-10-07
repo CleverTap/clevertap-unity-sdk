@@ -176,7 +176,7 @@ namespace CleverTapSDK.Native {
             * @param name The event name
             * @return Boolean indication whether the event name has been discarded from Dashboard
         */
-        public UnityNativeValidationResult IsEventDiscarded(string eventName)
+        internal UnityNativeValidationResult IsEventDiscarded(string eventName)
         {
             if (string.IsNullOrEmpty(eventName))
             {
