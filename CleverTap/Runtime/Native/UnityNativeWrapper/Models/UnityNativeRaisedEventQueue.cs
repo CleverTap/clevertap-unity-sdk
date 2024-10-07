@@ -8,8 +8,8 @@ namespace CleverTapSDK.Native {
 
         protected override string QueueName => "RAISED_EVENTS";
 
-        internal UnityNativeRaisedEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeEventValidator eventValidator, int queueLimit = 49, int defaultTimerInterval = 1) : 
-            base(coreState, networkEngine,eventValidator, queueLimit, defaultTimerInterval) { }
+        internal UnityNativeRaisedEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1) : 
+            base(coreState, networkEngine, queueLimit, defaultTimerInterval) { }
 
         protected override string RequestPath => UnityNativeConstants.Network.REQUEST_PATH_RECORD;
 

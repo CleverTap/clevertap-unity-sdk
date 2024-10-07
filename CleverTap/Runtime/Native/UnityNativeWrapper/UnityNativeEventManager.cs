@@ -37,7 +37,7 @@ namespace CleverTapSDK.Native {
             _eventValidator = new UnityNativeEventValidator();
             _networkEngine = UnityNativeNetworkEngine.Create(_coreState);
             SetResponseInterceptors();
-            _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore,_eventValidator);
+            _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
 
         private void SetResponseInterceptors()
@@ -231,7 +231,7 @@ namespace CleverTapSDK.Native {
                 }
             }
 
-            var eventBuilderResult = new UnityNativeProfileEventBuilder().BuildPushEvent(properties);
+            var eventBuilderResult = new UnityNativeProfileEventBuilder(_eventValidator).BuildPushEvent(properties);
             if (eventBuilderResult.EventResult.SystemFields == null || eventBuilderResult.EventResult.CustomFields == null) {
                 return null;
             }
@@ -342,7 +342,7 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
-            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine,_eventValidator).BuildEvent(eventType, eventDetails);
+            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine).BuildEvent(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
             if (storeEvent)
@@ -353,7 +353,7 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEvent BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true) {
-            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine,_eventValidator).BuildEventWithAppFields(eventType, eventDetails);
+            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine).BuildEventWithAppFields(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
             if (storeEvent)
