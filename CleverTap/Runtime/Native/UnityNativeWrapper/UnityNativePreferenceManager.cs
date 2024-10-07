@@ -1,5 +1,6 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
+using System.Globalization;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
@@ -54,16 +55,34 @@ namespace CleverTapSDK.Native {
 
         internal long GetLong(string key, long defaultValue)
         {
-            // Use string to get long values in PlayerPrefs
-            return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString()));
+            return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
         }
 
-        internal void SetLong(string key, long value)
+        internal void SetLong(string key, string longValue)
         {
-            // Use string to set long values in PlayerPrefs
-            PlayerPrefs.SetString(GetStorageKey(key), value.ToString());
+            PlayerPrefs.SetString(GetStorageKey(key), longValue);
         }
 
+        public void SetDouble(string key, double doubleValue)
+        {
+            PlayerPrefs.SetString(GetStorageKey(key), doubleValue.ToString(CultureInfo.InvariantCulture));
+        }
+        
+        public double GetDouble(string key, double defaultValue)
+        {
+            return double.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
+        }
+        
+        public void SetBool(string key, bool value)
+        {
+            PlayerPrefs.SetInt(GetStorageKey(key), value? 1 : 0);
+        }
+
+        public bool GetBool(string key, bool defaultValue)
+        {
+            return PlayerPrefs.GetInt(GetStorageKey(key), defaultValue? 1 : 0) == 1;
+        }
+        
         internal void DeleteKey(string key)
         {
             PlayerPrefs.DeleteKey(GetStorageKey(key));
@@ -114,12 +133,13 @@ namespace CleverTapSDK.Native {
         }
 
         internal string GetKeyIdentifier(string key, string identifier) {
-            return string.Format("{0}_{1}", key, identifier);
+            return $"{key}_{identifier}";
         }
 
         internal string GetStorageKey(string suffix) {
             return $"{_accountId}:{suffix}";
         }
+        
     }
 }
 #endif

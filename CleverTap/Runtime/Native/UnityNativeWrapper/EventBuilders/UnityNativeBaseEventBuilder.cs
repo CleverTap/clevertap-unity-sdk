@@ -9,7 +9,7 @@ namespace CleverTapSDK.Native {
         private UnityNativeDeviceInfo _deviceInfo;
         private UnityNativeSessionManager _sessionManager;
         private UnityNativeNetworkEngine _networkEngine;
-
+        
         internal UnityNativeEventBuilder(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine) {
             _deviceInfo = coreState.DeviceInfo;
             _sessionManager = coreState.SessionManager;

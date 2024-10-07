@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace CleverTapSDK.Native {
-    internal class UnityNativeEventValidator {
+    public class UnityNativeEventValidator {
+        private List<string> discardedEvents;
+
         internal UnityNativeValidationResult CleanEventName(string eventName, out string cleanEventName) {
             cleanEventName = eventName;
             if (string.IsNullOrWhiteSpace(cleanEventName)) {
-                return new UnityNativeValidationResult();
+                return new UnityNativeValidationResult(510, "Event name is null or empty.");
             }
 
             cleanEventName = ReplaceNotAllowedCharacters(cleanEventName, UnityNativeConstants.Validator.KEY_NOT_ALLOWED_CHARS);
@@ -57,7 +59,7 @@ namespace CleverTapSDK.Native {
         }
 
         internal UnityNativeValidationResult CleanMultiValuePropertyValue(string multiValuePropertyValue, out string cleanMultiValuePropertyValue) {
-            return CleanProperyValue(multiValuePropertyValue, out cleanMultiValuePropertyValue);
+            return CleanPropertyValue(multiValuePropertyValue, out cleanMultiValuePropertyValue);
         }
 
         internal UnityNativeValidationResult CleanMultiValuePropertyArray(List<string> multiValuePropertyArray, out List<string> cleanMultiValuePropertyArray, string key) {
@@ -82,7 +84,7 @@ namespace CleverTapSDK.Native {
             }
 
             if (cleanObjectValue is string) {
-                var validationResult = CleanProperyValue((string)cleanObjectValue, out var cleanObjectValueString);
+                var validationResult = CleanPropertyValue((string)cleanObjectValue, out var cleanObjectValueString);
                 cleanObjectValue = cleanObjectValueString;
                 return validationResult;
             }
@@ -127,16 +129,16 @@ namespace CleverTapSDK.Native {
             return new UnityNativeValidationResult();
         }
 
-        private UnityNativeValidationResult CleanProperyValue(string propertyValue, out string cleanProperyValue) {
-            cleanProperyValue = propertyValue;
-            if (string.IsNullOrWhiteSpace(cleanProperyValue)) {
+        private UnityNativeValidationResult CleanPropertyValue(string propertyValue, out string cleanPropertyValue) {
+            cleanPropertyValue = propertyValue;
+            if (string.IsNullOrWhiteSpace(cleanPropertyValue)) {
                 return new UnityNativeValidationResult();
             }
 
-            cleanProperyValue = ReplaceNotAllowedCharacters(cleanProperyValue, UnityNativeConstants.Validator.VALUE_NOT_ALLOWED_CHARS, toLower: true);
-            if (cleanProperyValue.Length > UnityNativeConstants.Validator.MAX_VALUE_CHARS) {
-                cleanProperyValue = cleanProperyValue.Substring(0, UnityNativeConstants.Validator.MAX_VALUE_CHARS);
-                return new UnityNativeValidationResult(521, $"{cleanProperyValue}... exceeds the limit of {UnityNativeConstants.Validator.MAX_VALUE_CHARS} characters. Trimmed");
+            cleanPropertyValue = ReplaceNotAllowedCharacters(cleanPropertyValue, UnityNativeConstants.Validator.VALUE_NOT_ALLOWED_CHARS, toLower: true);
+            if (cleanPropertyValue.Length > UnityNativeConstants.Validator.MAX_VALUE_CHARS) {
+                cleanPropertyValue = cleanPropertyValue.Substring(0, UnityNativeConstants.Validator.MAX_VALUE_CHARS);
+                return new UnityNativeValidationResult(521, $"{cleanPropertyValue}... exceeds the limit of {UnityNativeConstants.Validator.MAX_VALUE_CHARS} characters. Trimmed");
             }
 
             return new UnityNativeValidationResult();
@@ -166,6 +168,46 @@ namespace CleverTapSDK.Native {
             return o is short || o is int || o is long ||
                    o is float || o is double || o is decimal;
         }
+
+        /**
+            * Checks whether the specified event name has been discarded from Dashboard. If it is,
+            * then create a pending error, and abort.
+            *
+            * @param name The event name
+            * @return Boolean indication whether the event name has been discarded from Dashboard
+        */
+        internal UnityNativeValidationResult IsEventDiscarded(string eventName)
+        {
+            if (string.IsNullOrEmpty(eventName))
+            {
+                return new UnityNativeValidationResult(510, $"event name is null or empty.");
+            }
+
+            UnityNativeValidationResult error = new UnityNativeValidationResult();
+
+            var discardedEvents = GetDiscardedEvents();
+            if (discardedEvents != null)
+            {
+                foreach (string x in discardedEvents)
+                {
+                    if (string.Equals(eventName, x, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new UnityNativeValidationResult(513,
+                            $"{eventName} is restricted event name. Last event aborted.");
+                    }
+                }
+            }
+
+            return error;
+        }
+
+        private List<string> GetDiscardedEvents()
+        {
+            return discardedEvents;
+        }
+
+        public void SetDiscardedEvents(List<string> events) => this.discardedEvents = events;
     }
+    
 }
 #endif

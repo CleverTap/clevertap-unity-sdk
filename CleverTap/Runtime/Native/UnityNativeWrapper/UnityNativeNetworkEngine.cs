@@ -12,6 +12,7 @@ using UnityEngine.Networking;
 namespace CleverTapSDK.Native {
     internal class UnityNativeNetworkEngine : MonoBehaviour {
         private SynchronizationContext _context;
+        private UnityNativeCoreState _coreState;
         private void Awake()
         {
             _context = SynchronizationContext.Current;
@@ -86,14 +87,16 @@ namespace CleverTapSDK.Native {
         private UnityNativeNetworkEngine() {
         }
 
-        internal static UnityNativeNetworkEngine Create(string accountId)
+        internal static UnityNativeNetworkEngine Create(UnityNativeCoreState coreState)
         {
-            var gameObject = new GameObject($"{accountId}_UnityNativeNetworkEngine");
+            var gameObject = new GameObject($"{coreState.AccountInfo.AccountId}_UnityNativeNetworkEngine");
             gameObject.AddComponent<UnityNativeNetworkEngine>();
             DontDestroyOnLoad(gameObject);
 
             UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
-            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
+            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            
+            component._coreState = coreState;
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         }
 
@@ -287,18 +290,32 @@ namespace CleverTapSDK.Native {
         private void ApplyNetworkEngineRequestConfiguration(UnityNativeRequest request) {
             // Set Headers
             if (_headers?.Count > 0) {
+                var allHeaders = new Dictionary<string, string>(_headers);
                 if (request.Headers == null) {
-                    request.SetHeaders(_headers.ToDictionary(x => x.Key, x => x.Value));
+                    allHeaders = _headers.ToDictionary(x => x.Key, x => x.Value);
                 } else {
-                    var allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
+                    allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
                     foreach (var header in _headers) {
                         // Do not overwrite existing headers
                         if (!allHeaders.ContainsKey(header.Key)) {
                             allHeaders.Add(header.Key, header.Value);
                         }
                     }
-                    request.SetHeaders(allHeaders);
                 }
+                
+                long i = GetI();
+                if (i > 0) {
+                    allHeaders.Add("_i", i+"");
+                }
+
+                long j = GetJ();
+                if (j > 0) {
+                    allHeaders.Add("_j", j+"");
+                }
+                
+                //Add ARP 
+                allHeaders = AddARP(allHeaders);
+                request.SetHeaders(allHeaders);
             }
 
             // Set Timeout
@@ -332,6 +349,42 @@ namespace CleverTapSDK.Native {
                     request.SetResponseInterceptors(allResponseInterceptors);
                 }
             }
+        }
+
+        private Dictionary<string, string> AddARP(Dictionary<string, string> headers)
+        {
+            string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
+                _coreState.AccountInfo.AccountId, _coreState.DeviceInfo.DeviceId);
+            var arpJson = _preferenceManager.GetString(arpNamespaceKey, string.Empty);
+            if (string.IsNullOrEmpty(arpJson))
+                return headers;
+
+            Dictionary<string, object> arpDictionary = Json.Deserialize(arpJson) as Dictionary<string, object>;
+            if (arpDictionary == null || arpDictionary.Count == 0)
+                return headers;
+
+            var keysToRemove = new List<string>();
+    
+            foreach (var param in arpDictionary)
+            {
+                if (param.Value is string strValue && strValue.Length > 100)
+                {
+                    keysToRemove.Add(param.Key);
+                }
+                else if (param.Value is int intValue && intValue == -1)
+                {
+                    keysToRemove.Add(param.Key);
+                }
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                arpDictionary.Remove(key);
+            }
+
+            headers[UnityNativeConstants.Network.ARP_KEY] = Json.Serialize(arpDictionary);
+
+            return headers;
         }
 
         private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request) {
@@ -386,6 +439,19 @@ namespace CleverTapSDK.Native {
                 return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, ex.Message);
             }
         }
+
+        public long GetI()
+        {
+            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_I}:{_coreState.AccountInfo.AccountId}";
+            return _preferenceManager.GetLong( tempKey,0);
+        }
+        
+        public long GetJ()
+        {
+            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_coreState.AccountInfo.AccountId}";
+            return _preferenceManager.GetLong( tempKey,0);
+        }
+        
     }
 }
 #endif

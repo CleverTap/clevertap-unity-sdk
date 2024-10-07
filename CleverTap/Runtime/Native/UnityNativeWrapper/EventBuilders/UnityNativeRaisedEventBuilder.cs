@@ -5,22 +5,30 @@ using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeRaisedEventBuilder {
-        internal UnityNativeRaisedEventBuilder() { }
-
+         private readonly UnityNativeEventValidator _eventValidator;
+         internal UnityNativeRaisedEventBuilder(UnityNativeEventValidator eventValidator)
+        {
+            this._eventValidator = eventValidator;
+        }
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> Build(string eventName, Dictionary<string, object> properties = null) {
-            var eventValidator = new UnityNativeEventValidator();
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             if (string.IsNullOrWhiteSpace(eventName)) {
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
             }
 
-            var isRestrictedNameValidationResult = eventValidator.IsRestrictedName(eventName);
+            var isRestrictedNameValidationResult = _eventValidator.IsRestrictedName(eventName);
             if (!isRestrictedNameValidationResult.IsSuccess) {
                 eventValidationResultsWithErrors.Add(isRestrictedNameValidationResult);
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
             }
+            
+            var isDiscardedValidationResult = _eventValidator.IsEventDiscarded(eventName);
+            if (!isDiscardedValidationResult.IsSuccess) {
+                eventValidationResultsWithErrors.Add(isDiscardedValidationResult);
+                return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
+            }
 
-            var cleanEventNameValidationResult = eventValidator.CleanEventName(eventName, out var cleanEventName);
+            var cleanEventNameValidationResult = _eventValidator.CleanEventName(eventName, out var cleanEventName);
             if (!cleanEventNameValidationResult.IsSuccess) {
                 eventValidationResultsWithErrors.Add(cleanEventNameValidationResult);
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
@@ -33,18 +41,17 @@ namespace CleverTapSDK.Native {
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, eventDetails);
             }
 
-            var cleanObjectDictonaryValidationResult = CleanObjectDictonary(properties);
-            if (cleanObjectDictonaryValidationResult.ValidationResults.Any(vr => !vr.IsSuccess)) {
-                eventValidationResultsWithErrors.AddRange(cleanObjectDictonaryValidationResult.ValidationResults.Where(vr => !vr.IsSuccess));
+            var cleanObjectDictionaryValidationResult = CleanObjectDictonary(properties);
+            if (cleanObjectDictionaryValidationResult.ValidationResults.Any(vr => !vr.IsSuccess)) {
+                eventValidationResultsWithErrors.AddRange(cleanObjectDictionaryValidationResult.ValidationResults.Where(vr => !vr.IsSuccess));
             }
 
-            eventDetails.Add(UnityNativeConstants.Event.EVENT_DATA, cleanObjectDictonaryValidationResult.EventResult);
+            eventDetails.Add(UnityNativeConstants.Event.EVENT_DATA, cleanObjectDictionaryValidationResult.EventResult);
 
             return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, eventDetails);
         }
 
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> BuildChargedEvent(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
-            var eventValidator = new UnityNativeEventValidator();
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             if (details == null || items == null) {
                 return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, null);
@@ -83,17 +90,16 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEventBuilderResult<Dictionary<string, object>> CleanObjectDictonary(Dictionary<string, object> objectDictonary) {
-            var eventValidator = new UnityNativeEventValidator();
             var cleanObjectDictonary = new Dictionary<string, object>();
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             foreach (var (key, value) in objectDictonary) {
-                var cleanObjectKeyValdaitonReuslt = eventValidator.CleanObjectKey(key, out var cleanKey);
+                var cleanObjectKeyValdaitonReuslt = _eventValidator.CleanObjectKey(key, out var cleanKey);
                 if (!cleanObjectKeyValdaitonReuslt.IsSuccess) {
                     eventValidationResultsWithErrors.Add(cleanObjectKeyValdaitonReuslt);
                     continue;
                 }
 
-                var cleanObjectValue = eventValidator.CleanObjectValue(value, out var cleanValue, false);
+                var cleanObjectValue = _eventValidator.CleanObjectValue(value, out var cleanValue, false);
                 if (!cleanObjectValue.IsSuccess) {
                     eventValidationResultsWithErrors.Add(cleanObjectValue);
                     continue;
