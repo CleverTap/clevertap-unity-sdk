@@ -446,21 +446,10 @@ namespace CleverTapSDK.Native {
             return _preferenceManager.GetLong( tempKey,0);
         }
         
-        public void SetI(long l)
-        {
-            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_I}:{_coreState.AccountInfo.AccountId}";
-            _preferenceManager.SetLong( tempKey,l+"");
-        }
-        
         public long GetJ()
         {
             string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_coreState.AccountInfo.AccountId}";
             return _preferenceManager.GetLong( tempKey,0);
-        }
-        public void SetJ(long l)
-        {
-            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_coreState.AccountInfo.AccountId}";
-            _preferenceManager.SetLong( tempKey,l+"");
         }
         
     }
