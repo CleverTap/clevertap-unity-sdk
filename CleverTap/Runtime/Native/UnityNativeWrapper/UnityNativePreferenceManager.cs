@@ -55,8 +55,7 @@ namespace CleverTapSDK.Native {
 
         internal long GetLong(string key, long defaultValue)
         {
-            // Use string to get long values in PlayerPrefs
-            return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString()));
+            return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
         }
 
         internal void SetLong(string key, string longValue)
@@ -64,18 +63,19 @@ namespace CleverTapSDK.Native {
             PlayerPrefs.SetString(GetStorageKey(key), longValue);
         }
 
-        public void SetDouble(string key, string doubleValue)
+        public void SetDouble(string key, double doubleValue)
         {
-            PlayerPrefs.SetString(GetStorageKey(key), doubleValue.ToString());
+            PlayerPrefs.SetString(GetStorageKey(key), doubleValue.ToString(CultureInfo.InvariantCulture));
         }
         
         public double GetDouble(string key, double defaultValue)
         {
             return double.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
         }
-        public void SetBool(string key, int value)
+        
+        public void SetBool(string key, bool value)
         {
-            PlayerPrefs.SetInt(GetStorageKey(key), value);
+            PlayerPrefs.SetInt(GetStorageKey(key), value? 1 : 0);
         }
 
         public bool GetBool(string key, bool defaultValue)
