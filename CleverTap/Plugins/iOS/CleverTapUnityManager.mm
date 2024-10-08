@@ -74,8 +74,17 @@ static NSString * kCleverTapInAppsFetched = @"CleverTapInAppsFetched";
     [self launchWithAccountID:accountID token:token region:nil];
 }
 
-+ (void)launchWithAccountID:(NSString*)accountID token:(NSString *)token region:(NSString *)region {
++ (void)launchWithAccountID:(NSString *)accountID token:(NSString *)token region:(NSString *)region {
     [CleverTap setCredentialsWithAccountID:accountID token:token region:region];
+    [self performCommonLaunchTasks];
+}
+
++ (void)launchWithAccountID:(NSString *)accountID token:(NSString *)token proxyDomain:(NSString *)proxyDomain spikyProxyDomain:(NSString *)spikyProxyDomain {
+    [CleverTap setCredentialsWithAccountID:accountID token:token proxyDomain:proxyDomain spikyProxyDomain:spikyProxyDomain];
+    [self performCommonLaunchTasks];
+}
+
++ (void)performCommonLaunchTasks {
     // Initialize CleverTapUnityManager to register listeners and set delegates
     [CleverTapUnityManager sharedInstance];
     [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];

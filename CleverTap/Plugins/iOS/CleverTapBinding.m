@@ -135,6 +135,10 @@ void CleverTap_launchWithCredentialsForRegion(const char* accountID, const char*
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) region:clevertap_stringToNSString(region)];
 }
 
+void CleverTap_launchWithCredentialsForProxyServer(const char* accountID, const char* token, const char* proxyDomain, const char* spikyProxyDomain) {
+    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) region:clevertap_stringToNSString(region)];
+}
+
 void CleverTap_setDebugLevel(int level) {
     [CleverTapUnityManager setDebugLevel:level];
 }
