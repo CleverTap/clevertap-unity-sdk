@@ -47,6 +47,9 @@ namespace CleverTapSDK.Common {
 
         public event CleverTapCallbackDelegate OnOneTimeVariablesChanged;
 
+        public event CleverTapCallbackDelegate OnOneTimeVariablesChangedAndNoDownloadsPending;
+        
+        public event CleverTapCallbackDelegate OnVariablesChangedAndNoDownloadsPending;
         #endregion
 
         #region Default - Callback Methods
@@ -257,7 +260,20 @@ namespace CleverTapSDK.Common {
                 OnOneTimeVariablesChanged = null;
             }
         }
+        
+        //invoked when variable values are changed and the files associated with it are downloaded and ready to be used.
+        public virtual void CleverTapVariablesChangedAndNoDownloadsPending() {
+            CleverTapLogger.Log("Unity received variables changed and no downloads pending ");
+            if (OnVariablesChangedAndNoDownloadsPending != null) {
+                OnVariablesChangedAndNoDownloadsPending();
+            }
 
+            if (OnOneTimeVariablesChangedAndNoDownloadsPending != null) {
+                OnOneTimeVariablesChangedAndNoDownloadsPending();
+                OnOneTimeVariablesChangedAndNoDownloadsPending = null;
+            }
+        }
+        
         // invoked when an variable value changed
         public virtual void CleverTapVariableValueChanged(string variableName) {
             CleverTapLogger.Log("Unity received variables changed: " + (!String.IsNullOrEmpty(variableName) ? variableName : "NULL"));

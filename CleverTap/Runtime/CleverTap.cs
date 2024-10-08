@@ -127,6 +127,15 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnOneTimeVariablesChanged -= value;
         }
 
+        public static event CleverTapCallbackDelegate OnVariablesChangedAndNoDownloadsPending {
+            add => cleverTapCallbackHandler.OnVariablesChangedAndNoDownloadsPending += value;
+            remove => cleverTapCallbackHandler.OnVariablesChangedAndNoDownloadsPending -= value;
+        }
+        
+        public static event CleverTapCallbackDelegate OnOneTimeVariablesChangedAndNoDownloadsPending {
+            add => cleverTapCallbackHandler.OnOneTimeVariablesChangedAndNoDownloadsPending += value;
+            remove => cleverTapCallbackHandler.OnOneTimeVariablesChangedAndNoDownloadsPending -= value;
+        }
         #endregion
 
         #region Methods - CleverTap Platform Bindings

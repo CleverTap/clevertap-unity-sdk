@@ -105,6 +105,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_VARIABLES_FETCHED = "CleverTapVariablesFetched";
     
     private static final String CLEVERTAP_INAPPS_FETCHED = "CleverTapInAppsFetched";
+    
+    private static final String CLEVERTAP_VARIABLES_CHANGED = "CleverTapVariablesChanged";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -220,6 +222,13 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED, "{ Variables Changed Callback }");
                     }
                 });
+                clevertap.onVariablesChangedAndNoDownloadsPending(new VariablesChangedCallback() {
+                                    @Override
+                                    public void variablesChanged() {
+                                        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED, "{ Variables Changed Callback }");
+                                    }
+                                });
+              
             }
         } catch (Throwable t) {
             Log.e(LOG_TAG, "initialization error", t);
@@ -753,6 +762,17 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
+    public void defineFileVariables(string variableName){
+        Var<string> variable = clevertap.defineFileVariables(variableName);
+        if (variable != null) {
+            variable.addValueChangedCallback(new VariableCallback() {
+                @Override
+                public void onValueChanged(Var variable) {
+                    messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLE_VALUE_CHANGED, variable.name());
+                }
+            });
+        }
+    }
     public String getVariableValue(String variableName) {
         Object value = clevertap.getVariableValue(variableName);
         if (value == null) {
