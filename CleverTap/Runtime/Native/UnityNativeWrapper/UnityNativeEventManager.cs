@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Native.UnityNativeWrapper.Models;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
