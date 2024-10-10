@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CleverTapSDK.Utilities;
+using Native.UnityNativeWrapper.Models;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeRaisedEventBuilder {
