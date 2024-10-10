@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
@@ -33,7 +32,7 @@ namespace CleverTapSDK.Native
                         }
                         catch (Exception t)
                         {
-                            CleverTapLogger.Log("Failed to process ARP discarded events");
+                            CleverTapLogger.Log($"Failed to process ARP discarded events, Exception: {t.Message}, Stack Trace: {t.StackTrace}");
                         }
 
                         HandleARPUpdate(arp);
@@ -41,7 +40,7 @@ namespace CleverTapSDK.Native
             }
             catch (Exception exception)
             {
-                CleverTapLogger.Log("Failed to process ARP");
+                CleverTapLogger.Log($"Failed to process ARP, Exception: {exception.Message}, Stack Trace: {exception.StackTrace}");
             }
 
             return response;
