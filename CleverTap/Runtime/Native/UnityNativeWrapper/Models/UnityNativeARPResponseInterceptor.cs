@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
-namespace CleverTapSDK.Native
+namespace Native.UnityNativeWrapper.Models
 {
     internal class UnityNativeARPResponseInterceptor : IUnityNativeResponseInterceptor
     {
@@ -19,6 +20,11 @@ namespace CleverTapSDK.Native
 
         UnityNativeResponse IUnityNativeResponseInterceptor.Intercept(UnityNativeResponse response)
         {
+            if (response == null || string.IsNullOrEmpty(response.Content))
+            {
+                CleverTapLogger.Log($"Failed to process ARP, Response is Null or Empty!");
+                return null;
+            } 
             var result = Json.Deserialize(response.Content) as Dictionary<string, object>;
             try
             {

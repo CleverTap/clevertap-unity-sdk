@@ -58,9 +58,9 @@ namespace CleverTapSDK.Native {
             return long.Parse(PlayerPrefs.GetString(GetStorageKey(key), defaultValue.ToString(CultureInfo.InvariantCulture)));
         }
 
-        internal void SetLong(string key, string longValue)
+        internal void SetLong(string key, long longValue)
         {
-            PlayerPrefs.SetString(GetStorageKey(key), longValue);
+            PlayerPrefs.SetString(GetStorageKey(key), longValue.ToString(CultureInfo.InvariantCulture));
         }
 
         public void SetDouble(string key, double doubleValue)
