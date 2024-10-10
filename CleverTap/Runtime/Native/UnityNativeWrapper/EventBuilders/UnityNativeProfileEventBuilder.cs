@@ -1,6 +1,7 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using Native.UnityNativeWrapper.Models;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeProfileEventBuilder {
