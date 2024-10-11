@@ -303,6 +303,8 @@ namespace CleverTapSDK.Native {
             }
 
             var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator).Build(eventName, properties);
+            if(eventBuilderResult.EventResult == null)
+                return null;
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }

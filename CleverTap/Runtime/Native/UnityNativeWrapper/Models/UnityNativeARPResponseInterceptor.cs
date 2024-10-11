@@ -28,8 +28,8 @@ namespace Native.UnityNativeWrapper.Models
             var result = Json.Deserialize(response.Content) as Dictionary<string, object>;
             try
             {
-                if (result.ContainsKey("arp"))
-                    if (Json.Deserialize(result["arp"].ToString()) is Dictionary<string, object> { Count: > 0 } arp)
+                if (result != null && result.ContainsKey(UnityNativeConstants.Network.ARP_KEY))
+                    if (result[UnityNativeConstants.Network.ARP_KEY] is Dictionary<string, object> { Count: > 0 } arp)
                     {
                         //Handle Discarded events in ARP
                         try
@@ -102,9 +102,9 @@ namespace Native.UnityNativeWrapper.Models
         }
 
 
-        private void ProcessDiscardedEventsList(Dictionary<string, object> response)
+        private void ProcessDiscardedEventsList(Dictionary<string, object> arp)
         {
-            if (!response.ContainsKey(UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY))
+            if (!arp.ContainsKey(UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY))
             {
                 CleverTapLogger.Log("ARP doesn't contain the Discarded Events key");
                 return;
@@ -112,13 +112,10 @@ namespace Native.UnityNativeWrapper.Models
 
             try
             {
-                var discardedEventsList = new List<string>();
-                // Get the discarded event JSON from the response
-                string discardedEventsJson = response[UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY].ToString();
-                var discardedEventsArray = Json.Deserialize(discardedEventsJson) as List<string>;
-                if (discardedEventsArray != null)
+                var discardedEventsList = arp[UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY] as List<string>;
+                if (discardedEventsList == null || discardedEventsList.Count == 0)
                 {
-                    discardedEventsList.AddRange(discardedEventsArray);
+                    discardedEventsList = new List<string>();
                 }
                 if (_eventValidator != null)
                     _eventValidator.SetDiscardedEvents(discardedEventsList);
