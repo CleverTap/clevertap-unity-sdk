@@ -1,5 +1,7 @@
 ﻿#if UNITY_ANDROID
+using System;
 using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Android {
@@ -16,6 +18,14 @@ namespace CleverTapSDK.Android {
         protected override Var<T> DefineVariable<T>(string name, string kind, T defaultValue) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineVar", name, kind, Json.Serialize(defaultValue));
             Var<T> result = new AndroidVar<T>(name, kind, defaultValue);
+            varCache.Add(name, result);
+            return result;
+        }
+
+        protected override Var<string> DefineFileVariable<T>(string name)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineFileVariables", name);
+            Var<string> result = new AndroidVar<string>(name, CleverTapVariableKind.FILE, null);
             varCache.Add(name, result);
             return result;
         }

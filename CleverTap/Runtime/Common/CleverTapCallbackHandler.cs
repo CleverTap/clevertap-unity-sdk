@@ -47,6 +47,12 @@ namespace CleverTapSDK.Common {
 
         public event CleverTapCallbackDelegate OnOneTimeVariablesChanged;
 
+        public event CleverTapCallbackDelegate OnOneTimeVariablesChangedAndNoDownloadsPending;
+        
+        public event CleverTapCallbackDelegate OnVariablesChangedAndNoDownloadsPending;
+        
+        public event CleverTapCallbackWithMessageDelegate OnFileVariableReady;
+        
         #endregion
 
         #region Default - Callback Methods
@@ -257,7 +263,35 @@ namespace CleverTapSDK.Common {
                 OnOneTimeVariablesChanged = null;
             }
         }
+        
+        //invoked when variable values are changed and the files associated with it are downloaded and ready to be used.
+        public virtual void CleverTapVariablesChangedAndNoDownloadsPending() {
+            CleverTapLogger.Log("Unity received variables changed and no downloads pending ");
+            if (OnVariablesChangedAndNoDownloadsPending != null) {
+                OnVariablesChangedAndNoDownloadsPending();
+            }
 
+            if (OnOneTimeVariablesChangedAndNoDownloadsPending != null) {
+                OnOneTimeVariablesChangedAndNoDownloadsPending();
+                OnOneTimeVariablesChangedAndNoDownloadsPending = null;
+            }
+        }
+        
+        public virtual void CleverTapFileVariablesDownloaded(string variableName) {
+            CleverTapLogger.Log(" CleverTapFileVariablesDownloaded Unity received variables changed");
+            if (OnVariablesChanged != null) {
+                OnVariablesChanged();
+            }
+
+            if (OnOneTimeVariablesChanged != null) {
+                OnOneTimeVariablesChanged();
+                OnOneTimeVariablesChanged = null;
+            }
+            
+            CleverTapLogger.Log("[OnFileVariablesFileDownloaded]Unity received variables changed: " + (!String.IsNullOrEmpty(variableName) ? variableName : "NULL"));
+            VariableFactory.CleverTapVariable.VariablesFilesDownloadedAndReady(variableName);
+        }
+        
         // invoked when an variable value changed
         public virtual void CleverTapVariableValueChanged(string variableName) {
             CleverTapLogger.Log("Unity received variables changed: " + (!String.IsNullOrEmpty(variableName) ? variableName : "NULL"));
@@ -276,7 +310,7 @@ namespace CleverTapSDK.Common {
 
         #endregion
 
-        #region Default - Variables Callbacks
+        #region Default - InApps Callbacks
 
         public virtual void CleverTapInAppsFetched(string message) {
             CleverTapLogger.Log("unity received InApps fetched response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));

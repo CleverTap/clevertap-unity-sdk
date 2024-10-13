@@ -26,7 +26,6 @@ namespace CleverTapSDK.Native
 
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
-
         private Coroutine timerCoroutine;
 
         internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
