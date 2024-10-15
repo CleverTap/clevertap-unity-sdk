@@ -189,6 +189,10 @@ namespace CleverTapSDK.IOS {
             IOSDllImport.CleverTap_launchWithCredentialsForRegion(accountID, token, region);
         }
 
+        internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
+            IOSDllImport.CleverTap_launchWithCredentialsForProxyServer(accountID, token, proxyDomain, spikyProxyDomain);
+        }
+        
         internal override void MarkReadInboxMessageForID(string messageId) {
             IOSDllImport.CleverTap_markReadInboxMessageForID(messageId);
         }

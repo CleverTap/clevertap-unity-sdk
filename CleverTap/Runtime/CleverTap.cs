@@ -242,6 +242,9 @@ namespace CleverTapSDK {
         public static void LaunchWithCredentialsForRegion(string accountID, string token, string region) =>
             cleverTapBinding.LaunchWithCredentialsForRegion(accountID, token, region);
 
+        public static void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) =>
+            cleverTapBinding.LaunchWithCredentialsForProxyServer(accountID, token, proxyDomain, spikyProxyDomain);
+        
         public static void MarkReadInboxMessageForID(string messageId) =>
             cleverTapBinding.MarkReadInboxMessageForID(messageId);
 
