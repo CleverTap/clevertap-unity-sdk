@@ -19,6 +19,11 @@ namespace CleverTapSDK.IOS {
             varCache.Add(name, result);
             return result;
         }
+
+        protected override Var<string> DefineFileVariable<T>(string name)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 #endif
