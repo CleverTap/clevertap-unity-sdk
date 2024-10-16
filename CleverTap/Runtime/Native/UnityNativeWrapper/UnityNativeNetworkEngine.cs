@@ -303,19 +303,8 @@ namespace CleverTapSDK.Native {
                     }
                 }
                 
-                long i = GetI();
-                if (i > 0) {
-                    allHeaders.Add("_i", i+"");
-                }
-
-                long j = GetJ();
-                if (j > 0) {
-                    allHeaders.Add("_j", j+"");
-                }
                 
-                //Add ARP 
-                allHeaders = AddARP(allHeaders);
-                request.SetHeaders(allHeaders);
+                 request.SetHeaders(allHeaders);
             }
 
             // Set Timeout
@@ -385,6 +374,41 @@ namespace CleverTapSDK.Native {
             headers[UnityNativeConstants.Network.ARP_KEY] = Json.Serialize(arpDictionary);
 
             return headers;
+        }
+        
+        public Dictionary<string,object> GetARP()
+        {
+            string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
+                _coreState.AccountInfo.AccountId, _coreState.DeviceInfo.DeviceId);
+            var arpJson = _preferenceManager.GetString(arpNamespaceKey, string.Empty);
+            Dictionary<string,string> arp = new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(arpJson))
+                return null;
+
+            Dictionary<string, object> arpDictionary = Json.Deserialize(arpJson) as Dictionary<string, object>;
+            if (arpDictionary == null || arpDictionary.Count == 0)
+                return null;
+
+            var keysToRemove = new List<string>();
+    
+            foreach (var param in arpDictionary)
+            {
+                if (param.Value is string strValue && strValue.Length > 100)
+                {
+                    keysToRemove.Add(param.Key);
+                }
+                else if (param.Value is int intValue && intValue == -1)
+                {
+                    keysToRemove.Add(param.Key);
+                }
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                arpDictionary.Remove(key);
+            }
+
+            return arpDictionary;
         }
 
         private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request) {
