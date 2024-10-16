@@ -165,17 +165,12 @@ namespace CleverTapSDK.Native
                 { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, new UnityNativeEventBuilder(coreState, networkEngine).BuildAppFields() },
                 { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
-                { UnityNativeConstants.EventMeta.KEY_I, networkEngine.GetI() },
-                { UnityNativeConstants.EventMeta.KEY_J, networkEngine.GetJ() },
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() }
             };
-            Dictionary<string,object> arpObject = networkEngine.GetARP();
-            if (arpObject != null)
-                metaDetails[UnityNativeConstants.Network.ARP_KEY] = arpObject;
+
             return metaDetails;
         }
 
-        
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);
 
         protected void OnEventError()
