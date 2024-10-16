@@ -1,13 +1,16 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using Native.UnityNativeWrapper.Models;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeProfileEventBuilder {
-        internal UnityNativeProfileEventBuilder() { }
-
+        private readonly UnityNativeEventValidator _eventValidator;
+        internal UnityNativeProfileEventBuilder(UnityNativeEventValidator eventValidator)
+        {
+            this._eventValidator = eventValidator;
+        }
         internal UnityNativeEventBuilderResult<UnityNativePushEventResult> BuildPushEvent(Dictionary<string, object> properties) {
-            var eventValidator = new UnityNativeEventValidator();
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             if (properties == null || properties.Count == 0) {
                 return new UnityNativeEventBuilderResult<UnityNativePushEventResult>(eventValidationResultsWithErrors, new UnityNativePushEventResult(null, null));
@@ -36,17 +39,16 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEventBuilderResult<Dictionary<string, object>> CleanObjectDictonary(Dictionary<string, object> objectDictonary) {
-            var eventValidator = new UnityNativeEventValidator();
             var cleanObjectDictonary = new Dictionary<string, object>();
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             foreach (var (key, value) in objectDictonary) {
-                var cleanObjectKeyValdaitonReuslt = eventValidator.CleanObjectKey(key, out var cleanKey);
-                if (!cleanObjectKeyValdaitonReuslt.IsSuccess) {
-                    eventValidationResultsWithErrors.Add(cleanObjectKeyValdaitonReuslt);
+                var cleanObjectKeyValidationResult = _eventValidator.CleanObjectKey(key, out var cleanKey);
+                if (!cleanObjectKeyValidationResult.IsSuccess) {
+                    eventValidationResultsWithErrors.Add(cleanObjectKeyValidationResult);
                     continue;
                 }
 
-                var cleanObjectValue = eventValidator.CleanObjectValue(value, out var cleanValue, true);
+                var cleanObjectValue = _eventValidator.CleanObjectValue(value, out var cleanValue, true);
                 if (!cleanObjectValue.IsSuccess) {
                     eventValidationResultsWithErrors.Add(cleanObjectValue);
                     continue;
