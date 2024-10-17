@@ -102,7 +102,7 @@ namespace CleverTapSDK.Native {
                 request.timeout = UnityNativeConstants.Network.DEFAUL_REQUEST_TIMEOUT_SEC;
             }
 
-            CleverTapLogger.Log($"Build Request: {uri}, with body: {_requestBody}, " +
+            CleverTapLogger.Log($"Build Request: {uri}, with headers: {Json.Serialize(_headers)}, body: {_requestBody}, " +
                 $"and query parameters: [{Json.Serialize(_queryParameters)}]");
 
             return request;

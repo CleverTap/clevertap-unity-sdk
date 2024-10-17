@@ -12,6 +12,7 @@ using UnityEngine.Networking;
 namespace CleverTapSDK.Native {
     internal class UnityNativeNetworkEngine : MonoBehaviour {
         private SynchronizationContext _context;
+
         private void Awake()
         {
             _context = SynchronizationContext.Current;
@@ -86,14 +87,15 @@ namespace CleverTapSDK.Native {
         private UnityNativeNetworkEngine() {
         }
 
-        internal static UnityNativeNetworkEngine Create(string accountId)
+        internal static UnityNativeNetworkEngine Create(UnityNativeCoreState coreState)
         {
-            var gameObject = new GameObject($"{accountId}_UnityNativeNetworkEngine");
+            var gameObject = new GameObject($"{coreState.AccountInfo.AccountId}_UnityNativeNetworkEngine");
             gameObject.AddComponent<UnityNativeNetworkEngine>();
             DontDestroyOnLoad(gameObject);
 
             UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
-            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
+            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         }
 
@@ -287,18 +289,19 @@ namespace CleverTapSDK.Native {
         private void ApplyNetworkEngineRequestConfiguration(UnityNativeRequest request) {
             // Set Headers
             if (_headers?.Count > 0) {
+                var allHeaders = new Dictionary<string, string>(_headers);
                 if (request.Headers == null) {
-                    request.SetHeaders(_headers.ToDictionary(x => x.Key, x => x.Value));
+                    allHeaders = _headers.ToDictionary(x => x.Key, x => x.Value);
                 } else {
-                    var allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
+                    allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
                     foreach (var header in _headers) {
                         // Do not overwrite existing headers
                         if (!allHeaders.ContainsKey(header.Key)) {
                             allHeaders.Add(header.Key, header.Value);
                         }
                     }
-                    request.SetHeaders(allHeaders);
                 }
+                request.SetHeaders(allHeaders);
             }
 
             // Set Timeout
