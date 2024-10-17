@@ -221,8 +221,9 @@ namespace CleverTapSDK.Native {
             internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
             
-            internal const string ARP_NAMESPACE_KEY = "ARP:{0}:{1}";
+            internal const string ARP_NAMESPACE_KEY = "ARP:{0}";
             internal const string ARP_KEY = "arp";
+            internal const string DISCARDED_EVENTS_NAMESPACE_KEY = "DISCARDED_EVENTS:{0}";
         }
 
         internal static class Commands {

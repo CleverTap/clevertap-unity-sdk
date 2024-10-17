@@ -12,7 +12,7 @@ using UnityEngine.Networking;
 namespace CleverTapSDK.Native {
     internal class UnityNativeNetworkEngine : MonoBehaviour {
         private SynchronizationContext _context;
-        private UnityNativeCoreState _coreState;
+
         private void Awake()
         {
             _context = SynchronizationContext.Current;
@@ -96,7 +96,6 @@ namespace CleverTapSDK.Native {
             UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
             component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
             
-            component._coreState = coreState;
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         }
 
@@ -302,8 +301,6 @@ namespace CleverTapSDK.Native {
                         }
                     }
                 }
-                //Add ARP 
-                allHeaders = AddARP(allHeaders);
                 request.SetHeaders(allHeaders);
             }
 
@@ -338,42 +335,6 @@ namespace CleverTapSDK.Native {
                     request.SetResponseInterceptors(allResponseInterceptors);
                 }
             }
-        }
-
-        private Dictionary<string, string> AddARP(Dictionary<string, string> headers)
-        {
-            string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
-                _coreState.AccountInfo.AccountId, _coreState.DeviceInfo.DeviceId);
-            var arpJson = _preferenceManager.GetString(arpNamespaceKey, string.Empty);
-            if (string.IsNullOrEmpty(arpJson))
-                return headers;
-
-            Dictionary<string, object> arpDictionary = Json.Deserialize(arpJson) as Dictionary<string, object>;
-            if (arpDictionary == null || arpDictionary.Count == 0)
-                return headers;
-
-            var keysToRemove = new List<string>();
-    
-            foreach (var param in arpDictionary)
-            {
-                if (param.Value is string strValue && strValue.Length > 100)
-                {
-                    keysToRemove.Add(param.Key);
-                }
-                else if (param.Value is int intValue && intValue == -1)
-                {
-                    keysToRemove.Add(param.Key);
-                }
-            }
-
-            foreach (var key in keysToRemove)
-            {
-                arpDictionary.Remove(key);
-            }
-
-            headers[UnityNativeConstants.Network.ARP_KEY] = Json.Serialize(arpDictionary);
-
-            return headers;
         }
 
         private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request) {

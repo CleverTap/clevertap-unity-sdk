@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Native.UnityNativeWrapper.Models;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
@@ -27,24 +26,36 @@ namespace CleverTapSDK.Native {
             _callbackHandler = callbackHandler;
         }
 
-        private void Initialize(string accountId, string token, string region = null)
-        {
+        private void Initialize(string accountId, string token, string region = null) {
             _accountId = accountId;
             UnityNativeAccountInfo accountInfo = new UnityNativeAccountInfo(accountId, token, region);
             _coreState = new UnityNativeCoreState(accountInfo);
 
             _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(_accountId);
             _databaseStore = new UnityNativeDatabaseStore($"{_accountId}_{NATIVE_EVENTS_DB_CACHE}");
-            _eventValidator = new UnityNativeEventValidator();
+
+            _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
             _networkEngine = UnityNativeNetworkEngine.Create(_coreState);
             SetResponseInterceptors();
             _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
 
-        private void SetResponseInterceptors()
-        {
-            List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>();
-            responseInterceptors.Add(new UnityNativeARPResponseInterceptor(_accountId,_coreState.DeviceInfo.DeviceId,_eventValidator));
+        private List<string> LoadDiscardedEvents() {
+            string deKey = string.Format(UnityNativeConstants.Network.DISCARDED_EVENTS_NAMESPACE_KEY, _coreState.DeviceInfo.DeviceId);
+            var discardedEventsSerialized = _preferenceManager.GetString(deKey, "[]");
+            List<string> discardedEventNames = new List<string>();
+            if (Json.Deserialize(discardedEventsSerialized) is List<object> discardedEvents && discardedEvents.Count > 0)
+            {
+                discardedEventNames = discardedEvents.Select(e => e.ToString()).ToList();
+            }
+            return discardedEventNames;
+        }
+
+        private void SetResponseInterceptors() {
+            List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>
+            {
+                new UnityNativeARPResponseInterceptor(_accountId, _coreState.DeviceInfo.DeviceId, _eventValidator)
+            };
             _networkEngine.SetResponseInterceptors(responseInterceptors);
         }
         

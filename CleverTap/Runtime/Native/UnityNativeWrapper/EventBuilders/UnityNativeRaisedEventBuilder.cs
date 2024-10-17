@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using CleverTapSDK.Utilities;
-using Native.UnityNativeWrapper.Models;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeRaisedEventBuilder {
          private readonly UnityNativeEventValidator _eventValidator;
-         internal UnityNativeRaisedEventBuilder(UnityNativeEventValidator eventValidator)
-        {
-            this._eventValidator = eventValidator;
+
+        internal UnityNativeRaisedEventBuilder(UnityNativeEventValidator eventValidator) {
+            _eventValidator = eventValidator;
         }
+
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> Build(string eventName, Dictionary<string, object> properties = null) {
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             if (string.IsNullOrWhiteSpace(eventName)) {
