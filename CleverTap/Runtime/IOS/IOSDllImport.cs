@@ -248,6 +248,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_defineVar(string name, string kind, string jsonValue);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_defineFileVar(string name);
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_syncVariables();
 
         [DllImport("__Internal")]

@@ -1,5 +1,6 @@
 ﻿#if UNITY_IOS
 using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.IOS {
@@ -20,9 +21,11 @@ namespace CleverTapSDK.IOS {
             return result;
         }
 
-        protected override Var<string> DefineFileVariable<T>(string name)
-        {
-            throw new System.NotImplementedException();
+        internal override Var<string> DefineFileVariable(string name) {
+            IOSDllImport.CleverTap_defineFileVar(name);
+            Var<string> result = new IOSVar<string>(name, CleverTapVariableKind.FILE, null);
+            varCache.Add(name, result);
+            return result;
         }
     }
 }

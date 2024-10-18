@@ -34,7 +34,9 @@ static NSString * kCleverTapFeatureFlagsUpdated = @"CleverTapFeatureFlagsUpdated
 static NSString * kCleverTapPushPermissionResponseReceived = @"CleverTapPushPermissionResponseReceived";
 static NSString * kCleverTapPushNotificationPermissionStatus = @"CleverTapPushNotificationPermissionStatus";
 static NSString * kCleverTapVariablesChanged = @"CleverTapVariablesChanged";
+static NSString * kCleverTapVariablesChangedAndNoDownloadsPending = @"CleverTapVariablesChangedAndNoDownloadsPending";
 static NSString * kCleverTapVariableValueChanged = @"CleverTapVariableValueChanged";
+static NSString * kCleverTapVariableFileIsReady = @"CleverTapVariableFileIsReady";
 static NSString * kCleverTapVariablesFetched = @"CleverTapVariablesFetched";
 static NSString * kCleverTapInAppsFetched = @"CleverTapInAppsFetched";
 
@@ -59,8 +61,13 @@ static NSString * kCleverTapInAppsFetched = @"CleverTapInAppsFetched";
         [[clevertap productConfig] setDelegate:sharedInstance];
         [[clevertap featureFlags] setDelegate:sharedInstance];
         [clevertap setPushPermissionDelegate:sharedInstance];
+        
         [clevertap onVariablesChanged:^{
             [sharedInstance callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariablesChanged withMessage:@"VariablesChanged"];
+        }];
+        
+        [clevertap onVariablesChangedAndNoDownloadsPending:^{
+            [sharedInstance callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariablesChangedAndNoDownloadsPending withMessage:@"VariablesChangedAndNoDownloadsPending"];
         }];
     }
     
@@ -962,6 +969,19 @@ return jsonDict;
     
     [var onValueChanged:^{
         [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableValueChanged withMessage:[var name]];
+    }];
+}
+
+- (void)defineFileVar:(NSString *)name
+{
+    CTVar *var = [clevertap defineFileVar:name];
+    
+    [var onValueChanged:^{
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableValueChanged withMessage:[var name]];
+    }];
+    
+    [var onFileIsReady:^{
+        [self callUnityObject:kCleverTapGameObjectName forMethod:kCleverTapVariableFileIsReady withMessage:[var name]];
     }];
 }
 
