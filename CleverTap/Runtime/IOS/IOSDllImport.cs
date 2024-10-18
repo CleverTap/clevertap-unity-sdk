@@ -242,7 +242,10 @@ namespace CleverTapSDK.IOS {
         #region Variables
 
         [DllImport("__Internal")]
-        internal static extern string CleverTap_getVariableValue(string name, string kind);
+        internal static extern string CleverTap_getVariableValue(string name);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_getFileVariableValue(string name);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_defineVar(string name, string kind, string jsonValue);

@@ -610,6 +610,13 @@ char* CleverTap_getVariableValue(const char* name)
     return clevertap_cStringCopy([json UTF8String]);
 }
 
+char* CleverTap_getFileVariableValue(const char* name)
+{
+    NSString* json = [[CleverTapUnityManager sharedInstance]
+                      getFileVariableValue:clevertap_stringToNSString(name)];
+    return clevertap_cStringCopy([json UTF8String]);
+}
+
 void CleverTap_syncVariables()
 {
     [[CleverTapUnityManager sharedInstance] syncVariables];

@@ -1007,6 +1007,22 @@ return jsonDict;
     }
 }
 
+- (NSString *)getFileVariableValue:(NSString *)name
+{
+    CTVar *var = [clevertap getVariable:name];
+    if (!var) {
+        NSLog(@"Variable %@ not found.", name);
+        return nil;
+    }
+    
+    if (![var.kind isEqualToString:@"file"]) {
+        NSLog(@"Variable %@ is not a file variable.", name);
+        return nil;
+    }
+    
+    return [var fileValue];
+}
+
 NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
     if (dictionary == nil) {
         return dictionary;

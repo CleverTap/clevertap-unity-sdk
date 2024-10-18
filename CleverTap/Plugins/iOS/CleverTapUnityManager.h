@@ -148,6 +148,7 @@
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue;
 - (void)defineFileVar:(NSString *)name;
 - (NSString *)getVariableValue:(NSString *)name;
+- (NSString *)getFileVariableValue:(NSString *)name;
 
 #pragma mark - Client-side In-Apps
 - (void)fetchInApps:(int)callbackId;
