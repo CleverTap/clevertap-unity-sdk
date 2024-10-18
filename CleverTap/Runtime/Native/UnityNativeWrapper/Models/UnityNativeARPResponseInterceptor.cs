@@ -1,20 +1,23 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
+using System.Linq;
 
-namespace Native.UnityNativeWrapper.Models
+namespace CleverTapSDK.Native
 {
     internal class UnityNativeARPResponseInterceptor : IUnityNativeResponseInterceptor
     {
         private readonly UnityNativeEventValidator _eventValidator;
-        private readonly string _accountId;
+        private readonly UnityNativePreferenceManager _preferenceManager;
         private readonly string _namespaceARPKey;
-        public UnityNativeARPResponseInterceptor(string accountId,string deviceId, UnityNativeEventValidator eventValidator)
+        private readonly string _discardedEventsKey;
+
+        internal UnityNativeARPResponseInterceptor(string accountId, string deviceId, UnityNativeEventValidator eventValidator)
         {
-            this._accountId = accountId;
-            this._namespaceARPKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,accountId,deviceId); 
+            _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
+            _namespaceARPKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY, deviceId);
+            _discardedEventsKey = string.Format(UnityNativeConstants.Network.DISCARDED_EVENTS_NAMESPACE_KEY, deviceId);
             _eventValidator = eventValidator;
         }
 
@@ -22,27 +25,31 @@ namespace Native.UnityNativeWrapper.Models
         {
             if (response == null || string.IsNullOrEmpty(response.Content))
             {
-                CleverTapLogger.Log($"Failed to process ARP, Response is Null or Empty!");
-                return null;
-            } 
+                // Response or response content is null. This is the case for the handshake response.
+                return response;
+            }
+
             var result = Json.Deserialize(response.Content) as Dictionary<string, object>;
             try
             {
-                if (result.ContainsKey("arp"))
-                    if (Json.Deserialize(result["arp"].ToString()) is Dictionary<string, object> { Count: > 0 } arp)
+                if (result != null && result.ContainsKey(UnityNativeConstants.Network.ARP_KEY))
+                {
+                    if (result[UnityNativeConstants.Network.ARP_KEY] is Dictionary<string, object> { Count: > 0 } arp)
                     {
-                        //Handle Discarded events in ARP
+                        // Handle Discarded events in ARP
                         try
                         {
                             ProcessDiscardedEventsList(arp);
                         }
-                        catch (Exception t)
+                        catch (Exception discardedEventsException)
                         {
-                            CleverTapLogger.Log($"Failed to process ARP discarded events, Exception: {t.Message}, Stack Trace: {t.StackTrace}");
+                            CleverTapLogger.Log($"Failed to process ARP discarded events," +
+                                $" Exception: {discardedEventsException.Message}, Stack Trace: {discardedEventsException.StackTrace}");
                         }
 
                         HandleARPUpdate(arp);
                     }
+                }
             }
             catch (Exception exception)
             {
@@ -52,21 +59,18 @@ namespace Native.UnityNativeWrapper.Models
             return response;
         }
 
-
         private void HandleARPUpdate(Dictionary<string, object> arp)
         {
             if (arp == null || arp.Count == 0 || string.IsNullOrEmpty(_namespaceARPKey))
                 return;
 
-            UnityNativePreferenceManager preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(_accountId);
-            Dictionary<string, object> currentARP = Json.Deserialize(preferenceManager.GetString(_namespaceARPKey, "{}")) as Dictionary<string, object>;
-            
-            if (currentARP == null || currentARP.Count == 0)
+            Dictionary<string, object> currentARP = Json.Deserialize(_preferenceManager.GetString(_namespaceARPKey, "{}")) as Dictionary<string, object>;
+
+            if (currentARP == null)
             {
-                preferenceManager.SetString(_namespaceARPKey, Json.Serialize(arp));
-                return;
+                currentARP = new Dictionary<string, object>();
             }
-               
+
             foreach (var keyValuePair in arp)
             {
                 string key = keyValuePair.Key;
@@ -75,19 +79,44 @@ namespace Native.UnityNativeWrapper.Models
                 switch (value)
                 {
                     case int i:
-                        currentARP[key] = i;
+                        if (i == -1)
+                        {
+                            CleverTapLogger.Log($"ARP remove {key} (value is -1)");
+                            currentARP.Remove(key);
+                        }
+                        else
+                        {
+                            currentARP[key] = i;
+                        }
+                        break;
+                    case string s:
+                        if (s.Length > 100)
+                        {
+                            CleverTapLogger.Log($"ARP update for {key} rejected (string value too long)");
+                            currentARP.Remove(key);
+                        }
+                        else
+                        {
+                            currentARP[key] = s;
+                        }
+                        currentARP[key] = s;
                         break;
                     case long l:
-                        currentARP[key] = l;
+                        if (l == -1)
+                        {
+                            CleverTapLogger.Log($"ARP remove {key} (value is -1)");
+                            currentARP.Remove(key);
+                        }
+                        else
+                        {
+                            currentARP[key] = l;
+                        }
                         break;
                     case float f:
                         currentARP[key] = f;
                         break;
                     case double d:
                         currentARP[key] = d;
-                        break;
-                    case string s:
-                        currentARP[key] = s;
                         break;
                     case bool b:
                         currentARP[key] = b;
@@ -98,13 +127,12 @@ namespace Native.UnityNativeWrapper.Models
                 }
             }
 
-            preferenceManager.SetString(_namespaceARPKey, Json.Serialize(currentARP));
+            _preferenceManager.SetString(_namespaceARPKey, Json.Serialize(currentARP));
         }
 
-
-        private void ProcessDiscardedEventsList(Dictionary<string, object> response)
+        private void ProcessDiscardedEventsList(Dictionary<string, object> arp)
         {
-            if (!response.ContainsKey(UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY))
+            if (!arp.ContainsKey(UnityNativeConstants.Network.DISCARDED_EVENTS_KEY))
             {
                 CleverTapLogger.Log("ARP doesn't contain the Discarded Events key");
                 return;
@@ -112,22 +140,26 @@ namespace Native.UnityNativeWrapper.Models
 
             try
             {
-                var discardedEventsList = new List<string>();
-                // Get the discarded event JSON from the response
-                string discardedEventsJson = response[UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY].ToString();
-                var discardedEventsArray = Json.Deserialize(discardedEventsJson) as List<string>;
-                if (discardedEventsArray != null)
+                List<object> discardedEventsList = arp[UnityNativeConstants.Network.DISCARDED_EVENTS_KEY] as List<object>;
+                List<string> discardedEventNames = new List<string>();
+                if (discardedEventsList != null && discardedEventsList.Count > 0)
                 {
-                    discardedEventsList.AddRange(discardedEventsArray);
+                    discardedEventNames = discardedEventsList.Select(e => e.ToString()).ToList();
                 }
                 if (_eventValidator != null)
-                    _eventValidator.SetDiscardedEvents(discardedEventsList);
+                {
+                    CleverTapLogger.Log($"Setting discarded events: {string.Join(", ", discardedEventNames)}.");
+                    _eventValidator.SetDiscardedEvents(discardedEventNames);
+                    _preferenceManager.SetString(_discardedEventsKey, Json.Serialize(discardedEventNames));
+                }
                 else
+                {
                     CleverTapLogger.Log("Validator object is NULL");
+                } 
             }
             catch (Exception e)
             {
-                CleverTapLogger.Log("Error parsing discarded events list" + e.StackTrace);
+                CleverTapLogger.Log("Error parsing discarded events list: " + e.StackTrace);
             }
         }
     }

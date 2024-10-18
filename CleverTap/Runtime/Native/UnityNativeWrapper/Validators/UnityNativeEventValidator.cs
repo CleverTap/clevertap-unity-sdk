@@ -1,12 +1,20 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using CleverTapSDK.Utilities;
 using System.Linq;
-using Native.UnityNativeWrapper.Models;
 
 namespace CleverTapSDK.Native {
-    public class UnityNativeEventValidator {
+    internal class UnityNativeEventValidator {
+
         private List<string> discardedEvents;
+
+        internal void SetDiscardedEvents(List<string> events) => discardedEvents = events;
+
+        internal UnityNativeEventValidator(List<string> discardedEventNames)
+        {
+            SetDiscardedEvents(discardedEventNames);
+        }
 
         internal UnityNativeValidationResult CleanEventName(string eventName, out string cleanEventName) {
             cleanEventName = eventName;
@@ -124,6 +132,7 @@ namespace CleverTapSDK.Native {
             }
 
             if (UnityNativeConstants.Validator.IsRestrictedName(eventName)) {
+                CleverTapLogger.Log($"{eventName} is restricted event name. Last event aborted.");
                 return new UnityNativeValidationResult(513, $"{eventName} is restricted event name. Last event aborted.");
             }
 
@@ -177,38 +186,25 @@ namespace CleverTapSDK.Native {
             * @param name The event name
             * @return Boolean indication whether the event name has been discarded from Dashboard
         */
-        internal UnityNativeValidationResult IsEventDiscarded(string eventName)
-        {
-            if (string.IsNullOrEmpty(eventName))
-            {
+        internal UnityNativeValidationResult IsEventDiscarded(string eventName) {
+            if (string.IsNullOrEmpty(eventName)) {
                 return new UnityNativeValidationResult(510, $"event name is null or empty.");
             }
 
             UnityNativeValidationResult error = new UnityNativeValidationResult();
 
-            var discardedEvents = GetDiscardedEvents();
-            if (discardedEvents != null)
-            {
-                foreach (string x in discardedEvents)
-                {
-                    if (string.Equals(eventName, x, StringComparison.OrdinalIgnoreCase))
-                    {
+            if (discardedEvents != null) {
+                foreach (string x in discardedEvents) {
+                    if (string.Equals(eventName, x, StringComparison.OrdinalIgnoreCase)) {
+                        CleverTapLogger.Log($"{eventName} is a discarded event name. Last event aborted.");
                         return new UnityNativeValidationResult(513,
-                            $"{eventName} is restricted event name. Last event aborted.");
+                            $"{eventName} is a discarded event name. Last event aborted.");
                     }
                 }
             }
 
             return error;
         }
-
-        private List<string> GetDiscardedEvents()
-        {
-            return discardedEvents;
-        }
-
-        public void SetDiscardedEvents(List<string> events) => this.discardedEvents = events;
-    }
-    
+    }  
 }
 #endif

@@ -1,15 +1,15 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
-using Native.UnityNativeWrapper.Models;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeProfileEventBuilder {
         private readonly UnityNativeEventValidator _eventValidator;
-        internal UnityNativeProfileEventBuilder(UnityNativeEventValidator eventValidator)
-        {
-            this._eventValidator = eventValidator;
+
+        internal UnityNativeProfileEventBuilder(UnityNativeEventValidator eventValidator) {
+            _eventValidator = eventValidator;
         }
+
         internal UnityNativeEventBuilderResult<UnityNativePushEventResult> BuildPushEvent(Dictionary<string, object> properties) {
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             if (properties == null || properties.Count == 0) {

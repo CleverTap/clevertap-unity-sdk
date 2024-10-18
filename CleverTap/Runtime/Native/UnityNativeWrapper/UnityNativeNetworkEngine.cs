@@ -12,7 +12,7 @@ using UnityEngine.Networking;
 namespace CleverTapSDK.Native {
     internal class UnityNativeNetworkEngine : MonoBehaviour {
         private SynchronizationContext _context;
-        private UnityNativeCoreState _coreState;
+
         private void Awake()
         {
             _context = SynchronizationContext.Current;
@@ -83,20 +83,20 @@ namespace CleverTapSDK.Native {
         private int responseFailureCount;
 
         private UnityNativePreferenceManager _preferenceManager;
+        private string _accountId;
 
         private UnityNativeNetworkEngine() {
         }
 
-        internal static UnityNativeNetworkEngine Create(UnityNativeCoreState coreState)
-        {
-            var gameObject = new GameObject($"{coreState.AccountInfo.AccountId}_UnityNativeNetworkEngine");
+        internal static UnityNativeNetworkEngine Create(string accountId) {
+            var gameObject = new GameObject($"{accountId}_UnityNativeNetworkEngine");
             gameObject.AddComponent<UnityNativeNetworkEngine>();
             DontDestroyOnLoad(gameObject);
 
             UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
-            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            component._accountId = accountId;
+            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
             
-            component._coreState = coreState;
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         }
 
@@ -340,77 +340,6 @@ namespace CleverTapSDK.Native {
             }
         }
 
-        private Dictionary<string, string> AddARP(Dictionary<string, string> headers)
-        {
-            string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
-                _coreState.AccountInfo.AccountId, _coreState.DeviceInfo.DeviceId);
-            var arpJson = _preferenceManager.GetString(arpNamespaceKey, string.Empty);
-            if (string.IsNullOrEmpty(arpJson))
-                return headers;
-
-            Dictionary<string, object> arpDictionary = Json.Deserialize(arpJson) as Dictionary<string, object>;
-            if (arpDictionary == null || arpDictionary.Count == 0)
-                return headers;
-
-            var keysToRemove = new List<string>();
-    
-            foreach (var param in arpDictionary)
-            {
-                if (param.Value is string strValue && strValue.Length > 100)
-                {
-                    keysToRemove.Add(param.Key);
-                }
-                else if (param.Value is int intValue && intValue == -1)
-                {
-                    keysToRemove.Add(param.Key);
-                }
-            }
-
-            foreach (var key in keysToRemove)
-            {
-                arpDictionary.Remove(key);
-            }
-
-            headers[UnityNativeConstants.Network.ARP_KEY] = Json.Serialize(arpDictionary);
-
-            return headers;
-        }
-        
-        public Dictionary<string,object> GetARP()
-        {
-            string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
-                _coreState.AccountInfo.AccountId, _coreState.DeviceInfo.DeviceId);
-            var arpJson = _preferenceManager.GetString(arpNamespaceKey, string.Empty);
-            Dictionary<string,string> arp = new Dictionary<string, string>();
-            if (string.IsNullOrEmpty(arpJson))
-                return null;
-
-            Dictionary<string, object> arpDictionary = Json.Deserialize(arpJson) as Dictionary<string, object>;
-            if (arpDictionary == null || arpDictionary.Count == 0)
-                return null;
-
-            var keysToRemove = new List<string>();
-    
-            foreach (var param in arpDictionary)
-            {
-                if (param.Value is string strValue && strValue.Length > 100)
-                {
-                    keysToRemove.Add(param.Key);
-                }
-                else if (param.Value is int intValue && intValue == -1)
-                {
-                    keysToRemove.Add(param.Key);
-                }
-            }
-
-            foreach (var key in keysToRemove)
-            {
-                arpDictionary.Remove(key);
-            }
-
-            return arpDictionary;
-        }
-
         private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request) {
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
@@ -466,13 +395,13 @@ namespace CleverTapSDK.Native {
 
         public long GetI()
         {
-            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_I}:{_coreState.AccountInfo.AccountId}";
+            string tempKey = $"{UnityNativeConstants.Network.KEY_I}:{_accountId}";
             return _preferenceManager.GetLong( tempKey,0);
         }
         
         public long GetJ()
         {
-            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_coreState.AccountInfo.AccountId}";
+            string tempKey = $"{UnityNativeConstants.Network.KEY_J}:{_accountId}";
             return _preferenceManager.GetLong( tempKey,0);
         }
         

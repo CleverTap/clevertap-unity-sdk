@@ -45,14 +45,14 @@ namespace CleverTapSDK.Native
              
         public void SetI(long l)
         {
-            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_I}:{_accountId}";
-            _preferenceManager.SetLong( tempKey,l+"");
+            string tempKey = $"{UnityNativeConstants.Network.KEY_I}:{_accountId}";
+            _preferenceManager.SetLong(tempKey, l);
         }
     
         public void SetJ(long l)
         {
-            string tempKey = $"{UnityNativeConstants.EventMeta.KEY_J}:{_accountId}";
-            _preferenceManager.SetLong( tempKey,l+"");
+            string tempKey = $"{UnityNativeConstants.Network.KEY_J}:{_accountId}";
+            _preferenceManager.SetLong(tempKey, l);
         }
     }
 }

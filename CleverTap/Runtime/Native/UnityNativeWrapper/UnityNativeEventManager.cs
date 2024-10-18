@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Native.UnityNativeWrapper.Models;
 using UnityEngine;
 
 namespace CleverTapSDK.Native {
@@ -27,25 +26,37 @@ namespace CleverTapSDK.Native {
             _callbackHandler = callbackHandler;
         }
 
-        private void Initialize(string accountId, string token, string region = null)
-        {
+        private void Initialize(string accountId, string token, string region = null) {
             _accountId = accountId;
             UnityNativeAccountInfo accountInfo = new UnityNativeAccountInfo(accountId, token, region);
             _coreState = new UnityNativeCoreState(accountInfo);
 
             _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(_accountId);
             _databaseStore = new UnityNativeDatabaseStore($"{_accountId}_{NATIVE_EVENTS_DB_CACHE}");
-            _eventValidator = new UnityNativeEventValidator();
-            _networkEngine = UnityNativeNetworkEngine.Create(_coreState);
+
+            _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
+            _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
             SetResponseInterceptors();
             _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
 
-        private void SetResponseInterceptors()
-        {
-            List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>();
-            responseInterceptors.Add(new UnityNativeARPResponseInterceptor(_accountId,_coreState.DeviceInfo.DeviceId,_eventValidator));
-            responseInterceptors.Add(new UnityNativeMetadataResponseInterceptor(_accountId,_preferenceManager));
+        private List<string> LoadDiscardedEvents() {
+            string deKey = string.Format(UnityNativeConstants.Network.DISCARDED_EVENTS_NAMESPACE_KEY, _coreState.DeviceInfo.DeviceId);
+            var discardedEventsSerialized = _preferenceManager.GetString(deKey, "[]");
+            List<string> discardedEventNames = new List<string>();
+            if (Json.Deserialize(discardedEventsSerialized) is List<object> discardedEvents && discardedEvents.Count > 0)
+            {
+                discardedEventNames = discardedEvents.Select(e => e.ToString()).ToList();
+            }
+            return discardedEventNames;
+        }
+
+        private void SetResponseInterceptors() {
+            List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>
+            {
+                new UnityNativeARPResponseInterceptor(_accountId, _coreState.DeviceInfo.DeviceId, _eventValidator),
+                new UnityNativeMetadataResponseInterceptor(_accountId, _preferenceManager)
+            };
             _networkEngine.SetResponseInterceptors(responseInterceptors);
         }
         
@@ -114,46 +125,46 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
-			try {
-				string currentGUID = _coreState.DeviceInfo.DeviceId;
-				bool haveIdentifier = false;
-				string cachedGUID = null;
+            try {
+                string currentGUID = _coreState.DeviceInfo.DeviceId;
+                bool haveIdentifier = false;
+                string cachedGUID = null;
 
-				foreach (var key in profile.Keys) {
-					if (IdentityKeys.Contains(key.ToLower())) {
+                foreach (var key in profile.Keys) {
+                    if (IdentityKeys.Contains(key.ToLower())) {
                         var value = profile[key];
                         string identifier = value?.ToString();
-						if (!string.IsNullOrEmpty(identifier)) {
-							haveIdentifier = true;
-							cachedGUID = GetGUIDForIdentifier(key, identifier);
-							if (cachedGUID != null) {
-								break;
-							}
-						}
-					}
-				}
+                        if (!string.IsNullOrEmpty(identifier)) {
+                            haveIdentifier = true;
+                            cachedGUID = GetGUIDForIdentifier(key, identifier);
+                            if (cachedGUID != null) {
+                                break;
+                            }
+                        }
+                    }
+                }
 
-				// No Identifier or anonymous
-				if (!haveIdentifier || IsAnonymousUser()) {
+                // No Identifier or anonymous
+                if (!haveIdentifier || IsAnonymousUser()) {
                     CleverTapLogger.Log($"OnUserLogin: No identifier OR device is anonymous, associating profile with current user profile: {currentGUID}");
                     return ProfilePush(profile);
-				}
-				// Same Profile
-				if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
+                }
+                // Same Profile
+                if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
                     CleverTapLogger.Log($"OnUserLogin: Profile maps to current device id {currentGUID}, using current user profile.");
                     return ProfilePush(profile);
-				}
+                }
 
                 // New Profile
-				SwitchOrCreateProfile(profile, cachedGUID);
-			} catch (Exception e) {
-				CleverTapLogger.LogError("OnUserLogin failed: " + e);
-			}
+                SwitchOrCreateProfile(profile, cachedGUID);
+            } catch (Exception e) {
+                CleverTapLogger.LogError("OnUserLogin failed: " + e);
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		private bool IsAnonymousUser() {
+        private bool IsAnonymousUser() {
             return string.IsNullOrEmpty(_preferenceManager.GetUserIdentities());
         }
 
@@ -182,7 +193,11 @@ namespace CleverTapSDK.Native {
                     _coreState.DeviceInfo.ForceNewDeviceID();
                 }
 
+                // Load discarded events for new user
+                _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
+                // Set interceptors for new user
                 SetResponseInterceptors();
+
                 NotifyUserProfileInitialized();
 
                 RecordAppLaunch();
@@ -304,6 +319,8 @@ namespace CleverTapSDK.Native {
             }
 
             var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator).Build(eventName, properties);
+            if(eventBuilderResult.EventResult == null)
+                return null;
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
