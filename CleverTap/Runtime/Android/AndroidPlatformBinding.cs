@@ -104,7 +104,22 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("getCleverTapID");
             return string.Empty;
         }
+        internal override JSONArray GetAllInboxMessages()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
+            JSONArray json;
+            try
+            {
+                json = (JSONArray)JSON.Parse(jsonString);
+            }
+            catch
+            {
+                CleverTapLogger.LogError("Unable to parse inbox messages JSON");
+                json = new JSONArray();
+            }
 
+            return json;
+        }
         internal override int GetInboxMessageCount() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("getInboxMessageCount");
         }
