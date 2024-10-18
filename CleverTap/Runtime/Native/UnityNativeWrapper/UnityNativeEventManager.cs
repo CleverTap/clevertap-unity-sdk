@@ -192,7 +192,11 @@ namespace CleverTapSDK.Native {
                     _coreState.DeviceInfo.ForceNewDeviceID();
                 }
 
+                // Load discarded events for new user
+                _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
+                // Set interceptors for new user
                 SetResponseInterceptors();
+
                 NotifyUserProfileInitialized();
 
                 RecordAppLaunch();
