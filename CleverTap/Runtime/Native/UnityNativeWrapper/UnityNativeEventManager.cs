@@ -41,7 +41,7 @@ namespace CleverTapSDK.Native {
         }
 
         private List<string> LoadDiscardedEvents() {
-            string deKey = string.Format(UnityNativeConstants.Network.DISCARDED_EVENTS_NAMESPACE_KEY, _coreState.DeviceInfo.DeviceId);
+            string deKey = string.Format(UnityNativeConstants.EventMeta.DISCARDED_EVENTS_NAMESPACE_KEY, _coreState.DeviceInfo.DeviceId);
             var discardedEventsSerialized = _preferenceManager.GetString(deKey, "[]");
             List<string> discardedEventNames = new List<string>();
             if (Json.Deserialize(discardedEventsSerialized) is List<object> discardedEvents && discardedEvents.Count > 0)
@@ -54,7 +54,8 @@ namespace CleverTapSDK.Native {
         private void SetResponseInterceptors() {
             List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>
             {
-                new UnityNativeARPResponseInterceptor(_accountId, _coreState.DeviceInfo.DeviceId, _eventValidator)
+                new UnityNativeARPResponseInterceptor(_accountId, _coreState.DeviceInfo.DeviceId, _eventValidator),
+                new UnityNativeMetadataResponseInterceptor(_preferenceManager)
             };
             _networkEngine.SetResponseInterceptors(responseInterceptors);
         }
