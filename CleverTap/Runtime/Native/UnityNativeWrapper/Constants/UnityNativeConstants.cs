@@ -1,4 +1,5 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -172,7 +173,6 @@ namespace CleverTapSDK.Native {
             internal const int MAX_KEY_CHARS = 120;
             internal const int MAX_VALUE_CHARS = 1024;
             internal const int MAX_VALUE_PROPERTY_ARRAY_COUNT = 100;
-
             internal static readonly IReadOnlyList<string> KEY_NOT_ALLOWED_CHARS = new List<string> { ".", ":", "$", "'", "\"", "\\" };
             internal static readonly IReadOnlyList<string> VALUE_NOT_ALLOWED_CHARS = new List<string> { "'", "\"", "\\" };
 
@@ -216,6 +216,11 @@ namespace CleverTapSDK.Native {
 #endif
             internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
+            
+            internal const string ARP_NAMESPACE_KEY = "ARP:{0}";
+            internal const string ARP_KEY = "arp";
+            internal const string DISCARDED_EVENTS_KEY = "d_e";
+            internal const string DISCARDED_EVENTS_NAMESPACE_KEY = "DISCARDED_EVENTS:{0}";
         }
 
         internal static class Commands {

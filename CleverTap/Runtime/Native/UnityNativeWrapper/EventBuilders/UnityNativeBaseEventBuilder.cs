@@ -9,7 +9,7 @@ namespace CleverTapSDK.Native {
         private UnityNativeDeviceInfo _deviceInfo;
         private UnityNativeSessionManager _sessionManager;
         private UnityNativeNetworkEngine _networkEngine;
-
+        
         internal UnityNativeEventBuilder(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine) {
             _deviceInfo = coreState.DeviceInfo;
             _sessionManager = coreState.SessionManager;
@@ -52,9 +52,14 @@ namespace CleverTapSDK.Native {
             return eventData;
         }
 
-        internal Dictionary<string, object> BuildAppFields() {
-            var deviceInfo = _deviceInfo;
+        internal Dictionary<string, object> BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
+            var eventData = BuildEvent(eventType, eventDetails);
+            eventData.Add(UnityNativeConstants.Event.EVENT_DATA, BuildAppFields(_deviceInfo));
 
+            return eventData;
+        }
+
+        internal static Dictionary<string, object> BuildAppFields(UnityNativeDeviceInfo deviceInfo) {
             var data = new Dictionary<string, object>
             {
                 { UnityNativeConstants.Event.APP_VERSION, deviceInfo.AppVersion },
@@ -82,16 +87,14 @@ namespace CleverTapSDK.Native {
             data.Add(UnityNativeConstants.Event.USE_IP, useIp);
             if (useIp)
             {
-                if (!string.IsNullOrEmpty(deviceInfo.Radio))
-                {
+                if (!string.IsNullOrEmpty(deviceInfo.Radio)) {
                     data.Add(UnityNativeConstants.Event.NETWORK_TYPE, deviceInfo.Radio);
                 }
-                if (deviceInfo.Wifi != -1)
-                {
+                if (deviceInfo.Wifi != -1) {
                     data.Add(UnityNativeConstants.Event.CONNECTED_TO_WIFI, deviceInfo.Wifi);
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(deviceInfo.CountryCode)) {
                 data.Add(UnityNativeConstants.Event.COUNTRY_CODE, deviceInfo.CountryCode);
             }
@@ -101,13 +104,6 @@ namespace CleverTapSDK.Native {
             }
 
             return data;
-        }
-
-        internal Dictionary<string, object> BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
-            var eventData = BuildEvent(eventType, eventDetails);
-            eventData.Add(UnityNativeConstants.Event.EVENT_DATA, BuildAppFields());
-
-            return eventData;
         }
     }
 }

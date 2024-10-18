@@ -12,6 +12,7 @@ using UnityEngine.Networking;
 namespace CleverTapSDK.Native {
     internal class UnityNativeNetworkEngine : MonoBehaviour {
         private SynchronizationContext _context;
+
         private void Awake()
         {
             _context = SynchronizationContext.Current;
@@ -86,8 +87,7 @@ namespace CleverTapSDK.Native {
         private UnityNativeNetworkEngine() {
         }
 
-        internal static UnityNativeNetworkEngine Create(string accountId)
-        {
+        internal static UnityNativeNetworkEngine Create(string accountId) {
             var gameObject = new GameObject($"{accountId}_UnityNativeNetworkEngine");
             gameObject.AddComponent<UnityNativeNetworkEngine>();
             DontDestroyOnLoad(gameObject);
