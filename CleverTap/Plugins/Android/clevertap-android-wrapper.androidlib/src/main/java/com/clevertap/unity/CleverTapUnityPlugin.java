@@ -114,7 +114,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
     }
     
-    private static void changeCredentials(String accountID, String token, String proxyDomain, String spikyProxyDomain) {
+    private static void changeCredentials(String accountID, String accountToken, String proxyDomain, String spikyProxyDomain) {
          CleverTapAPI.changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
     }
         
