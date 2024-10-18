@@ -9,7 +9,6 @@ namespace CleverTapSDK.Common {
     internal abstract class CleverTapPlatformVariable {
         protected readonly IDictionary<string, IVar> varCache = new Dictionary<string, IVar>();
         protected readonly IDictionary<int, Action<bool>> variablesFetchedCallbacks = new Dictionary<int, Action<bool>>();
-        protected readonly IDictionary<string, Action> variablesFileReadyCallbacks = new Dictionary<string, Action>();
 
         protected readonly CleverTapCounter variablesFetchedIdCounter = new CleverTapCounter();
 
@@ -72,13 +71,12 @@ namespace CleverTapSDK.Common {
             }
         }
 
-        internal virtual void VariablesFilesDownloadedAndReady(string variableName) {
-            if (variablesFileReadyCallbacks.ContainsKey(variableName)) {
-                variablesFileReadyCallbacks[variableName].Invoke();
-                variablesFileReadyCallbacks.Remove(variableName);
+        internal virtual void VariableFileIsReady(string name) {
+            if (varCache.ContainsKey(name))
+            {
+                varCache[name].FileIsReady();
             }
         }
-        
         
         internal virtual void VariableChanged(string name) {
             if (varCache.ContainsKey(name)) {
@@ -110,7 +108,7 @@ namespace CleverTapSDK.Common {
                 return (Var<string>)varCache[name];
             }
             
-            return DefineFileVariable<string>(name);
+            return DefineFileVariable(name);
         }
         
         protected virtual string GetKindNameFromGenericType<T>() {
@@ -136,6 +134,5 @@ namespace CleverTapSDK.Common {
         internal abstract void SyncVariables(bool isProduction);
         internal abstract void FetchVariables(int callbackId);
         protected abstract Var<T> DefineVariable<T>(string name, string kind, T defaultValue);
-        protected abstract Var<string> DefineFileVariable<T>(string name);
     }
 }

@@ -6,6 +6,7 @@ namespace CleverTapSDK.Common {
         string Name { get; }
         string Kind { get; }
         void ValueChanged();
+        void FileIsReady();
         bool IsFileReady { get; }
     }
 
@@ -17,6 +18,7 @@ namespace CleverTapSDK.Common {
         protected bool isFileReady;
         
         public virtual event CleverTapCallbackDelegate OnValueChanged;
+        public virtual event CleverTapCallbackDelegate OnFileReady;
 
         public Var(string name, string kind, T defaultValue) {
             this.name = name;
@@ -32,14 +34,18 @@ namespace CleverTapSDK.Common {
         public virtual bool IsFileReady => Kind == CleverTapVariableKind.FILE && isFileReady;
         public string FileValue => Kind == CleverTapVariableKind.FILE ? StringValue : null;
         
-        public virtual void ValueChanged()
-        {
-            if (Kind.Equals(CleverTapVariableKind.FILE))
-                isFileReady = true;
-            
-            if (OnValueChanged != null) {
-                OnValueChanged();
+        public virtual void ValueChanged() {
+            OnValueChanged?.Invoke();
+        }
+
+        public virtual void FileIsReady() {
+            if (!Kind.Equals(CleverTapVariableKind.FILE)) {
+                CleverTapLogger.Log($"Var \"{name}\": FileIsReady is only available for File Variables.");
+                return;
             }
+
+            isFileReady = true;
+            OnFileReady?.Invoke();
         }
 
         public static implicit operator T(Var<T> var) {
