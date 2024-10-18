@@ -87,15 +87,13 @@ namespace CleverTapSDK.Native {
         private UnityNativeNetworkEngine() {
         }
 
-        internal static UnityNativeNetworkEngine Create(UnityNativeCoreState coreState)
-        {
-            var gameObject = new GameObject($"{coreState.AccountInfo.AccountId}_UnityNativeNetworkEngine");
+        internal static UnityNativeNetworkEngine Create(string accountId) {
+            var gameObject = new GameObject($"{accountId}_UnityNativeNetworkEngine");
             gameObject.AddComponent<UnityNativeNetworkEngine>();
             DontDestroyOnLoad(gameObject);
 
             UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
-            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
-            
+            component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         }
 
@@ -289,19 +287,19 @@ namespace CleverTapSDK.Native {
         private void ApplyNetworkEngineRequestConfiguration(UnityNativeRequest request) {
             // Set Headers
             if (_headers?.Count > 0) {
-                var allHeaders = new Dictionary<string, string>(_headers);
                 if (request.Headers == null) {
-                    allHeaders = _headers.ToDictionary(x => x.Key, x => x.Value);
-                } else {
-                    allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
+                    request.SetHeaders(_headers.ToDictionary(x => x.Key, x => x.Value));
+                }
+                else {
+                    var allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
                     foreach (var header in _headers) {
                         // Do not overwrite existing headers
                         if (!allHeaders.ContainsKey(header.Key)) {
                             allHeaders.Add(header.Key, header.Value);
                         }
                     }
+                    request.SetHeaders(allHeaders);
                 }
-                request.SetHeaders(allHeaders);
             }
 
             // Set Timeout

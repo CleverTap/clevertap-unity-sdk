@@ -35,7 +35,7 @@ namespace CleverTapSDK.Native {
             _databaseStore = new UnityNativeDatabaseStore($"{_accountId}_{NATIVE_EVENTS_DB_CACHE}");
 
             _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
-            _networkEngine = UnityNativeNetworkEngine.Create(_coreState);
+            _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
             SetResponseInterceptors();
             _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
