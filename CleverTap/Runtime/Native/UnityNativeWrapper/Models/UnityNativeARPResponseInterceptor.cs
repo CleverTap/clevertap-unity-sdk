@@ -16,8 +16,8 @@ namespace CleverTapSDK.Native
         internal UnityNativeARPResponseInterceptor(string accountId, string deviceId, UnityNativeEventValidator eventValidator)
         {
             _preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
-            _namespaceARPKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY, deviceId);
-            _discardedEventsKey = string.Format(UnityNativeConstants.Network.DISCARDED_EVENTS_NAMESPACE_KEY, deviceId);
+            _namespaceARPKey = string.Format(UnityNativeConstants.EventMeta.ARP_NAMESPACE_KEY, deviceId);
+            _discardedEventsKey = string.Format(UnityNativeConstants.EventMeta.DISCARDED_EVENTS_NAMESPACE_KEY, deviceId);
             _eventValidator = eventValidator;
         }
 
@@ -32,9 +32,9 @@ namespace CleverTapSDK.Native
             var result = Json.Deserialize(response.Content) as Dictionary<string, object>;
             try
             {
-                if (result != null && result.ContainsKey(UnityNativeConstants.Network.ARP_KEY))
+                if (result != null && result.ContainsKey(UnityNativeConstants.EventMeta.ARP_KEY))
                 {
-                    if (result[UnityNativeConstants.Network.ARP_KEY] is Dictionary<string, object> { Count: > 0 } arp)
+                    if (result[UnityNativeConstants.EventMeta.ARP_KEY] is Dictionary<string, object> { Count: > 0 } arp)
                     {
                         // Handle Discarded events in ARP
                         try
@@ -132,7 +132,7 @@ namespace CleverTapSDK.Native
 
         private void ProcessDiscardedEventsList(Dictionary<string, object> arp)
         {
-            if (!arp.ContainsKey(UnityNativeConstants.Network.DISCARDED_EVENTS_KEY))
+            if (!arp.ContainsKey(UnityNativeConstants.EventMeta.DISCARDED_EVENTS_KEY))
             {
                 CleverTapLogger.Log("ARP doesn't contain the Discarded Events key");
                 return;
@@ -140,7 +140,7 @@ namespace CleverTapSDK.Native
 
             try
             {
-                List<object> discardedEventsList = arp[UnityNativeConstants.Network.DISCARDED_EVENTS_KEY] as List<object>;
+                List<object> discardedEventsList = arp[UnityNativeConstants.EventMeta.DISCARDED_EVENTS_KEY] as List<object>;
                 List<string> discardedEventNames = new List<string>();
                 if (discardedEventsList != null && discardedEventsList.Count > 0)
                 {

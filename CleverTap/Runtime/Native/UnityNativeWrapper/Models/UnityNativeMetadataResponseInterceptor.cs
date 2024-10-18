@@ -8,10 +8,9 @@ namespace CleverTapSDK.Native
     internal class UnityNativeMetadataResponseInterceptor : IUnityNativeResponseInterceptor
     {
         private readonly UnityNativePreferenceManager _preferenceManager;
-        private readonly string _accountId;
-        public UnityNativeMetadataResponseInterceptor(string accountId, UnityNativePreferenceManager preferenceManager)
+
+        public UnityNativeMetadataResponseInterceptor(UnityNativePreferenceManager preferenceManager)
         {
-            _accountId = accountId;
             _preferenceManager = preferenceManager;
         }
 
@@ -21,26 +20,26 @@ namespace CleverTapSDK.Native
                 return response;
 
             Dictionary<string,object> responseContent = Json.Deserialize(response.Content) as Dictionary<string,object>;
-            if (responseContent == null || responseContent.Count <= 0)
+            if (responseContent == null || responseContent.Count == 0)
                 return response;
-            // Handle i
+            // Handle _i
             try {
                 if (responseContent.TryGetValue("_i", out var value)) {
                     long i = long.Parse(value.ToString());
                     SetI(i);
                 }
-            } catch (Exception t) {
-                CleverTapLogger.Log("Error parsing _i values, " + t.StackTrace);
+            } catch (Exception e) {
+                CleverTapLogger.Log("Error parsing _i values, " + e.StackTrace);
             }
 
-            // Handle j
+            // Handle _j
             try {
                 if (responseContent.TryGetValue("_j", out var value)) {
                     long j = long.Parse(value.ToString());
                     SetJ(j);
                 }
-            } catch (Exception t) {
-                CleverTapLogger.Log("Error parsing _j values, " + t.StackTrace);
+            } catch (Exception e) {
+                CleverTapLogger.Log("Error parsing _j values, " + e.StackTrace);
             }
 
             return response;
@@ -48,14 +47,12 @@ namespace CleverTapSDK.Native
              
         public void SetI(long l)
         {
-            string tempKey = $"{UnityNativeConstants.Network.KEY_I}:{_accountId}";
-            _preferenceManager.SetLong(tempKey, l);
+            _preferenceManager.SetLong(UnityNativeConstants.EventMeta.KEY_I, l);
         }
     
         public void SetJ(long l)
         {
-            string tempKey = $"{UnityNativeConstants.Network.KEY_J}:{_accountId}";
-            _preferenceManager.SetLong(tempKey, l);
+            _preferenceManager.SetLong(UnityNativeConstants.EventMeta.KEY_J, l);
         }
     }
 }

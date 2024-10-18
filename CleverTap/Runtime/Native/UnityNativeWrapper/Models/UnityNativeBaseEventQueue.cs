@@ -166,16 +166,16 @@ namespace CleverTapSDK.Native
                 { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },
-                { UnityNativeConstants.Network.ARP_KEY, GetARP() },
-                { UnityNativeConstants.Network.KEY_I, GetI() },
-                { UnityNativeConstants.Network.KEY_J, GetJ() }
+                { UnityNativeConstants.EventMeta.ARP_KEY, GetARP() },
+                { UnityNativeConstants.EventMeta.KEY_I, GetI() },
+                { UnityNativeConstants.EventMeta.KEY_J, GetJ() }
             };
             return metaDetails;
         }
 
         private Dictionary<string, object> GetARP()
         {
-            string arpNamespaceKey = string.Format(UnityNativeConstants.Network.ARP_NAMESPACE_KEY,
+            string arpNamespaceKey = string.Format(UnityNativeConstants.EventMeta.ARP_NAMESPACE_KEY,
                 coreState.DeviceInfo.DeviceId);
             var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
             string arpJson = preferenceManager.GetString(arpNamespaceKey, string.Empty);
@@ -192,15 +192,13 @@ namespace CleverTapSDK.Native
         private long GetI()
         {
             var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
-            string tempKey = $"{UnityNativeConstants.Network.KEY_I}:{coreState.AccountInfo.AccountId}";
-            return preferenceManager.GetLong(tempKey, 0);
+            return preferenceManager.GetLong(UnityNativeConstants.EventMeta.KEY_I, 0);
         }
 
         private long GetJ()
         {
             var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
-            string tempKey = $"{UnityNativeConstants.Network.KEY_J}:{coreState.AccountInfo.AccountId}";
-            return preferenceManager.GetLong(tempKey, 0);
+            return preferenceManager.GetLong(UnityNativeConstants.EventMeta.KEY_J, 0);
         }
 
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);
