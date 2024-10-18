@@ -143,7 +143,11 @@ namespace CleverTapSDK.Android {
         internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
             CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, region, CleverTapAndroidJNI.UnityActivity);
         }
-
+        
+        internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
+            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, proxyDomain, spikyProxyDomain, CleverTapAndroidJNI.UnityActivity);
+        }
+        
         internal override void MarkReadInboxMessageForID(string messageId) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("markReadInboxMessageForId", messageId);
         }

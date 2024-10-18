@@ -8,6 +8,8 @@ public class CleverTapSettings : ScriptableObject
     public string CleverTapAccountRegion;
     public bool CleverTapEnablePersonalization { get; set; } = true;
     public bool CleverTapDisableIDFV;
+    public string CleverTapProxyDomain;
+    public string CleverTapSpikyProxyDomain;
 
     public override string ToString()
     {
@@ -15,6 +17,8 @@ public class CleverTapSettings : ScriptableObject
                $"CleverTapAccountId: {CleverTapAccountId}\n" +
                $"CleverTapAccountToken: {CleverTapAccountToken}\n" +
                $"CleverTapAccountRegion: {CleverTapAccountRegion}\n" +
+               $"CleverTapProxyDomain: {CleverTapProxyDomain}\n" +
+               $"CleverTapSpikyProxyDomain: {CleverTapSpikyProxyDomain}\n" +
                $"CleverTapEnablePersonalization: {CleverTapEnablePersonalization}\n" +
                $"CleverTapDisableIDFV: {CleverTapDisableIDFV}";
     }

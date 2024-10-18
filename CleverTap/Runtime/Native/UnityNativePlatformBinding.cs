@@ -1,10 +1,7 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
-using CleverTapSDK.Utilities;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativePlatformBinding : CleverTapPlatformBindings {
@@ -20,9 +17,14 @@ namespace CleverTapSDK.Native {
             _unityNativeWrapper.LaunchWithCredentials(accountID, token);
         }
 
-        internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region)
-        {
+        internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
             _unityNativeWrapper.LaunchWithCredentials(accountID, token, region);
+        }
+
+        internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
+            UnityEngine.Debug.LogWarning("LaunchWithCredentialsForProxyServer is not supported on Unity Native." +
+                " Using LaunchWithCredentials instead.");
+            _unityNativeWrapper.LaunchWithCredentials(accountID, token);
         }
 
         internal override void OnUserLogin(Dictionary<string, object> properties) {
