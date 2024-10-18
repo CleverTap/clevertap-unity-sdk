@@ -289,8 +289,7 @@ namespace CleverTapSDK.Native {
             if (_headers?.Count > 0) {
                 if (request.Headers == null) {
                     request.SetHeaders(_headers.ToDictionary(x => x.Key, x => x.Value));
-                }
-                else {
+                } else {
                     var allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
                     foreach (var header in _headers) {
                         // Do not overwrite existing headers
