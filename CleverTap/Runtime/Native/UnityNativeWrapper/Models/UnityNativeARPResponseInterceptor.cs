@@ -132,7 +132,7 @@ namespace CleverTapSDK.Native
 
         private void ProcessDiscardedEventsList(Dictionary<string, object> arp)
         {
-            if (!arp.ContainsKey(UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY))
+            if (!arp.ContainsKey(UnityNativeConstants.Network.DISCARDED_EVENTS_KEY))
             {
                 CleverTapLogger.Log("ARP doesn't contain the Discarded Events key");
                 return;
@@ -140,7 +140,7 @@ namespace CleverTapSDK.Native
 
             try
             {
-                List<object> discardedEventsList = arp[UnityNativeConstants.EventMeta.DISCARDED_EVENT_JSON_KEY] as List<object>;
+                List<object> discardedEventsList = arp[UnityNativeConstants.Network.DISCARDED_EVENTS_KEY] as List<object>;
                 List<string> discardedEventNames = new List<string>();
                 if (discardedEventsList != null && discardedEventsList.Count > 0)
                 {

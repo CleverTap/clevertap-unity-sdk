@@ -186,21 +186,16 @@ namespace CleverTapSDK.Native {
             * @param name The event name
             * @return Boolean indication whether the event name has been discarded from Dashboard
         */
-        internal UnityNativeValidationResult IsEventDiscarded(string eventName)
-        {
-            if (string.IsNullOrEmpty(eventName))
-            {
+        internal UnityNativeValidationResult IsEventDiscarded(string eventName) {
+            if (string.IsNullOrEmpty(eventName)) {
                 return new UnityNativeValidationResult(510, $"event name is null or empty.");
             }
 
             UnityNativeValidationResult error = new UnityNativeValidationResult();
 
-            if (discardedEvents != null)
-            {
-                foreach (string x in discardedEvents)
-                {
-                    if (string.Equals(eventName, x, StringComparison.OrdinalIgnoreCase))
-                    {
+            if (discardedEvents != null) {
+                foreach (string x in discardedEvents) {
+                    if (string.Equals(eventName, x, StringComparison.OrdinalIgnoreCase)) {
                         CleverTapLogger.Log($"{eventName} is a discarded event name. Last event aborted.");
                         return new UnityNativeValidationResult(513,
                             $"{eventName} is a discarded event name. Last event aborted.");
