@@ -167,8 +167,8 @@ namespace CleverTapSDK.Native
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },
                 { UnityNativeConstants.Network.ARP_KEY, GetARP() },
-                { UnityNativeConstants.Network.KEY_I, networkEngine.GetI() },
-                { UnityNativeConstants.Network.KEY_J, networkEngine.GetJ() }
+                { UnityNativeConstants.Network.KEY_I, GetI() },
+                { UnityNativeConstants.Network.KEY_J, GetJ() }
             };
             return metaDetails;
         }
@@ -187,6 +187,20 @@ namespace CleverTapSDK.Native
             }
 
             return new Dictionary<string, object>();
+        }
+
+        private long GetI()
+        {
+            var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            string tempKey = $"{UnityNativeConstants.Network.KEY_I}:{coreState.AccountInfo.AccountId}";
+            return preferenceManager.GetLong(tempKey, 0);
+        }
+
+        private long GetJ()
+        {
+            var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            string tempKey = $"{UnityNativeConstants.Network.KEY_J}:{coreState.AccountInfo.AccountId}";
+            return preferenceManager.GetLong(tempKey, 0);
         }
 
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);

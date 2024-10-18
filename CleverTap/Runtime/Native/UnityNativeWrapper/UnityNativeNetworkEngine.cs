@@ -83,7 +83,6 @@ namespace CleverTapSDK.Native {
         private int responseFailureCount;
 
         private UnityNativePreferenceManager _preferenceManager;
-        private string _accountId;
 
         private UnityNativeNetworkEngine() {
         }
@@ -94,9 +93,7 @@ namespace CleverTapSDK.Native {
             DontDestroyOnLoad(gameObject);
 
             UnityNativeNetworkEngine component = gameObject.GetComponent<UnityNativeNetworkEngine>();
-            component._accountId = accountId;
             component._preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(accountId);
-            
             return gameObject.GetComponent<UnityNativeNetworkEngine>();
         }
 
@@ -290,21 +287,18 @@ namespace CleverTapSDK.Native {
         private void ApplyNetworkEngineRequestConfiguration(UnityNativeRequest request) {
             // Set Headers
             if (_headers?.Count > 0) {
-                var allHeaders = new Dictionary<string, string>(_headers);
                 if (request.Headers == null) {
-                    allHeaders = _headers.ToDictionary(x => x.Key, x => x.Value);
+                    request.SetHeaders(_headers.ToDictionary(x => x.Key, x => x.Value));
                 } else {
-                    allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
+                    var allHeaders = request.Headers.ToDictionary(x => x.Key, x => x.Value);
                     foreach (var header in _headers) {
                         // Do not overwrite existing headers
                         if (!allHeaders.ContainsKey(header.Key)) {
                             allHeaders.Add(header.Key, header.Value);
                         }
                     }
+                    request.SetHeaders(allHeaders);
                 }
-                
-                
-                 request.SetHeaders(allHeaders);
             }
 
             // Set Timeout
@@ -392,19 +386,6 @@ namespace CleverTapSDK.Native {
                 return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, ex.Message);
             }
         }
-
-        public long GetI()
-        {
-            string tempKey = $"{UnityNativeConstants.Network.KEY_I}:{_accountId}";
-            return _preferenceManager.GetLong( tempKey,0);
-        }
-        
-        public long GetJ()
-        {
-            string tempKey = $"{UnityNativeConstants.Network.KEY_J}:{_accountId}";
-            return _preferenceManager.GetLong( tempKey,0);
-        }
-        
     }
 }
 #endif

@@ -125,46 +125,46 @@ namespace CleverTapSDK.Native {
         }
 
         private UnityNativeEvent _OnUserLogin(Dictionary<string, object> profile) {
-            try {
-                string currentGUID = _coreState.DeviceInfo.DeviceId;
-                bool haveIdentifier = false;
-                string cachedGUID = null;
+			try {
+				string currentGUID = _coreState.DeviceInfo.DeviceId;
+				bool haveIdentifier = false;
+				string cachedGUID = null;
 
-                foreach (var key in profile.Keys) {
-                    if (IdentityKeys.Contains(key.ToLower())) {
+				foreach (var key in profile.Keys) {
+					if (IdentityKeys.Contains(key.ToLower())) {
                         var value = profile[key];
                         string identifier = value?.ToString();
-                        if (!string.IsNullOrEmpty(identifier)) {
-                            haveIdentifier = true;
-                            cachedGUID = GetGUIDForIdentifier(key, identifier);
-                            if (cachedGUID != null) {
-                                break;
-                            }
-                        }
-                    }
-                }
+						if (!string.IsNullOrEmpty(identifier)) {
+							haveIdentifier = true;
+							cachedGUID = GetGUIDForIdentifier(key, identifier);
+							if (cachedGUID != null) {
+								break;
+							}
+						}
+					}
+				}
 
-                // No Identifier or anonymous
-                if (!haveIdentifier || IsAnonymousUser()) {
+				// No Identifier or anonymous
+				if (!haveIdentifier || IsAnonymousUser()) {
                     CleverTapLogger.Log($"OnUserLogin: No identifier OR device is anonymous, associating profile with current user profile: {currentGUID}");
                     return ProfilePush(profile);
-                }
-                // Same Profile
-                if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
+				}
+				// Same Profile
+				if (cachedGUID != null && cachedGUID.Equals(currentGUID)) {
                     CleverTapLogger.Log($"OnUserLogin: Profile maps to current device id {currentGUID}, using current user profile.");
                     return ProfilePush(profile);
-                }
+				}
 
                 // New Profile
-                SwitchOrCreateProfile(profile, cachedGUID);
-            } catch (Exception e) {
-                CleverTapLogger.LogError("OnUserLogin failed: " + e);
-            }
+				SwitchOrCreateProfile(profile, cachedGUID);
+			} catch (Exception e) {
+				CleverTapLogger.LogError("OnUserLogin failed: " + e);
+			}
 
-            return null;
-        }
+			return null;
+		}
 
-        private bool IsAnonymousUser() {
+		private bool IsAnonymousUser() {
             return string.IsNullOrEmpty(_preferenceManager.GetUserIdentities());
         }
 
