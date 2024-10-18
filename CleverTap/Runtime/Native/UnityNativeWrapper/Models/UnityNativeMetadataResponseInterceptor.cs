@@ -17,6 +17,9 @@ namespace CleverTapSDK.Native
 
         UnityNativeResponse IUnityNativeResponseInterceptor.Intercept(UnityNativeResponse response)
         {
+            if (response == null || string.IsNullOrWhiteSpace(response.Content))
+                return response;
+
             Dictionary<string,object> responseContent = Json.Deserialize(response.Content) as Dictionary<string,object>;
             if (responseContent == null || responseContent.Count <= 0)
                 return response;
