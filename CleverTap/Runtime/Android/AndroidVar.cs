@@ -1,9 +1,9 @@
 ﻿#if UNITY_ANDROID
 using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 using System;
 using System.Collections;
-using CleverTapSDK.Constants;
 
 namespace CleverTapSDK.Android {
     internal class AndroidVar<T> : Var<T> {
@@ -16,15 +16,17 @@ namespace CleverTapSDK.Android {
                     return value;
                 }
 
-                object newValue = Json.Deserialize(jsonRepresentation);
-                if (kind.Equals(CleverTapVariableKind.FILE))
-                {
-                    if (typeof(T) != typeof(string)) {
-                        return (T)(object)jsonRepresentation;
+                if (kind.Equals(CleverTapVariableKind.FILE)) {
+                    if (typeof(T) == typeof(string)) {
+                        return (T)Convert.ChangeType(jsonRepresentation, typeof(T));
+                    } else {
+                        CleverTapLogger.LogError("File variables must be of string type");
+                        return value;
                     }
-                    CleverTapLogger.LogError("Expected type string for FILE kind, but got " + typeof(T));
                 }
-                else if (newValue is IDictionary) {
+
+                object newValue = Json.Deserialize(jsonRepresentation);
+                if (newValue is IDictionary) {
                     Util.FillInValues(newValue, value);
                 } else if (newValue == null) {
                     value = defaultValue;

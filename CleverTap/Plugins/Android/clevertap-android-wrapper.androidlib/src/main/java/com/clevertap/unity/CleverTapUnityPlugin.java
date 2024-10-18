@@ -108,7 +108,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     private static final String CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING = "CleverTapVariablesChangedAndNoDownloadsPending";
     
-    private static final String CLEVERTAP_FILE_VARIABLE_READY = "CleverTapFileVariablesReady";
+    private static final String CLEVERTAP_FILE_VARIABLE_READY = "CleverTapVariableFileIsReady";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -118,7 +118,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
     }
     
-    private static void changeCredentials(String accountID, String token, String proxyDomain, String spikyProxyDomain) {
+    private static void changeCredentials(String accountID, String accountToken, String proxyDomain, String spikyProxyDomain) {
          CleverTapAPI.changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
     }
         
@@ -241,7 +241,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 clevertap.onVariablesChangedAndNoDownloadsPending(new VariablesChangedCallback() {
                     @Override
                     public void variablesChanged() {
-                        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING, "{ Variables Changed Callback }");
+                        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING, "{ Variables Changed No Downloads Pending Callback }");
                     }
                 });
 
@@ -778,7 +778,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void defineFileVariables(String variableName) {
+    public void defineFileVariable(String variableName) {
         Var<String> variable = clevertap.defineFileVariable(variableName);
         if (variable != null) {
             variable.addValueChangedCallback(new VariableCallback() {

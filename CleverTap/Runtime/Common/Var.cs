@@ -16,7 +16,7 @@ namespace CleverTapSDK.Common {
         protected T value;
         protected T defaultValue;
         protected bool isFileReady;
-        
+
         public virtual event CleverTapCallbackDelegate OnValueChanged;
         public virtual event CleverTapCallbackDelegate OnFileReady;
 
@@ -30,7 +30,16 @@ namespace CleverTapSDK.Common {
         public virtual string Name => name;
         public virtual T Value => value;
         public virtual T DefaultValue => defaultValue;
-        public virtual string StringValue => Kind == CleverTapVariableKind.DICTIONARY ? Json.Serialize(Value) : Value.ToString();
+        public virtual string StringValue {
+            get {
+                if (Kind == CleverTapVariableKind.DICTIONARY) {
+                    return Json.Serialize(Value);
+                } else {
+                    return Value?.ToString();
+                }
+            }
+        }
+
         public virtual bool IsFileReady => Kind == CleverTapVariableKind.FILE && isFileReady;
         public string FileValue => Kind == CleverTapVariableKind.FILE ? StringValue : null;
         

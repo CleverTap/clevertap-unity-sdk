@@ -22,9 +22,8 @@ namespace CleverTapSDK.Android {
             return result;
         }
 
-        protected override Var<string> DefineFileVariable<T>(string name)
-        {
-            CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineFileVariables", name);
+        internal override Var<string> DefineFileVariable(string name) {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineFileVariable", name);
             Var<string> result = new AndroidVar<string>(name, CleverTapVariableKind.FILE, null);
             varCache.Add(name, result);
             return result;
