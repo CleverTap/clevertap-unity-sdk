@@ -11,6 +11,7 @@ namespace CleverTapSDK {
         private static CleverTapPlatformBindings cleverTapBinding = BindingFactory.CleverTapBinding;
         private static CleverTapPlatformVariable cleverTapVariable = VariableFactory.CleverTapVariable;
         private static CleverTapPlatformInApps cleverTapInApps = InAppsFactory.CleverTapInApps;
+        private static CleverTapPlatformCustomTemplates cleverTapCustomInApps = CustomTemplatesFactory.CleverTapCustomTemplates;
 
         #region Constants - CleverTap Version
 
@@ -135,6 +136,24 @@ namespace CleverTapSDK {
         public static event CleverTapCallbackDelegate OnOneTimeVariablesChangedAndNoDownloadsPending {
             add => cleverTapCallbackHandler.OnOneTimeVariablesChangedAndNoDownloadsPending += value;
             remove => cleverTapCallbackHandler.OnOneTimeVariablesChangedAndNoDownloadsPending -= value;
+        }
+
+        public static event CleverTapCallbackWithTemplateContext OnCustomTemplatePresent
+        {
+            add => cleverTapCallbackHandler.OnCustomTemplatePresent += value;
+            remove => cleverTapCallbackHandler.OnCustomTemplatePresent -= value;
+        }
+
+        public static event CleverTapCallbackWithTemplateContext OnCustomTemplateClose
+        {
+            add => cleverTapCallbackHandler.OnCustomTemplateClose += value;
+            remove => cleverTapCallbackHandler.OnCustomTemplateClose -= value;
+        }
+
+        public static event CleverTapCallbackWithTemplateContext OnCustomFunctionPresent
+        {
+            add => cleverTapCallbackHandler.OnCustomFunctionPresent += value;
+            remove => cleverTapCallbackHandler.OnCustomFunctionPresent -= value;
         }
         #endregion
 
@@ -462,6 +481,16 @@ namespace CleverTapSDK {
 
         public static void ClearInAppResources(bool expiredOnly) =>
             cleverTapInApps.ClearInAppResources(expiredOnly);
+
+        #endregion
+
+        #region Methods - CleverTap Platform Custom Templates
+
+        public static void SyncCustomTemplates() =>
+            cleverTapCustomInApps.SyncCustomTemplates();
+
+        public static void SyncCustomTemplates(bool isProduction) =>
+            cleverTapCustomInApps.SyncCustomTemplates(isProduction);
 
         #endregion
     }

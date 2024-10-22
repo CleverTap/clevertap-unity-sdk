@@ -50,7 +50,12 @@ namespace CleverTapSDK.Common {
         public event CleverTapCallbackDelegate OnOneTimeVariablesChangedAndNoDownloadsPending;
         
         public event CleverTapCallbackDelegate OnVariablesChangedAndNoDownloadsPending;
-        
+
+        public event CleverTapCallbackWithTemplateContext OnCustomTemplatePresent;
+
+        public event CleverTapCallbackWithTemplateContext OnCustomTemplateClose;
+
+        public event CleverTapCallbackWithTemplateContext OnCustomFunctionPresent;
         #endregion
 
         #region Default - Callback Methods
@@ -306,6 +311,29 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        #endregion
+
+        #region Default - Custom Templates Callbacks
+        public virtual void CleverTapCustomTemplatePresent(string templateName)
+        {
+            CleverTapLogger.Log($"Unity received template present: {templateName}");
+            CleverTapTemplateContext context = CustomTemplatesFactory.CleverTapCustomTemplates.CreateContext(templateName);
+            OnCustomTemplatePresent?.Invoke(context);
+        }
+
+        public virtual void CleverTapCustomTemplateClose(string templateName)
+        {
+            CleverTapLogger.Log($"Unity received template close: {templateName}");
+            CleverTapTemplateContext context = CustomTemplatesFactory.CleverTapCustomTemplates.CreateContext(templateName);
+            OnCustomTemplateClose?.Invoke(context);
+        }
+
+        public virtual void CleverTapCustomFunctionPresent(string templateName)
+        {
+            CleverTapLogger.Log($"Unity received function present: {templateName}");
+            CleverTapTemplateContext context = CustomTemplatesFactory.CleverTapCustomTemplates.CreateContext(templateName);
+            OnCustomFunctionPresent?.Invoke(context);
+        }
         #endregion
     }
 }
