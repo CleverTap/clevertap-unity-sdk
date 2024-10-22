@@ -1,5 +1,6 @@
 ﻿#if UNITY_IOS
 using System.Runtime.InteropServices;
+using CleverTapSDK.IOS;
 
 namespace CleverTapSDK.IOS {
     internal static class IOSDllImport {
@@ -271,6 +272,52 @@ namespace CleverTapSDK.IOS {
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_clearInAppResources(bool expiredOnly);
+
+        #endregion
+
+        #region CustomTemplates
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_customTemplateSetPresented(string templateName);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_customTemplateSetDismissed(string templateName);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_customTemplateContextToString(string templateName);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_customTemplateTriggerAction(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_customTemplateGetStringArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern bool? CleverTap_customTemplateGetBooleanArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_customTemplateGetFileArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_customTemplateGetDictionaryArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern int CleverTap_customTemplateGetIntArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern double CleverTap_customTemplateGetDoubleArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern float CleverTap_customTemplateGetFloatArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern long CleverTap_customTemplateGetLongArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern short CleverTap_customTemplateGetShortArg(string templateName, string argumentName);
+
+        [DllImport("__Internal")]
+        internal static extern byte CleverTap_customTemplateGetByteArg(string templateName, string argumentName);
 
         #endregion
     }

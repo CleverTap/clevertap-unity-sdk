@@ -5,6 +5,7 @@
 #import <CleverTapSDK/CleverTapUTMDetail.h>
 #import <CleverTapSDK/CleverTapEventDetail.h>
 
+static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 
 @interface CleverTapUnityManager : NSObject
 
@@ -153,5 +154,31 @@
 #pragma mark - Client-side In-Apps
 - (void)fetchInApps:(int)callbackId;
 - (void)clearInAppResources:(BOOL)expiredOnly;
+
+#pragma mark - Custom Templates
+- (void)customTemplateSetPresented:(NSString *)name;
+- (void)customTemplateSetDismissed:(NSString *)name;
+- (void)customTemplateTriggerAction:(NSString *)templateName named:(NSString *)argumentName;
+
+- (NSString *)customTemplateContextToString:(NSString *)name;
+- (NSString *)customTemplateGetStringArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (BOOL)customTemplateGetBooleanArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (NSString *)customTemplateGetFileArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (NSDictionary *)customTemplateGetDictionaryArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (int)customTemplateGetIntArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (double)customTemplateGetDoubleArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (float)customTemplateGetFloatArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (int64_t)customTemplateGetLongArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (int16_t)customTemplateGetShortArg:(NSString *)templateName named:(NSString *)argumentName;
+
+- (int8_t)customTemplateGetByteArg:(NSString *)templateName named:(NSString *)argumentName;
 
 @end

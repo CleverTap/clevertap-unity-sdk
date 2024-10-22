@@ -11,10 +11,10 @@
 #import <CleverTapSDK/Clevertap+PushPermission.h>
 #import <CleverTapSDK/CTVar.h>
 #import <CleverTapSDK/CleverTap+CTVar.h>
+#import <CleverTapSDK/CTTemplateContext.h>
 
 static CleverTap *clevertap;
 
-static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 static NSString * kCleverTapGameObjectProfileInitializedCallback = @"CleverTapProfileInitializedCallback";
 static NSString * kCleverTapGameObjectProfileUpdatesCallback = @"CleverTapProfileUpdatesCallback";
 static NSString * kCleverTapDeepLinkCallback = @"CleverTapDeepLinkCallback";
@@ -1062,6 +1062,137 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
 - (void)clearInAppResources:(BOOL)expiredOnly 
 {
     [clevertap clearInAppResources:expiredOnly];
+}
+
+- (NSString *)customTemplateContextToString:(NSString *)name {
+    CTTemplateContext *context = [self contextNamed:name];
+    if (context) {
+        return [context debugDescription];
+    }
+    return nil;
+}
+
+- (void)customTemplateSetDismissed:(NSString *)name {
+    CTTemplateContext *context = [self contextNamed:name];
+    if (context) {
+        [context dismissed];
+    }
+}
+
+- (void)customTemplateSetPresented:(NSString *)name {
+    CTTemplateContext *context = [self contextNamed:name];
+    if (context) {
+        [context presented];
+    }
+}
+
+- (void)customTemplateTriggerAction:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        [context triggerActionNamed:argumentName];
+    }
+}
+
+- (NSString *)customTemplateGetStringArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context stringNamed:argumentName];
+    }
+    return nil;
+}
+
+- (BOOL)customTemplateGetBooleanArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context boolNamed:argumentName];
+    }
+    
+    return NO;
+}
+
+- (int8_t)customTemplateGetByteArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [[context numberNamed:argumentName] charValue];
+    }
+    
+    return 0;
+}
+
+- (NSDictionary *)customTemplateGetDictionaryArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context dictionaryNamed:argumentName];
+    }
+    return nil;
+}
+
+- (double)customTemplateGetDoubleArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context doubleNamed:argumentName];
+    }
+    
+    return 0;
+}
+
+- (NSString *)customTemplateGetFileArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context fileNamed:argumentName];
+    }
+    return nil;
+}
+
+- (float)customTemplateGetFloatArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context floatNamed:argumentName];
+    }
+    
+    return 0;
+}
+
+- (int)customTemplateGetIntArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context intNamed:argumentName];
+    }
+    
+    return 0;
+}
+
+- (int64_t)customTemplateGetLongArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [context longLongNamed:argumentName];
+    }
+    
+    return 0;
+}
+
+- (int16_t)customTemplateGetShortArg:(NSString *)templateName named:(NSString *)argumentName {
+    CTTemplateContext *context = [self contextNamed:templateName];
+    if (context) {
+        return [[context numberNamed:argumentName] charValue];
+    }
+    
+    return 0;
+}
+
+- (CTTemplateContext *)contextNamed:(NSString *)templateName {
+    if (!clevertap) {
+        NSLog(@"CleverTap is not initialized");
+        return nil;
+    }
+    
+    CTTemplateContext *context  = [clevertap activeContextForTemplate:templateName];
+    if (!context) {
+        NSLog(@"Custom template: %@ is not currently being presented", templateName);
+        return nil;
+    }
+
+    return context;
 }
 
 @end
