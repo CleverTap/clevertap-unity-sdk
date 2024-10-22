@@ -9,6 +9,7 @@ namespace CleverTapSDK.Common {
     internal abstract class CleverTapPlatformVariable {
         protected readonly IDictionary<string, IVar> varCache = new Dictionary<string, IVar>();
         protected readonly IDictionary<int, Action<bool>> variablesFetchedCallbacks = new Dictionary<int, Action<bool>>();
+
         protected readonly CleverTapCounter variablesFetchedIdCounter = new CleverTapCounter();
 
         #region Default - Variables
@@ -52,6 +53,9 @@ namespace CleverTapSDK.Common {
         internal virtual Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) =>
             GetOrDefineVariable<Dictionary<string, string>>(name, defaultValue);
 
+        internal virtual Var<string> DefineFileVariable(string name) =>
+            GetOrDefineFileVariable(name);
+        
         internal virtual void FetchVariables(Action<bool> isSucessCallback) {
             var callbackId = variablesFetchedIdCounter.GetNextAndIncreaseCounter();
             if (!variablesFetchedCallbacks.ContainsKey(callbackId)) {
@@ -67,6 +71,13 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        internal virtual void VariableFileIsReady(string name) {
+            if (varCache.ContainsKey(name))
+            {
+                varCache[name].FileIsReady();
+            }
+        }
+        
         internal virtual void VariableChanged(string name) {
             if (varCache.ContainsKey(name)) {
                 varCache[name].ValueChanged();
@@ -87,10 +98,19 @@ namespace CleverTapSDK.Common {
                 }
                 return (Var<T>)varCache[name];
             }
-
+            
             return DefineVariable<T>(name, kindName, defaultValue);
         }
 
+        protected virtual Var<string> GetOrDefineFileVariable(string name) {
+            
+            if (varCache.ContainsKey(name) && varCache[name].Kind.Equals(CleverTapVariableKind.FILE)) {
+                return (Var<string>)varCache[name];
+            }
+            
+            return DefineFileVariable(name);
+        }
+        
         protected virtual string GetKindNameFromGenericType<T>() {
             Type type = typeof(T);
             if (type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(char) || type == typeof(sbyte) || type == typeof(byte)) {

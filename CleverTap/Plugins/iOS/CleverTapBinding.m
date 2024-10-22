@@ -598,10 +598,22 @@ void CleverTap_defineVar(const char* name, const char* kind, const char* value)
                                       andDefaultValue:clevertap_stringToNSString(value)];
 }
 
+void CleverTap_defineFileVar(const char* name)
+{
+    [[CleverTapUnityManager sharedInstance] defineFileVar:clevertap_stringToNSString(name)];
+}
+
 char* CleverTap_getVariableValue(const char* name)
 {
     NSString* json = [[CleverTapUnityManager sharedInstance]
                       getVariableValue:clevertap_stringToNSString(name)];
+    return clevertap_cStringCopy([json UTF8String]);
+}
+
+char* CleverTap_getFileVariableValue(const char* name)
+{
+    NSString* json = [[CleverTapUnityManager sharedInstance]
+                      getFileVariableValue:clevertap_stringToNSString(name)];
     return clevertap_cStringCopy([json UTF8String]);
 }
 

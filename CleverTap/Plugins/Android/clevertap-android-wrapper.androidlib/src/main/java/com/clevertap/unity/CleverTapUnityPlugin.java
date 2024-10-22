@@ -103,8 +103,12 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_VARIABLE_VALUE_CHANGED = "CleverTapVariableValueChanged";
 
     private static final String CLEVERTAP_VARIABLES_FETCHED = "CleverTapVariablesFetched";
-    
+
     private static final String CLEVERTAP_INAPPS_FETCHED = "CleverTapInAppsFetched";
+
+    private static final String CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING = "CleverTapVariablesChangedAndNoDownloadsPending";
+    
+    private static final String CLEVERTAP_FILE_VARIABLE_READY = "CleverTapVariableFileIsReady";
 
     private static CleverTapUnityPlugin instance = null;
 
@@ -234,6 +238,13 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                         messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED, "{ Variables Changed Callback }");
                     }
                 });
+                clevertap.onVariablesChangedAndNoDownloadsPending(new VariablesChangedCallback() {
+                    @Override
+                    public void variablesChanged() {
+                        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING, "{ Variables Changed No Downloads Pending Callback }");
+                    }
+                });
+
             }
         } catch (Throwable t) {
             Log.e(LOG_TAG, "initialization error", t);
@@ -762,6 +773,25 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
                 @Override
                 public void onValueChanged(Var variable) {
                     messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLE_VALUE_CHANGED, variable.name());
+                }
+            });
+        }
+    }
+
+    public void defineFileVariable(String variableName) {
+        Var<String> variable = clevertap.defineFileVariable(variableName);
+        if (variable != null) {
+            variable.addValueChangedCallback(new VariableCallback() {
+                @Override
+                public void onValueChanged(Var variable) {
+                    messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLE_VALUE_CHANGED, variable.name());
+                }
+            });
+
+            variable.addFileReadyHandler(new VariableCallback<String>() {
+                @Override
+                public void onValueChanged(Var<String> variable) {
+                    messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_FILE_VARIABLE_READY, variable.name());
                 }
             });
         }

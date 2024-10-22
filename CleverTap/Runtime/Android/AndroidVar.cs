@@ -1,5 +1,6 @@
 ﻿#if UNITY_ANDROID
 using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 using System;
 using System.Collections;
@@ -13,6 +14,15 @@ namespace CleverTapSDK.Android {
                 string jsonRepresentation = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getVariableValue", name);
                 if (jsonRepresentation == Json.Serialize(value)) {
                     return value;
+                }
+
+                if (kind.Equals(CleverTapVariableKind.FILE)) {
+                    if (typeof(T) == typeof(string)) {
+                        return (T)Convert.ChangeType(jsonRepresentation, typeof(T));
+                    } else {
+                        CleverTapLogger.LogError("File variables must be of string type");
+                        return value;
+                    }
                 }
 
                 object newValue = Json.Deserialize(jsonRepresentation);
