@@ -26,7 +26,6 @@ namespace CTIntegrationTests
             var contentSizeFitter = transform.GetComponent<ContentSizeFitter>();
             if (layoutGroup != null)
             {
-                Debug.Log("Update");
                 layoutGroup.SetLayoutHorizontal();
                 layoutGroup.SetLayoutVertical();
             }

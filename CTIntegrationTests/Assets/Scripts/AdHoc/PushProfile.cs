@@ -36,14 +36,6 @@ namespace CTIntegrationTests
             }
 
             CleverTap.ProfilePush(profileData);
-
-            int age = UnityEngine.Random.Range(20, 80);
-            Dictionary<string, object> profileProperties = new Dictionary<string, object>
-            {
-                { "DOB", DateTime.Now.AddYears(-age) }
-            };
-
-            CleverTap.ProfilePush(profileProperties);
         }
     }
 }
