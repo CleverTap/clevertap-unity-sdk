@@ -5,29 +5,51 @@ namespace CTIntegrationTests
 {
     public class KeyValue : MonoBehaviour
     {
-        public string Key { get; set; }
-        public string Value { get; set; }
+        [SerializeField] private TMP_Text KeyText;
+        [SerializeField] private TMP_Text ValueText;
 
-        public bool UseTextValues;
-        public TMP_Text KeyText;
-        public TMP_Text ValueText;
-
-        // Start is called before the first frame update
         void Start()
         {
-            if (!UseTextValues)
-            {
-                KeyText.SetText(Key);
-                ValueText.SetText(Value);
-            }
+            KeyText.GetComponent<ClickableText>().OnTextClickedEvent += KeyValue_OnTextClickedEvent;
+            ValueText.GetComponent<ClickableText>().OnTextClickedEvent += KeyValue_OnTextClickedEvent;
 
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform.parent.transform);
         }
 
-        // Update is called once per frame
-        void Update()
+        public string GetKey()
         {
+            return KeyText.text;
+        }
 
+        public void SetKey(string text)
+        {
+            if (text != KeyText.text)
+            {
+                KeyText.SetText(text);
+            }
+        }
+
+        public string GetValue()
+        {
+            return ValueText.text;
+        }
+
+        public void SetValue(string text)
+        {
+            if (text != ValueText.text)
+            {
+                ValueText.SetText(text);
+            }
+        }
+
+        private void KeyValue_OnTextClickedEvent(string text)
+        {
+            TextEditor te = new TextEditor();
+            te.text = text;
+            te.SelectAll();
+            te.Copy();
+
+            Debug.Log($"[SAMPLE] copied: {text}");
         }
     }
 }
