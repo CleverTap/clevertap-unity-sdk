@@ -30,6 +30,20 @@ namespace CTIntegrationTests
             buttonText.SetText(text);
         }
 
+        public void AddAdditionalButton(string name, string text, OnButtonClicked onButtonClicked)
+        {
+            VerticalLayoutGroup layout = GetComponent<VerticalLayoutGroup>();
+
+            Button newButton = Instantiate(button);
+            newButton.name = name;
+            newButton.GetComponentInChildren<TMP_Text>().text = text;
+            newButton.onClick.AddListener(() =>
+            {
+                onButtonClicked?.Invoke(textInput.text);
+            });
+            newButton.transform.SetParent(layout.transform, false);
+        }
+
         // Start is called before the first frame update
         void Start()
         {

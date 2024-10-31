@@ -60,21 +60,10 @@ namespace CTIntegrationTests
             multiProp.transform.SetParent(parent, false);
             multiProp.AddComponent<MultiProperty>();
 
-            GameObject addMultiProp = Instantiate(InputPanelPrefab);
-            addMultiProp.name = "AddMultiProperty";
-            addMultiProp.transform.SetParent(parent, false);
-            addMultiProp.AddComponent<MultiProperty>().useAddValues = true;
-
-            GameObject increment = Instantiate(InputPanelPrefab);
-            increment.name = "IncrementProperty";
-            increment.transform.SetParent(parent, false);
-            increment.AddComponent<IncrementDecrementProperty>();
-
-            GameObject decrement = Instantiate(InputPanelPrefab);
-            decrement.name = "DecrementProperty";
-            decrement.transform.SetParent(parent, false);
-            var decr = decrement.AddComponent<IncrementDecrementProperty>();
-            decr.shouldDecrement = true;
+            GameObject incrementDecrement = Instantiate(InputPanelPrefab);
+            incrementDecrement.name = "Increment/Decrement Property";
+            incrementDecrement.transform.SetParent(parent, false);
+            incrementDecrement.AddComponent<IncrementDecrementProperty>();
         }
 
         private void AddInfoValues(RectTransform parent)

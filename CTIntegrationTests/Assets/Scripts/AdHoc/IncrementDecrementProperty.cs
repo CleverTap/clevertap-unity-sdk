@@ -7,8 +7,6 @@ namespace CTIntegrationTests
     [RequireComponent(typeof(InputPanel))]
     public class IncrementDecrementProperty : MonoBehaviour
     {
-        public bool shouldDecrement;
-
 		private InputPanel panel;
 
         private void Awake()
@@ -18,41 +16,45 @@ namespace CTIntegrationTests
 
         void Start()
         {
-            panel.SetTitle(shouldDecrement ? "Decrement property" : "Increment property");
+            panel.SetTitle("Increment/Decrement property");
             panel.SetPlaceholder("propertyName:value");
-            panel.SetButtonText(shouldDecrement ? "Decrement" : "Increment");
+            panel.SetButtonText("Increment");
 
-            panel.OnButtonClickedEvent += OnButtonClick;
+            panel.OnButtonClickedEvent += OnIncrementButtonClick;
+
+            panel.AddAdditionalButton("Decrement", "Decrement", OnDecrementButtonClick);
         }
 
-        private void OnButtonClick(string text)
+        private void OnDecrementButtonClick(string text)
         {
-            Debug.Log($"[SAMPLE] Panel_OnButtonClickedEvent: {text}");
-
             string[] keyValue = text.Split(":", StringSplitOptions.RemoveEmptyEntries);
             if (keyValue.Length == 2)
             {
                 string key = keyValue[0];
-                if (int.TryParse(keyValue[1], out int number)) {
-                    if (shouldDecrement)
-                    {
-                        CleverTap.ProfileDecrementValueForKey(key, number);
-                    }
-                    else
-                    {
-                        CleverTap.ProfileIncrementValueForKey(key, number);
-                    }
+                if (int.TryParse(keyValue[1], out int number))
+                {
+                    CleverTap.ProfileDecrementValueForKey(key, number);
                 }
                 else if (double.TryParse(keyValue[1], out double d))
                 {
-                    if (shouldDecrement)
-                    {
-                        CleverTap.ProfileDecrementValueForKey(key, d);
-                    }
-                    else
-                    {
-                        CleverTap.ProfileIncrementValueForKey(key, d);
-                    }
+                    CleverTap.ProfileDecrementValueForKey(key, d);
+                }
+            }
+        }
+
+        private void OnIncrementButtonClick(string text)
+        {
+            string[] keyValue = text.Split(":", StringSplitOptions.RemoveEmptyEntries);
+            if (keyValue.Length == 2)
+            {
+                string key = keyValue[0];
+                if (int.TryParse(keyValue[1], out int number))
+                {
+                    CleverTap.ProfileIncrementValueForKey(key, number);
+                }
+                else if (double.TryParse(keyValue[1], out double d))
+                {
+                    CleverTap.ProfileIncrementValueForKey(key, d);
                 }
             }
         }
