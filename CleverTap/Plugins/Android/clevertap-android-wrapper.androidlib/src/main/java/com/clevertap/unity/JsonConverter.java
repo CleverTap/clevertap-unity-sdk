@@ -1,10 +1,20 @@
 package com.clevertap.unity;
 
+import android.util.Log;
+
+import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.util.Log;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 public class JsonConverter {
     private static final String DATE_PREFIX = "ct_date_";
 
@@ -54,6 +64,7 @@ public class JsonConverter {
             return null;
         }
     }
+
     @SuppressWarnings("unchecked")
     public static JSONObject mapToJsonObject(Map<String, ?> map) throws JSONException {
         JSONObject obj = new JSONObject();
@@ -68,6 +79,7 @@ public class JsonConverter {
         }
         return obj;
     }
+
     @SuppressWarnings("unchecked")
     public static JSONArray listToJsonArray(Iterable<?> list) throws JSONException {
         JSONArray obj = new JSONArray();
@@ -81,8 +93,9 @@ public class JsonConverter {
         }
         return obj;
     }
+
     @SuppressWarnings("unchecked")
-    public static <T>Map<String, T> mapFromJson(JSONObject object) {
+    public static <T> Map<String, T> mapFromJson(JSONObject object) {
         if (object == null) {
             return null;
         }
@@ -102,6 +115,7 @@ public class JsonConverter {
         }
         return result;
     }
+
     public static List<Object> listFromJson(JSONArray json) {
         if (json == null) {
             return null;
@@ -119,5 +133,16 @@ public class JsonConverter {
             result.add(value);
         }
         return result;
+    }
+
+    public static JSONArray displayUnitListToJSONArray(ArrayList<CleverTapDisplayUnit> displayUnits)
+            throws JSONException {
+        JSONArray array = new JSONArray();
+
+        for (int i = 0; i < displayUnits.size(); i++) {
+            array.put(displayUnits.get(i).getJsonObject());
+        }
+
+        return array;
     }
 }

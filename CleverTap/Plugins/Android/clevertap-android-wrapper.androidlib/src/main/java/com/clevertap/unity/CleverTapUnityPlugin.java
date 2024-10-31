@@ -1,6 +1,5 @@
 package com.clevertap.unity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,117 +10,48 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import androidx.annotation.Nullable;
+
 import androidx.annotation.RequiresApi;
+
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
-import com.clevertap.android.sdk.CTFeatureFlagsListener;
-import com.clevertap.android.sdk.CTInboxListener;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.InAppNotificationButtonListener;
-import com.clevertap.android.sdk.InAppNotificationListener;
-import com.clevertap.android.sdk.InboxMessageButtonListener;
-import com.clevertap.android.sdk.InboxMessageListener;
-import com.clevertap.android.sdk.PushPermissionResponseListener;
-import com.clevertap.android.sdk.SyncListener;
 import com.clevertap.android.sdk.UTMDetail;
-import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
-import com.clevertap.android.sdk.inapp.CTInAppNotification;
 import com.clevertap.android.sdk.inapp.CTLocalInApp;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
-import com.clevertap.android.sdk.interfaces.OnInitCleverTapIDListener;
-import com.clevertap.android.sdk.product_config.CTProductConfigListener;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.clevertap.android.sdk.variables.Var;
-import com.clevertap.android.sdk.variables.callbacks.VariableCallback;
-import com.clevertap.android.sdk.variables.callbacks.VariablesChangedCallback;
-import com.clevertap.android.sdk.variables.callbacks.FetchVariablesCallback;
-import com.clevertap.android.sdk.inapp.callbacks.FetchInAppsCallback;
-import com.unity3d.player.UnityPlayer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class CleverTapUnityPlugin implements SyncListener, InAppNotificationListener,
-        CTInboxListener, InAppNotificationButtonListener,
-        InboxMessageButtonListener, DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener,
-        OnInitCleverTapIDListener, InboxMessageListener, PushPermissionResponseListener {
+public class CleverTapUnityPlugin {
 
-    private static final String LOG_TAG = "CleverTapUnityPlugin";
-
-    private static final String CLEVERTAP_GAME_OBJECT_NAME = "AndroidCallbackHandler";
-
-    private static final String CLEVERTAP_PROFILE_INITIALIZED_CALLBACK = "CleverTapProfileInitializedCallback";
-
-    private static final String CLEVERTAP_PROFILE_UPDATES_CALLBACK = "CleverTapProfileUpdatesCallback";
-
-    private static final String CLEVERTAP_DEEP_LINK_CALLBACK = "CleverTapDeepLinkCallback";
-
-    private static final String CLEVERTAP_PUSH_OPENED_CALLBACK = "CleverTapPushOpenedCallback";
-
-    private static final String CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK
-            = "CleverTapInAppNotificationDismissedCallback";
-
-    private static final String CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK
-            = "CleverTapInAppNotificationShowCallback";
-
-    private static final String CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK
-            = "CleverTapOnPushPermissionResponseCallback";
-
-    private static final String CLEVERTAP_INBOX_DID_INITIALIZE = "CleverTapInboxDidInitializeCallback";
-
-    private static final String CLEVERTAP_INBOX_MESSAGES_DID_UPDATE = "CleverTapInboxMessagesDidUpdateCallback";
-
-    private static final String CLEVERTAP_ON_INBOX_BUTTON_CLICKED = "CleverTapInboxCustomExtrasButtonSelect";
-
-    private static final String CLEVERTAP_ON_INBOX_ITEM_CLICKED = "CleverTapInboxItemSelect";
-
-    private static final String CLEVERTAP_ON_INAPP_BUTTON_CLICKED = "CleverTapInAppNotificationButtonTapped";
-
-    private static final String CLEVERTAP_DISPLAY_UNITS_UPDATED = "CleverTapNativeDisplayUnitsUpdated";
-
-    private static final String CLEVERTAP_FEATURE_FLAG_UPDATED = "CleverTapFeatureFlagsUpdated";
-
-    private static final String CLEVERTAP_PRODUCT_CONFIG_INITIALIZED = "CleverTapProductConfigInitialized";
-
-    private static final String CLEVERTAP_PRODUCT_CONFIG_FETCHED = "CleverTapProductConfigFetched";
-
-    private static final String CLEVERTAP_PRODUCT_CONFIG_ACTIVATED = "CleverTapProductConfigActivated";
-
-    private static final String CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK = "CleverTapInitCleverTapIdCallback";
-
-    private static final String CLEVERTAP_VARIABLES_CHANGED = "CleverTapVariablesChanged";
-
-    private static final String CLEVERTAP_VARIABLE_VALUE_CHANGED = "CleverTapVariableValueChanged";
-
-    private static final String CLEVERTAP_VARIABLES_FETCHED = "CleverTapVariablesFetched";
-
-    private static final String CLEVERTAP_INAPPS_FETCHED = "CleverTapInAppsFetched";
-
-    private static final String CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING = "CleverTapVariablesChangedAndNoDownloadsPending";
-    
-    private static final String CLEVERTAP_FILE_VARIABLE_READY = "CleverTapVariableFileIsReady";
+    public static final String LOG_TAG = "CleverTapUnityPlugin";
 
     private static CleverTapUnityPlugin instance = null;
 
     private CleverTapAPI clevertap = null;
+    private final CleverTapUnityCallbackHandler callbackHandler;
 
     private static void changeCredentials(final String accountID, final String accountToken, final String region) {
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
     }
-    
+
     private static void changeCredentials(String accountID, String accountToken, String proxyDomain, String spikyProxyDomain) {
-         CleverTapAPI.changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
+        CleverTapAPI.changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
     }
-        
+
     static void handleIntent(Intent intent, Activity activity) {
         if (intent == null) {
             return;
@@ -169,31 +99,29 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     static private void handlePushNotification(final JSONObject data) {
-        final String json = data.toString();
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PUSH_OPENED_CALLBACK, json);
+        CleverTapUnityCallbackHandler.handlePushNotification(data);
     }
 
     static private void handleDeepLink(final Uri data) {
-        final String json = data.toString();
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_DEEP_LINK_CALLBACK, json);
+        CleverTapUnityCallbackHandler.handleDeepLink(data);
     }
 
     public static void initialize(final String accountID, final String accountToken, final Activity activity) {
         initialize(accountID, accountToken, null, activity);
     }
-    
+
     public static void initialize(final String accountID, final String accountToken, final String region,
                                   final Activity activity) {
         changeCredentials(accountID, accountToken, region);
         setupActivityForInitialization(activity);
     }
-    
-    public static void initialize(final String accountID, final String accountToken, final String proxyDomain, 
+
+    public static void initialize(final String accountID, final String accountToken, final String proxyDomain,
                                   final String spikyProxyDomain, final Activity activity) {
         changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
         setupActivityForInitialization(activity);
     }
-    
+
     private static void setupActivityForInitialization(Activity activity) {
         try {
             ActivityLifecycleCallback.register(activity.getApplication());
@@ -217,33 +145,24 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     private CleverTapUnityPlugin(final Context context) {
+        callbackHandler = new CleverTapUnityCallbackHandler();
         try {
             clevertap = CleverTapAPI.getDefaultInstance(context);
             if (clevertap != null) {
                 Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
-                clevertap.registerPushPermissionNotificationResponseListener(this);
-                clevertap.setInAppNotificationListener(this);
-                clevertap.setSyncListener(this);
-                clevertap.setCTNotificationInboxListener(this);
-                clevertap.setInboxMessageButtonListener(this);
-                clevertap.setCTInboxMessageListener(this);
-                clevertap.setInAppNotificationButtonListener(this);
-                clevertap.setDisplayUnitListener(this);
-                clevertap.setCTFeatureFlagsListener(this);
-                clevertap.setCTProductConfigListener(this);
+                clevertap.registerPushPermissionNotificationResponseListener(callbackHandler);
+                clevertap.setInAppNotificationListener(callbackHandler);
+                clevertap.setSyncListener(callbackHandler);
+                clevertap.setCTNotificationInboxListener(callbackHandler);
+                clevertap.setInboxMessageButtonListener(callbackHandler);
+                clevertap.setCTInboxMessageListener(callbackHandler);
+                clevertap.setInAppNotificationButtonListener(callbackHandler);
+                clevertap.setDisplayUnitListener(callbackHandler);
+                clevertap.setCTFeatureFlagsListener(callbackHandler);
+                clevertap.setCTProductConfigListener(callbackHandler);
                 clevertap.setLibrary("Unity");
-                clevertap.addVariablesChangedCallback(new VariablesChangedCallback() {
-                    @Override
-                    public void variablesChanged() {
-                        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED, "{ Variables Changed Callback }");
-                    }
-                });
-                clevertap.onVariablesChangedAndNoDownloadsPending(new VariablesChangedCallback() {
-                    @Override
-                    public void variablesChanged() {
-                        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING, "{ Variables Changed No Downloads Pending Callback }");
-                    }
-                });
+                clevertap.addVariablesChangedCallback(callbackHandler.getVariablesChangedCallback());
+                clevertap.onVariablesChangedAndNoDownloadsPending(callbackHandler.getVariablesChangedAndNoDownloadsPending());
 
             }
         } catch (Throwable t) {
@@ -252,7 +171,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public static void createNotificationChannel(Context context, String channelId, String channelName,
-            String channelDescription, int importance, boolean showBadge) {
+                                                 String channelDescription, int importance, boolean showBadge) {
         try {
             CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
                     showBadge);
@@ -263,7 +182,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithSound(Context context, String channelId, String channelName,
-            String channelDescription, int importance, boolean showBadge, String sound) {
+                                                          String channelDescription, int importance, boolean showBadge, String sound) {
         try {
             CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
                     showBadge, sound);
@@ -274,7 +193,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithGroup(Context context, String channelId, String channelName,
-            String channelDescription, int importance, String groupId, boolean showBadge) {
+                                                          String channelDescription, int importance, String groupId, boolean showBadge) {
         try {
             CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
                     groupId, showBadge);
@@ -285,8 +204,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
     @RequiresApi(api = VERSION_CODES.O)
     public static void createNotificationChannelWithGroupAndSound(Context context, String channelId,
-            String channelName, String channelDescription, int importance, String groupId, boolean showBadge,
-            String sound) {
+                                                                  String channelName, String channelDescription, int importance, String groupId, boolean showBadge,
+                                                                  String sound) {
         try {
             CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
                     groupId, showBadge, sound);
@@ -470,26 +389,16 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    @Override
-    public void onInitCleverTapID(String cleverTapID){
-        final String json = "{cleverTapID:" + cleverTapID + "}";
+    public void getCleverTapID() {
         try {
-             messageUnity(CLEVERTAP_GAME_OBJECT_NAME,CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK,json);
-        } catch (Throwable t) {
-            Log.e(LOG_TAG, "onInitCleverTapID error", t);
-        }
-    }
-
-    public void getCleverTapID(){
-        try {
-            clevertap.getCleverTapID(this);
+            clevertap.getCleverTapID(callbackHandler);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "getCleverTapID error", t);
         }
     }
 
 
-    public void profileIncrementValueForKey(final String key, final double value){
+    public void profileIncrementValueForKey(final String key, final double value) {
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {
@@ -497,7 +406,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void profileIncrementValueForKey(final String key, final int value){
+    public void profileIncrementValueForKey(final String key, final int value) {
         try {
             clevertap.incrementValue(key, value);
         } catch (Throwable t) {
@@ -505,7 +414,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void profileDecrementValueForKey(final String key,final double value) {
+    public void profileDecrementValueForKey(final String key, final double value) {
         try {
             clevertap.decrementValue(key, value);
         } catch (Throwable t) {
@@ -513,7 +422,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void profileDecrementValueForKey(final String key,final int value) {
+    public void profileDecrementValueForKey(final String key, final int value) {
         try {
             clevertap.decrementValue(key, value);
         } catch (Throwable t) {
@@ -521,7 +430,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    public void suspendInAppNotifications(){
+    public void suspendInAppNotifications() {
         try {
             clevertap.suspendInAppNotifications();
         } catch (Throwable t) {
@@ -530,7 +439,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
 
-    public void discardInAppNotifications(){
+    public void discardInAppNotifications() {
         try {
             clevertap.discardInAppNotifications();
         } catch (Throwable t) {
@@ -539,7 +448,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
 
-    public void resumeInAppNotifications(){
+    public void resumeInAppNotifications() {
         try {
             clevertap.resumeInAppNotifications();
         } catch (Throwable t) {
@@ -769,31 +678,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
 
         if (variable != null) {
-            variable.addValueChangedCallback(new VariableCallback() {
-                @Override
-                public void onValueChanged(Var variable) {
-                    messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLE_VALUE_CHANGED, variable.name());
-                }
-            });
+            variable.addValueChangedCallback(callbackHandler.getVariableCallback());
         }
     }
 
     public void defineFileVariable(String variableName) {
         Var<String> variable = clevertap.defineFileVariable(variableName);
         if (variable != null) {
-            variable.addValueChangedCallback(new VariableCallback() {
-                @Override
-                public void onValueChanged(Var variable) {
-                    messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLE_VALUE_CHANGED, variable.name());
-                }
-            });
-
-            variable.addFileReadyHandler(new VariableCallback<String>() {
-                @Override
-                public void onValueChanged(Var<String> variable) {
-                    messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_FILE_VARIABLE_READY, variable.name());
-                }
-            });
+            variable.addValueChangedCallback(callbackHandler.getVariableCallback());
+            variable.addFileReadyHandler(callbackHandler.getFileVariableCallback());
         }
     }
 
@@ -802,7 +695,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         if (value == null) {
             return null;
         }
-        
+
         return (value instanceof Map) ? new JSONObject((Map<?, ?>) value).toString() : value.toString();
     }
 
@@ -811,41 +704,15 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     public void fetchVariables(final int callbackId) {
-        clevertap.fetchVariables(new FetchVariablesCallback() {
-            @Override
-            public void onVariablesFetched(boolean isSuccess) {
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("callbackId", callbackId);
-                    json.put("isSuccess", isSuccess);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-
-                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_VARIABLES_FETCHED, json.toString());
-            }
-        });
+        clevertap.fetchVariables(callbackHandler.getFetchVariablesCallback(callbackId));
     }
-    
-    // InApps   
+
+    // InApps
     public void fetchInApps(final int callbackId) {
-        clevertap.fetchInApps(new FetchInAppsCallback() {
-            @Override
-            public void onInAppsFetched(boolean isSuccess) {
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("callbackId", callbackId);
-                    json.put("isSuccess", isSuccess);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-
-                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPPS_FETCHED, json.toString());
-            }
-        });
+        clevertap.fetchInApps(callbackHandler.getFetchInAppsCallback(callbackId));
     }
 
-   /**
+    /**
      * Deletes all images and gifs which are preloaded for inapps in cs mode
      *
      * @param expiredOnly to clear only assets which will not be needed further for inapps
@@ -860,7 +727,7 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
             ArrayList<CleverTapDisplayUnit> arrayList = clevertap.getAllDisplayUnits();
             JSONArray jsonArray = new JSONArray();
             if (arrayList != null) {
-                jsonArray = displayUnitListToJSONArray(arrayList);
+                jsonArray = JsonConverter.displayUnitListToJSONArray(arrayList);
             }
             return jsonArray.toString();
         } catch (JSONException e) {
@@ -953,11 +820,11 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         return clevertap.isPushPermissionGranted();
     }
 
-    public void promptForPushPermission(boolean showFallbackSettings){
+    public void promptForPushPermission(boolean showFallbackSettings) {
         clevertap.promptForPushPermission(showFallbackSettings);
     }
 
-    public void promptPushPrimer(String jsonStr){
+    public void promptPushPrimer(String jsonStr) {
         try {
             Map<String, Object> localInAppMap = toMap(new JSONObject(jsonStr));
             JSONObject jsonObject = localInAppFromMap(localInAppMap);
@@ -967,143 +834,9 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         }
     }
 
-    //Push primer listener
-    @Override
-    public void onPushPermissionResponse(boolean accepted) {
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK,
-                String.valueOf(accepted));
-    }
-
-    // InAppNotificationListener
-    public boolean beforeShow(Map<String, Object> var1) {
-        return true;
-    }
-
-    @SuppressLint("RestrictedApi")
-    public void onShow(CTInAppNotification ctInAppNotification) {
-        if (ctInAppNotification != null && ctInAppNotification.getJsonDescription() != null) {
-            final String json = "{inApp onShow() json payload:" + ctInAppNotification.getJsonDescription().toString() + "}";
-            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK, json);
-        }
-    }
-
-    public void onDismissed(Map<String, Object> var1, @Nullable Map<String, Object> var2) {
-        if (var1 == null && var2 == null) {
-            return;
-        }
-
-        JSONObject extras = var1 != null ? new JSONObject(var1) : new JSONObject();
-        String _json = "{extras:" + extras.toString() + ",";
-
-        JSONObject actionExtras = var2 != null ? new JSONObject(var2) : new JSONObject();
-        _json += "actionExtras:" + actionExtras.toString() + "}";
-
-        final String json = _json;
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK, json);
-    }
-
-    // SyncListener
-    public void profileDataUpdated(JSONObject updates) {
-
-        if (updates == null) {
-            return;
-        }
-
-        final String json = "{updates:" + updates.toString() + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_UPDATES_CALLBACK, json);
-    }
-
-    public void profileDidInitialize(String CleverTapID) {
-
-        if (CleverTapID == null) {
-            return;
-        }
-
-        final String json = "{CleverTapID:" + CleverTapID + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PROFILE_INITIALIZED_CALLBACK, json);
-    }
-
-    //Inbox Listeners
-    public void inboxDidInitialize() {
-        final String json = "{CleverTap App Inbox Initialized}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_DID_INITIALIZE, json);
-    }
-
-    public void inboxMessagesDidUpdate() {
-        final String json = "{CleverTap App Inbox Messages Updated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
-    }
-
-    //Inbox Button Click Listener
-    public void onInboxButtonClick(HashMap<String, String> payload) {
-        JSONObject jsonObject = new JSONObject(payload);
-        final String json = "{inbox button payload:" + jsonObject.toString() + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
-    }
-
-
-    public void onInboxItemClicked(CTInboxMessage message, int contentPageIndex, int buttonIndex) {
-        if (message != null && message.getData() != null) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("ContentPageIndex",contentPageIndex);
-                jsonObject.put("ButtonIndex",buttonIndex);
-                jsonObject.put("CTInboxMessagePayload",message.getData());
-                messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INBOX_ITEM_CLICKED,
-                    jsonObject.toString());
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    //InApp Button Click Listener
-    public void onInAppButtonClick(HashMap<String, String> payload) {
-        JSONObject jsonObject = new JSONObject(payload);
-        final String json = "{inapp button payload:" + jsonObject.toString() + "}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_ON_INAPP_BUTTON_CLICKED, json);
-    }
-
-    //Native Display Listener
-    public void onDisplayUnitsLoaded(ArrayList<CleverTapDisplayUnit> units) {
-        try {
-            JSONArray jsonArray = displayUnitListToJSONArray(units);
-            final String json = "{display units:" + jsonArray.toString() + "}";
-            messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_DISPLAY_UNITS_UPDATED, json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Feature Flag Listener
-    public void featureFlagsUpdated() {
-        final String json = "{CleverTap App Feature Flags Updated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_FEATURE_FLAG_UPDATED, json);
-    }
-
-    //Product Config Listener
-    public void onInit() {
-        final String json = "{CleverTap App Product Config Initialized}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PRODUCT_CONFIG_INITIALIZED, json);
-    }
-
-    public void onFetched() {
-        final String json = "{CleverTap App Product Config Fetched}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PRODUCT_CONFIG_FETCHED, json);
-    }
-
-    public void onActivated() {
-        final String json = "{CleverTap App Product Config Activated}";
-        messageUnity(CLEVERTAP_GAME_OBJECT_NAME, CLEVERTAP_PRODUCT_CONFIG_ACTIVATED, json);
-    }
-
     /*******************
      * Helpers
      ******************/
-
-    private static void messageUnity(final String gameObject, final String method, final String data) {
-        UnityPlayer.UnitySendMessage(gameObject, method, data);
-    }
 
     private static Object fromJson(Object json) throws JSONException {
         if (json == JSONObject.NULL) {
@@ -1379,16 +1112,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
 
         for (int i = 0; i < messageList.size(); i++) {
             array.put(messageList.get(i).getData());
-        }
-
-        return array;
-    }
-
-    private JSONArray displayUnitListToJSONArray(ArrayList<CleverTapDisplayUnit> displayUnits) throws JSONException {
-        JSONArray array = new JSONArray();
-
-        for (int i = 0; i < displayUnits.size(); i++) {
-            array.put(displayUnits.get(i).getJsonObject());
         }
 
         return array;
