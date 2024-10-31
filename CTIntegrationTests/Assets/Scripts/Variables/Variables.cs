@@ -1,7 +1,7 @@
-﻿using CleverTapSDK;
+﻿using System.Collections.Generic;
+using CleverTapSDK;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +11,8 @@ namespace CTIntegrationTests
     {
         public GameObject ButtonPrefab;
         public VerticalLayoutGroup VerticalLayoutGroup;
+
+        public GameObject keyValuePrefab;
 
         private GameObject _fetchButton;
         private static bool VariablesDefined = false;
@@ -100,18 +102,18 @@ namespace CTIntegrationTests
             varHello = CleverTap.Define("var.hello", "hello, group");
 
             var_dict = CleverTap.Define("var_dict", new Dictionary<string, object>() {
-            { "nested_string", "hello, nested" },
-            { "nested_double", 10.5d },
-        });
+                { "nested_string", "hello, nested" },
+                { "nested_double", 10.5d },
+            });
 
             var_dict_complex = CleverTap.Define("var_dict_complex", new Dictionary<string, object>() {
-            { "nested_int", 1 },
-            { "nested_string", "hello, nested" },
-            { "nested_map", new Dictionary<string, object>() {
-                {"nested_map_int", 11 },
-                {"nested_map_string", "hello, nested map" }
-            }}
-        });
+                { "nested_int", 1 },
+                { "nested_string", "hello, nested" },
+                { "nested_map", new Dictionary<string, object>() {
+                    {"nested_map_int", 11 },
+                    {"nested_map_string", "hello, nested map" }
+                }}
+            });
 
             var_dictNested_outside = CleverTap.Define("var_dict.nested_outside", "hello, outside");
 
@@ -121,17 +123,17 @@ namespace CTIntegrationTests
 
             varGroupVarGroup = CleverTap.Define("var.group.varGroup", "This is in a group.");
             varGroup = CleverTap.Define("var.group", new Dictionary<string, string>() {
-            { "anotherInner", "This is also in a group" }
-        });
+                { "anotherInner", "This is also in a group" }
+            });
 
             group1Var1 = CleverTap.Define("group1.var1", 1);
             group1Group2Var3 = CleverTap.Define("group1.group2.var3", 3);
             group1 = CleverTap.Define("group1", new Dictionary<string, object>() {
-            { "var2", 2 },
-            { "group1", new Dictionary<string, object>() {
-                { "var4", 4 }
-            }}
-        });
+                { "var2", 2 },
+                { "group1", new Dictionary<string, object>() {
+                    { "var4", 4 }
+                }}
+            });
 
             // Set Callbacks
             CleverTap.OnVariablesChanged += OnVariablesChanged;
@@ -145,6 +147,8 @@ namespace CTIntegrationTests
             var_long.OnValueChanged += Var_long_OnValueChanged;
 
             VariablesDefined = true;
+
+            BuildVarsUI();
         }
 
         private void SyncVariables()
@@ -162,6 +166,62 @@ namespace CTIntegrationTests
             button.interactable = false;
             button.GetComponentInChildren<Text>().text = "Fetching Variables In Progress...";
             CleverTap.FetchVariables(OnFetchVariablesCallback);
+        }
+
+        private void BuildVarsUI()
+        {
+            // Clear the values
+            for (int i = 0; i < VerticalLayoutGroup.transform.childCount; i++)
+            {
+                GameObject child = VerticalLayoutGroup.transform.GetChild(i).gameObject;
+                // Do not delete the buttons
+                if (child.GetComponent<Button>() == null)
+                {
+                    Destroy(child);
+                }
+            }
+
+            Var<int> var1 = CleverTap.Define("var1", 1);
+            AddKeyValue(var1.Name, var1.Value.ToString());
+
+            Var<int> var2 = CleverTap.Define("var2", 2);
+            AddKeyValue(var2.Name, var2.Value.ToString());
+
+            Var<int> var3 = CleverTap.Define("var3", 3);
+            AddKeyValue(var3.Name, var3.Value.ToString());
+
+            AddKeyValue(var_string.Name, var_string.Value?.ToString());
+            AddKeyValue(var_int.Name, var_int.Value.ToString());
+            AddKeyValue(var_bool.Name, var_bool.Value.ToString());
+            AddKeyValue(var_float.Name, var_float.Value.ToString());
+            AddKeyValue(var_double.Name, var_double.Value.ToString());
+            AddKeyValue(var_short.Name, var_short.Value.ToString());
+            AddKeyValue(var_long.Name, var_long.Value.ToString());
+
+            AddKeyValue(var_dict.Name, Json.Serialize(var_dict.Value));
+            AddKeyValue(androidSamsung.Name, Json.Serialize(androidSamsung.Value));
+            AddKeyValue(varGroup.Name, Json.Serialize(varGroup.Value));
+            AddKeyValue(varGroupVarGroup.Name, Json.Serialize(varGroupVarGroup.Value));
+            AddKeyValue(var_dict_complex.Name, Json.Serialize(var_dict_complex.Value));
+            AddKeyValue($"{var_dict_complex.Name}.nested_string", Json.Serialize(var_dict_complex.Value["nested_string"]));
+            AddKeyValue(var_dictNested_outside.Name, Json.Serialize(var_dictNested_outside.Value));
+
+            AddKeyValue(androidSamsungS1.Name, Json.Serialize(androidSamsungS1.Value));
+            AddKeyValue(androidSamsungS2.Name, Json.Serialize(androidSamsungS2.Value));
+            AddKeyValue(group1Var1.Name, Json.Serialize(group1Var1.Value));
+            AddKeyValue(group1Group2Var3.Name, Json.Serialize(group1Group2Var3.Value));
+            AddKeyValue(group1.Name, Json.Serialize(group1.Value));
+            AddKeyValue(varHello.Name, Json.Serialize(varHello.Value));
+        }
+
+        private void AddKeyValue(string name, string value)
+        {
+            var parent = VerticalLayoutGroup.GetComponent<RectTransform>();
+            GameObject sdkVersion = Instantiate(keyValuePrefab);
+            KeyValue sdkVersionKV = sdkVersion.GetComponent<KeyValue>();
+            sdkVersionKV.SetKey(name);
+            sdkVersionKV.SetValue(value);
+            sdkVersion.transform.SetParent(parent, false);
         }
 
         private void PrintVariables()
@@ -220,7 +280,8 @@ namespace CTIntegrationTests
 
         private void OnVariablesChanged()
         {
-            Debug.Log("OnVariablesChanged: Unity received variables changed");
+            Debug.Log("[SAMPLE] OnVariablesChanged: Unity received variables changed");
+            BuildVarsUI();
         }
 
         private void OnOneTimeVariablesChanged()
@@ -230,7 +291,7 @@ namespace CTIntegrationTests
 
         void OnFetchVariablesCallback(bool isSuccess)
         {
-            Debug.Log("unity received fetched variables is success: " + isSuccess);
+            Debug.Log("[SAMPLE] unity received fetched variables is success: " + isSuccess);
             var button = _fetchButton.GetComponent<Button>();
             button.interactable = true;
             button.GetComponentInChildren<Text>().text = "Fetch Variables";
