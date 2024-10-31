@@ -1,19 +1,13 @@
 package com.clevertap.unity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Build.VERSION_CODES;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.UTMDetail;
@@ -35,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class CleverTapUnityPlugin {
 
     public static final String LOG_TAG = "CleverTapUnityPlugin";
@@ -43,95 +38,6 @@ public class CleverTapUnityPlugin {
 
     private CleverTapAPI clevertap = null;
     private final CleverTapUnityCallbackHandler callbackHandler;
-
-    private static void changeCredentials(final String accountID, final String accountToken, final String region) {
-        CleverTapAPI.changeCredentials(accountID, accountToken, region);
-    }
-
-    private static void changeCredentials(String accountID, String accountToken, String proxyDomain, String spikyProxyDomain) {
-        CleverTapAPI.changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
-    }
-
-    static void handleIntent(Intent intent, Activity activity) {
-        if (intent == null) {
-            return;
-        }
-        if (intent.getAction() == null) {
-            return;
-        }
-
-        if (intent.getAction().equals(Intent.ACTION_VIEW)) {
-            Uri data = intent.getData();
-            if (data != null) {
-                handleDeepLink(data);
-            }
-        } else {
-            Bundle extras = intent.getExtras();
-            boolean isPushNotification = (extras != null && extras.get("wzrk_pn") != null);
-            if (isPushNotification) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    CleverTapAPI.getDefaultInstance(activity).pushNotificationClickedEvent(extras);
-                }
-
-                JSONObject data = new JSONObject();
-
-                for (String key : extras.keySet()) {
-                    try {
-                        Object value = extras.get(key);
-                        if (value instanceof Map) {
-                            JSONObject jsonObject = new JSONObject((Map) value);
-                            data.put(key, jsonObject);
-                        } else if (value instanceof List) {
-                            JSONArray jsonArray = new JSONArray((List) value);
-                            data.put(key, jsonArray);
-                        } else {
-                            data.put(key, extras.get(key));
-                        }
-
-                    } catch (JSONException e) {
-                        // no-op
-                    }
-                }
-                handlePushNotification(data);
-            }
-        }
-    }
-
-    static private void handlePushNotification(final JSONObject data) {
-        CleverTapUnityCallbackHandler.handlePushNotification(data);
-    }
-
-    static private void handleDeepLink(final Uri data) {
-        CleverTapUnityCallbackHandler.handleDeepLink(data);
-    }
-
-    public static void initialize(final String accountID, final String accountToken, final Activity activity) {
-        initialize(accountID, accountToken, null, activity);
-    }
-
-    public static void initialize(final String accountID, final String accountToken, final String region,
-                                  final Activity activity) {
-        changeCredentials(accountID, accountToken, region);
-        setupActivityForInitialization(activity);
-    }
-
-    public static void initialize(final String accountID, final String accountToken, final String proxyDomain,
-                                  final String spikyProxyDomain, final Activity activity) {
-        changeCredentials(accountID, accountToken, proxyDomain, spikyProxyDomain);
-        setupActivityForInitialization(activity);
-    }
-
-    private static void setupActivityForInitialization(Activity activity) {
-        try {
-            ActivityLifecycleCallback.register(activity.getApplication());
-            CleverTapAPI.setAppForeground(true);
-            getInstance(activity.getApplicationContext());
-            CleverTapAPI.onActivityResumed(activity);
-        } catch (Throwable t) {
-            Log.e(LOG_TAG, "initialize error", t);
-        }
-    }
 
     public static void setDebugLevel(int level) {
         CleverTapAPI.setDebugLevel(level);
@@ -145,25 +51,11 @@ public class CleverTapUnityPlugin {
     }
 
     private CleverTapUnityPlugin(final Context context) {
-        callbackHandler = new CleverTapUnityCallbackHandler();
+        callbackHandler = CleverTapUnityCallbackHandler.getInstance();
         try {
             clevertap = CleverTapAPI.getDefaultInstance(context);
             if (clevertap != null) {
                 Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
-                clevertap.registerPushPermissionNotificationResponseListener(callbackHandler);
-                clevertap.setInAppNotificationListener(callbackHandler);
-                clevertap.setSyncListener(callbackHandler);
-                clevertap.setCTNotificationInboxListener(callbackHandler);
-                clevertap.setInboxMessageButtonListener(callbackHandler);
-                clevertap.setCTInboxMessageListener(callbackHandler);
-                clevertap.setInAppNotificationButtonListener(callbackHandler);
-                clevertap.setDisplayUnitListener(callbackHandler);
-                clevertap.setCTFeatureFlagsListener(callbackHandler);
-                clevertap.setCTProductConfigListener(callbackHandler);
-                clevertap.setLibrary("Unity");
-                clevertap.addVariablesChangedCallback(callbackHandler.getVariablesChangedCallback());
-                clevertap.onVariablesChangedAndNoDownloadsPending(callbackHandler.getVariablesChangedAndNoDownloadsPending());
-
             }
         } catch (Throwable t) {
             Log.e(LOG_TAG, "initialization error", t);
@@ -311,14 +203,6 @@ public class CleverTapUnityPlugin {
             Log.e(LOG_TAG, "profilePush error", t);
         }
     }
-/*
-    public void profilePushFacebookUser(final String jsonString) {
-        try {
-            clevertap.pushFacebookUser(new JSONObject(jsonString));
-        } catch (Throwable t) {
-            Log.e(LOG_TAG, "profilePushFacebookUser error", t);
-        }
-    }*/
 
     public String profileGet(final String key) {
         try {
@@ -367,7 +251,7 @@ public class CleverTapUnityPlugin {
 
     public void profileSetMultiValuesForKey(final String key, final String[] values) {
         try {
-            clevertap.setMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
+            clevertap.setMultiValuesForKey(key, new ArrayList<>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileSetMultiValuesForKey error", t);
         }
@@ -375,7 +259,7 @@ public class CleverTapUnityPlugin {
 
     public void profileAddMultiValuesForKey(final String key, final String[] values) {
         try {
-            clevertap.addMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
+            clevertap.addMultiValuesForKey(key, new ArrayList<>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileAddMultiValuesForKey error", t);
         }
@@ -383,7 +267,7 @@ public class CleverTapUnityPlugin {
 
     public void profileRemoveMultiValuesForKey(final String key, final String[] values) {
         try {
-            clevertap.removeMultiValuesForKey(key, new ArrayList<String>(Arrays.asList(values)));
+            clevertap.removeMultiValuesForKey(key, new ArrayList<>(Arrays.asList(values)));
         } catch (Throwable t) {
             Log.e(LOG_TAG, "profileRemoveMultiValuesForKey error", t);
         }
@@ -485,7 +369,7 @@ public class CleverTapUnityPlugin {
     public void recordChargedEventWithDetailsAndItems(final String detailsJSON, final String itemsJSON) {
 
         try {
-            HashMap<String, Object> details = new HashMap<String, Object>(JsonConverter.fromJsonWithConvertedDateValues(detailsJSON));
+            HashMap<String, Object> details = new HashMap<>(JsonConverter.fromJsonWithConvertedDateValues(detailsJSON));
             JSONArray items = new JSONArray(itemsJSON);
             clevertap.pushChargedEvent(details, toArrayListOfStringObjectMaps(items));
         } catch (Throwable t) {
@@ -589,7 +473,7 @@ public class CleverTapUnityPlugin {
         try {
             return inboxMessageListToJSONArray(clevertap.getAllInboxMessages()).toString();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Failed to get inbox messages", e);
             return null;
         }
     }
@@ -598,7 +482,7 @@ public class CleverTapUnityPlugin {
         try {
             return inboxMessageListToJSONArray(clevertap.getUnreadInboxMessages()).toString();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Failed to get unread messages", e);
             return null;
         }
     }
@@ -635,14 +519,6 @@ public class CleverTapUnityPlugin {
         clevertap.pushInboxNotificationClickedEvent(messageId);
     }
 
-    public void setLibrary(String library) {
-        try {
-            clevertap.setLibrary(library);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "setLibrary error", e);
-        }
-    }
-
     public void pushInstallReferrer(String source, String medium, String campaign) {
         try {
             clevertap.pushInstallReferrer(source, medium, campaign);
@@ -655,26 +531,36 @@ public class CleverTapUnityPlugin {
 
     public void defineVar(String name, String kind, String jsonValue) {
         Var<?> variable = null;
-        if (kind.equals("integer")) {
-            Long value = Long.valueOf(jsonValue);
-            variable = clevertap.defineVariable(name, value);
-        } else if (kind.equals("float")) {
-            Double value = Double.valueOf(jsonValue);
-            variable = clevertap.defineVariable(name, value);
-        } else if (kind.equals("string")) {
-            String value = jsonValue.substring(1, jsonValue.length() - 1);
-            variable = clevertap.defineVariable(name, value);
-        } else if (kind.equals("bool")) {
-            Boolean value = Boolean.valueOf(jsonValue);
-            variable = clevertap.defineVariable(name, value);
-        } else if (kind.equals("group")) {
-            try {
-                JSONObject jsonObj = new JSONObject(jsonValue);
-                Map<String, Object> value = toMap(jsonObj);
+        switch (kind) {
+            case "integer": {
+                Long value = Long.valueOf(jsonValue);
                 variable = clevertap.defineVariable(name, value);
-            } catch (Throwable t) {
-                Log.e(LOG_TAG, "defineVar error", t);
+                break;
             }
+            case "float": {
+                Double value = Double.valueOf(jsonValue);
+                variable = clevertap.defineVariable(name, value);
+                break;
+            }
+            case "string": {
+                String value = jsonValue.substring(1, jsonValue.length() - 1);
+                variable = clevertap.defineVariable(name, value);
+                break;
+            }
+            case "bool": {
+                Boolean value = Boolean.valueOf(jsonValue);
+                variable = clevertap.defineVariable(name, value);
+                break;
+            }
+            case "group":
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonValue);
+                    Map<String, Object> value = toMap(jsonObj);
+                    variable = clevertap.defineVariable(name, value);
+                } catch (Throwable t) {
+                    Log.e(LOG_TAG, "defineVar error", t);
+                }
+                break;
         }
 
         if (variable != null) {
@@ -731,7 +617,7 @@ public class CleverTapUnityPlugin {
             }
             return jsonArray.toString();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Failed to get display units", e);
             return null;
         }
     }
@@ -849,10 +735,10 @@ public class CleverTapUnityPlugin {
     }
 
     private static HashMap<String, Object> toMap(JSONObject object) throws JSONException {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        Iterator keys = object.keys();
+        HashMap<String, Object> map = new HashMap<>();
+        Iterator<String> keys = object.keys();
         while (keys.hasNext()) {
-            String key = (String) keys.next();
+            String key = keys.next();
             map.put(key, fromJson(object.get(key)));
         }
         return map;
@@ -860,7 +746,7 @@ public class CleverTapUnityPlugin {
 
     private static ArrayList<HashMap<String, Object>> toArrayListOfStringObjectMaps(JSONArray array)
             throws JSONException {
-        ArrayList<HashMap<String, Object>> aList = new ArrayList<HashMap<String, Object>>();
+        ArrayList<HashMap<String, Object>> aList = new ArrayList<>();
 
         for (int i = 0; i < array.length(); i++) {
             aList.add(toMap((JSONObject) array.get(i)));
@@ -901,8 +787,8 @@ public class CleverTapUnityPlugin {
         JSONObject json = new JSONObject();
 
         if (history != null) {
-            for (Object key : history.keySet()) {
-                json.put(key.toString(), eventDetailsToJSON(history.get((String) key)));
+            for (String key : history.keySet()) {
+                json.put(key, eventDetailsToJSON(history.get(key)));
             }
         }
 

@@ -2,6 +2,7 @@
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace CleverTapSDK.Android {
@@ -136,16 +137,19 @@ namespace CleverTapSDK.Android {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool>("isPushPermissionGranted");
         }
 
+        [Obsolete("This method no longer does anything. Replaced with initialization in the Application class")]
         internal override void LaunchWithCredentials(string accountID, string token) {
-            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, CleverTapAndroidJNI.UnityActivity);
+            
         }
 
+        [Obsolete("This method no longer does anything. Replaced with initialization in the Application class")]
         internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
-            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, region, CleverTapAndroidJNI.UnityActivity);
+            
         }
         
+        [Obsolete("This method no longer does anything. Replaced with initialization in the Application class")]
         internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
-            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, proxyDomain, spikyProxyDomain, CleverTapAndroidJNI.UnityActivity);
+            
         }
         
         internal override void MarkReadInboxMessageForID(string messageId) {

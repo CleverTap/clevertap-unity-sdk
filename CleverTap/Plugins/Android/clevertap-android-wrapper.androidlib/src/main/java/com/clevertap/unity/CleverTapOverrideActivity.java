@@ -1,7 +1,8 @@
 package com.clevertap.unity;
 
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
+
 import com.unity3d.player.UnityPlayerActivity;
 
 
@@ -21,7 +22,7 @@ public class CleverTapOverrideActivity extends UnityPlayerActivity {
 
     private void handleIntent(Intent intent) {
         if (intent != null) {
-            CleverTapUnityPlugin.handleIntent(intent, this);
+            CleverTapUnityAPI.handleIntent(intent, this);
         }
     }
 }

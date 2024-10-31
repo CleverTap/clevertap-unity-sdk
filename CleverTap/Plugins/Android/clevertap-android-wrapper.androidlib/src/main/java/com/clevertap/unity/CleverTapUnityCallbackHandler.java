@@ -34,6 +34,7 @@ import androidx.annotation.Nullable;
 
 import com.clevertap.android.sdk.CTFeatureFlagsListener;
 import com.clevertap.android.sdk.CTInboxListener;
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.InAppNotificationButtonListener;
 import com.clevertap.android.sdk.InAppNotificationListener;
 import com.clevertap.android.sdk.InboxMessageButtonListener;
@@ -68,18 +69,52 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
 
     private static final String CLEVERTAP_GAME_OBJECT_NAME = "AndroidCallbackHandler";
 
+    private static CleverTapUnityCallbackHandler instance = null;
+
+    public synchronized static CleverTapUnityCallbackHandler getInstance() {
+        if (instance == null) {
+            instance = new CleverTapUnityCallbackHandler();
+        }
+        return instance;
+    }
+
     public static void handleDeepLink(Uri data) {
         final String json = data.toString();
         sendToUnity(CLEVERTAP_DEEP_LINK_CALLBACK, json);
+    }
+
+    public static void handlePushNotification(JSONObject data) {
+        final String json = data.toString();
+        sendToUnity(CLEVERTAP_PUSH_OPENED_CALLBACK, json);
     }
 
     private static void sendToUnity(final CleverTapUnityCallback callback, final String data) {
         UnityPlayer.UnitySendMessage(CLEVERTAP_GAME_OBJECT_NAME, callback.callbackName, data);
     }
 
-    public static void handlePushNotification(JSONObject data) {
-        final String json = data.toString();
-        sendToUnity(CLEVERTAP_PUSH_OPENED_CALLBACK, json);
+    private final VariablesChangedCallback variablesChangedCallback;
+    private final VariablesChangedCallback variablesChangedAndNoDownloadsPendingCallback;
+
+    private CleverTapUnityCallbackHandler() {
+        variablesChangedCallback = getVariablesChangedCallback();
+        variablesChangedAndNoDownloadsPendingCallback = getVariablesChangedAndNoDownloadsPending();
+    }
+
+    public void attachToApiInstance(CleverTapAPI clevertap) {
+        clevertap.unregisterPushPermissionNotificationResponseListener(this);
+        clevertap.registerPushPermissionNotificationResponseListener(this);
+        clevertap.setInAppNotificationListener(this);
+        clevertap.setSyncListener(this);
+        clevertap.setCTNotificationInboxListener(this);
+        clevertap.setInboxMessageButtonListener(this);
+        clevertap.setCTInboxMessageListener(this);
+        clevertap.setInAppNotificationButtonListener(this);
+        clevertap.setDisplayUnitListener(this);
+        clevertap.setCTFeatureFlagsListener(this);
+        clevertap.setCTProductConfigListener(this);
+        clevertap.removeVariablesChangedCallback(variablesChangedCallback);
+        clevertap.addVariablesChangedCallback(variablesChangedCallback);
+        clevertap.onVariablesChangedAndNoDownloadsPending(variablesChangedAndNoDownloadsPendingCallback);
     }
 
     //OnInitCleverTapIDListener
