@@ -13,7 +13,7 @@ namespace CTIntegrationTests
             KeyText.GetComponent<ClickableText>().OnTextClickedEvent += KeyValue_OnTextClickedEvent;
             ValueText.GetComponent<ClickableText>().OnTextClickedEvent += KeyValue_OnTextClickedEvent;
 
-            RefreshContentHelper.RefreshContentFitters((RectTransform)transform.parent.transform);
+            RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
         }
 
         public string GetKey()
@@ -49,7 +49,7 @@ namespace CTIntegrationTests
             te.SelectAll();
             te.Copy();
 
-            Debug.Log($"[SAMPLE] copied: {text}");
+            Debug.Log($"[SAMPLE] Copied: {text}");
         }
     }
 }
