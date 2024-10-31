@@ -49,7 +49,7 @@ namespace CTIntegrationTests
             te.SelectAll();
             te.Copy();
 
-            Debug.Log($"[SAMPLE] Copied: {text}");
+            Logger.Log($"Copied: {text}");
         }
     }
 }

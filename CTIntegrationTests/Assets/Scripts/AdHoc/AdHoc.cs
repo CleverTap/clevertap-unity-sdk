@@ -92,7 +92,7 @@ namespace CTIntegrationTests
 
         private void CleverTap_OnCleverTapProfileInitializedCallback(string message)
         {
-            Debug.Log($"[SAMPLE] OnCleverTapProfileInitializedCallback: {message}");
+            Logger.Log($"OnCleverTapProfileInitializedCallback: {message}");
             var messageJson = Json.Deserialize(message) as Dictionary<string, object>;
             SetKVValue(CleverTapIDObject, messageJson["CleverTapID"]?.ToString());
         }
@@ -100,7 +100,7 @@ namespace CTIntegrationTests
 #if UNITY_ANDROID
         private void CleverTap_OnCleverTapInitCleverTapIdCallback(string message)
         {
-            Debug.Log($"[SAMPLE] OnCleverTapInitCleverTapIdCallback: {message}");
+            Logger.Log($"OnCleverTapInitCleverTapIdCallback: {message}");
             var messageJson = Json.Deserialize(message) as Dictionary<string, object>;
             SetKVValue(CleverTapIDObject, messageJson["cleverTapID"]?.ToString());
         }

@@ -228,70 +228,70 @@ namespace CTIntegrationTests
         {
             if (!VariablesDefined)
             {
-                Debug.LogWarning("Define variables first.");
+                Logger.LogWarning("Define variables first.");
                 return;
             }
 
             Var<int> var1 = CleverTap.Define("var1", 1);
-            Debug.Log($"Name: {var1.Name}, Default Value:  {var1.DefaultValue}, Value: {var1.Value}");
+            Logger.Log($"Name: {var1.Name}, Default Value:  {var1.DefaultValue}, Value: {var1.Value}");
 
             Var<int> var2 = CleverTap.Define("var2", 2);
-            Debug.Log($"Name: {var2.Name}, Default Value: {var2.DefaultValue}, Value: {var2.Value}");
+            Logger.Log($"Name: {var2.Name}, Default Value: {var2.DefaultValue}, Value: {var2.Value}");
 
             Var<int> var3 = CleverTap.Define("var3", 3);
-            Debug.Log($"Name: {var3.Name}, Default Value: {var3.DefaultValue}, Value: {var3.Value}");
+            Logger.Log($"Name: {var3.Name}, Default Value: {var3.DefaultValue}, Value: {var3.Value}");
 
-            Debug.Log($"Name: {var_string.Name}, Default Value: {var_string.DefaultValue}, Value: {var_string.Value}");
+            Logger.Log($"Name: {var_string.Name}, Default Value: {var_string.DefaultValue}, Value: {var_string.Value}");
 
-            Debug.Log($"Name: {var_int.Name}, Default Value: {var_int.DefaultValue}, Value: {var_int.Value}");
+            Logger.Log($"Name: {var_int.Name}, Default Value: {var_int.DefaultValue}, Value: {var_int.Value}");
 
-            Debug.Log($"Name: {var_bool.Name}, Default Value: {var_bool.DefaultValue}, Value: {var_bool.Value}");
+            Logger.Log($"Name: {var_bool.Name}, Default Value: {var_bool.DefaultValue}, Value: {var_bool.Value}");
 
-            Debug.Log($"Name: {var_float.Name}, Default Value: {var_float.DefaultValue}, Value: {var_float.Value}");
+            Logger.Log($"Name: {var_float.Name}, Default Value: {var_float.DefaultValue}, Value: {var_float.Value}");
 
-            Debug.Log($"Name: {var_double.Name}, Default Value: {var_double.DefaultValue}, Value: {var_double.Value}");
+            Logger.Log($"Name: {var_double.Name}, Default Value: {var_double.DefaultValue}, Value: {var_double.Value}");
 
-            Debug.Log($"Name: {var_short.Name}, Default Value: {var_short.DefaultValue}, Value: {var_short.Value}");
+            Logger.Log($"Name: {var_short.Name}, Default Value: {var_short.DefaultValue}, Value: {var_short.Value}");
 
-            Debug.Log($"Name: {var_long.Name}, Default Value: {var_long.DefaultValue}, Value: {var_long.Value}");
+            Logger.Log($"Name: {var_long.Name}, Default Value: {var_long.DefaultValue}, Value: {var_long.Value}");
 
-            Debug.Log($"Name: {var_dict.Name}, Default Value: {Json.Serialize(var_dict.DefaultValue)}, Value: {Json.Serialize(var_dict.Value)}");
+            Logger.Log($"Name: {var_dict.Name}, Default Value: {Json.Serialize(var_dict.DefaultValue)}, Value: {Json.Serialize(var_dict.Value)}");
 
-            Debug.Log($"Name: {androidSamsung.Name}, Default Value: {Json.Serialize(androidSamsung.DefaultValue)}, Value: {Json.Serialize(androidSamsung.Value)}");
+            Logger.Log($"Name: {androidSamsung.Name}, Default Value: {Json.Serialize(androidSamsung.DefaultValue)}, Value: {Json.Serialize(androidSamsung.Value)}");
 
-            Debug.Log($"Name: {varGroup.Name}, Default Value: {Json.Serialize(varGroup.DefaultValue)}, Value: {Json.Serialize(varGroup.Value)}");
+            Logger.Log($"Name: {varGroup.Name}, Default Value: {Json.Serialize(varGroup.DefaultValue)}, Value: {Json.Serialize(varGroup.Value)}");
 
-            Debug.Log($"Name: {varGroupVarGroup.Name}, Default Value: {Json.Serialize(varGroupVarGroup.DefaultValue)}, Value: {Json.Serialize(varGroupVarGroup.Value)}");
+            Logger.Log($"Name: {varGroupVarGroup.Name}, Default Value: {Json.Serialize(varGroupVarGroup.DefaultValue)}, Value: {Json.Serialize(varGroupVarGroup.Value)}");
 
-            Debug.Log($"Name: {var_dict_complex.Name}, Default Value: {Json.Serialize(var_dict_complex.DefaultValue)}, Value: {Json.Serialize(var_dict_complex.Value)}");
-            Debug.Log($"Name: {var_dict_complex.Name}.nested_string, Default Value: {Json.Serialize(var_dict_complex.DefaultValue["nested_string"])}, Value: {Json.Serialize(var_dict_complex.Value["nested_string"])}");
+            Logger.Log($"Name: {var_dict_complex.Name}, Default Value: {Json.Serialize(var_dict_complex.DefaultValue)}, Value: {Json.Serialize(var_dict_complex.Value)}");
+            Logger.Log($"Name: {var_dict_complex.Name}.nested_string, Default Value: {Json.Serialize(var_dict_complex.DefaultValue["nested_string"])}, Value: {Json.Serialize(var_dict_complex.Value["nested_string"])}");
 
-            Debug.Log($"Name: {var_dictNested_outside.Name}, Default Value: {var_dictNested_outside.DefaultValue}, Value: {var_dictNested_outside.Value}");
+            Logger.Log($"Name: {var_dictNested_outside.Name}, Default Value: {var_dictNested_outside.DefaultValue}, Value: {var_dictNested_outside.Value}");
 
-            Debug.Log($"Name: {androidSamsungS1.Name}, Default Value: {androidSamsungS1.DefaultValue}, Value: {androidSamsungS1.Value}");
-            Debug.Log($"Name: {androidSamsungS2.Name}, Default Value: {androidSamsungS2.DefaultValue}, Value: {androidSamsungS2.Value}");
+            Logger.Log($"Name: {androidSamsungS1.Name}, Default Value: {androidSamsungS1.DefaultValue}, Value: {androidSamsungS1.Value}");
+            Logger.Log($"Name: {androidSamsungS2.Name}, Default Value: {androidSamsungS2.DefaultValue}, Value: {androidSamsungS2.Value}");
 
-            Debug.Log($"Name: {group1Var1.Name}, Default Value: {group1Var1.DefaultValue}, Value: {group1Var1.Value}");
-            Debug.Log($"Name: {group1Group2Var3.Name}, Default Value: {group1Group2Var3.DefaultValue}, Value: {group1Group2Var3.Value}");
-            Debug.Log($"Name: {group1.Name}, Default Value: {Json.Serialize(group1.DefaultValue)}, Value: {Json.Serialize(group1.Value)}");
+            Logger.Log($"Name: {group1Var1.Name}, Default Value: {group1Var1.DefaultValue}, Value: {group1Var1.Value}");
+            Logger.Log($"Name: {group1Group2Var3.Name}, Default Value: {group1Group2Var3.DefaultValue}, Value: {group1Group2Var3.Value}");
+            Logger.Log($"Name: {group1.Name}, Default Value: {Json.Serialize(group1.DefaultValue)}, Value: {Json.Serialize(group1.Value)}");
 
-            Debug.Log($"Name: {varHello.Name}, Default Value: {varHello.DefaultValue}, Value: {varHello.Value}");
+            Logger.Log($"Name: {varHello.Name}, Default Value: {varHello.DefaultValue}, Value: {varHello.Value}");
         }
 
         private void OnVariablesChanged()
         {
-            Debug.Log("[SAMPLE] OnVariablesChanged: Unity received variables changed");
+            Logger.Log("[SAMPLE] OnVariablesChanged: Unity received variables changed");
             BuildVarsUI();
         }
 
         private void OnOneTimeVariablesChanged()
         {
-            Debug.Log("OnOneTimeVariablesChanged: Unity received variables changed");
+            Logger.Log("[SAMPLE] OnOneTimeVariablesChanged: Unity received variables changed");
         }
 
         void OnFetchVariablesCallback(bool isSuccess)
         {
-            Debug.Log("[SAMPLE] unity received fetched variables is success: " + isSuccess);
+            Logger.Log("On Fetched Variables is success: " + isSuccess);
             var button = _fetchButton.GetComponent<Button>();
             button.interactable = true;
             button.GetComponentInChildren<Text>().text = "Fetch Variables";
@@ -299,37 +299,37 @@ namespace CTIntegrationTests
 
         private void Var_string_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_string");
+            Logger.Log("Unity received variable changed var_string");
         }
 
         private void Var_int_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_int");
+            Logger.Log("Unity received variable changed var_int");
         }
 
         private void Var_bool_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_bool");
+            Logger.Log("Unity received variable changed var_bool");
         }
 
         private void Var_float_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_float");
+            Logger.Log("Unity received variable changed var_float");
         }
 
         private void Var_double_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_double");
+            Logger.Log("Unity received variable changed var_double");
         }
 
         private void Var_short_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_short");
+            Logger.Log("Unity received variable changed var_short");
         }
 
         private void Var_long_OnValueChanged()
         {
-            Debug.Log("Unity received variable changed var_long");
+            Logger.Log("Unity received variable changed var_long");
         }
     }
 }

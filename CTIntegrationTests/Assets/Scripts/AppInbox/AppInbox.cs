@@ -71,7 +71,7 @@ namespace CTIntegrationTests
         {
             if (!hasInboxInitialized)
             {
-                Debug.Log("Inbox not initialized");
+                Logger.LogWarning("Inbox not initialized.");
                 shouldShowInbox = true;
                 return;
             }
