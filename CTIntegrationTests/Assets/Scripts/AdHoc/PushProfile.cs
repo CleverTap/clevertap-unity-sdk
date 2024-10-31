@@ -1,29 +1,32 @@
 using System;
 using System.Collections.Generic;
 using CleverTapSDK;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CTIntegrationTests
 {
+    [RequireComponent(typeof(InputPanel))]
     public class PushProfile : MonoBehaviour
     {
-        private TMP_InputField input;
-        private Button button;
+        private InputPanel panel;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Awake()
         {
-            input = GetComponentInChildren<TMP_InputField>();
-            button = GetComponentInChildren<Button>();
-
-            button.onClick.AddListener(OnButtonClick);
+            panel = GetComponent<InputPanel>();
         }
 
-        void OnButtonClick()
+        void Start()
         {
-            string profileInput = input.text;
+            panel.SetTitle("Push Profile");
+            panel.SetPlaceholder("profileProperty1:value,profileProperty2:value");
+            panel.SetButtonText("Push Profile");
+
+            panel.OnButtonClickedEvent += OnButtonClick;
+        }
+
+        void OnButtonClick(string text)
+        {
+            string profileInput = text;
             string[] pairs = profileInput.Split(",", StringSplitOptions.RemoveEmptyEntries);
             Dictionary<string, string> profileData = new Dictionary<string, string>();
             foreach (var pair in pairs)

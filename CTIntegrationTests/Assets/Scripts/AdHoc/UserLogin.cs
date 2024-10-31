@@ -1,28 +1,31 @@
 using System.Collections.Generic;
 using CleverTapSDK;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CTIntegrationTests
 {
+    [RequireComponent(typeof(InputPanel))]
     public class UserLogin : MonoBehaviour
     {
-        private TMP_InputField input;
-        private Button button;
+        private InputPanel panel;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Awake()
         {
-            input = GetComponentInChildren<TMP_InputField>();
-            button = GetComponentInChildren<Button>();
-
-            button.onClick.AddListener(OnButtonClick);
+            panel = GetComponent<InputPanel>();
         }
 
-        void OnButtonClick()
+        void Start()
         {
-            string id = input.text;
+            panel.SetTitle("User Login");
+            panel.SetPlaceholder("Identity");
+            panel.SetButtonText("On User Login");
+
+            panel.OnButtonClickedEvent += OnButtonClick;
+        }
+
+        void OnButtonClick(string text)
+        {
+            string id = text;
             Dictionary<string, string> login = new Dictionary<string, string>
             {
                 { "Identity", id }

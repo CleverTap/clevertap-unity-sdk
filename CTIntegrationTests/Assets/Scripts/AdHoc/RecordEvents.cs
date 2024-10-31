@@ -1,28 +1,31 @@
 using System.Collections.Generic;
 using CleverTapSDK;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CTIntegrationTests
 {
+    [RequireComponent(typeof(InputPanel))]
     public class RecordEvents : MonoBehaviour
     {
-        private TMP_InputField input;
-        private Button button;
+        private InputPanel panel;
 
-        // Start is called before the first frame update
-        void Start()
+        private void Awake()
         {
-            input = GetComponentInChildren<TMP_InputField>();
-            button = GetComponentInChildren<Button>();
-
-            button.onClick.AddListener(OnButtonClick);
+            panel = GetComponent<InputPanel>();
         }
 
-        void OnButtonClick()
+        void Start()
         {
-            string eventInput = input.text;
+            panel.SetTitle("Record Event");
+            panel.SetPlaceholder("eventName/eventProperty1:value,eventProperty2:value");
+            panel.SetButtonText("Record event");
+
+            panel.OnButtonClickedEvent += OnButtonClick;
+        }
+
+        private void OnButtonClick(string text)
+        {
+            string eventInput = text;
             string[] data = eventInput.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
             string eventName = data[0];
 
