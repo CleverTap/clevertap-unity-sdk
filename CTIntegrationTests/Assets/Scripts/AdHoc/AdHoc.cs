@@ -73,7 +73,13 @@ namespace CTIntegrationTests
             sdkVersionKV.SetKey("SDK Version");
             sdkVersionKV.SetValue(CleverTapVersion.CLEVERTAP_SDK_VERSION);
             sdkVersion.transform.SetParent(parent, false);
-            sdkVersion.transform.SetSiblingIndex(0);
+
+            App app = FindObjectOfType<App>();
+            GameObject accountId = Instantiate(KeyValuePrefab);
+            KeyValue accountIdKV = accountId.GetComponent<KeyValue>();
+            accountIdKV.SetKey("Account Id");
+            accountIdKV.SetValue(app.accountId);
+            accountIdKV.transform.SetParent(parent, false);
 
             CleverTap.OnCleverTapProfileInitializedCallback += CleverTap_OnCleverTapProfileInitializedCallback;
 #if UNITY_ANDROID
@@ -86,7 +92,6 @@ namespace CTIntegrationTests
             ctidKV.SetKey("CleverTap ID");
             ctidKV.SetValue(CleverTap.ProfileGetCleverTapID());
             CleverTapIDObject.transform.SetParent(parent, false);
-            CleverTapIDObject.transform.SetSiblingIndex(1);
         }
 
 
