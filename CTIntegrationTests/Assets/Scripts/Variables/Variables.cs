@@ -45,6 +45,9 @@ namespace CTIntegrationTests
 
         Var<string> varHello;
 
+        Var<string> factory_var_file;
+        Var<string> folder1FileVariable;
+
         void Start()
         {
             InitPanel();
@@ -135,9 +138,14 @@ namespace CTIntegrationTests
                 }}
             });
 
+            factory_var_file = CleverTap.DefineFileVariable("factory_var_file");
+            folder1FileVariable = CleverTap.DefineFileVariable("folder1.fileVariable");
+
             // Set Callbacks
             CleverTap.OnVariablesChanged += OnVariablesChanged;
             CleverTap.OnOneTimeVariablesChanged += OnOneTimeVariablesChanged;
+            CleverTap.OnVariablesChangedAndNoDownloadsPending += OnVariablesChangedAndNoDownloadsPending;
+            CleverTap.OnOneTimeVariablesChangedAndNoDownloadsPending += OnOneTimeVariablesChangedAndNoDownloadsPending;
             var_string.OnValueChanged += Var_string_OnValueChanged;
             var_int.OnValueChanged += Var_int_OnValueChanged;
             var_bool.OnValueChanged += Var_bool_OnValueChanged;
@@ -145,6 +153,7 @@ namespace CTIntegrationTests
             var_double.OnValueChanged += Var_double_OnValueChanged;
             var_short.OnValueChanged += Var_short_OnValueChanged;
             var_long.OnValueChanged += Var_long_OnValueChanged;
+            factory_var_file.OnFileReady += Factory_var_file_OnFileReady;
 
             VariablesDefined = true;
 
@@ -212,6 +221,11 @@ namespace CTIntegrationTests
             AddKeyValue(group1Group2Var3.Name, Json.Serialize(group1Group2Var3.Value));
             AddKeyValue(group1.Name, Json.Serialize(group1.Value));
             AddKeyValue(varHello.Name, Json.Serialize(varHello.Value));
+
+            AddKeyValue(factory_var_file.Name, factory_var_file.Value);
+            AddKeyValue(factory_var_file.Name, factory_var_file.FileValue);
+
+            AddKeyValue(folder1FileVariable.Name, folder1FileVariable.FileValue);
         }
 
         private void AddKeyValue(string name, string value)
@@ -289,6 +303,16 @@ namespace CTIntegrationTests
             Logger.Log("[SAMPLE] OnOneTimeVariablesChanged: Unity received variables changed");
         }
 
+        private void OnOneTimeVariablesChangedAndNoDownloadsPending()
+        {
+            Logger.Log("[SAMPLE] OnOneTimeVariablesChangedAndNoDownloadsPending: Unity received variables changed");
+        }
+
+        private void OnVariablesChangedAndNoDownloadsPending()
+        {
+            Logger.Log("[SAMPLE] OnVariablesChangedAndNoDownloadsPending: Unity received variables changed");
+        }
+
         void OnFetchVariablesCallback(bool isSuccess)
         {
             Logger.Log("On Fetched Variables is success: " + isSuccess);
@@ -330,6 +354,11 @@ namespace CTIntegrationTests
         private void Var_long_OnValueChanged()
         {
             Logger.Log("Unity received variable changed var_long");
+        }
+
+        private void Factory_var_file_OnFileReady()
+        {
+            Logger.Log("Unity received file ready factory_var_file");
         }
     }
 }
