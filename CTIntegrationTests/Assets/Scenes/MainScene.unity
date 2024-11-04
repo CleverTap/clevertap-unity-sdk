@@ -1333,6 +1333,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa526deadf2de4c61aa7f1da96e597a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accountName: ACCOUNT_NAME
+  accountId: ACCOUNT_ID
+  accountToken: ACCOUNT_TOKEN
 --- !u!4 &1174546666
 Transform:
   m_ObjectHideFlags: 0
