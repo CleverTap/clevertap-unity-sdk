@@ -47,6 +47,7 @@ namespace CTIntegrationTests
         // Start is called before the first frame update
         void Start()
         {
+            RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
             button.onClick.AddListener(ButtonClick);
         }
 
