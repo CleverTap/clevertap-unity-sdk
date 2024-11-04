@@ -5,6 +5,7 @@ namespace CTIntegrationTests
 {
     public class App : MonoBehaviour
     {
+        public string accountName = "ACCOUNT_NAME";
         public string accountId = "ACCOUNT_ID";
         [SerializeField] private string accountToken = "ACCOUNT_TOKEN";
 

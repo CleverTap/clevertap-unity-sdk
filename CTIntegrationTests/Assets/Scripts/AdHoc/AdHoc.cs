@@ -69,13 +69,22 @@ namespace CTIntegrationTests
         private void AddInfoValues(RectTransform parent)
         {
             GameObject sdkVersion = Instantiate(KeyValuePrefab);
+            sdkVersion.name = "SDKVersion";
             KeyValue sdkVersionKV = sdkVersion.GetComponent<KeyValue>();
             sdkVersionKV.SetKey("SDK Version");
             sdkVersionKV.SetValue(CleverTapVersion.CLEVERTAP_SDK_VERSION);
             sdkVersion.transform.SetParent(parent, false);
 
             App app = FindObjectOfType<App>();
+            GameObject accountName = Instantiate(KeyValuePrefab);
+            accountName.name = "AccountName";
+            KeyValue accountNameKV = accountName.GetComponent<KeyValue>();
+            accountNameKV.SetKey("Account Name");
+            accountNameKV.SetValue(app.accountName);
+            accountNameKV.transform.SetParent(parent, false);
+
             GameObject accountId = Instantiate(KeyValuePrefab);
+            accountId.name = "AccountId";
             KeyValue accountIdKV = accountId.GetComponent<KeyValue>();
             accountIdKV.SetKey("Account Id");
             accountIdKV.SetValue(app.accountId);
@@ -88,6 +97,7 @@ namespace CTIntegrationTests
 #endif
 
             CleverTapIDObject = Instantiate(KeyValuePrefab);
+            CleverTapIDObject.name = "CleverTapID";
             KeyValue ctidKV = CleverTapIDObject.GetComponent<KeyValue>();
             ctidKV.SetKey("CleverTap ID");
             ctidKV.SetValue(CleverTap.ProfileGetCleverTapID());
@@ -122,7 +132,7 @@ namespace CTIntegrationTests
         {
             int age = UnityEngine.Random.Range(20, 80);
             DateTime date = DateTime.Now.AddYears(-age);
-            Debug.Log($"[SAMPLE] Setting DOB to: {date}");
+            Logger.Log($"Setting DOB to: {date}");
             Dictionary<string, object> profileProperties = new Dictionary<string, object>
                 {
                     { "DOB", date }
