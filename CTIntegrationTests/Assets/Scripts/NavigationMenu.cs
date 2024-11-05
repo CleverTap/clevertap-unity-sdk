@@ -14,6 +14,15 @@ namespace CTIntegrationTests
 
         public List<GameObject> panels = new List<GameObject>();
 
+        private void Awake()
+        {
+#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
+            AppInbox.interactable = false;
+            Variables.interactable = false;
+            SDK.interactable = false;
+#endif
+        }
+
         void Start()
         {
             SDK.onClick.AddListener(DidTapSDKButton);
@@ -21,12 +30,12 @@ namespace CTIntegrationTests
             Variables.onClick.AddListener(DidTapVariablesButton);
             AdHoc.onClick.AddListener(DidTapAdHocButton);
 
-            panels.Add(GameObject.Find("QASDK"));
-            panels.Add(GameObject.Find("AppInbox"));
-            panels.Add(GameObject.Find("Variables"));
             panels.Add(GameObject.Find("AdHoc"));
+            panels.Add(GameObject.Find("Variables"));
+            panels.Add(GameObject.Find("AppInbox"));
+            panels.Add(GameObject.Find("QASDK"));
 
-            DidTapSDKButton();
+            DidTapAdHocButton();
         }
 
         public void DidTapSDKButton()

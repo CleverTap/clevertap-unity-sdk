@@ -994,10 +994,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1412194356}
   - {fileID: 213166201}
   - {fileID: 1732902320}
   - {fileID: 1777706787}
+  - {fileID: 1412194356}
   m_Father: {fileID: 1188845594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1725,11 +1725,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1225684961504094, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Name
-      value: QA SDK Button
+      value: More Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 1225684961504094, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125796543351124, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
+      propertyPath: m_Interactable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114440545205759142, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Text
-      value: QA SDK
+      value: More
       objectReference: {fileID: 0}
     - target: {fileID: 224412516315191226, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Pivot.x
@@ -1827,7 +1835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114440545205759142, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Text
-      value: Messages
+      value: In-app Messages
       objectReference: {fileID: 0}
     - target: {fileID: 224412516315191226, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Pivot.x
@@ -1941,10 +1949,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 754847142}
   - {fileID: 1233580256}
   - {fileID: 1260826556}
   - {fileID: 685338408}
-  - {fileID: 754847142}
   m_Father: {fileID: 1188845594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
