@@ -11,6 +11,10 @@ namespace CTIntegrationTests
 
         void Awake()
         {
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+            Logger.Log($"Setting targetFrameRate to: {(int)Screen.currentResolution.refreshRateRatio.value}");
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+#endif
             CleverTap.SetDebugLevel(3);
             CleverTap.LaunchWithCredentials(accountId, accountToken);
         }
