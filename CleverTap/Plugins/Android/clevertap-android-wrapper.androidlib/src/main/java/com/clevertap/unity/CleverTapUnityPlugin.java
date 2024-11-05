@@ -3,6 +3,7 @@ package com.clevertap.unity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Build.VERSION_CODES;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -50,57 +51,36 @@ public class CleverTapUnityPlugin {
         return instance;
     }
 
-    private CleverTapUnityPlugin(final Context context) {
-        callbackHandler = CleverTapUnityCallbackHandler.getInstance();
+    public static void createNotificationChannel(Context context, String channelId, String channelName, String channelDescription, int importance, boolean showBadge) {
         try {
-            clevertap = CleverTapAPI.getDefaultInstance(context);
-            if (clevertap != null) {
-                Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
-            }
-        } catch (Throwable t) {
-            Log.e(LOG_TAG, "initialization error", t);
-        }
-    }
-
-    public static void createNotificationChannel(Context context, String channelId, String channelName,
-                                                 String channelDescription, int importance, boolean showBadge) {
-        try {
-            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
-                    showBadge);
+            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance, showBadge);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error creating Notification Channel", t);
         }
     }
 
     @RequiresApi(api = VERSION_CODES.O)
-    public static void createNotificationChannelWithSound(Context context, String channelId, String channelName,
-                                                          String channelDescription, int importance, boolean showBadge, String sound) {
+    public static void createNotificationChannelWithSound(Context context, String channelId, String channelName, String channelDescription, int importance, boolean showBadge, String sound) {
         try {
-            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
-                    showBadge, sound);
+            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance, showBadge, sound);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error creating Notification Channel", t);
         }
     }
 
     @RequiresApi(api = VERSION_CODES.O)
-    public static void createNotificationChannelWithGroup(Context context, String channelId, String channelName,
-                                                          String channelDescription, int importance, String groupId, boolean showBadge) {
+    public static void createNotificationChannelWithGroup(Context context, String channelId, String channelName, String channelDescription, int importance, String groupId, boolean showBadge) {
         try {
-            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
-                    groupId, showBadge);
+            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance, groupId, showBadge);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error creating Notification Channel with groupId", t);
         }
     }
 
     @RequiresApi(api = VERSION_CODES.O)
-    public static void createNotificationChannelWithGroupAndSound(Context context, String channelId,
-                                                                  String channelName, String channelDescription, int importance, String groupId, boolean showBadge,
-                                                                  String sound) {
+    public static void createNotificationChannelWithGroupAndSound(Context context, String channelId, String channelName, String channelDescription, int importance, String groupId, boolean showBadge, String sound) {
         try {
-            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance,
-                    groupId, showBadge, sound);
+            CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance, groupId, showBadge, sound);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error creating Notification Channel with groupId", t);
         }
@@ -131,6 +111,38 @@ public class CleverTapUnityPlugin {
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error deleting Notification Channel Group", t);
         }
+    }
+
+    private CleverTapUnityPlugin(final Context context) {
+        callbackHandler = CleverTapUnityCallbackHandler.getInstance();
+        disableMessageBuffers();
+        try {
+            clevertap = CleverTapAPI.getDefaultInstance(context);
+            if (clevertap != null) {
+                Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
+            }
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "initialization error", t);
+        }
+    }
+
+    private void disableMessageBuffers() {
+        // disable buffers after a delay in order to give some time for callback delegates to attach
+        // and receive initially buffered messages. After that all buffers will be cleared and disabled
+        // and messages will continue to be sent immediately.
+        new Handler().postDelayed(() -> CleverTapMessageSender.getInstance().resetAllBuffers(false), 5000);
+    }
+
+    public void onCallbackAdded(String callbackName) {
+        CleverTapUnityCallback callback = CleverTapUnityCallback.fromName(callbackName);
+        if (callback == null) {
+            Log.e(LOG_TAG, "Unsupported callback added: " + callbackName);
+            return;
+        }
+        // disable the buffering for the specified callback as it already has attached delegate and
+        // flush all buffered messages
+        CleverTapMessageSender.getInstance().disableBuffer(callback);
+        CleverTapMessageSender.getInstance().flushBuffer(callback);
     }
 
     public void setPushToken(String token, String region, String type) {
@@ -744,8 +756,7 @@ public class CleverTapUnityPlugin {
         return map;
     }
 
-    private static ArrayList<HashMap<String, Object>> toArrayListOfStringObjectMaps(JSONArray array)
-            throws JSONException {
+    private static ArrayList<HashMap<String, Object>> toArrayListOfStringObjectMaps(JSONArray array) throws JSONException {
         ArrayList<HashMap<String, Object>> aList = new ArrayList<>();
 
         for (int i = 0; i < array.length(); i++) {
@@ -801,10 +812,7 @@ public class CleverTapUnityPlugin {
             return null;
         }
         CTLocalInApp.InAppType inAppType = null;
-        String titleText = null, messageText = null, positiveBtnText = null,
-                negativeBtnText = null, backgroundColor = null, btnBorderColor = null,
-                titleTextColor = null, messageTextColor = null,
-                btnTextColor = null, imageUrl = null, btnBackgroundColor = null, btnBorderRadius = null;
+        String titleText = null, messageText = null, positiveBtnText = null, negativeBtnText = null, backgroundColor = null, btnBorderColor = null, titleTextColor = null, messageTextColor = null, btnTextColor = null, imageUrl = null, btnBackgroundColor = null, btnBorderRadius = null;
         boolean fallbackToSettings = false, followDeviceOrientation = false;
 
         for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
@@ -856,18 +864,14 @@ public class CleverTapUnityPlugin {
                     btnBorderRadius = (String) entry.getValue();
                 }
             } catch (Throwable t) {
-                Log.e("CleverTapError", "Invalid parameters in LocalInApp config"
-                        + t.getLocalizedMessage());
+                Log.e("CleverTapError", "Invalid parameters in LocalInApp config" + t.getLocalizedMessage());
                 return null;
             }
         }
 
 
         //creates the builder instance of localInApp with all the required parameters
-        CTLocalInApp.Builder.Builder6 builderWithRequiredParams = getLocalInAppBuilderWithRequiredParam(
-                inAppType, titleText, messageText, followDeviceOrientation, positiveBtnText,
-                negativeBtnText
-        );
+        CTLocalInApp.Builder.Builder6 builderWithRequiredParams = getLocalInAppBuilderWithRequiredParam(inAppType, titleText, messageText, followDeviceOrientation, positiveBtnText, negativeBtnText);
 
         //adds the optional parameters to the builder instance
         if (backgroundColor != null) {
@@ -897,8 +901,7 @@ public class CleverTapUnityPlugin {
         builderWithRequiredParams.setFallbackToSettings(fallbackToSettings);
 
         JSONObject localInAppConfig = builderWithRequiredParams.build();
-        Log.i("CTLocalInAppConfig", "LocalInAppConfig for push primer prompt: "
-                + localInAppConfig);
+        Log.i("CTLocalInAppConfig", "LocalInAppConfig for push primer prompt: " + localInAppConfig);
         return localInAppConfig;
     }
 
@@ -907,25 +910,15 @@ public class CleverTapUnityPlugin {
      *
      * @return the {@link CTLocalInApp.Builder.Builder6} instance
      */
-    private static CTLocalInApp.Builder.Builder6
-    getLocalInAppBuilderWithRequiredParam(CTLocalInApp.InAppType inAppType,
-                                          String titleText, String messageText,
-                                          boolean followDeviceOrientation, String positiveBtnText,
-                                          String negativeBtnText) {
+    private static CTLocalInApp.Builder.Builder6 getLocalInAppBuilderWithRequiredParam(CTLocalInApp.InAppType inAppType, String titleText, String messageText, boolean followDeviceOrientation, String positiveBtnText, String negativeBtnText) {
 
         //throws exception if any of the required parameter is missing
-        if (inAppType == null || titleText == null || messageText == null || positiveBtnText == null
-                || negativeBtnText == null) {
+        if (inAppType == null || titleText == null || messageText == null || positiveBtnText == null || negativeBtnText == null) {
             throw new IllegalArgumentException("Mandatory parameters are missing for LocalInApp config");
         }
 
         CTLocalInApp.Builder builder = CTLocalInApp.builder();
-        return builder.setInAppType(inAppType)
-                .setTitleText(titleText)
-                .setMessageText(messageText)
-                .followDeviceOrientation(followDeviceOrientation)
-                .setPositiveBtnText(positiveBtnText)
-                .setNegativeBtnText(negativeBtnText);
+        return builder.setInAppType(inAppType).setTitleText(titleText).setMessageText(messageText).followDeviceOrientation(followDeviceOrientation).setPositiveBtnText(positiveBtnText).setNegativeBtnText(negativeBtnText);
     }
 
     private static CTLocalInApp.InAppType inAppTypeFromString(String inAppType) {

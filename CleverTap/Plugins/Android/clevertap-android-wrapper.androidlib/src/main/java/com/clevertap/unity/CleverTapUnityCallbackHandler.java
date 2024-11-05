@@ -30,6 +30,7 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.clevertap.android.sdk.CTFeatureFlagsListener;
@@ -52,7 +53,6 @@ import com.clevertap.android.sdk.variables.Var;
 import com.clevertap.android.sdk.variables.callbacks.FetchVariablesCallback;
 import com.clevertap.android.sdk.variables.callbacks.VariableCallback;
 import com.clevertap.android.sdk.variables.callbacks.VariablesChangedCallback;
-import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,8 +66,6 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
         CTInboxListener, InAppNotificationButtonListener, InboxMessageButtonListener,
         DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener,
         OnInitCleverTapIDListener, InboxMessageListener, PushPermissionResponseListener {
-
-    private static final String CLEVERTAP_GAME_OBJECT_NAME = "AndroidCallbackHandler";
 
     private static CleverTapUnityCallbackHandler instance = null;
 
@@ -88,8 +86,8 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
         sendToUnity(CLEVERTAP_PUSH_OPENED_CALLBACK, json);
     }
 
-    private static void sendToUnity(final CleverTapUnityCallback callback, final String data) {
-        UnityPlayer.UnitySendMessage(CLEVERTAP_GAME_OBJECT_NAME, callback.callbackName, data);
+    private static void sendToUnity(@NonNull CleverTapUnityCallback callback, @NonNull String data) {
+        CleverTapMessageSender.getInstance().send(callback, data);
     }
 
     private final VariablesChangedCallback variablesChangedCallback;
@@ -304,7 +302,7 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
             final String json = "{display units:" + jsonArray + "}";
             sendToUnity(CLEVERTAP_DISPLAY_UNITS_UPDATED, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Failed to convert displayUnits to JSON", e);
         }
     }
 
