@@ -15,6 +15,7 @@ import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
 import com.clevertap.android.sdk.inapp.CTLocalInApp;
+import com.clevertap.android.sdk.inapp.customtemplates.CustomTemplateContext;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.clevertap.android.sdk.variables.Var;
@@ -617,6 +618,135 @@ public class CleverTapUnityPlugin {
      */
     public void clearInAppResources(boolean expiredOnly) {
         clevertap.clearInAppResources(expiredOnly);
+    }
+
+    public void customTemplateSetDismissed(String templateName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            templateContext.setDismissed();
+        }
+    }
+
+    public void customTemplateSetPresented(String templateName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            templateContext.setPresented();
+        }
+    }
+
+    public void customTemplateTriggerAction(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext instanceof CustomTemplateContext.TemplateContext) {
+            ((CustomTemplateContext.TemplateContext) templateContext).triggerActionArgument(argName, null);
+        }
+    }
+
+    public String customTemplateGetStringArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getString(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Boolean customTemplateGetBooleanArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getBoolean(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Byte customTemplateGetByteArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getByte(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Short customTemplateGetShortArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getShort(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Integer customTemplateGetIntArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getInt(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Long customTemplateGetLongArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getLong(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Float customTemplateGetFloatArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getFloat(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public Double customTemplateGetDoubleArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getDouble(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public String customTemplateGetFileArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.getFile(argName);
+        } else {
+            return null;
+        }
+    }
+
+    public String customTemplateGetDictionaryJsonArg(String templateName, String argName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            Map<String, Object> mapArg = templateContext.getMap(argName);
+            if (mapArg != null) {
+                return JsonConverter.toJson(mapArg);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public String customTemplateContextToString(String templateName) {
+        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
+        if (templateContext != null) {
+            return templateContext.toString();
+        } else {
+            return null;
+        }
+    }
+
+    public void syncCustomTemplates() {
+        clevertap.syncRegisteredInAppTemplates();
     }
 
     //Native Display Units

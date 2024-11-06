@@ -8,14 +8,7 @@ namespace CleverTapSDK.IOS
 {
     internal class IOSTemplateContext : CleverTapTemplateContext
     {
-        private readonly string templateName;
-
-        internal IOSTemplateContext(string name)
-        {
-            templateName = name;
-        }
-
-        public override string TemplateName => templateName;
+        public IOSTemplateContext(string templateName) : base(templateName) { }
 
         public override void SetDismissed()
         {
@@ -52,7 +45,7 @@ namespace CleverTapSDK.IOS
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.Log($"Leanplum: Error getting dictionary value for name: {name}. Exception: {ex.Message}");
+                UnityEngine.Debug.Log($"CustomTemplates: Error getting dictionary value for name: {name}. Exception: {ex.Message}");
             }
 
             return default;
@@ -63,35 +56,34 @@ namespace CleverTapSDK.IOS
             return IOSDllImport.CleverTap_customTemplateGetFileArg(TemplateName, name);
         }
 
-        public override T GetNumber<T>(string name)
+        public override byte? GetByte(string name)
         {
-            Type t = typeof(T);
-            if (t == typeof(int))
-            {
-                return (T)(object)IOSDllImport.CleverTap_customTemplateGetIntArg(TemplateName, name);
-            }
-            else if (t == typeof(double))
-            {
-                return (T)(object)IOSDllImport.CleverTap_customTemplateGetDoubleArg(TemplateName, name);
-            }
-            else if (t == typeof(float))
-            {
-                return (T)(object)IOSDllImport.CleverTap_customTemplateGetFloatArg(TemplateName, name);
-            }
-            else if (t == typeof(long))
-            {
-                return (T)(object)IOSDllImport.CleverTap_customTemplateGetLongArg(TemplateName, name);
-            }
-            else if (t == typeof(short))
-            {
-                return (T)(object)IOSDllImport.CleverTap_customTemplateGetShortArg(TemplateName, name);
-            }
-            else if (t == typeof(byte))
-            {
-                return (T)(object)IOSDllImport.CleverTap_customTemplateGetByteArg(TemplateName, name);
-            }
+            return IOSDllImport.CleverTap_customTemplateGetByteArg(TemplateName, name);
+        }
 
-            return default;
+        public override short? GetShort(string name)
+        {
+            return IOSDllImport.CleverTap_customTemplateGetShortArg(TemplateName, name);
+        }
+
+        public override int? GetInt(string name)
+        {
+            return IOSDllImport.CleverTap_customTemplateGetIntArg(TemplateName, name);
+        }
+
+        public override long? GetLong(string name)
+        {
+            return IOSDllImport.CleverTap_customTemplateGetLongArg(TemplateName, name);
+        }
+
+        public override float? GetFloat(string name)
+        {
+            return IOSDllImport.CleverTap_customTemplateGetFloatArg(TemplateName, name);
+        }
+
+        public override double? GetDouble(string name)
+        {
+            return IOSDllImport.CleverTap_customTemplateGetDoubleArg(TemplateName, name);
         }
 
         public override void TriggerAction(string name)
@@ -102,11 +94,6 @@ namespace CleverTapSDK.IOS
         internal override string GetTemplateString()
         {
             return IOSDllImport.CleverTap_customTemplateContextToString(TemplateName);
-        }
-
-        public override string ToString()
-        {
-            return GetTemplateString();
         }
     }
 }

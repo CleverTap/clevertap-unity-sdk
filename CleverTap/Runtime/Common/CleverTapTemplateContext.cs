@@ -4,7 +4,11 @@ namespace CleverTapSDK.Common
 {
     public abstract class CleverTapTemplateContext
     {
-        public abstract string TemplateName { get; }
+        public readonly string TemplateName;
+        public CleverTapTemplateContext(string templateName)
+        {
+            TemplateName = templateName;
+        }
 
         public abstract void SetPresented();
         public abstract void SetDismissed();
@@ -18,9 +22,24 @@ namespace CleverTapSDK.Common
 
         public abstract string GetFile(string name);
 
-        public abstract T GetNumber<T>(string name);
+        public abstract byte? GetByte(string name);
+
+        public abstract short? GetShort(string name);
+
+        public abstract int? GetInt(string name);
+
+        public abstract long? GetLong(string name);
+
+        public abstract float? GetFloat(string name);
+
+        public abstract double? GetDouble(string name);
 
         internal abstract string GetTemplateString();
+
+        public override string ToString()
+        {
+            return GetTemplateString();
+        }
     }
 }
 

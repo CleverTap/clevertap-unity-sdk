@@ -26,7 +26,11 @@ public enum CleverTapUnityCallback {
     CLEVERTAP_VARIABLES_FETCHED("CleverTapVariablesFetched"),
     CLEVERTAP_INAPPS_FETCHED("CleverTapInAppsFetched"),
     CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING("CleverTapVariablesChangedAndNoDownloadsPending"),
-    CLEVERTAP_FILE_VARIABLE_READY("CleverTapVariableFileIsReady");
+    CLEVERTAP_FILE_VARIABLE_READY("CleverTapVariableFileIsReady"),
+    CLEVERTAP_CUSTOM_TEMPLATE_PRESENT("CleverTapCustomTemplatePresent", true),
+    CLEVERTAP_CUSTOM_FUNCTION_PRESENT("CleverTapCustomFunctionPresent", true),
+    CLEVERTAP_CUSTOM_TEMPLATE_CLOSE("CleverTapCustomTemplateClose");
+
 
     @Nullable
     public static CleverTapUnityCallback fromName(String callbackName) {
