@@ -14,6 +14,8 @@ namespace CTIntegrationTests
         public delegate void OnButtonClicked(string text);
         public event OnButtonClicked OnButtonClickedEvent;
 
+        private bool refreshedContentFitter = false;
+
         public void SetTitle(string text)
         {
             title.SetText(text);
@@ -42,12 +44,19 @@ namespace CTIntegrationTests
                 onButtonClicked?.Invoke(textInput.text);
             });
             newButton.transform.SetParent(layout.transform, false);
+
+            // Button was added after Start, refresh the content to fit the additional button
+            if (refreshedContentFitter)
+            {
+                RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
+            }
         }
 
         // Start is called before the first frame update
         void Start()
         {
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
+            refreshedContentFitter = true;
             button.onClick.AddListener(ButtonClick);
         }
 

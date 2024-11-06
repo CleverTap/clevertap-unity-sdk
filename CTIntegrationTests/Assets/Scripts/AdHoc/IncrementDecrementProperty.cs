@@ -12,6 +12,8 @@ namespace CTIntegrationTests
         private void Awake()
         {
             panel = GetComponent<InputPanel>();
+
+            panel.AddAdditionalButton("Decrement", "Decrement", OnDecrementButtonClick);
         }
 
         void Start()
@@ -21,8 +23,6 @@ namespace CTIntegrationTests
             panel.SetButtonText("Increment");
 
             panel.OnButtonClickedEvent += OnIncrementButtonClick;
-
-            panel.AddAdditionalButton("Decrement", "Decrement", OnDecrementButtonClick);
         }
 
         private void OnDecrementButtonClick(string text)

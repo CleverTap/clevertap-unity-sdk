@@ -16,6 +16,8 @@ namespace CTIntegrationTests
         private void Awake()
         {
             panel = GetComponent<InputPanel>();
+
+            panel.AddAdditionalButton("AddValues", "Add Values", OnAddValuesButtonClick);
         }
 
         void Start()
@@ -25,7 +27,6 @@ namespace CTIntegrationTests
             panel.SetButtonText("Set multi property");
 
             panel.OnButtonClickedEvent += OnSetValuesButtonClick;
-            panel.AddAdditionalButton("AddValues", "Add Values", OnAddValuesButtonClick);
         }
 
         KeyValuePair<string, List<string>> ProcessInput(string text)
