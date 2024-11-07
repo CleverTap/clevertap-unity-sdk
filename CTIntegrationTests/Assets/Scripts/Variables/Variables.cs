@@ -290,32 +290,38 @@ namespace CTIntegrationTests
             Logger.Log($"Name: {group1.Name}, Default Value: {Json.Serialize(group1.DefaultValue)}, Value: {Json.Serialize(group1.Value)}");
 
             Logger.Log($"Name: {varHello.Name}, Default Value: {varHello.DefaultValue}, Value: {varHello.Value}");
+
+            Logger.Log($"Name: {factory_var_file.Name}, Default Value: {factory_var_file.DefaultValue}, Value: {factory_var_file.Value}, File Value: {factory_var_file.FileValue}");
+            Logger.Log($"Name: {folder1FileVariable.Name}, Default Value: {folder1FileVariable.DefaultValue}, Value: {folder1FileVariable.Value}, File Value: {folder1FileVariable.FileValue}");
         }
 
         private void OnVariablesChanged()
         {
-            Logger.Log("[SAMPLE] OnVariablesChanged: Unity received variables changed");
+            Logger.Log("OnVariablesChanged");
             BuildVarsUI();
         }
 
         private void OnOneTimeVariablesChanged()
         {
-            Logger.Log("[SAMPLE] OnOneTimeVariablesChanged: Unity received variables changed");
+            Logger.Log("OnOneTimeVariablesChanged");
         }
 
         private void OnOneTimeVariablesChangedAndNoDownloadsPending()
         {
-            Logger.Log("[SAMPLE] OnOneTimeVariablesChangedAndNoDownloadsPending: Unity received variables changed");
+            Logger.Log("OnOneTimeVariablesChangedAndNoDownloadsPending");
         }
 
         private void OnVariablesChangedAndNoDownloadsPending()
         {
-            Logger.Log("[SAMPLE] OnVariablesChangedAndNoDownloadsPending: Unity received variables changed");
+            Toast.Show("On Variables Changed and No Downloads Pending");
+            Logger.Log("OnVariablesChangedAndNoDownloadsPending");
         }
 
         void OnFetchVariablesCallback(bool isSuccess)
         {
-            Logger.Log("On Fetched Variables is success: " + isSuccess);
+            string message = "On Fetched Variables is success: " + isSuccess;
+            Toast.Show(message);
+            Logger.Log(message);
             var button = _fetchButton.GetComponent<Button>();
             button.interactable = true;
             button.GetComponentInChildren<Text>().text = "Fetch Variables";
@@ -323,42 +329,42 @@ namespace CTIntegrationTests
 
         private void Var_string_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_string");
+            Logger.Log("Variable changed: var_string");
         }
 
         private void Var_int_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_int");
+            Logger.Log("Variable changed: var_int");
         }
 
         private void Var_bool_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_bool");
+            Logger.Log("Variable changed: var_bool");
         }
 
         private void Var_float_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_float");
+            Logger.Log("Variable changed: var_float");
         }
 
         private void Var_double_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_double");
+            Logger.Log("Variable changed: var_double");
         }
 
         private void Var_short_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_short");
+            Logger.Log("Variable changed: var_short");
         }
 
         private void Var_long_OnValueChanged()
         {
-            Logger.Log("Unity received variable changed var_long");
+            Logger.Log("Variable changed: var_long");
         }
 
         private void Factory_var_file_OnFileReady()
         {
-            Logger.Log("Unity received file ready factory_var_file");
+            Logger.Log("File ready: factory_var_file");
         }
     }
 }

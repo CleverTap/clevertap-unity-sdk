@@ -36,6 +36,7 @@ namespace CTIntegrationTests
                 button.onClick.AddListener(() =>
                 {
                     CleverTapSDK.CleverTap.RecordEvent(button.name);
+                    Toast.Show($"Recording event: {button.name}");
                 });
             }
 

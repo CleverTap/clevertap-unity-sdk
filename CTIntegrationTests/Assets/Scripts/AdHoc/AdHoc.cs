@@ -133,6 +133,7 @@ namespace CTIntegrationTests
             int age = UnityEngine.Random.Range(20, 80);
             DateTime date = DateTime.Now.AddYears(-age);
             Logger.Log($"Setting DOB to: {date}");
+            Toast.Show($"Setting DOB to: {date}");
             Dictionary<string, object> profileProperties = new Dictionary<string, object>
                 {
                     { "DOB", date }
@@ -170,6 +171,7 @@ namespace CTIntegrationTests
                 }
             };
             CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
+            Toast.Show("Record \"Date Support Test\" event and Charged event with dates");
         }
     }
 }
