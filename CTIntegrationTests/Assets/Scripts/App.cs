@@ -8,6 +8,7 @@ namespace CTIntegrationTests
         public string accountName = "ACCOUNT_NAME";
         public string accountId = "ACCOUNT_ID";
         [SerializeField] private string accountToken = "ACCOUNT_TOKEN";
+        [SerializeField] private string accountRegion = "ACCOUNT_REGION";
 
         void Awake()
         {
@@ -16,7 +17,7 @@ namespace CTIntegrationTests
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
 #endif
             CleverTap.SetDebugLevel(3);
-            CleverTap.LaunchWithCredentials(accountId, accountToken);
+            CleverTap.LaunchWithCredentialsForRegion(accountId, accountToken, accountRegion);
         }
     }
 }
