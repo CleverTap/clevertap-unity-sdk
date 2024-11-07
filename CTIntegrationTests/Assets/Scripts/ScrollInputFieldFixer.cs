@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace CTIntegrationTests
 {
     [RequireComponent(typeof(TMP_InputField))]
-    public class ScrollViewInput : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerClickHandler
+    public class ScrollInputFieldFixer : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerClickHandler
     {
         private ScrollRect _scrollRect = null;
         private TMP_InputField _input = null;
