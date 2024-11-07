@@ -1,10 +1,11 @@
-﻿#if UNITY_IOS && UNITY_EDITOR
+﻿#if (UNITY_IOS || UNITY_ANDROID) && UNITY_EDITOR
 using System.IO;
 using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEditor;
 using UnityEngine;
+using System;
 
 namespace CleverTapSDK.Private
 {
@@ -54,10 +55,14 @@ namespace CleverTapSDK.Private
 		public static void OnPostProcessBuild(BuildTarget target, string path)
 		{
 			if (target == BuildTarget.iOS)
-            {
-                IOSPostProcess(path);
-            }
-        }
+			{
+				IOSPostProcess(path);
+			}
+			else if (target == BuildTarget.Android)
+			{
+				AndroidPostProcess(path);
+			}
+		}
 
         private static void IOSPostProcess(string path)
         {
@@ -208,6 +213,33 @@ namespace CleverTapSDK.Private
 			}
 			string output = string.Join("", newContents.ToArray());
 			File.WriteAllText(filepath, output);
+		}
+
+		private static void AndroidPostProcess(string path)
+		{
+			CloneDirectory(Application.dataPath + "/CleverTap", path + "/unityLibrary/clevertap-android-wrapper.androidlib/assets/CleverTap");
+
+		}
+		private static void CloneDirectory(string root, string dest)
+		{
+			foreach (var directory in Directory.GetDirectories(root))
+			{
+				//Get the path of the new directory
+				var newDirectory = Path.Combine(dest, Path.GetFileName(directory));
+				//Create the directory if it doesn't already exist
+				Directory.CreateDirectory(newDirectory);
+				//Recursively clone the directory
+				CloneDirectory(directory, newDirectory);
+			}
+
+			foreach (var file in Directory.GetFiles(root))
+			{
+				string fileName = Path.GetFileName(file);
+				if (!fileName.EndsWith(".meta"))
+				{
+					File.Copy(file, Path.Combine(dest, fileName));
+				}
+			}
 		}
 	}
 }

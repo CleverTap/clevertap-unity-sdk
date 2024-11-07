@@ -19,12 +19,23 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class CleverTapCustomTemplates {
-    public static void registerCustomTemplates(Context context, String... jsonAssets) {
-        for (String jsonAsset : jsonAssets) {
-            String jsonDefinitions = readAsset(context, jsonAsset);
-            if (jsonDefinitions != null) {
-                CleverTapAPI.registerCustomInAppTemplates(jsonDefinitions, createTemplatePresenter(), createFunctionPresenter());
+
+    private static final String TEMPLATES_DEFINITIONS_ASSETS_FOLDER = "CleverTap/CustomTemplates";
+
+    public static void registerCustomTemplates(Context context) {
+        try {
+            String[] jsonAssets = context.getAssets().list(TEMPLATES_DEFINITIONS_ASSETS_FOLDER);
+            if (jsonAssets == null || jsonAssets.length == 0) {
+                return;
             }
+            for (String jsonAsset : jsonAssets) {
+                String jsonDefinitions = readAsset(context, TEMPLATES_DEFINITIONS_ASSETS_FOLDER + "/" + jsonAsset);
+                if (jsonDefinitions != null) {
+                    CleverTapAPI.registerCustomInAppTemplates(jsonDefinitions, createTemplatePresenter(), createFunctionPresenter());
+                }
+            }
+        } catch (IOException ioException) {
+            Log.e(CleverTapUnityPlugin.LOG_TAG, "Could not read template definitions folder. Custom templates will not work.", ioException);
         }
     }
 
