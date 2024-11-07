@@ -38,6 +38,8 @@ namespace CTIntegrationTests
                     CleverTapSDK.CleverTap.RecordEvent(button.name);
                 });
             }
+
+            RefreshContentHelper.RefreshContentFitters(parent);
         }
     }
 }

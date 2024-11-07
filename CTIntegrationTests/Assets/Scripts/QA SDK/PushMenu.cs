@@ -35,6 +35,8 @@ namespace CTIntegrationTests
                     CleverTap.RecordEvent(button.name);
                 });
             }
+
+            RefreshContentHelper.RefreshContentFitters(parent);
         }
 
         void AddRegisterForIOSPushButton(Transform parent)
