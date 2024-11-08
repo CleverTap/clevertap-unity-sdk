@@ -103,12 +103,15 @@ namespace CleverTapSDK.Common {
         }
 
         protected virtual Var<string> GetOrDefineFileVariable(string name) {
-            
-            if (varCache.ContainsKey(name) && varCache[name].Kind.Equals(CleverTapVariableKind.FILE)) {
+            if (varCache.ContainsKey(name)) {
+                if (varCache[name].Kind != CleverTapVariableKind.FILE) {
+                    CleverTapLogger.LogError("CleverTap Error: Variable " + "\"" + name + "\" was already defined with a different kind");
+                    return null;
+                }
                 return (Var<string>)varCache[name];
             }
-            
-            return DefineFileVariable(name);
+
+            return DefineVariable<string>(name, CleverTapVariableKind.FILE, null);
         }
         
         protected virtual string GetKindNameFromGenericType<T>() {
