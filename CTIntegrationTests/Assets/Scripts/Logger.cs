@@ -38,7 +38,7 @@ namespace CTIntegrationTests
         {
             if (Level >= LoggerLevel.Error)
             {
-                Debug.Log($"[CTIntegrationTests][Error]: {message}");
+                Debug.LogError($"[CTIntegrationTests][Error]: {message}");
             }
         }
     }
