@@ -1452,7 +1452,7 @@ MonoBehaviour:
   accountName: ACCOUNT_NAME
   accountId: ACCOUNT_ID
   accountToken: ACCOUNT_TOKEN
-  accountRegion: ACCOUNT_REGION
+  accountRegion: 
 --- !u!4 &1174546666
 Transform:
   m_ObjectHideFlags: 0
