@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     public class NavigationMenu : MonoBehaviour
     {

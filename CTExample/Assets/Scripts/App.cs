@@ -2,7 +2,7 @@ using CleverTapSDK;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     public class App : MonoBehaviour
     {

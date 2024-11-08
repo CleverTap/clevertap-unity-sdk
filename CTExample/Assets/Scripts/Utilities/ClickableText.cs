@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     [RequireComponent(typeof(TMP_Text))]
     public class ClickableText : MonoBehaviour, IPointerClickHandler

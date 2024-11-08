@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using CleverTapSDK;
 using UnityEngine;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     [RequireComponent(typeof(InputPanel))]
     public class UserLogin : MonoBehaviour

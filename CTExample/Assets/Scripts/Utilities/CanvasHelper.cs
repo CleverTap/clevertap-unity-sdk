@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     [RequireComponent(typeof(Canvas))]
     public class CanvasHelper : MonoBehaviour

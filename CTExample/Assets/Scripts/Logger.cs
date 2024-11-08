@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     internal enum LoggerLevel
     {

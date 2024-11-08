@@ -5,7 +5,7 @@ using CleverTapSDK;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     [RequireComponent(typeof(InputPanel))]
     public class MultiProperty : MonoBehaviour

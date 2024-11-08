@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     public class SDKPanel : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     public class KeyValue : MonoBehaviour
     {

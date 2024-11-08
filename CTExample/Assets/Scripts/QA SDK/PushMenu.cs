@@ -3,7 +3,7 @@ using CleverTapSDK;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     public class PushMenu : MonoBehaviour
     {

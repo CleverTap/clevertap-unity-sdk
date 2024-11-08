@@ -2,7 +2,7 @@
 using CleverTapSDK;
 using UnityEngine;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     [RequireComponent(typeof(InputPanel))]
     public class IncrementDecrementProperty : MonoBehaviour

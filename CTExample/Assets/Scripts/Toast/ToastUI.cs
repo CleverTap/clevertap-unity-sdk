@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     internal class ToastModel
     {

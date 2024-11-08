@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     /// <summary>
     /// Enable scroll over InputFields inside ScrollView.

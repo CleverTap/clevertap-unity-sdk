@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-namespace CTIntegrationTests
+namespace CTExample
 {
     internal delegate void ButtonAction(Button button);
 
