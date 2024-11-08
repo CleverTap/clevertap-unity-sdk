@@ -22,7 +22,7 @@ namespace CTExample
         {
             if (Level >= LoggerLevel.Debug)
             {
-                Debug.Log($"[CTIntegrationTests]: {message}");
+                Debug.Log($"[CTExample]: {message}");
             }
         }
 
@@ -30,7 +30,7 @@ namespace CTExample
         {
             if (Level >= LoggerLevel.Error)
             {
-                Debug.LogWarning($"[CTIntegrationTests][Warning]: {message}");
+                Debug.LogWarning($"[CTExample][Warning]: {message}");
             }
         }
 
@@ -38,7 +38,7 @@ namespace CTExample
         {
             if (Level >= LoggerLevel.Error)
             {
-                Debug.LogError($"[CTIntegrationTests][Error]: {message}");
+                Debug.LogError($"[CTExample][Error]: {message}");
             }
         }
     }
