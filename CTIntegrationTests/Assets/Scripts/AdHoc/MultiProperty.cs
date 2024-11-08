@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CleverTapSDK;
-using TMPro;
+using CleverTapSDK.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CTIntegrationTests
 {
@@ -42,12 +41,14 @@ namespace CTIntegrationTests
         {
             var keyValues = ProcessInput(text);
             CleverTap.ProfileAddMultiValuesForKey(keyValues.Key, keyValues.Value);
+            Logger.Log($"Add multi values for key: {keyValues.Key}, values: {Json.Serialize(keyValues.Value)}");
         }
 
         void OnSetValuesButtonClick(string text)
         {
             var keyValues = ProcessInput(text);
             CleverTap.ProfileSetMultiValuesForKey(keyValues.Key, keyValues.Value);
+            Logger.Log($"Set multi values for key: {keyValues.Key}, values: {Json.Serialize(keyValues.Value)}");
         }
     }
 }

@@ -18,6 +18,7 @@ namespace CTIntegrationTests
 #endif
             CleverTap.SetDebugLevel(3);
             CleverTap.LaunchWithCredentialsForRegion(accountId, accountToken, accountRegion);
+            Logger.Log($"Launching \"{accountName}\" with accountId: {accountId}, accountToken: {accountToken}, accountRegion: {accountRegion}");
         }
     }
 }

@@ -92,6 +92,7 @@ namespace CTIntegrationTests
             // Convert the Dictionary parameters to a string and pass it to `ShowAppInbox()`
             string jsonStr = Json.Serialize(styleConfig);
             CleverTap.ShowAppInbox(jsonStr);
+            Logger.Log($"Showing app inbox with config: {jsonStr}");
         }
 
         private void CleverTap_OnCleverTapInboxDidInitializeCallback()
@@ -102,6 +103,7 @@ namespace CTIntegrationTests
                 ShowInbox();
                 shouldShowInbox = false;
             }
+            Toast.Show("On CleverTap Inbox Initialize");
         }
 
         public void Restore()

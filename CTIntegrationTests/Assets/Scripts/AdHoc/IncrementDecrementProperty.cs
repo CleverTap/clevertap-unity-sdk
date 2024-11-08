@@ -1,6 +1,6 @@
 ﻿using System;
-using UnityEngine;
 using CleverTapSDK;
+using UnityEngine;
 
 namespace CTIntegrationTests
 {
@@ -34,10 +34,12 @@ namespace CTIntegrationTests
                 if (int.TryParse(keyValue[1], out int number))
                 {
                     CleverTap.ProfileDecrementValueForKey(key, number);
+                    Logger.Log($"Decrementing key: {key} with value: {number}");
                 }
                 else if (double.TryParse(keyValue[1], out double d))
                 {
                     CleverTap.ProfileDecrementValueForKey(key, d);
+                    Logger.Log($"Decrementing key: {key} with value: {d}");
                 }
             }
         }
@@ -51,10 +53,12 @@ namespace CTIntegrationTests
                 if (int.TryParse(keyValue[1], out int number))
                 {
                     CleverTap.ProfileIncrementValueForKey(key, number);
+                    Logger.Log($"Icrementing key: {key} with value: {number}");
                 }
                 else if (double.TryParse(keyValue[1], out double d))
                 {
                     CleverTap.ProfileIncrementValueForKey(key, d);
+                    Logger.Log($"Icrementing key: {key} with value: {d}");
                 }
             }
         }

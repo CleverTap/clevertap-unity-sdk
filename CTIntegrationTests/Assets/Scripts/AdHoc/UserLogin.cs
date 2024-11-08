@@ -31,6 +31,7 @@ namespace CTIntegrationTests
                 { "Identity", id }
             };
             CleverTap.OnUserLogin(login);
+            Logger.Log($"User login: {id}");
         }
     }
 }

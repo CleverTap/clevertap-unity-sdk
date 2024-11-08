@@ -50,6 +50,7 @@ namespace CTIntegrationTests
             te.Copy();
 
             Logger.Log($"Copied: {text}");
+            Toast.Show($"Copied: {text}");
         }
     }
 }

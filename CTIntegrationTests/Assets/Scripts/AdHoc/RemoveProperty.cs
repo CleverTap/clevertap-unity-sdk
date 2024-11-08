@@ -25,6 +25,7 @@ namespace CTIntegrationTests
         void OnButtonClick(string text)
         {
             CleverTap.ProfileRemoveValueForKey(text);
+            Logger.Log($"Remove profile key: {text}");
         }
     }
 }

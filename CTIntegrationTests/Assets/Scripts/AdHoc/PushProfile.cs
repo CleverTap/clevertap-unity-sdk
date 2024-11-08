@@ -37,8 +37,8 @@ namespace CTIntegrationTests
                     profileData.Add(keyValue[0], keyValue[1]);
                 }
             }
-
             CleverTap.ProfilePush(profileData);
+            Logger.Log($"Profile push: {CleverTapSDK.Utilities.Json.Serialize(profileData)}");
         }
     }
 }

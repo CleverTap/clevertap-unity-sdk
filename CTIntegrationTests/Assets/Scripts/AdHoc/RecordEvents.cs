@@ -46,10 +46,12 @@ namespace CTIntegrationTests
             if (eventProperties.Count > 0)
             {
                 CleverTap.RecordEvent(eventName, eventProperties);
+                Logger.Log($"Record event: {eventName} with properties: {CleverTapSDK.Utilities.Json.Serialize(eventProperties)}");
             }
             else
             {
                 CleverTap.RecordEvent(eventName);
+                Logger.Log($"Record event: {eventName}");
             }
         }
     }

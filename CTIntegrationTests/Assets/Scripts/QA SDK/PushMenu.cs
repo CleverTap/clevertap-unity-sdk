@@ -33,6 +33,7 @@ namespace CTIntegrationTests
                 button.onClick.AddListener(() =>
                 {
                     CleverTap.RecordEvent(button.name);
+                    Toast.Show($"Recording event: {button.name}");
                 });
             }
 
