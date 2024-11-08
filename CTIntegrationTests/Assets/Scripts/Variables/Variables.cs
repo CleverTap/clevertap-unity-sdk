@@ -55,7 +55,6 @@ namespace CTIntegrationTests
 
         public void Restore()
         {
-            InitPanel();
         }
 
         private void InitPanel()
