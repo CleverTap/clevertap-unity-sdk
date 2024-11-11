@@ -23,40 +23,40 @@ namespace CleverTapSDK.Common {
             return null;
         }
 
-        internal virtual Var<int> Define(string name, int defaultValue) =>
+        internal Var<int> Define(string name, int defaultValue) =>
             GetOrDefineVariable<int>(name, defaultValue);
 
-        internal virtual Var<long> Define(string name, long defaultValue) =>
+        internal Var<long> Define(string name, long defaultValue) =>
             GetOrDefineVariable<long>(name, defaultValue);
 
-        internal virtual Var<short> Define(string name, short defaultValue) =>
+        internal Var<short> Define(string name, short defaultValue) =>
             GetOrDefineVariable<short>(name, defaultValue);
 
-        internal virtual Var<byte> Define(string name, byte defaultValue) =>
+        internal Var<byte> Define(string name, byte defaultValue) =>
             GetOrDefineVariable<byte>(name, defaultValue);
 
-        internal virtual Var<bool> Define(string name, bool defaultValue) =>
+        internal Var<bool> Define(string name, bool defaultValue) =>
             GetOrDefineVariable<bool>(name, defaultValue);
 
-        internal virtual Var<float> Define(string name, float defaultValue) =>
+        internal Var<float> Define(string name, float defaultValue) =>
             GetOrDefineVariable<float>(name, defaultValue);
 
-        internal virtual Var<double> Define(string name, double defaultValue) =>
+        internal Var<double> Define(string name, double defaultValue) =>
             GetOrDefineVariable<double>(name, defaultValue);
 
-        internal virtual Var<string> Define(string name, string defaultValue) =>
+        internal Var<string> Define(string name, string defaultValue) =>
             GetOrDefineVariable<string>(name, defaultValue);
 
-        internal virtual Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) =>
+        internal Var<Dictionary<string, object>> Define(string name, Dictionary<string, object> defaultValue) =>
             GetOrDefineVariable<Dictionary<string, object>>(name, defaultValue);
 
-        internal virtual Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) =>
+        internal Var<Dictionary<string, string>> Define(string name, Dictionary<string, string> defaultValue) =>
             GetOrDefineVariable<Dictionary<string, string>>(name, defaultValue);
 
-        internal virtual Var<string> DefineFileVariable(string name) =>
+        internal Var<string> DefineFileVariable(string name) =>
             GetOrDefineFileVariable(name);
         
-        internal virtual void FetchVariables(Action<bool> isSucessCallback) {
+        internal void FetchVariables(Action<bool> isSucessCallback) {
             var callbackId = variablesFetchedIdCounter.GetNextAndIncreaseCounter();
             if (!variablesFetchedCallbacks.ContainsKey(callbackId)) {
                 variablesFetchedCallbacks.Add(callbackId, isSucessCallback);
@@ -64,21 +64,20 @@ namespace CleverTapSDK.Common {
             }
         }
 
-        internal virtual void VariablesFetched(int callbackId, bool isSuccess) {
+        internal void VariablesFetched(int callbackId, bool isSuccess) {
             if (variablesFetchedCallbacks.ContainsKey(callbackId)) {
                 variablesFetchedCallbacks[callbackId].Invoke(isSuccess);
                 variablesFetchedCallbacks.Remove(callbackId);
             }
         }
 
-        internal virtual void VariableFileIsReady(string name) {
-            if (varCache.ContainsKey(name))
-            {
+        internal void VariableFileIsReady(string name) {
+            if (varCache.ContainsKey(name)) {
                 varCache[name].FileIsReady();
             }
         }
         
-        internal virtual void VariableChanged(string name) {
+        internal void VariableChanged(string name) {
             if (varCache.ContainsKey(name)) {
                 varCache[name].ValueChanged();
             }
