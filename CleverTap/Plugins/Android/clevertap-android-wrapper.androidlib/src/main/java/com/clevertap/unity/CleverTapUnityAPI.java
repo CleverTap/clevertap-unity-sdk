@@ -19,6 +19,7 @@ import java.util.Map;
 public class CleverTapUnityAPI {
 
     public static void initialize(Context context) {
+        CleverTapCustomTemplates.registerCustomTemplates(context);
         CleverTapAPI clevertap = CleverTapAPI.getDefaultInstance(context);
         if (clevertap != null) {
             clevertap.setLibrary("Unity");
