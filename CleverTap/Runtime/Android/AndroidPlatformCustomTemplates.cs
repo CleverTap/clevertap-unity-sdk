@@ -6,17 +6,17 @@ namespace CleverTapSDK.Android {
     {
         internal override CleverTapTemplateContext CreateContext(string name)
         {
-            throw new System.NotImplementedException();
+            return new AndroidTemplateContext(name);
         }
 
         internal override void SyncCustomTemplates()
         {
-            throw new System.NotImplementedException();
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("syncCustomTemplates");
         }
 
         internal override void SyncCustomTemplates(bool isProduction)
         {
-            throw new System.NotImplementedException();
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("syncCustomTemplates");
         }
     }
 }
