@@ -5,8 +5,6 @@
 #import <CleverTapSDK/CleverTapUTMDetail.h>
 #import <CleverTapSDK/CleverTapEventDetail.h>
 
-static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
-
 @interface CleverTapUnityManager : NSObject
 
 + (CleverTapUnityManager *)sharedInstance;
@@ -20,6 +18,8 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 + (void)setLocation:(CLLocationCoordinate2D)location;
 + (void)registerPush;
 + (void)setApplicationIconBadgeNumber:(int)num;
+
+- (void)onCallbackAdded:(NSString *)callbackName;
 
 
 #pragma mark - Offline API

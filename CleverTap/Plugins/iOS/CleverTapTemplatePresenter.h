@@ -9,9 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString * kCleverTapCustomTemplatePresent = @"CleverTapCustomTemplatePresent";
-static NSString * kCleverTapCustomTemplateClose = @"CleverTapCustomTemplateClose";
-
 @interface CleverTapTemplatePresenter : NSObject <CTTemplatePresenter>
 
 @end

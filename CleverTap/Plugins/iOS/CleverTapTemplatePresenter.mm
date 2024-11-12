@@ -6,15 +6,17 @@
 
 #import "CleverTapTemplatePresenter.h"
 #import "CleverTapUnityManager.h"
+#import "CleverTapMessageSender.h"
+#import "CleverTapUnityCallbackInfo.h"
 
 @implementation CleverTapTemplatePresenter
 
-- (void)onPresent:(nonnull CTTemplateContext *)context { 
-    UnitySendMessage([kCleverTapGameObjectName UTF8String], [kCleverTapCustomTemplatePresent UTF8String], [context.templateName UTF8String]);
+- (void)onPresent:(nonnull CTTemplateContext *)context {
+    [[CleverTapMessageSender sharedInstance] send:CleverTapUnityCallbackCustomTemplateClose withMessage:context.templateName];
 }
 
 - (void)onCloseClicked:(nonnull CTTemplateContext *)context {
-    UnitySendMessage([kCleverTapGameObjectName UTF8String], [kCleverTapCustomTemplateClose UTF8String], [context.templateName UTF8String]);
+    [[CleverTapMessageSender sharedInstance] send:CleverTapUnityCallbackCustomTemplateClose withMessage:context.templateName];
 }
 
 @end

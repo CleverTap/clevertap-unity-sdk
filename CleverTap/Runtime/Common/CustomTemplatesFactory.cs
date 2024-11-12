@@ -19,7 +19,7 @@ namespace CleverTapSDK.Common
 #if UNITY_ANDROID
             cleverTapCustomTemplates = new AndroidPlatformCustomTemplates();
 #elif UNITY_IOS
-            //cleverTapCustomTemplates = new IOSPlatformCustomTemplates();
+            cleverTapCustomTemplates = new IOSPlatformCustomTemplates();
 #else
             cleverTapCustomTemplates = new UnityNativePlatformCustomTemplates();
 #endif

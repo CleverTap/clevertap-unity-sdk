@@ -9,8 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString * kCleverTapAppFunctionPresent = @"CleverTapAppFunctionPresent";
-
 @interface CleverTapAppFunctionPresenter : NSObject <CTTemplatePresenter>
 
 @end

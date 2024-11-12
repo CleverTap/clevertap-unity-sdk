@@ -737,3 +737,9 @@ int8_t CleverTap_customTemplateGetByteArg(const char* templateName, const char* 
     return [[CleverTapUnityManager sharedInstance]
             customTemplateGetByteArg:clevertap_stringToNSString(templateName) named:clevertap_stringToNSString(argumentName)];
 }
+
+void CleverTap_onCallbackAdded(const char* callbackName)
+{
+    [[CleverTapUnityManager sharedInstance]
+     onCallbackAdded:clevertap_stringToNSString(callbackName)];
+}
