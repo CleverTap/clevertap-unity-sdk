@@ -16,15 +16,12 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchVariables", callbackId);
 
         protected override Var<T> DefineVariable<T>(string name, string kind, T defaultValue) {
-            CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineVar", name, kind, Json.Serialize(defaultValue));
+            if (kind == CleverTapVariableKind.FILE) {
+                CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineFileVariable", name);
+            } else {
+                CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineVar", name, kind, Json.Serialize(defaultValue));
+            }
             Var<T> result = new AndroidVar<T>(name, kind, defaultValue);
-            varCache.Add(name, result);
-            return result;
-        }
-
-        internal override Var<string> DefineFileVariable(string name) {
-            CleverTapAndroidJNI.CleverTapJNIInstance.Call("defineFileVariable", name);
-            Var<string> result = new AndroidVar<string>(name, CleverTapVariableKind.FILE, null);
             varCache.Add(name, result);
             return result;
         }
