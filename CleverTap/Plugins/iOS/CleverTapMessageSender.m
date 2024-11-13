@@ -39,7 +39,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
     return [NSDictionary dictionaryWithDictionary:buffers];
 }
 
-// TODO: synchronized
 - (void)send:(CleverTapUnityCallback)callback withMessage:(NSString *)message {
     @synchronized (self) {
         CleverTapUnityCallbackInfo *callbackInfo = [CleverTapUnityCallbackInfo infoForCallback:callback];
