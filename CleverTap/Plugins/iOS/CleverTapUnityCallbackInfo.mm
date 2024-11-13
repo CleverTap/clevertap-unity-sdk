@@ -25,7 +25,6 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    // Return a new instance with the same property values
     return [[CleverTapUnityCallbackInfo allocWithZone:zone] initWithName:self.callbackName bufferable:self.isBufferable];
 }
 
@@ -37,21 +36,19 @@
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProfileInitializedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProfileUpdatesCallback" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapDeepLinkCallback" bufferable:YES],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushReceivedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushOpenedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationDismissedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationButtonTapped" bufferable:YES],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapOnPushPermissionResponseCallback" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInboxDidInitializeCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInboxMessagesDidUpdateCallback" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInboxCustomExtrasButtonSelect" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInboxItemClicked" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationButtonTapped" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapNativeDisplayUnitsUpdated" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapFeatureFlagsUpdated" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProductConfigInitialized" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProductConfigFetched" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProductConfigActivated" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInitCleverTapIdCallback" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesChanged" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariableValueChanged" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesFetched" bufferable:NO],
@@ -61,7 +58,6 @@
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomTemplatePresent" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomFunctionPresent" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomTemplateClose" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushReceivedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushPermissionResponseReceived" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushNotificationPermissionStatus" bufferable:NO]
         ];

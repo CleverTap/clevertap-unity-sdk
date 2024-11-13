@@ -1,9 +1,3 @@
-//
-//  CleverTapMessageSender.h
-//
-//  Created by Nikola Zagorchev on 12.11.24.
-//
-
 #import <Foundation/Foundation.h>
 #import "CleverTapUnityCallbackInfo.h"
 

@@ -1,9 +1,3 @@
-//
-//  CleverTapMessageSender.m
-//
-//  Created by Nikola Zagorchev on 12.11.24.
-//
-
 #import "CleverTapMessageSender.h"
 #import "CleverTapUnityCallbackInfo.h"
 #import "CleverTapMessageBuffer.h"
@@ -45,43 +39,56 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
     return [NSDictionary dictionaryWithDictionary:buffers];
 }
 
+// TODO: synchronized
 - (void)send:(CleverTapUnityCallback)callback withMessage:(NSString *)message {
-    CleverTapUnityCallbackInfo *callbackInfo = [CleverTapUnityCallbackInfo infoForCallback:callback];
-    if (callbackInfo.isBufferable) {
-        CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
-        if (buffer.isEnabled) {
-            [buffer add:message];
-            return;
+    @synchronized (self) {
+        CleverTapUnityCallbackInfo *callbackInfo = [CleverTapUnityCallbackInfo infoForCallback:callback];
+        if (callbackInfo.isBufferable) {
+            CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
+            if (buffer.isEnabled) {
+                [buffer addItem:message];
+                return;
+            }
         }
-    }
-    [self sendToUnity:callbackInfo withMessage:message];
-}
-
-- (void)sendToUnity:(CleverTapUnityCallbackInfo *)callbackInfo withMessage:(NSString *)message {
-    UnitySendMessage([kCleverTapGameObjectName UTF8String], [callbackInfo.callbackName UTF8String], [message UTF8String]);
-}
-
-- (void)flushBuffer:(CleverTapUnityCallbackInfo *)callbackInfo {
-    CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
-    if (!buffer) {
-        return;
-    }
-    
-    while (buffer.count > 0) {
-        NSString *message = [buffer remove];
         [self sendToUnity:callbackInfo withMessage:message];
     }
 }
 
+- (void)sendToUnity:(CleverTapUnityCallbackInfo *)callbackInfo withMessage:(NSString *)message {
+    if (!message) {
+        NSLog(@"Cannot send nil message to Unity. Callback: %@.", callbackInfo.callbackName);
+        return;
+    }
+    UnitySendMessage([kCleverTapGameObjectName UTF8String], [callbackInfo.callbackName UTF8String], [message UTF8String]);
+}
+
+- (void)flushBuffer:(CleverTapUnityCallbackInfo *)callbackInfo {
+    @synchronized (self) {
+        CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
+        if (!buffer) {
+            return;
+        }
+        
+        while (buffer.count > 0) {
+            NSString *message = [buffer popItem];
+            [self sendToUnity:callbackInfo withMessage:message];
+        }
+    }
+}
+
 - (void)disableBuffer:(CleverTapUnityCallbackInfo *)callbackInfo {
-    CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
-    if (buffer) {
-        [buffer setIsEnabled:NO];
+    @synchronized (self) {
+        CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
+        if (buffer) {
+            [buffer setIsEnabled:NO];
+        }
     }
 }
 
 - (void)resetAllBuffers {
-    self.messageBuffers = [self createBuffers:NO];
+    @synchronized (self) {
+        self.messageBuffers = [self createBuffers:NO];
+    }
 }
 
 @end

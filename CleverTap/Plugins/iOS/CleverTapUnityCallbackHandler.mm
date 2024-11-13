@@ -1,23 +1,6 @@
-//
-//  CleverTapUnityCallbackHandler.m
-//
-//  Created by Nikola Zagorchev on 11.11.24.
-//
-
 #import "CleverTapUnityCallbackHandler.h"
 #import "CleverTapUnityCallbackInfo.h"
 #import "CleverTapMessageSender.h"
-#import <CleverTapSDK/CleverTap.h>
-#import <CleverTapSDK/CleverTapSyncDelegate.h>
-#import <CleverTapSDK/CleverTap+DisplayUnit.h>
-#import <CleverTapSDK/CleverTap+FeatureFlags.h>
-#import <CleverTapSDK/CleverTap+ProductConfig.h>
-#import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
-#import <CleverTapSDK/Clevertap+PushPermission.h>
-
-@interface CleverTapUnityCallbackHandler () <CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate>
-
-@end
 
 @implementation CleverTapUnityCallbackHandler
 
@@ -44,9 +27,47 @@
     [instance onVariablesChanged:[self variablesChanged]];
     [instance onVariablesChangedAndNoDownloadsPending:[self variablesChangedAndNoDownloadsPending]];
     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[instance productConfig] setDelegate:self];
     [[instance featureFlags] setDelegate:self];
+#pragma clang diagnostic pop
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Utils
+
+- (NSString *)dictToJson:(NSDictionary *)dict {
+    NSError *err;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&err];
+    
+    if(err != nil) {
+        return nil;
+    }
+    
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
+#pragma mark - Remote Notification
+
+- (void)didReceiveRemoteNotification:(UIApplicationState)applicationState data:(NSData *)data {
+    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    CleverTapUnityCallback callback = (applicationState == UIApplicationStateActive) ? CleverTapUnityCallbackPushReceived : CleverTapUnityCallbackPushOpened;
+    
+    [self callUnityObject:callback withMessage:dataString];
+}
+
+#pragma mark - Deeplink
+
+- (void)deepLinkCallback:(NSString *)url {
+    [self callUnityObject:CleverTapUnityCallbackDeepLink withMessage:url];
+}
+
+#pragma mark - Variables
 
 - (CleverTapVariablesChangedBlock)variablesChanged {
     return ^{
@@ -72,22 +93,6 @@
     };
 }
 
-- (CleverTapFetchInAppsBlock)fetchInAppsBlock:(int)callbackId {
-    return ^(BOOL success) {
-        NSDictionary* response = @{
-            @"callbackId": @(callbackId),
-            @"isSuccess": @(success)
-        };
-        
-        NSString* json = [self dictToJson:response];
-        [self callUnityObject:CleverTapUnityCallbackInAppsFetched withMessage:json];
-    };
-}
-
-- (void)pushPermissionCallback:(BOOL)isPushEnabled {
-    [self callUnityObject:CleverTapUnityCallbackPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"True": @"False"]];
-}
-
 - (CleverTapVariablesChangedBlock)variableValueChanged:(NSString *)varName {
     return ^{
         [self callUnityObject:CleverTapUnityCallbackVariableValueChanged withMessage:varName];
@@ -98,47 +103,6 @@
     return ^{
         [self callUnityObject:CleverTapUnityCallbackVariableFileIsReady withMessage:varName];
     };
-}
-
-- (CleverTapInboxSuccessBlock)initializeInboxBlock {
-    return ^(BOOL success) {
-        NSLog(@"Inbox initialized %d", success);
-        [self callUnityObject:CleverTapUnityCallbackInboxDidInitialize withMessage:[NSString stringWithFormat:@"%@", success? @"YES": @"NO"]];
-    };
-}
-
-- (CleverTapInboxUpdatedBlock)inboxUpdatedBlock {
-    return ^{
-        NSLog(@"Inbox Messages updated");
-        [self callUnityObject:CleverTapUnityCallbackInboxMessagesDidUpdate withMessage:@"inbox updated."];
-    };
-}
-
-- (void)didReceiveRemoteNotification:(UIApplicationState)applicationState data:(NSData *)data {
-    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    CleverTapUnityCallback callback = (applicationState == UIApplicationStateActive) ? CleverTapUnityCallbackPushReceived : CleverTapUnityCallbackPushOpened;
-    
-    [self callUnityObject:callback withMessage:dataString];
-}
-
-- (void)deepLinkCallback:(NSString *)url {
-    [self callUnityObject:CleverTapUnityCallbackDeepLink withMessage:url];
-}
-
-- (NSString *)dictToJson:(NSDictionary *)dict {
-    NSError *err;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&err];
-    
-    if(err != nil) {
-        return nil;
-    }
-    
-    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - CleverTapSyncDelegate/Listener
@@ -168,7 +132,21 @@
     }
 }
 
-#pragma mark - InApp Notification Delegates
+#pragma mark - InApp Notifications
+
+- (CleverTapFetchInAppsBlock)fetchInAppsBlock:(int)callbackId {
+    return ^(BOOL success) {
+        NSDictionary* response = @{
+            @"callbackId": @(callbackId),
+            @"isSuccess": @(success)
+        };
+        
+        NSString* json = [self dictToJson:response];
+        [self callUnityObject:CleverTapUnityCallbackInAppsFetched withMessage:json];
+    };
+}
+
+#pragma mark - InApp Notification Delegate
 
 - (void)inAppNotificationDismissedWithExtras:(NSDictionary *)extras andActionExtras:(NSDictionary *)actionExtras {
     
@@ -204,7 +182,6 @@
     }
 }
 
-
 #pragma mark - Native Display
 
 - (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
@@ -233,6 +210,20 @@
 
 #pragma mark - App Inbox
 
+- (CleverTapInboxSuccessBlock)initializeInboxBlock {
+    return ^(BOOL success) {
+        NSLog(@"Inbox initialized %d", success);
+        [self callUnityObject:CleverTapUnityCallbackInboxDidInitialize withMessage:[NSString stringWithFormat:@"%@", success? @"YES": @"NO"]];
+    };
+}
+
+- (CleverTapInboxUpdatedBlock)inboxUpdatedBlock {
+    return ^{
+        NSLog(@"Inbox Messages updated");
+        [self callUnityObject:CleverTapUnityCallbackInboxMessagesDidUpdate withMessage:@"inbox updated."];
+    };
+}
+
 - (void)messageButtonTappedWithCustomExtras:(NSDictionary *)customExtras {
     
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];
@@ -251,7 +242,6 @@
 - (void)messageDidSelect:(CleverTapInboxMessage *_Nonnull)message atIndex:(int)index withButtonIndex:(int)buttonIndex {
     NSMutableDictionary *body = [NSMutableDictionary new];
     if ([message json] != nil) {
-        NSError *error;
         if ([message json] != nil) {
             body[@"CTInboxMessagePayload"] = [NSMutableDictionary dictionaryWithDictionary:[message json]];
         }
@@ -262,6 +252,12 @@
             [self callUnityObject:CleverTapUnityCallbackInboxItemClicked withMessage:jsonString];
         }
     }
+}
+
+#pragma mark - Push Permissions
+
+- (void)pushPermissionCallback:(BOOL)isPushEnabled {
+    [self callUnityObject:CleverTapUnityCallbackPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"True": @"False"]];
 }
 
 #pragma mark - Push Permission Delegate
@@ -280,6 +276,9 @@
 
 #pragma mark - Product Config
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 - (void)ctProductConfigFetched {
     [self callUnityObject:CleverTapUnityCallbackProductConfigFetched withMessage:@"Product Config Fetched"];
 }
@@ -291,11 +290,15 @@
 - (void)ctProductConfigInitialized {
     [self callUnityObject:CleverTapUnityCallbackProductConfigInitialized withMessage:@"Product Config Initialized"];
 }
+#pragma clang diagnostic pop
 
 #pragma mark - Feature Flags
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)ctFeatureFlagsUpdated {
     [self callUnityObject:CleverTapUnityCallbackFeatureFlagsUpdated withMessage:@"Feature Flags updated"];
 }
+#pragma clang diagnostic pop
 
 @end

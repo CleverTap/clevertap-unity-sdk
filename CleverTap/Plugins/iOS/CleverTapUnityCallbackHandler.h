@@ -1,17 +1,25 @@
-//
-//  CleverTapUnityCallbackHandler.h
-//
-//  Created by Nikola Zagorchev on 11.11.24.
-//
-
 #import <Foundation/Foundation.h>
 #import <CleverTapSDK/CleverTap+Inbox.h>
+#import <CleverTapSDK/CleverTap.h>
+#import <CleverTapSDK/CleverTapSyncDelegate.h>
+#import <CleverTapSDK/CleverTap+DisplayUnit.h>
+#import <CleverTapSDK/CleverTap+FeatureFlags.h>
+#import <CleverTapSDK/CleverTap+ProductConfig.h>
+#import <CleverTapSDK/CleverTapInAppNotificationDelegate.h>
+#import <CleverTapSDK/Clevertap+PushPermission.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CleverTapUnityCallbackHandler : NSObject
+@interface CleverTapUnityCallbackHandler : NSObject 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+<CleverTapInAppNotificationDelegate, CleverTapDisplayUnitDelegate, CleverTapInboxViewControllerDelegate, CleverTapProductConfigDelegate, CleverTapFeatureFlagsDelegate, CleverTapPushPermissionDelegate>
+
+#pragma clang diagnostic pop
 
 + (instancetype)sharedInstance;
+
+- (void)attachInstance:(CleverTap *)instance;
 
 - (void)pushPermissionCallback:(BOOL)isPushEnabled;
 

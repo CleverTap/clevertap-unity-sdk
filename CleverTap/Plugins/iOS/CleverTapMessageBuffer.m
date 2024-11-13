@@ -1,9 +1,3 @@
-//
-//  CleverTapMessageBuffer.m
-//
-//  Created by Nikola Zagorchev on 12.11.24.
-//
-
 #import "CleverTapMessageBuffer.h"
 
 @implementation CleverTapMessageBuffer
@@ -16,13 +10,13 @@
     return self;
 }
 
-- (void)add:(NSString *)item {
+- (void)addItem:(NSString *)item {
     if (item) {
         [self.items addObject:item];
     }
 }
 
-- (nullable NSString *)remove {
+- (nullable NSString *)popItem {
     if (self.items.count > 0) {
         NSString *last = [self.items lastObject];
         [self.items removeLastObject];
