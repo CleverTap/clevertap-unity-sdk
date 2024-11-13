@@ -273,10 +273,6 @@ const int PENDING_EVENTS_TIME_OUT = 5;
     [self.cleverTap handleNotificationWithData:data];
 }
 
-- (void)showInAppNotificationIfAny {
-    [self.cleverTap showInAppNotificationIfAny];
-}
-
 - (void)registerApplication:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
     [self handleNotificationWithData:notification];
     
