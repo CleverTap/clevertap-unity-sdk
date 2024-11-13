@@ -127,16 +127,9 @@ char* clevertap_cStringCopy(const char* string) {
 
 #pragma mark - Admin
 
-void CleverTap_launchWithCredentials(const char* accountID, const char* token) {
-    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) andToken:clevertap_stringToNSString(token)];
-}
-
-void CleverTap_launchWithCredentialsForRegion(const char* accountID, const char* token, const char* region) {
-    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) region:clevertap_stringToNSString(region)];
-}
-
-void CleverTap_launchWithCredentialsForProxyServer(const char* accountID, const char* token, const char* proxyDomain, const char* spikyProxyDomain) {
-    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) proxyDomain:clevertap_stringToNSString(proxyDomain) spikyProxyDomain:clevertap_stringToNSString(spikyProxyDomain)];
+void CleverTap_onCallbackAdded(const char* callbackName) {
+    [[CleverTapUnityManager sharedInstance]
+     onCallbackAdded:clevertap_stringToNSString(callbackName)];
 }
 
 void CleverTap_setDebugLevel(int level) {
@@ -713,10 +706,4 @@ int16_t CleverTap_customTemplateGetShortArg(const char* templateName, const char
 int8_t CleverTap_customTemplateGetByteArg(const char* templateName, const char* argumentName) {
     return [[CleverTapUnityManager sharedInstance]
             customTemplateGetByteArg:clevertap_stringToNSString(templateName) named:clevertap_stringToNSString(argumentName)];
-}
-
-void CleverTap_onCallbackAdded(const char* callbackName)
-{
-    [[CleverTapUnityManager sharedInstance]
-     onCallbackAdded:clevertap_stringToNSString(callbackName)];
 }

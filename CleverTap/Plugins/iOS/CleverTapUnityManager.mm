@@ -40,6 +40,7 @@
         self.cleverTap = [CleverTap sharedInstance];
         NSLog(@"CleverTap default instance: %@", self.cleverTap);
         self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
+        [self.callbackHandler attachInstance:self.cleverTap];
         [self disableMessageBuffers];
     }
     return self;
@@ -58,26 +59,6 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 }
 
 #pragma mark - Admin
-
-+ (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token {
-    [self launchWithAccountID:accountID token:token region:nil];
-}
-
-+ (void)launchWithAccountID:(NSString *)accountID token:(NSString *)token region:(NSString *)region {
-    [CleverTap setCredentialsWithAccountID:accountID token:token region:region];
-    [self initializeAndNotifyLaunch];
-}
-
-+ (void)launchWithAccountID:(NSString *)accountID token:(NSString *)token proxyDomain:(NSString *)proxyDomain spikyProxyDomain:(NSString *)spikyProxyDomain {
-    [CleverTap setCredentialsWithAccountID:accountID token:token proxyDomain:proxyDomain spikyProxyDomain:spikyProxyDomain];
-    [self initializeAndNotifyLaunch];
-}
-
-+ (void)initializeAndNotifyLaunch {
-    // Initialize CleverTapUnityManager to register listeners and set delegates
-    [CleverTapUnityManager sharedInstance];
-    [[CleverTap sharedInstance] notifyApplicationLaunchedWithOptions:nil];
-}
 
 + (void)setApplicationIconBadgeNumber:(int)num {
     [UIApplication sharedApplication].applicationIconBadgeNumber = num;
@@ -261,6 +242,8 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 + (void)registerPush {
     UIApplication *application = [UIApplication sharedApplication];
     if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         UIUserNotificationSettings *settings = [UIUserNotificationSettings
                                                 settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
                                                 categories:nil];
@@ -268,6 +251,7 @@ const int PENDING_EVENTS_TIME_OUT = 5;
         
         [application registerUserNotificationSettings:settings];
         [application registerForRemoteNotifications];
+#pragma clang diagnostic pop
     }
     else {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 80000
@@ -355,7 +339,7 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 }
 
 - (void)showAppInbox:(NSDictionary *)styleConfig {
-    CleverTapInboxViewController *inboxController = [self.cleverTap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:self];
+    CleverTapInboxViewController *inboxController = [self.cleverTap newInboxViewControllerWithConfig:[self _dictToInboxStyleConfig:styleConfig? styleConfig : nil] andDelegate:self.callbackHandler];
     if (inboxController) {
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:inboxController];
         [UnityGetGLViewController() presentViewController:navigationController animated:YES completion:nil];
@@ -541,6 +525,8 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 
 #pragma mark - Product Config
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)fetchProductConfig {
     [[self.cleverTap productConfig] fetch];
 }
@@ -577,9 +563,9 @@ const int PENDING_EVENTS_TIME_OUT = 5;
     }
     else {
         jsonDict = @{ key: value.jsonValue };
-}
-
-return jsonDict;
+    }
+    
+    return jsonDict;
 }
 
 - (double)getProductConfigLastFetchTimeStamp {
@@ -591,13 +577,16 @@ return jsonDict;
 - (void)resetProductConfig {
     [[self.cleverTap productConfig] reset];
 }
-
+#pragma clang diagnostic pop
 
 #pragma mark - Feature Flags
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)get:(NSString *)key withDefaultValue:(BOOL)defaultValue {
     return [[self.cleverTap featureFlags] get:key withDefaultValue:defaultValue];
 }
+#pragma clang diagnostic pop
 
 #pragma mark - Push Primer
 
