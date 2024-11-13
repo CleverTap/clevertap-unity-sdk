@@ -1,9 +1,3 @@
-//
-//  CleverTapAppFunctionPresenter.m
-//
-//  Created by Nikola Zagorchev on 22.10.24.
-//
-
 #import "CleverTapAppFunctionPresenter.h"
 #import "CleverTapUnityManager.h"
 #import "CleverTapMessageSender.h"

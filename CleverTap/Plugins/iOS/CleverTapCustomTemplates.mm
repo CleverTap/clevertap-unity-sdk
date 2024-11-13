@@ -1,9 +1,3 @@
-//
-//  CleverTapCustomTemplates.m
-//
-//  Created by Nikola Zagorchev on 22.10.24.
-//
-
 #import "CleverTapCustomTemplates.h"
 #import "CleverTapTemplatePresenter.h"
 #import "CleverTapAppFunctionPresenter.h"
