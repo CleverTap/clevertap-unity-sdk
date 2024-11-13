@@ -802,8 +802,13 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
         if (value == null) {
             return null;
         }
-        
-        return (value instanceof Map) ? new JSONObject((Map<?, ?>) value).toString() : value.toString();
+        if (value instanceof Map) {
+            return new JSONObject((Map<?, ?>) value).toString();
+        } else if (value instanceof String) {
+            return "\"" + value + "\"";
+        } else {
+            return value.toString();
+        }
     }
 
     public void syncVariables() {
