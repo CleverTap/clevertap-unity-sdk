@@ -42,18 +42,19 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (void)send:(CleverTapUnityCallback)callback withMessage:(NSString *)message {
     @synchronized (self) {
         CleverTapUnityCallbackInfo *callbackInfo = [CleverTapUnityCallbackInfo infoForCallback:callback];
-        if (callbackInfo.isBufferable) {
-            CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
-            if (buffer.isEnabled) {
-                [buffer addItem:message];
-                return;
-            }
+        CleverTapMessageBuffer *buffer = self.messageBuffers[callbackInfo];
+        if (callbackInfo.isBufferable && buffer.isEnabled) {
+            [buffer addItem:message];
+            return;
         }
         [self sendToUnity:callbackInfo withMessage:message];
     }
 }
 
 - (void)sendToUnity:(CleverTapUnityCallbackInfo *)callbackInfo withMessage:(NSString *)message {
+    if (!callbackInfo) {
+        NSLog(@"Cannot send message for nil callback.");
+    }
     if (!message) {
         NSLog(@"Cannot send nil message to Unity. Callback: %@.", callbackInfo.callbackName);
         return;
