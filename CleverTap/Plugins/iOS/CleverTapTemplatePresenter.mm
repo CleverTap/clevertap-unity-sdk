@@ -6,7 +6,7 @@
 @implementation CleverTapTemplatePresenter
 
 - (void)onPresent:(nonnull CTTemplateContext *)context {
-    [[CleverTapMessageSender sharedInstance] send:CleverTapUnityCallbackCustomTemplateClose withMessage:context.templateName];
+    [[CleverTapMessageSender sharedInstance] send:CleverTapUnityCallbackCustomTemplatePresent withMessage:context.templateName];
 }
 
 - (void)onCloseClicked:(nonnull CTTemplateContext *)context {
