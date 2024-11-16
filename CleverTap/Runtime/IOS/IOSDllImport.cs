@@ -4,8 +4,11 @@ using CleverTapSDK.IOS;
 
 namespace CleverTapSDK.IOS {
     internal static class IOSDllImport {
-        
+
         #region Bindings
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_onCallbackAdded(string name);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_launchWithCredentials(string accountID, string token);

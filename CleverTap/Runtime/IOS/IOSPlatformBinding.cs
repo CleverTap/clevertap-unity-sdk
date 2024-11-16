@@ -2,6 +2,7 @@
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace CleverTapSDK.IOS {
@@ -181,18 +182,23 @@ namespace CleverTapSDK.IOS {
             return true;
         }
 
+#pragma warning disable CS0809
+        [Obsolete("This method no longer does anything. " +
+            "Replaced with initialization in the application:didFinishLaunchingWithOptions:")]
         internal override void LaunchWithCredentials(string accountID, string token) {
-            IOSDllImport.CleverTap_launchWithCredentials(accountID, token);
         }
 
+        [Obsolete("This method no longer does anything. " +
+    "Replaced with initialization in the application:didFinishLaunchingWithOptions:")]
         internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
-            IOSDllImport.CleverTap_launchWithCredentialsForRegion(accountID, token, region);
         }
 
+        [Obsolete("This method no longer does anything. " +
+    "Replaced with initialization in the application:didFinishLaunchingWithOptions:")]
         internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
-            IOSDllImport.CleverTap_launchWithCredentialsForProxyServer(accountID, token, proxyDomain, spikyProxyDomain);
         }
-        
+#pragma warning restore CS0809
+
         internal override void MarkReadInboxMessageForID(string messageId) {
             IOSDllImport.CleverTap_markReadInboxMessageForID(messageId);
         }

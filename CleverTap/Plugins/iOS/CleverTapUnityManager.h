@@ -5,15 +5,16 @@
 #import <CleverTapSDK/CleverTapUTMDetail.h>
 #import <CleverTapSDK/CleverTapEventDetail.h>
 
-static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
+NS_ASSUME_NONNULL_BEGIN
 
 @interface CleverTapUnityManager : NSObject
 
 + (CleverTapUnityManager *)sharedInstance;
 
-+ (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token;
-+ (void)launchWithAccountID:(NSString*)accountID token:(NSString *)token region:(NSString *)region;
-+ (void)launchWithAccountID:(NSString *)accountID token:(NSString *)token proxyDomain:(NSString *)proxyDomain spikyProxyDomain:(NSString *)spikyProxyDomain;
+- (void)onCallbackAdded:(NSString *)callbackName;
+
+#pragma mark - Admin
+
 + (void)setDebugLevel:(int)level;
 + (void)enablePersonalization;
 + (void)disablePersonalization;
@@ -21,17 +22,14 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 + (void)registerPush;
 + (void)setApplicationIconBadgeNumber:(int)num;
 
-
 #pragma mark - Offline API
 
 - (void)setOffline:(BOOL)enabled;
-
 
 #pragma mark - Opt-out API
 
 - (void)setOptOut:(BOOL)enabled;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
-
 
 #pragma mark - User Profile
 
@@ -49,7 +47,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (NSString *)profileGetCleverTapID;
 - (NSString *)profileGetCleverTapAttributionIdentifier;
 
-
 #pragma mark - User Action Events
 
 - (void)recordScreenView:(NSString *)screenName;
@@ -63,7 +60,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (NSDictionary *)userGetEventHistory;
 - (CleverTapEventDetail *)eventGetDetail:(NSString *)event;
 
-
 #pragma mark - User Session
 
 - (NSTimeInterval)sessionGetTimeElapsed;
@@ -71,7 +67,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (int)userGetTotalVisits;
 - (int)userGetScreenCount;
 - (NSTimeInterval)userGetPreviousVisitTime;
-
 
 #pragma mark - Push Notifications
 
@@ -83,7 +78,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (void)pushInstallReferrerSource:(NSString *)source
                            medium:(NSString *)medium
                          campaign:(NSString *)campaign;
-
 
 #pragma mark - App Inbox
 
@@ -102,14 +96,12 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (void)recordInboxNotificationViewedEventForID:(NSString *)messageId;
 - (void)recordInboxNotificationClickedEventForID:(NSString *)messageId;
 
-
 #pragma mark - Native Display
 
 - (NSArray *)getAllDisplayUnits;
 - (NSDictionary *)getDisplayUnitForID:(NSString *)unitID;
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
-
 
 #pragma mark - Product Config
 
@@ -123,7 +115,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (NSDictionary *)getProductConfigValueFor:(NSString *)key;
 - (double)getProductConfigLastFetchTimeStamp;
 - (void)resetProductConfig;
-
 
 #pragma mark - Feature Flags
 
@@ -139,7 +130,6 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (void)promptForPushPermission:(BOOL)showFallbackSettings;
 - (void)promptPushPrimer:(NSDictionary *)json;
 - (void)isPushPermissionGranted;
-
 
 #pragma mark - Variables
 - (void)syncVariables;
@@ -182,3 +172,5 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (int8_t)customTemplateGetByteArg:(NSString *)templateName named:(NSString *)argumentName;
 
 @end
+
+NS_ASSUME_NONNULL_END
