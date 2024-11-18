@@ -36,6 +36,13 @@ namespace CTExample
                 CleverTap.LaunchWithCredentials(accountId, accountToken);
             }
             Logger.Log($"Launching \"{accountName}\" with accountId: {accountId}, accountToken: {accountToken}, accountRegion: {accountRegion}.");
+
+#if UNITY_ANDROID
+            if (!CleverTap.IsPushPermissionGranted())
+            {
+                CleverTap.PromptForPushPermission(true);
+            }
+#endif
         }
     }
 }
