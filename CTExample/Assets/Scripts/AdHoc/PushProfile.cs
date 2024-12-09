@@ -26,15 +26,23 @@ namespace CTExample
 
         void OnButtonClick(string text)
         {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
+
             string profileInput = text;
             string[] pairs = profileInput.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            Dictionary<string, string> profileData = new Dictionary<string, string>();
+            Dictionary<string, object> profileData = new Dictionary<string, object>();
             foreach (var pair in pairs)
             {
                 string[] keyValue = pair.Split(":", StringSplitOptions.RemoveEmptyEntries);
                 if (keyValue.Length == 2)
                 {
-                    profileData.Add(keyValue[0], keyValue[1]);
+                    string key = keyValue[0];
+                    string stringValue = keyValue[1];
+                    object value = Utils.ParseValue(stringValue);
+                    profileData.Add(key, value);
                 }
             }
             CleverTap.ProfilePush(profileData);

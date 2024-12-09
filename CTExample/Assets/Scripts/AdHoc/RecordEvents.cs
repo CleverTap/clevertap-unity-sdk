@@ -25,6 +25,11 @@ namespace CTExample
 
         private void OnButtonClick(string text)
         {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
+
             string eventInput = text;
             string[] data = eventInput.Split("/", System.StringSplitOptions.RemoveEmptyEntries);
             string eventName = data[0];
@@ -38,7 +43,11 @@ namespace CTExample
                     string[] keyValue = pair.Split(":", System.StringSplitOptions.RemoveEmptyEntries);
                     if (keyValue.Length == 2)
                     {
-                        eventProperties.Add(keyValue[0], keyValue[1]);
+                        string key = keyValue[0];
+                        string stringValue = keyValue[1];
+                        object value = Utils.ParseValue(stringValue);
+
+                        eventProperties.Add(key, value);
                     }
                 }
             }
