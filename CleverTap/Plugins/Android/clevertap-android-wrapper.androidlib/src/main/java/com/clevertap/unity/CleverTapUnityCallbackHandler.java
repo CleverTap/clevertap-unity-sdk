@@ -118,8 +118,8 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
     //OnInitCleverTapIDListener
     @Override
     public void onInitCleverTapID(String cleverTapID) {
-        final String json = "{cleverTapID:" + cleverTapID + "}";
         try {
+            final String json = new JSONObject().put("CleverTapID", cleverTapID).toString();
             sendToUnity(CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK, json);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "onInitCleverTapID error", t);
@@ -141,25 +141,28 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
     @Override
     public void onShow(CTInAppNotification ctInAppNotification) {
         if (ctInAppNotification != null && ctInAppNotification.getJsonDescription() != null) {
-            final String json = "{inApp onShow() json payload:" + ctInAppNotification.getJsonDescription().toString() + "}";
-            sendToUnity(CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK, json);
+            sendToUnity(CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK,
+                    ctInAppNotification.getJsonDescription().toString());
+        } else {
+            Log.e(LOG_TAG, "Could not trigger onShow for InApp with null json description");
         }
     }
 
     @Override
-    public void onDismissed(Map<String, Object> var1, @Nullable Map<String, Object> var2) {
-        if (var1 == null && var2 == null) {
-            return;
+    public void onDismissed(Map<String, Object> extras, @Nullable Map<String, Object> actionExtras) {
+        try {
+            JSONObject json = new JSONObject();
+            if (extras != null) {
+                json.put("extras", new JSONObject(extras));
+            }
+            if (actionExtras != null) {
+                json.put("actionExtras", actionExtras);
+            }
+
+            sendToUnity(CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK, json.toString());
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Could not convert in app extras to json ", e);
         }
-
-        JSONObject extras = var1 != null ? new JSONObject(var1) : new JSONObject();
-        String _json = "{extras:" + extras + ",";
-
-        JSONObject actionExtras = var2 != null ? new JSONObject(var2) : new JSONObject();
-        _json += "actionExtras:" + actionExtras + "}";
-
-        final String json = _json;
-        sendToUnity(CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK, json);
     }
 
     // SyncListener
@@ -170,8 +173,7 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
             return;
         }
 
-        final String json = "{updates:" + updates + "}";
-        sendToUnity(CLEVERTAP_PROFILE_UPDATES_CALLBACK, json);
+        sendToUnity(CLEVERTAP_PROFILE_UPDATES_CALLBACK, updates.toString());
     }
 
     @Override
@@ -181,29 +183,39 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
             return;
         }
 
-        final String json = "{CleverTapID:" + CleverTapID + "}";
-        sendToUnity(CLEVERTAP_PROFILE_INITIALIZED_CALLBACK, json);
+        try {
+            final String json = new JSONObject().put("CleverTapID", CleverTapID).toString();
+            sendToUnity(CLEVERTAP_PROFILE_INITIALIZED_CALLBACK, json);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "profileDidInitialize json error", e);
+        }
     }
 
     //Inbox Listeners
     @Override
     public void inboxDidInitialize() {
-        final String json = "{CleverTap App Inbox Initialized}";
-        sendToUnity(CLEVERTAP_INBOX_DID_INITIALIZE, json);
+        final String message = "CleverTap App Inbox Initialized";
+        sendToUnity(CLEVERTAP_INBOX_DID_INITIALIZE, message);
     }
 
     @Override
     public void inboxMessagesDidUpdate() {
-        final String json = "{CleverTap App Inbox Messages Updated}";
-        sendToUnity(CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, json);
+        final String message = "CleverTap App Inbox Messages Updated";
+        sendToUnity(CLEVERTAP_INBOX_MESSAGES_DID_UPDATE, message);
     }
 
     //Inbox Button Click Listener
     @Override
     public void onInboxButtonClick(HashMap<String, String> payload) {
-        JSONObject jsonObject = new JSONObject(payload);
-        final String json = "{inbox button payload:" + jsonObject + "}";
-        sendToUnity(CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json);
+        try {
+            JSONObject json = new JSONObject();
+            if (payload != null) {
+                json.put("customExtras", new JSONObject(payload));
+            }
+            sendToUnity(CLEVERTAP_ON_INBOX_BUTTON_CLICKED, json.toString());
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Could not convert inbox extras to json ", e);
+        }
     }
 
     @Override
@@ -258,7 +270,7 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
         return new VariablesChangedCallback() {
             @Override
             public void variablesChanged() {
-                sendToUnity(CLEVERTAP_VARIABLES_CHANGED, "{ Variables Changed Callback }");
+                sendToUnity(CLEVERTAP_VARIABLES_CHANGED, "Variables Changed Callback");
             }
         };
     }
@@ -267,7 +279,7 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
         return new VariablesChangedCallback() {
             @Override
             public void variablesChanged() {
-                sendToUnity(CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING, "{ Variables Changed No Downloads Pending Callback }");
+                sendToUnity(CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING, "Variables Changed No Downloads Pending Callback");
             }
         };
     }
@@ -289,9 +301,15 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
 
     @Override
     public void onInAppButtonClick(HashMap<String, String> payload) {
-        JSONObject jsonObject = new JSONObject(payload);
-        final String json = "{inapp button payload:" + jsonObject + "}";
-        sendToUnity(CLEVERTAP_ON_INAPP_BUTTON_CLICKED, json);
+        try {
+            JSONObject json = new JSONObject();
+            if (payload != null) {
+                json.put("customExtras", new JSONObject(payload));
+            }
+            sendToUnity(CLEVERTAP_ON_INAPP_BUTTON_CLICKED, json.toString());
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Could not convert in app button extras to json ", e);
+        }
     }
 
     //Native Display Listener
@@ -299,36 +317,36 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
     public void onDisplayUnitsLoaded(ArrayList<CleverTapDisplayUnit> units) {
         try {
             JSONArray jsonArray = JsonConverter.displayUnitListToJSONArray(units);
-            final String json = "{display units:" + jsonArray + "}";
-            sendToUnity(CLEVERTAP_DISPLAY_UNITS_UPDATED, json);
+            JSONObject json = new JSONObject().put("displayUnits", jsonArray);
+            sendToUnity(CLEVERTAP_DISPLAY_UNITS_UPDATED, json.toString());
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Failed to convert displayUnits to JSON", e);
+            Log.e(LOG_TAG, "Could not convert display units to json ", e);
         }
     }
 
     //Feature Flag Listener
     @Override
     public void featureFlagsUpdated() {
-        final String json = "{CleverTap App Feature Flags Updated}";
-        sendToUnity(CLEVERTAP_FEATURE_FLAG_UPDATED, json);
+        final String message = "CleverTap App Feature Flags Updated";
+        sendToUnity(CLEVERTAP_FEATURE_FLAG_UPDATED, message);
     }
 
     //Product Config Listener
     @Override
     public void onInit() {
-        final String json = "{CleverTap App Product Config Initialized}";
-        sendToUnity(CLEVERTAP_PRODUCT_CONFIG_INITIALIZED, json);
+        final String message = "CleverTap App Product Config Initialized";
+        sendToUnity(CLEVERTAP_PRODUCT_CONFIG_INITIALIZED, message);
     }
 
     @Override
     public void onFetched() {
-        final String json = "{CleverTap App Product Config Fetched}";
-        sendToUnity(CLEVERTAP_PRODUCT_CONFIG_FETCHED, json);
+        final String message = "CleverTap App Product Config Fetched";
+        sendToUnity(CLEVERTAP_PRODUCT_CONFIG_FETCHED, message);
     }
 
     @Override
     public void onActivated() {
-        final String json = "{CleverTap App Product Config Activated}";
-        sendToUnity(CLEVERTAP_PRODUCT_CONFIG_ACTIVATED, json);
+        final String message = "CleverTap App Product Config Activated";
+        sendToUnity(CLEVERTAP_PRODUCT_CONFIG_ACTIVATED, message);
     }
 }
