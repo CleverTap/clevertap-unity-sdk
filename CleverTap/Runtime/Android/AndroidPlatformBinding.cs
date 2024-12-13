@@ -104,7 +104,22 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("getCleverTapID");
             return string.Empty;
         }
+        internal override JSONArray GetAllInboxMessages()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
+            JSONArray json;
+            try
+            {
+                json = (JSONArray)JSON.Parse(jsonString);
+            }
+            catch
+            {
+                CleverTapLogger.LogError("Unable to parse inbox messages JSON");
+                json = new JSONArray();
+            }
 
+            return json;
+        }
         internal override int GetInboxMessageCount() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("getInboxMessageCount");
         }
@@ -128,7 +143,11 @@ namespace CleverTapSDK.Android {
         internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
             CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, region, CleverTapAndroidJNI.UnityActivity);
         }
-
+        
+        internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
+            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("initialize", accountID, token, proxyDomain, spikyProxyDomain, CleverTapAndroidJNI.UnityActivity);
+        }
+        
         internal override void MarkReadInboxMessageForID(string messageId) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("markReadInboxMessageForId", messageId);
         }

@@ -146,6 +146,9 @@ namespace CleverTapSDK.Common {
 
         internal virtual void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
         }
+        
+        internal virtual void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
+        }
 
         internal virtual void MarkReadInboxMessageForID(string messageId) {
         }

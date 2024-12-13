@@ -12,6 +12,7 @@
 
 + (void)launchWithAccountID:(NSString*)accountID andToken:(NSString *)token;
 + (void)launchWithAccountID:(NSString*)accountID token:(NSString *)token region:(NSString *)region;
++ (void)launchWithAccountID:(NSString *)accountID token:(NSString *)token proxyDomain:(NSString *)proxyDomain spikyProxyDomain:(NSString *)spikyProxyDomain;
 + (void)setDebugLevel:(int)level;
 + (void)enablePersonalization;
 + (void)disablePersonalization;
@@ -145,7 +146,9 @@
 - (void)fetchVariables:(int)callbackId;
 
 - (void)defineVar:(NSString *)name kind:(NSString *)kind andDefaultValue:(NSString *)defaultValue;
+- (void)defineFileVar:(NSString *)name;
 - (NSString *)getVariableValue:(NSString *)name;
+- (NSString *)getFileVariableValue:(NSString *)name;
 
 #pragma mark - Client-side In-Apps
 - (void)fetchInApps:(int)callbackId;

@@ -26,7 +26,6 @@ namespace CleverTapSDK.Native
 
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
-
         private Coroutine timerCoroutine;
 
         internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
@@ -163,13 +162,43 @@ namespace CleverTapSDK.Native
             {
                 { UnityNativeConstants.EventMeta.GUID, deviceInfo.DeviceId },
                 { UnityNativeConstants.EventMeta.TYPE, UnityNativeConstants.EventMeta.TYPE_NAME },
-                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, new UnityNativeEventBuilder(coreState, networkEngine).BuildAppFields() },
+                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, UnityNativeEventBuilder.BuildAppFields(deviceInfo) },
                 { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
-                { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() }
+                { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },
+                { UnityNativeConstants.EventMeta.ARP_KEY, GetARP() },
+                { UnityNativeConstants.EventMeta.KEY_I, GetI() },
+                { UnityNativeConstants.EventMeta.KEY_J, GetJ() }
             };
-
             return metaDetails;
+        }
+
+        private Dictionary<string, object> GetARP()
+        {
+            string arpNamespaceKey = string.Format(UnityNativeConstants.EventMeta.ARP_NAMESPACE_KEY,
+                coreState.DeviceInfo.DeviceId);
+            var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            string arpJson = preferenceManager.GetString(arpNamespaceKey, string.Empty);
+            if (!string.IsNullOrEmpty(arpJson)
+                && Json.Deserialize(arpJson) is Dictionary<string, object> arpDictionary
+                && arpDictionary.Count > 0)
+            {
+                return arpDictionary;
+            }
+
+            return new Dictionary<string, object>();
+        }
+
+        private long GetI()
+        {
+            var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            return preferenceManager.GetLong(UnityNativeConstants.EventMeta.KEY_I, 0);
+        }
+
+        private long GetJ()
+        {
+            var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+            return preferenceManager.GetLong(UnityNativeConstants.EventMeta.KEY_J, 0);
         }
 
         protected abstract bool CanProcessEventResponse(UnityNativeResponse response);

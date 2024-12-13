@@ -135,6 +135,10 @@ void CleverTap_launchWithCredentialsForRegion(const char* accountID, const char*
     [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) region:clevertap_stringToNSString(region)];
 }
 
+void CleverTap_launchWithCredentialsForProxyServer(const char* accountID, const char* token, const char* proxyDomain, const char* spikyProxyDomain) {
+    [CleverTapUnityManager launchWithAccountID:clevertap_stringToNSString(accountID) token:clevertap_stringToNSString(token) proxyDomain:clevertap_stringToNSString(proxyDomain) spikyProxyDomain:clevertap_stringToNSString(spikyProxyDomain)];
+}
+
 void CleverTap_setDebugLevel(int level) {
     [CleverTapUnityManager setDebugLevel:level];
 }
@@ -594,10 +598,22 @@ void CleverTap_defineVar(const char* name, const char* kind, const char* value)
                                       andDefaultValue:clevertap_stringToNSString(value)];
 }
 
+void CleverTap_defineFileVar(const char* name)
+{
+    [[CleverTapUnityManager sharedInstance] defineFileVar:clevertap_stringToNSString(name)];
+}
+
 char* CleverTap_getVariableValue(const char* name)
 {
     NSString* json = [[CleverTapUnityManager sharedInstance]
                       getVariableValue:clevertap_stringToNSString(name)];
+    return clevertap_cStringCopy([json UTF8String]);
+}
+
+char* CleverTap_getFileVariableValue(const char* name)
+{
+    NSString* json = [[CleverTapUnityManager sharedInstance]
+                      getFileVariableValue:clevertap_stringToNSString(name)];
     return clevertap_cStringCopy([json UTF8String]);
 }
 

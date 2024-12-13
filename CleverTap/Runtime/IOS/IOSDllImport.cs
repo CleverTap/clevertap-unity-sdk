@@ -13,6 +13,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_launchWithCredentialsForRegion(string accountID, string token, string region);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_launchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string  spikyProxyDomain);
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_onUserLogin(string properties);
 
         [DllImport("__Internal")]
@@ -239,10 +242,16 @@ namespace CleverTapSDK.IOS {
         #region Variables
 
         [DllImport("__Internal")]
-        internal static extern string CleverTap_getVariableValue(string name, string kind);
+        internal static extern string CleverTap_getVariableValue(string name);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_getFileVariableValue(string name);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_defineVar(string name, string kind, string jsonValue);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_defineFileVar(string name);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_syncVariables();

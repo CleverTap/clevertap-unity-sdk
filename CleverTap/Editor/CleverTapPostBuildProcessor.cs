@@ -89,7 +89,19 @@ namespace CleverTapSDK.Private
             {
                 rootDict.SetString("CleverTapAccountID", settings.CleverTapAccountId);
                 rootDict.SetString("CleverTapToken", settings.CleverTapAccountToken);
-                rootDict.SetString("CleverTapRegion", settings.CleverTapAccountRegion);
+                if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountRegion))
+                {
+                    rootDict.SetString("CleverTapRegion", settings.CleverTapAccountRegion);
+                }
+                if (!string.IsNullOrWhiteSpace(settings.CleverTapProxyDomain))
+				{
+                    rootDict.SetString("CleverTapProxyDomain", settings.CleverTapProxyDomain);
+                }
+                if (!string.IsNullOrWhiteSpace(settings.CleverTapSpikyProxyDomain))
+                {
+                    rootDict.SetString("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
+                }
+
                 rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
 
                 // Write to file

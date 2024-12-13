@@ -35,6 +35,8 @@ namespace CleverTapSDK.Private
             settings.CleverTapAccountId = EditorGUILayout.TextField("CleverTapAccountId", settings.CleverTapAccountId);
             settings.CleverTapAccountToken = EditorGUILayout.TextField("CleverTapAccountToken", settings.CleverTapAccountToken);
             settings.CleverTapAccountRegion = EditorGUILayout.TextField("CleverTapAccountRegion", settings.CleverTapAccountRegion);
+            settings.CleverTapProxyDomain = EditorGUILayout.TextField("CleverTapProxyDomain", settings.CleverTapProxyDomain);
+            settings.CleverTapSpikyProxyDomain = EditorGUILayout.TextField("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
 
             settings.CleverTapEnablePersonalization = EditorGUILayout.Toggle("CleverTapEnablePersonalization", settings.CleverTapEnablePersonalization);
             settings.CleverTapDisableIDFV = EditorGUILayout.Toggle("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
