@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 4.1.0 *(13 December, 2024)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v7.0.3](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.0.3)
+- Updated to [CleverTap iOS SDK v7.0.3](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.0.3)
+- Supports launch with proxy and spiky proxy domain
+- Supports file type variables
+- Unity native networking improvements
+- Fixes missing GetAllInboxMessages() in Android plugin
+- Fixes string variables on Android always having default values
+- Fixes json messages send from Android Unity plugin
+
 Version 4.0.0 *(07 August, 2024)*
 -------------------------------------------
 - Added native support for WebGL, Mac and Windows platform

@@ -290,8 +290,18 @@ namespace CTExample
 
             Logger.Log($"Name: {varHello.Name}, Default Value: {varHello.DefaultValue}, Value: {varHello.Value}");
 
-            Logger.Log($"Name: {factory_var_file.Name}, Default Value: {factory_var_file.DefaultValue}, Value: {factory_var_file.Value}, File Value: {factory_var_file.FileValue}");
-            Logger.Log($"Name: {folder1FileVariable.Name}, Default Value: {folder1FileVariable.DefaultValue}, Value: {folder1FileVariable.Value}, File Value: {folder1FileVariable.FileValue}");
+            Logger.Log($"Name: {factory_var_file.Name}, File Exists: {FileExists(factory_var_file.FileValue)}, Value: {factory_var_file.Value}, File Value: {factory_var_file.FileValue}");
+            Logger.Log($"Name: {folder1FileVariable.Name}, File Exists: {FileExists(folder1FileVariable.FileValue)}, Value: {folder1FileVariable.Value}, File Value: {folder1FileVariable.FileValue}");
+        }
+
+        private static bool FileExists(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return false;
+            }
+
+            return System.IO.File.Exists(filePath);
         }
 
         private void OnVariablesChanged()

@@ -16,6 +16,7 @@ Currently, CleverTap SDK supports the following variable types:
 - long
 - float
 - double
+- file
 
 # Define Variables
 
@@ -29,14 +30,28 @@ Var<double> doubleVariable = CleverTap.Define("double_variable", 11.5);
 Var<string> stringVariable = CleverTap.Define("string_variable", "hello, world");
 ```
 
+# Define File Variables
+Clevertap supports File Types for Variables from `v4.1.0+`. Supported file types include but are not limited to images (jpg, jpeg, png, gif), text files, and PDFs.
+
+Use the `DefineFileVariable(...)` method.
+
+```csharp
+Var<string> fileVar = CleverTap.DefineFileVariable("var_file");
+```
+
+The file variables value is a string with the file path to the file on the device.
+
 # Setup Callbacks
 
 CleverTap Unity SDK provides several callbacks for the developer to receive feedback from the SDK. You can use them as per your requirements. Using all of them is not mandatory. They are as follows:
 
 - Status of fetch variables request
-- `onVariablesChanged`
-- `onceVariablesChanged`
-- `onValueChanged`
+- `OnVariablesChanged`
+- `OnOneTimeVariablesChanged`
+- `OnVariablesChangedAndNoDownloadsPending`
+- `OnOneTimeVariablesChangedAndNoDownloadsPending`
+- `OnValueChanged`
+- `OnFileReady`
 
 ## Status of Variables Fetch Request
 
@@ -49,7 +64,7 @@ void OnFetchVariablesCallback(bool isSuccess) {
     }
 ```
 
-## onVariablesChanged
+## OnVariablesChanged
 
 This callback is invoked when variables are initialized with values fetched from the server. It is called each time new values are fetched.
 
@@ -60,7 +75,7 @@ Debug.Log("Unity received variables changed");
     }
 ```
 
-## onceVariablesChanged
+## OnOneTimeVariablesChanged
 
 This callback is invoked when variables are initialized with values fetched from the server. It is called once.
 
@@ -72,7 +87,30 @@ Debug.Log("Unity received variables changed");
  }
 ```
 
-## onValueChanged
+## OnVariablesChangedAndNoDownloadsPending
+
+This callback is invoked when variables are initialized with values fetched from the server and files download is complete. It is called each time new values are fetched and downloads completed.
+
+```csharp
+CleverTap.OnVariablesChangedAndNoDownloadsPending += OnVariablesChangedAndNoDownloadsPending;  
+private void OnVariablesChangedAndNoDownloadsPending() {  
+Debug.Log("Unity received variables changed and no downloads pending");  
+    }
+```
+
+## OnOneTimeVariablesChangedAndNoDownloadsPending
+
+This callback is invoked when variables are initialized with values fetched from the server and files download is complete. It is called once.
+
+```csharp
+CleverTap.OnOneTimeVariablesChangedAndNoDownloadsPending += OnOneTimeVariablesChangedAndNoDownloadsPending;  
+private void OnOneTimeVariablesChangedAndNoDownloadsPending()  
+    {  
+Debug.Log("Unity received variables changed and no downloads pending");  
+ }
+```
+
+## OnValueChanged
 
 This callback is invoked when the value of the variable changes. You attach the callback to the variable object:
 
@@ -81,6 +119,18 @@ Var<string> stringVariable = CleverTap.Define("string_variable", "hello, world")
 stringVariable.OnValueChanged += stringVariable_OnValueChanged;  
 private void stringVariable_OnValueChanged() {  
         Debug.Log("Unity received variable changed stringVariable");  
+    }
+```
+
+## OnFileReady
+
+This individual callback is registered per file variable. It is called when the file associated with the variable is downloaded and ready to be used.
+
+```csharp
+Var<string> fileVar = CleverTap.DefineFileVariable("var_file");
+fileVar.OnFileReady += fileVar_OnFileReady;  
+private void fileVar_OnFileReady() {  
+        Debug.Log("Unity received file ready fileVar");  
     }
 ```
 
