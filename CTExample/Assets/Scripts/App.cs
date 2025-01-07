@@ -37,12 +37,46 @@ namespace CTExample
             }
             Logger.Log($"Launching \"{accountName}\" with accountId: {accountId}, accountToken: {accountToken}, accountRegion: {accountRegion}.");
 
+            // add listeners for events that may be triggered on app launch so they can be logged
+            CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
+            CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
+
+            // todo: add UI for custom templates
+            CleverTap.OnCustomTemplatePresent += CleverTapCustomTemplatePresent;
+            CleverTap.OnCustomTemplateClose += CleverTapCustomTemplateClose;
+            CleverTap.OnCustomFunctionPresent += CleverTapCustomFunctionPresent;
+
 #if UNITY_ANDROID
             if (!CleverTap.IsPushPermissionGranted())
             {
                 CleverTap.PromptForPushPermission(true);
             }
 #endif
+        }
+
+        private void CleverTapPushOpenedCallback(string message)
+        {
+        }
+
+        private void CleverTapDeepLinkCallback(string message)
+        {
+        }
+
+        private void CleverTapCustomTemplatePresent(CleverTapSDK.Common.CleverTapTemplateContext context)
+        {
+            context.SetPresented();
+            context.SetDismissed();
+        }
+
+        private void CleverTapCustomTemplateClose(CleverTapSDK.Common.CleverTapTemplateContext context)
+        {
+            context.SetDismissed();
+        }
+
+        private void CleverTapCustomFunctionPresent(CleverTapSDK.Common.CleverTapTemplateContext context)
+        {
+            context.SetPresented();
+            context.SetDismissed();
         }
     }
 }
