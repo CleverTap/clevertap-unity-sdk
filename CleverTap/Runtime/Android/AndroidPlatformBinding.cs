@@ -6,8 +6,13 @@ using System.Collections.Generic;
 
 namespace CleverTapSDK.Android {
     internal class AndroidPlatformBinding : CleverTapPlatformBindings {
-        internal AndroidPlatformBinding() {
+        internal AndroidPlatformBinding()
+        {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<AndroidCallbackHandler>(CleverTapGameObjectName.ANDROID_CALLBACK_HANDLER);
+            CleverTapAndroidJNI.OnInitCleverTapInstanceDelegate = cleverTapJniInstance =>
+            {
+                cleverTapJniInstance.Call("setInAppNotificationOnShowCallback", new InAppOnShowCallback(CallbackHandler));
+            };
             CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }
 
@@ -286,6 +291,20 @@ namespace CleverTapSDK.Android {
         */
         internal override void ResumeInAppNotifications() {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("resumeInAppNotifications");
+        }
+
+        internal class InAppOnShowCallback : AndroidPluginCallback
+        {
+            private readonly CleverTapCallbackHandler CallbackHandler;
+            public InAppOnShowCallback(CleverTapCallbackHandler callbackHandler)
+            {
+                CallbackHandler = callbackHandler;
+            }
+
+            internal override void Invoke(string message)
+            {
+                CallbackHandler.CleverTapInAppNotificationShowCallback(message);
+            }
         }
 
         internal override int SessionGetTimeElapsed() {
