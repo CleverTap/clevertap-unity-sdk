@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="YOUR_BUNDLE_IDENTIFIER"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="preferExternal"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:glEsVersion="0x00020000" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch.distinct"
+        android:required="false" />
+
+    <application
+        android:debuggable="true"
+        android:icon="@drawable/app_icon"
+        android:isGame="true"
+        android:name="com.clevertap.unity.CleverTapUnityApplication"
+        android:label="@string/app_name"
+        android:theme="@style/UnityThemeSelector">
+
+        <activity
+            android:name="com.clevertap.unity.CleverTapOverrideActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="fullSensor">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep Links uncomment and replace YOUR_URL_SCHEME, if applicable, or remove if not supporting deep links-->
+            <!--
+            <intent-filter android:label="@string/app_name">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="YOUR_URL_SCHEME" />
+            </intent-filter>
+            -->
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
+        </activity>
+
+        <service
+            android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.clevertap.android.sdk.pushnotification.CTNotificationIntentService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.clevertap.PUSH_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="CLEVERTAP_ACCOUNT_ID"
+            android:value="Your CleverTap Account ID" />
+
+        <meta-data
+            android:name="CLEVERTAP_TOKEN"
+            android:value="Your CleverTap Account Token" />
+
+        <meta-data
+            android:name="CLEVERTAP_REGION"
+            android:value="Your CleverTap Account Region" />
+
+    </application>
+
+</manifest>
