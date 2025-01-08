@@ -98,7 +98,7 @@ namespace CleverTapSDK.Android {
         }
 
         /**
-        * requests for a unique, asynchronous CleverTap identifier. The value will be available as json {"cleverTapID" : <value> } via
+        * requests for a unique, asynchronous CleverTap identifier. The value will be available as json {"CleverTapID" : <value> } via
         * CleverTapUnity#CleverTapInitCleverTapIdCallback() function
         */
         internal override string GetCleverTapID() {

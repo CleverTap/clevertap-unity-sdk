@@ -49,6 +49,7 @@ import com.clevertap.android.sdk.inapp.callbacks.FetchInAppsCallback;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.interfaces.OnInitCleverTapIDListener;
 import com.clevertap.android.sdk.product_config.CTProductConfigListener;
+import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener;
 import com.clevertap.android.sdk.variables.Var;
 import com.clevertap.android.sdk.variables.callbacks.FetchVariablesCallback;
 import com.clevertap.android.sdk.variables.callbacks.VariableCallback;
@@ -62,10 +63,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotificationListener,
+class CleverTapUnityCallbackHandler implements SyncListener, InAppNotificationListener,
         CTInboxListener, InAppNotificationButtonListener, InboxMessageButtonListener,
         DisplayUnitListener, CTFeatureFlagsListener, CTProductConfigListener,
-        OnInitCleverTapIDListener, InboxMessageListener, PushPermissionResponseListener {
+        OnInitCleverTapIDListener, InboxMessageListener, PushPermissionResponseListener,
+        CTPushNotificationListener {
 
     private static CleverTapUnityCallbackHandler instance = null;
 
@@ -76,14 +78,9 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
         return instance;
     }
 
-    public static void handleDeepLink(Uri data) {
+    static void handleDeepLink(Uri data) {
         final String json = data.toString();
         sendToUnity(CLEVERTAP_DEEP_LINK_CALLBACK, json);
-    }
-
-    public static void handlePushNotification(JSONObject data) {
-        final String json = data.toString();
-        sendToUnity(CLEVERTAP_PUSH_OPENED_CALLBACK, json);
     }
 
     private static void sendToUnity(@NonNull CleverTapUnityCallback callback, @NonNull String data) {
@@ -101,6 +98,7 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
     public void attachToApiInstance(CleverTapAPI clevertap) {
         clevertap.unregisterPushPermissionNotificationResponseListener(this);
         clevertap.registerPushPermissionNotificationResponseListener(this);
+        clevertap.setCTPushNotificationListener(this);
         clevertap.setInAppNotificationListener(this);
         clevertap.setSyncListener(this);
         clevertap.setCTNotificationInboxListener(this);
@@ -130,6 +128,17 @@ public class CleverTapUnityCallbackHandler implements SyncListener, InAppNotific
     @Override
     public void onPushPermissionResponse(boolean accepted) {
         sendToUnity(CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK, String.valueOf(accepted));
+    }
+
+    // CTPushNotificationListener
+    @Override
+    public void onNotificationClickedPayloadReceived(HashMap<String, Object> payload) {
+        try {
+            String payloadJson = new JSONObject(payload).toString();
+            sendToUnity(CLEVERTAP_PUSH_OPENED_CALLBACK, payloadJson);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "onNotificationClickedPayloadReceived error", e);
+        }
     }
 
     // InAppNotificationListener

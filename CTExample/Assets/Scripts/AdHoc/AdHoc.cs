@@ -117,7 +117,7 @@ namespace CTExample
         {
             Logger.Log($"OnCleverTapInitCleverTapIdCallback: {message}");
             var messageJson = Json.Deserialize(message) as Dictionary<string, object>;
-            SetKVValue(CleverTapIDObject, messageJson["cleverTapID"]?.ToString());
+            SetKVValue(CleverTapIDObject, messageJson["CleverTapID"]?.ToString());
         }
 #endif
 
