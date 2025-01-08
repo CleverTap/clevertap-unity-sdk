@@ -74,9 +74,6 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static final String CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK
             = "CleverTapInAppNotificationDismissedCallback";
 
-    private static final String CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK
-            = "CleverTapInAppNotificationShowCallback";
-
     private static final String CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK
             = "CleverTapOnPushPermissionResponseCallback";
 
@@ -117,6 +114,8 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     private static CleverTapUnityPlugin instance = null;
 
     private CleverTapAPI clevertap = null;
+
+    private PluginCallback inAppOnShowCallback = null;
 
     private static void changeCredentials(final String accountID, final String accountToken, final String region) {
         CleverTapAPI.changeCredentials(accountID, accountToken, region);
@@ -984,16 +983,23 @@ public class CleverTapUnityPlugin implements SyncListener, InAppNotificationList
     }
 
     // InAppNotificationListener
+    public void setInAppNotificationOnShowCallback(PluginCallback callback) {
+        inAppOnShowCallback = callback;
+    }
+
     public boolean beforeShow(Map<String, Object> var1) {
         return true;
     }
 
     @SuppressLint("RestrictedApi")
     public void onShow(CTInAppNotification ctInAppNotification) {
+        final PluginCallback onShowCallback = inAppOnShowCallback;
+        if (onShowCallback == null) {
+            Log.d(LOG_TAG, "Will not trigger onShow for InApp without NotificationOnShowCallback");
+            return;
+        }
         if (ctInAppNotification != null && ctInAppNotification.getJsonDescription() != null) {
-            messageUnity(CLEVERTAP_GAME_OBJECT_NAME,
-                    CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK,
-                    ctInAppNotification.getJsonDescription().toString());
+            onShowCallback.Invoke(ctInAppNotification.getJsonDescription().toString());
         } else {
             Log.e(LOG_TAG, "Could not trigger onShow for InApp with null json description");
         }
