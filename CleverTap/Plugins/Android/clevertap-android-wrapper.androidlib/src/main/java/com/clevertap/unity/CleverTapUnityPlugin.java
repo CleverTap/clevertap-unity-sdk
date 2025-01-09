@@ -625,6 +625,10 @@ public class CleverTapUnityPlugin {
         clevertap.clearInAppResources(expiredOnly);
     }
 
+    public void setInAppNotificationOnShowCallback(PluginCallback callback) {
+        CleverTapUnityCallback.CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK.pluginCallback = callback;
+    }
+
     public void customTemplateSetDismissed(String templateName) {
         CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
         if (templateContext != null) {

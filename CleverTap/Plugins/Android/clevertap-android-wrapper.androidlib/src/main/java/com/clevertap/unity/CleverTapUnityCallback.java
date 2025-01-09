@@ -1,5 +1,6 @@
 package com.clevertap.unity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public enum CleverTapUnityCallback {
@@ -8,7 +9,7 @@ public enum CleverTapUnityCallback {
     CLEVERTAP_DEEP_LINK_CALLBACK("CleverTapDeepLinkCallback", true),
     CLEVERTAP_PUSH_OPENED_CALLBACK("CleverTapPushOpenedCallback", true),
     CLEVERTAP_INAPP_NOTIFICATION_DISMISSED_CALLBACK("CleverTapInAppNotificationDismissedCallback", true),
-    CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK("CleverTapInAppNotificationShowCallback", true),
+    CLEVERTAP_INAPP_NOTIFICATION_SHOW_CALLBACK("CleverTapInAppNotificationShowCallback", true, Mode.DIRECT_CALLBACK),
     CLEVERTAP_ON_PUSH_PERMISSION_RESPONSE_CALLBACK("CleverTapOnPushPermissionResponseCallback"),
     CLEVERTAP_INBOX_DID_INITIALIZE("CleverTapInboxDidInitializeCallback", true),
     CLEVERTAP_INBOX_MESSAGES_DID_UPDATE("CleverTapInboxMessagesDidUpdateCallback"),
@@ -21,7 +22,7 @@ public enum CleverTapUnityCallback {
     CLEVERTAP_PRODUCT_CONFIG_FETCHED("CleverTapProductConfigFetched"),
     CLEVERTAP_PRODUCT_CONFIG_ACTIVATED("CleverTapProductConfigActivated"),
     CLEVERTAP_INIT_CLEVERTAP_ID_CALLBACK("CleverTapInitCleverTapIdCallback"),
-    CLEVERTAP_VARIABLES_CHANGED("CleverTapVariablesChanged"),
+    CLEVERTAP_VARIABLES_CHANGED("CleverTapVariablesChanged", true),
     CLEVERTAP_VARIABLE_VALUE_CHANGED("CleverTapVariableValueChanged"),
     CLEVERTAP_VARIABLES_FETCHED("CleverTapVariablesFetched"),
     CLEVERTAP_INAPPS_FETCHED("CleverTapInAppsFetched"),
@@ -42,15 +43,30 @@ public enum CleverTapUnityCallback {
         return null;
     }
 
+    @NonNull
     public final String callbackName;
     public final boolean bufferable;
+    @NonNull
+    public final Mode mode;
+    @Nullable
+    public PluginCallback pluginCallback;
 
-    CleverTapUnityCallback(String callbackName, boolean bufferable) {
+    CleverTapUnityCallback(@NonNull String callbackName, boolean bufferable, @NonNull Mode mode) {
         this.callbackName = callbackName;
         this.bufferable = bufferable;
+        this.mode = mode;
+    }
+
+    CleverTapUnityCallback(String callbackName, boolean bufferable) {
+        this(callbackName, bufferable, Mode.UNITY_PLAYER_MESSAGE);
     }
 
     CleverTapUnityCallback(String callbackName) {
         this(callbackName, false);
+    }
+
+    public enum Mode {
+        UNITY_PLAYER_MESSAGE,
+        DIRECT_CALLBACK
     }
 }
