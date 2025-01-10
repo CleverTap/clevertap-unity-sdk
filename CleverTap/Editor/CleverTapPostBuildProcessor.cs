@@ -5,7 +5,7 @@ using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEditor;
 using UnityEngine;
-using System;
+using System.Xml;
 
 namespace CleverTapSDK.Private
 {
@@ -217,8 +217,12 @@ namespace CleverTapSDK.Private
 
 		private static void AndroidPostProcess(string path)
 		{
-			CloneDirectory(Application.dataPath + "/CleverTap", path + "/unityLibrary/clevertap-android-wrapper.androidlib/assets/CleverTap");
+			string androidProjectPath = path + "/unityLibrary/clevertap-android-wrapper.androidlib";
 
+			// copy assets to the android project
+			CloneDirectory(Application.dataPath + "/CleverTap", androidProjectPath + "/assets/CleverTap");
+			// copy CleverTapSettings to the project's AndroidManifest
+			CopySettingsToAndroidManifest(androidProjectPath);
 		}
 		private static void CloneDirectory(string root, string dest)
 		{
@@ -237,9 +241,71 @@ namespace CleverTapSDK.Private
 				string fileName = Path.GetFileName(file);
 				if (!fileName.EndsWith(".meta"))
 				{
+					string newFilePath = Path.Combine(dest, fileName);
+					if (File.Exists(newFilePath))
+					{
+						File.Delete(newFilePath);
+					}
 					File.Copy(file, Path.Combine(dest, fileName));
 				}
 			}
+		}
+
+		private static void CopySettingsToAndroidManifest(string androidProjectPath)
+		{
+			CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
+			if (settings == null)
+			{
+				Debug.Log($"CleverTapSettings have not been set.\n" +
+				$"Please update them from {CleverTapSettingsWindow.ITEM_NAME} or " +
+				$"set them manually in the project's AndroidManifest.xml.");
+				return;
+			}
+
+			string manifestFilePath = androidProjectPath + "/src/main/AndroidManifest.xml";
+			XmlDocument manifestXml = new();
+			manifestXml.Load(manifestFilePath);
+			XmlNode applicationNode = manifestXml.SelectSingleNode("/manifest/application");
+
+			if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountId))
+			{
+				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_ACCOUNT_ID", settings.CleverTapAccountId);
+				applicationNode.AppendChild(node);
+			}
+			if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountToken))
+			{
+				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_TOKEN", settings.CleverTapAccountToken);
+				applicationNode.AppendChild(node);
+			}
+			if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountRegion))
+			{
+				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_REGION", settings.CleverTapAccountRegion);
+				applicationNode.AppendChild(node);
+			}
+			if (!string.IsNullOrWhiteSpace(settings.CleverTapProxyDomain))
+			{
+				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_PROXY_DOMAIN", settings.CleverTapProxyDomain);
+				applicationNode.AppendChild(node);
+			}
+			if (!string.IsNullOrWhiteSpace(settings.CleverTapSpikyProxyDomain))
+			{
+				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_SPIKY_PROXY_DOMAIN", settings.CleverTapSpikyProxyDomain);
+				applicationNode.AppendChild(node);
+			}
+
+			manifestXml.Save(manifestFilePath);
+		}
+
+		private static XmlNode CreateMetaDataNode(XmlDocument manifestXml, string name, string value)
+		{
+			XmlNode node = manifestXml.CreateElement("meta-data");
+			XmlAttribute nameAttribute = manifestXml.CreateAttribute("android:name", "http://schemas.android.com/apk/res/android");
+			nameAttribute.Value = name;
+			node.Attributes.Append(nameAttribute);
+			XmlAttribute valueAttribute = manifestXml.CreateAttribute("android:value", "http://schemas.android.com/apk/res/android");
+			valueAttribute.Value = value;
+			node.Attributes.Append(valueAttribute);
+			return node;
 		}
 	}
 }

@@ -81,19 +81,6 @@
                 <action android:name="com.clevertap.PUSH_EVENT" />
             </intent-filter>
         </service>
-
-        <meta-data
-            android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="Your CleverTap Account ID" />
-
-        <meta-data
-            android:name="CLEVERTAP_TOKEN"
-            android:value="Your CleverTap Account Token" />
-
-        <meta-data
-            android:name="CLEVERTAP_REGION"
-            android:value="Your CleverTap Account Region" />
-
     </application>
 
 </manifest>
