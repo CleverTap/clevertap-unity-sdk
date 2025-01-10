@@ -38,8 +38,11 @@ namespace CTExample
             Logger.Log($"Launching \"{accountName}\" with accountId: {accountId}, accountToken: {accountToken}, accountRegion: {accountRegion}.");
 
             // add listeners for events that may be triggered on app launch so they can be logged
-            CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
-            CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
+            CleverTap.OnCleverTapPushOpenedCallback += CleverTapCallback;
+            CleverTap.OnCleverTapDeepLinkCallback += CleverTapCallback;
+            CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapCallback;
+            CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapCallback;
+            CleverTap.OnCleverTapInAppNotificationDismissedCallback += CleverTapCallback;
 
             // todo: add UI for custom templates
             CleverTap.OnCustomTemplatePresent += CleverTapCustomTemplatePresent;
@@ -54,11 +57,7 @@ namespace CTExample
 #endif
         }
 
-        private void CleverTapPushOpenedCallback(string message)
-        {
-        }
-
-        private void CleverTapDeepLinkCallback(string message)
+        private void CleverTapCallback(string message)
         {
         }
 

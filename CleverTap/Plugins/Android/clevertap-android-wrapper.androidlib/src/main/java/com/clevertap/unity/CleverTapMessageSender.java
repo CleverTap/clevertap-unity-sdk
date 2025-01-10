@@ -123,12 +123,25 @@ public class CleverTapMessageSender {
         }
 
         messageBuffer.add(messageData);
-        Log.i(LOG_TAG, "Buffering message " + callback.callbackName + ":" + messageData);
+        Log.i(LOG_TAG, "Message buffered " + callback.callbackName + ":" + messageData);
     }
 
     private void sendMessage(@NonNull CleverTapUnityCallback callback, @NonNull String data) {
-        UnityPlayer.UnitySendMessage(CLEVERTAP_GAME_OBJECT_NAME, callback.callbackName, data);
-        Log.i(LOG_TAG, "Sending message " + callback.callbackName + ":" + data);
+        switch (callback.mode) {
+            case UNITY_PLAYER_MESSAGE: {
+                UnityPlayer.UnitySendMessage(CLEVERTAP_GAME_OBJECT_NAME, callback.callbackName, data);
+                break;
+            }
+            case DIRECT_CALLBACK: {
+                if (callback.pluginCallback == null) {
+                    Log.d(LOG_TAG, "Message not sent, direct callback is null for " + callback.callbackName + ":" + data);
+                    return;
+                }
+                callback.pluginCallback.Invoke(data);
+                break;
+            }
+        }
+        Log.i(LOG_TAG, "Message sent " + callback.callbackName + ":" + data);
     }
 
     private Map<CleverTapUnityCallback, MessageBuffer> createBuffersMap(boolean enableBuffers) {
