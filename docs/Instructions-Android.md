@@ -4,7 +4,34 @@
 
 ![Android Build Settings](/docs/images/android_settings.png  "Android Build Settings")
 
-2. Once you enable the custom Android Manifest, ensure to add additional configurations to enable Push Notifications and override the default `UnityActivity`. Add your Bundle Identifier, FCM Sender ID, CleverTap Account ID, CleverTap Token, and Deep Link URL scheme (if applicable):
+2. Once you enable the custom Android Manifest, ensure to add additional configurations to enable Push Notifications and override the default `UnityActivity`. Add your Bundle Identifier, Deep Link URL scheme (if applicable). You can also add your account configuration manually if you did not user the CleverTap Setting from the Unity Editor.
+
+    1. In case you have implemented your own `android.app.Application` class, add the following code in it:
+        ```java
+        @Override
+        public void onCreate() {
+            ActivityLifecycleCallback.register(this);
+            super.onCreate();
+            CleverTapUnityAPI.initialize(this);
+        }
+        ```
+        Otherwise use `com.clevertap.unity.CleverTapUnityApplication` as shown in the Manifest below.
+
+    2. In case you have implemented your own Launcher Activity, add the following code in it:
+        ```java
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            CleverTapUnityAPI.onLauncherActivityCreate(this);
+        }
+
+        @Override
+        public void onNewIntent(Intent intent) {
+            super.onNewIntent(intent);
+            CleverTapUnityAPI.onLauncherActivityNewIntent(this, intent);
+        }
+        ```
+        Otherwise use `com.clevertap.unity.CleverTapOverrideActivity` as shown in the Manifest below.
 
 ```xml
 
@@ -43,6 +70,7 @@
         android:debuggable="true"
         android:icon="@drawable/app_icon"
         android:isGame="true"
+        android:name="com.clevertap.unity.CleverTapUnityApplication"
         android:label="@string/app_name"
         android:theme="@style/UnityThemeSelector">
 
@@ -91,10 +119,7 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="FCM_SENDER_ID"
-            android:value="id:YOUR_FCM_SENDER_ID" />
-
+        <!-- Uncomment these lines to manually add your account configuration.
         <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
             android:value="Your CleverTap Account ID" />
@@ -103,6 +128,18 @@
             android:name="CLEVERTAP_TOKEN"
             android:value="Your CleverTap Account Token" />
 
+        <meta-data
+            android:name="CLEVERTAP_REGION"
+            android:value="Your CleverTap Account Region" />
+
+        <meta-data
+            android:name="CLEVERTAP_PROXY_DOMAIN"
+            android:value="Your CleverTap Account Proxy Domain" />
+
+        <meta-data
+            android:name="CLEVERTAP_SPIKY_PROXY_DOMAIN"
+            android:value="Your CleverTap Account Spiky Proxy Domain" />
+        -->
     </application>
 
 </manifest>
@@ -110,13 +147,3 @@
 
 3. Add your `google-services.json` file to the project's **Assets** folder.
 4. Build your app or Android project.
-
-# Initialize CleverTap SDK
-
-```csharp
-// Initialize CleverTap
-CleverTap.LaunchWithCredentialsForRegion({YOUR_CLEVERTAP_ACCOUNT_ID}, {YOUR_CLEVERTAP_ACCOUNT_TOKEN}, {CLEVERTAP_ACCOUNT_REGION});
-// Enable personalization
-CleverTap.EnablePersonalization();
-```
-
