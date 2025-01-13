@@ -220,11 +220,11 @@ namespace CleverTapSDK.Private
 			string androidProjectPath = path + "/unityLibrary/clevertap-android-wrapper.androidlib";
 
 			// copy assets to the android project
-			CloneDirectory(Application.dataPath + "/CleverTap", androidProjectPath + "/assets/CleverTap");
+			CopyChangedFiles(Application.dataPath + "/CleverTap", androidProjectPath + "/assets/CleverTap");
 			// copy CleverTapSettings to the project's AndroidManifest
 			CopySettingsToAndroidManifest(androidProjectPath);
 		}
-		private static void CloneDirectory(string root, string dest)
+		private static void CopyChangedFiles(string root, string dest)
 		{
 			foreach (var directory in Directory.GetDirectories(root))
 			{
@@ -233,20 +233,27 @@ namespace CleverTapSDK.Private
 				//Create the directory if it doesn't already exist
 				Directory.CreateDirectory(newDirectory);
 				//Recursively clone the directory
-				CloneDirectory(directory, newDirectory);
+				CopyChangedFiles(directory, newDirectory);
 			}
 
-			foreach (var file in Directory.GetFiles(root))
+			foreach (var filePath in Directory.GetFiles(root))
 			{
-				string fileName = Path.GetFileName(file);
+				string fileName = Path.GetFileName(filePath);
 				if (!fileName.EndsWith(".meta"))
 				{
 					string newFilePath = Path.Combine(dest, fileName);
 					if (File.Exists(newFilePath))
 					{
-						File.Delete(newFilePath);
+						if (File.GetLastWriteTime(filePath) > File.GetLastWriteTime(newFilePath))
+						{
+							File.Delete(newFilePath);
+						}
+						else
+						{
+							continue;
+						}
 					}
-					File.Copy(file, Path.Combine(dest, fileName));
+					File.Copy(filePath, Path.Combine(dest, fileName));
 				}
 			}
 		}
