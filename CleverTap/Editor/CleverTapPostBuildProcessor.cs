@@ -49,6 +49,8 @@ namespace CleverTapSDK.Private
 		private static readonly string CODE_ADD_USER_NOTIFICATION_FRAMEWORK = rn +
 			"    [UNUserNotificationCenter currentNotificationCenter].delegate = (id <UNUserNotificationCenterDelegate>)self;" + rn;
 
+		private static readonly string ANDROID_XML_NS_URI = "http://schemas.android.com/apk/res/android";
+
 		private enum Position { Begin, End };
 
 		[PostProcessBuild(99)]
@@ -260,7 +262,7 @@ namespace CleverTapSDK.Private
 
 		private static void CopySettingsToAndroidManifest(string androidProjectPath)
 		{
-			CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
+			var settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
 			if (settings == null)
 			{
 				Debug.Log($"CleverTapSettings have not been set.\n" +
@@ -270,49 +272,72 @@ namespace CleverTapSDK.Private
 			}
 
 			string manifestFilePath = androidProjectPath + "/src/main/AndroidManifest.xml";
-			XmlDocument manifestXml = new();
+			var manifestXml = new XmlDocument();
 			manifestXml.Load(manifestFilePath);
-			XmlNode applicationNode = manifestXml.SelectSingleNode("/manifest/application");
+			var manifestNode = manifestXml.SelectSingleNode("/manifest");
+			if (manifestNode == null)
+			{
+				Debug.LogError("Failed to find manifest node in AndroidManifest.xml");
+				return;
+			}
+			if (manifestNode.Attributes["xmlns:android"] == null)
+				{
+					var nsAttribute = manifestXml.CreateAttribute("xmlns:android");
+					nsAttribute.Value = ANDROID_XML_NS_URI;
+					manifestNode.Attributes.Append(nsAttribute);
+				}
 
-			if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountId))
+			var namespaceManager = new XmlNamespaceManager(manifestXml.NameTable);
+			if (!namespaceManager.HasNamespace("android"))
 			{
-				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_ACCOUNT_ID", settings.CleverTapAccountId);
-				applicationNode.AppendChild(node);
+				if (manifestNode.Attributes["xmlns:android"] == null)
+				{
+					var nsAttribute = manifestXml.CreateAttribute("xmlns:android");
+					nsAttribute.Value = ANDROID_XML_NS_URI;
+					manifestNode.Attributes.Append(nsAttribute);
+				}
+				namespaceManager.AddNamespace("android", ANDROID_XML_NS_URI);
 			}
-			if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountToken))
+			var applicationNode = manifestXml.SelectSingleNode("/manifest/application");
+			if (applicationNode == null)
 			{
-				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_TOKEN", settings.CleverTapAccountToken);
-				applicationNode.AppendChild(node);
+				applicationNode = manifestXml.CreateElement("application");
+				manifestNode.AppendChild(applicationNode);
 			}
-			if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountRegion))
-			{
-				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_REGION", settings.CleverTapAccountRegion);
-				applicationNode.AppendChild(node);
-			}
-			if (!string.IsNullOrWhiteSpace(settings.CleverTapProxyDomain))
-			{
-				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_PROXY_DOMAIN", settings.CleverTapProxyDomain);
-				applicationNode.AppendChild(node);
-			}
-			if (!string.IsNullOrWhiteSpace(settings.CleverTapSpikyProxyDomain))
-			{
-				XmlNode node = CreateMetaDataNode(manifestXml, "CLEVERTAP_SPIKY_PROXY_DOMAIN", settings.CleverTapSpikyProxyDomain);
-				applicationNode.AppendChild(node);
-			}
+
+			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_ACCOUNT_ID", settings.CleverTapAccountId);
+			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_TOKEN", settings.CleverTapAccountToken);
+			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_REGION", settings.CleverTapAccountRegion);
+			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_PROXY_DOMAIN", settings.CleverTapProxyDomain);
+			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_SPIKY_PROXY_DOMAIN", settings.CleverTapSpikyProxyDomain);
 
 			manifestXml.Save(manifestFilePath);
 		}
 
-		private static XmlNode CreateMetaDataNode(XmlDocument manifestXml, string name, string value)
+		private static void UpdateMetaDataNode(XmlDocument manifestXml, XmlNode applicationNode, XmlNamespaceManager nsManager, string name, string value)
 		{
-			XmlNode node = manifestXml.CreateElement("meta-data");
-			XmlAttribute nameAttribute = manifestXml.CreateAttribute("android:name", "http://schemas.android.com/apk/res/android");
-			nameAttribute.Value = name;
-			node.Attributes.Append(nameAttribute);
-			XmlAttribute valueAttribute = manifestXml.CreateAttribute("android:value", "http://schemas.android.com/apk/res/android");
-			valueAttribute.Value = value;
-			node.Attributes.Append(valueAttribute);
-			return node;
+			var hasNewValue = !string.IsNullOrWhiteSpace(value);
+			var existingNode = applicationNode.SelectSingleNode($"meta-data[@android:name='{name}']", nsManager);
+			if (existingNode != null)
+			{
+				if (hasNewValue)
+				{
+					existingNode.Attributes["android:value"].Value = value;
+				}
+				else
+				{
+					applicationNode.RemoveChild(existingNode);
+				}
+				return;
+			}
+
+			if (hasNewValue)
+			{
+				var newElement = manifestXml.CreateElement("meta-data");
+				newElement.SetAttribute("name", ANDROID_XML_NS_URI, name);
+				newElement.SetAttribute("value", ANDROID_XML_NS_URI, value);
+				applicationNode.AppendChild(newElement);
+			}
 		}
 	}
 }
