@@ -6,35 +6,35 @@
 
 @implementation CleverTapCustomTemplates
 
-+ (void)registerCustomTemplates:(nonnull NSString *)firstJsonAsset, ... NS_REQUIRES_NIL_TERMINATION {
-    va_list args;
-    va_start(args, firstJsonAsset);
-    
-    NSBundle *bundle = [NSBundle mainBundle];
-    [self registerCustomTemplates:bundle firstJsonAsset:firstJsonAsset args:args];
-    va_end(args);
-}
++ (void)registerCustomTemplates {
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *cleverTapPath = [resourcePath stringByAppendingPathComponent:kCleverTapDirName];
+    NSString *customTemplatesPath = [cleverTapPath stringByAppendingPathComponent:kCustomTemplatesDirName];
+    NSError *contentsOfDirectoryError;
+    NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:customTemplatesPath error:&contentsOfDirectoryError];
+    if (contentsOfDirectoryError) {
+        NSLog(@"Error getting contents of directory at path: %@. Error: %@.", customTemplatesPath, contentsOfDirectoryError);
+        return;
+    }
+    if (directoryContents.count == 0) {
+        NSLog(@"%@ directory is empty.", kCustomTemplatesDirName);
+        return;
+    }
 
-+ (void)registerCustomTemplates:(nonnull NSBundle *)bundle jsonFileNames:(nonnull NSString *)firstJsonAsset, ... NS_REQUIRES_NIL_TERMINATION {
-    va_list args;
-    va_start(args, firstJsonAsset);
-    
-    [self registerCustomTemplates:bundle firstJsonAsset:firstJsonAsset args:args];
-    va_end(args);
-}
-
-+ (void)registerCustomTemplates:(NSBundle * _Nonnull)bundle firstJsonAsset:(NSString * _Nonnull)firstJsonAsset args:(va_list)args  {
+    NSString *jsonExtension = @".json";
     CleverTapTemplatePresenter *templatePresenter = [[CleverTapTemplatePresenter alloc] init];
     CleverTapAppFunctionPresenter *functionPresenter = [[CleverTapAppFunctionPresenter alloc] init];
-    for (NSString *arg = firstJsonAsset; arg != nil; arg = va_arg(args, NSString*)) {
-        NSString *filePath = [bundle pathForResource:arg ofType:@"json"];
-        if (filePath) {
-            NSString *definitionsJson = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-            
+    for (NSString *file in directoryContents) {
+        if ([file hasSuffix:jsonExtension]) {
+            NSString *filePath = [customTemplatesPath stringByAppendingPathComponent:file];
+            NSError *error;
+            NSString *definitionsJson = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+            if (error) {
+                NSLog(@"Error getting contents of file: %@. Error: %@.", filePath, error);
+                continue;
+            }
             CTJsonTemplateProducer *producer = [[CTJsonTemplateProducer alloc] initWithJson:definitionsJson templatePresenter:templatePresenter functionPresenter:functionPresenter];
             [CleverTap registerCustomInAppTemplates:producer];
-        } else {
-            NSLog(@"Custom templates JSON file not found. File name: \"%@\" in bundle: %@.", arg, bundle);
         }
     }
 }

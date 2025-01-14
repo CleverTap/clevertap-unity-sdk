@@ -1,15 +1,14 @@
 ﻿#if (UNITY_IOS || UNITY_ANDROID) && UNITY_EDITOR
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using UnityEditor;
 using UnityEngine;
-using System.Xml;
 
 namespace CleverTapSDK.Private
 {
-	public static class CleverTapPostBuildProcessor
+    public static class IOSPostBuildProcessor
 	{
 		private static readonly string rn = "\n";
 
@@ -49,20 +48,14 @@ namespace CleverTapSDK.Private
 		private static readonly string CODE_ADD_USER_NOTIFICATION_FRAMEWORK = rn +
 			"    [UNUserNotificationCenter currentNotificationCenter].delegate = (id <UNUserNotificationCenterDelegate>)self;" + rn;
 
-		private static readonly string ANDROID_XML_NS_URI = "http://schemas.android.com/apk/res/android";
+        private enum Position { Begin, End };
 
-		private enum Position { Begin, End };
-
-		[PostProcessBuild(99)]
+        [PostProcessBuild(99)]
 		public static void OnPostProcessBuild(BuildTarget target, string path)
 		{
 			if (target == BuildTarget.iOS)
 			{
 				IOSPostProcess(path);
-			}
-			else if (target == BuildTarget.Android)
-			{
-				AndroidPostProcess(path);
 			}
 		}
 
@@ -124,6 +117,41 @@ namespace CleverTapSDK.Private
             // Update AppController
             bool personalizationEnabled = settings == null || settings.CleverTapEnablePersonalization;
             InsertCodeIntoControllerClass(path, personalizationEnabled);
+
+            // Copy CleverTap folder
+            string sourceFolderPath = Path.Combine(Application.dataPath, "CleverTap");
+			string destinationFolderPath = Path.Combine(path, "CleverTapSDK");
+            EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath);
+
+            string mainTargetGuid = proj.GetUnityMainTargetGuid();
+            // Add folder reference and target membership
+            string folderGuid = proj.AddFolderReference(destinationFolderPath, "CleverTapSDK");
+            proj.AddFileToBuild(mainTargetGuid, folderGuid);
+
+            File.WriteAllText(projPath, proj.WriteToString());
+        }
+
+        private static void AddFolderFilesToTarget(PBXProject pbxProject, string folderPath, string relativePath, string targetGuid)
+        {
+            DirectoryInfo dir = new DirectoryInfo(folderPath);
+            FileInfo[] files = dir.GetFiles();
+
+            foreach (FileInfo file in files)
+            {
+                // Add file to the Xcode project
+                string filePath = Path.Combine(relativePath, file.Name);
+                string fileGuid = pbxProject.AddFile(filePath, filePath);
+
+                // Add file to the target membership
+                pbxProject.AddFileToBuild(targetGuid, fileGuid);
+            }
+
+            // Recursively add files in subdirectories
+            DirectoryInfo[] subDirs = dir.GetDirectories();
+            foreach (DirectoryInfo subDir in subDirs)
+            {
+                AddFolderFilesToTarget(pbxProject, subDir.FullName, Path.Combine(relativePath, subDir.Name), targetGuid);
+            }
         }
 
         private static void InsertCodeIntoControllerClass(string projectPath, bool personalizationEnabled)
@@ -215,129 +243,6 @@ namespace CleverTapSDK.Private
 			}
 			string output = string.Join("", newContents.ToArray());
 			File.WriteAllText(filepath, output);
-		}
-
-		private static void AndroidPostProcess(string path)
-		{
-			string androidProjectPath = path + "/unityLibrary/clevertap-android-wrapper.androidlib";
-
-			// copy assets to the android project
-			CopyChangedFiles(Application.dataPath + "/CleverTap", androidProjectPath + "/assets/CleverTap");
-			// copy CleverTapSettings to the project's AndroidManifest
-			CopySettingsToAndroidManifest(androidProjectPath);
-		}
-		private static void CopyChangedFiles(string root, string dest)
-		{
-			foreach (var directory in Directory.GetDirectories(root))
-			{
-				//Get the path of the new directory
-				var newDirectory = Path.Combine(dest, Path.GetFileName(directory));
-				//Create the directory if it doesn't already exist
-				Directory.CreateDirectory(newDirectory);
-				//Recursively clone the directory
-				CopyChangedFiles(directory, newDirectory);
-			}
-
-			foreach (var filePath in Directory.GetFiles(root))
-			{
-				string fileName = Path.GetFileName(filePath);
-				if (!fileName.EndsWith(".meta"))
-				{
-					string newFilePath = Path.Combine(dest, fileName);
-					if (File.Exists(newFilePath))
-					{
-						if (File.GetLastWriteTime(filePath) > File.GetLastWriteTime(newFilePath))
-						{
-							File.Delete(newFilePath);
-						}
-						else
-						{
-							continue;
-						}
-					}
-					File.Copy(filePath, Path.Combine(dest, fileName));
-				}
-			}
-		}
-
-		private static void CopySettingsToAndroidManifest(string androidProjectPath)
-		{
-			var settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
-			if (settings == null)
-			{
-				Debug.Log($"CleverTapSettings have not been set.\n" +
-				$"Please update them from {CleverTapSettingsWindow.ITEM_NAME} or " +
-				$"set them manually in the project's AndroidManifest.xml.");
-				return;
-			}
-
-			string manifestFilePath = androidProjectPath + "/src/main/AndroidManifest.xml";
-			var manifestXml = new XmlDocument();
-			manifestXml.Load(manifestFilePath);
-			var manifestNode = manifestXml.SelectSingleNode("/manifest");
-			if (manifestNode == null)
-			{
-				Debug.LogError("Failed to find manifest node in AndroidManifest.xml");
-				return;
-			}
-			if (manifestNode.Attributes["xmlns:android"] == null)
-				{
-					var nsAttribute = manifestXml.CreateAttribute("xmlns:android");
-					nsAttribute.Value = ANDROID_XML_NS_URI;
-					manifestNode.Attributes.Append(nsAttribute);
-				}
-
-			var namespaceManager = new XmlNamespaceManager(manifestXml.NameTable);
-			if (!namespaceManager.HasNamespace("android"))
-			{
-				if (manifestNode.Attributes["xmlns:android"] == null)
-				{
-					var nsAttribute = manifestXml.CreateAttribute("xmlns:android");
-					nsAttribute.Value = ANDROID_XML_NS_URI;
-					manifestNode.Attributes.Append(nsAttribute);
-				}
-				namespaceManager.AddNamespace("android", ANDROID_XML_NS_URI);
-			}
-			var applicationNode = manifestXml.SelectSingleNode("/manifest/application");
-			if (applicationNode == null)
-			{
-				applicationNode = manifestXml.CreateElement("application");
-				manifestNode.AppendChild(applicationNode);
-			}
-
-			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_ACCOUNT_ID", settings.CleverTapAccountId);
-			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_TOKEN", settings.CleverTapAccountToken);
-			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_REGION", settings.CleverTapAccountRegion);
-			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_PROXY_DOMAIN", settings.CleverTapProxyDomain);
-			UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_SPIKY_PROXY_DOMAIN", settings.CleverTapSpikyProxyDomain);
-
-			manifestXml.Save(manifestFilePath);
-		}
-
-		private static void UpdateMetaDataNode(XmlDocument manifestXml, XmlNode applicationNode, XmlNamespaceManager nsManager, string name, string value)
-		{
-			var hasNewValue = !string.IsNullOrWhiteSpace(value);
-			var existingNode = applicationNode.SelectSingleNode($"meta-data[@android:name='{name}']", nsManager);
-			if (existingNode != null)
-			{
-				if (hasNewValue)
-				{
-					existingNode.Attributes["android:value"].Value = value;
-				}
-				else
-				{
-					applicationNode.RemoveChild(existingNode);
-				}
-				return;
-			}
-
-			if (hasNewValue)
-			{
-				var newElement = manifestXml.CreateElement("meta-data");
-				newElement.SetAttribute("name", ANDROID_XML_NS_URI, name);
-				newElement.SetAttribute("value", ANDROID_XML_NS_URI, value);
-				applicationNode.AppendChild(newElement);
-			}
 		}
 	}
 }
