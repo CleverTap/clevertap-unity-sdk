@@ -486,9 +486,19 @@ namespace CleverTapSDK {
 
         #region Methods - CleverTap Platform Custom Templates
 
+        /// <summary>
+        /// Sync all currently defined templates (through the templates json definition) to the backend.
+        /// Use this method to transfer template definitions from the SDK to the CT dashboard. This method can
+        /// only be called from a debug build of the application and the current logged-in user must be marked as a
+        /// test profile through the web dashboard.
+        /// </summary>
         public static void SyncCustomTemplates() =>
             cleverTapCustomInApps.SyncCustomTemplates();
 
+        /// <summary>
+        /// iOS specific version of <see cref="SyncCustomTemplates"/>
+        /// </summary>
+        /// <param name="isProduction">Provide `true` if the templates must be synced in Production build/configuration.</param>
         public static void SyncCustomTemplates(bool isProduction) =>
             cleverTapCustomInApps.SyncCustomTemplates(isProduction);
 
