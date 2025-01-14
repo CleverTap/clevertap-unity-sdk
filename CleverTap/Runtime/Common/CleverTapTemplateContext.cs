@@ -78,7 +78,7 @@ namespace CleverTapSDK.Common
         public abstract short? GetShort(string name);
 
         /// <summary>
-        /// Retrieve a <c>short</c> argument by name.
+        /// Retrieve an <c>int</c> argument by name.
         /// </summary>
         /// <param name="name">The name of the argument</param>
         /// <returns>The argument value or <c>null</c> if no such argument is defined for the template.</returns>
@@ -116,4 +116,3 @@ namespace CleverTapSDK.Common
         }
     }
 }
-

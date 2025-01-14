@@ -3,7 +3,7 @@
 CleverTap Unity SDK supports a custom presentation of in-app messages. This allows for utilizing the in-app notifications functionality with custom configuration and presentation logic. Two types of templates can be defined through the SDK: Templates and Functions. Templates can contain action arguments while Functions cannot and Functions can be used as actions while Templates cannot. Functions can be either "visual" or "non-visual". "Visual" functions can contain UI logic and will be part of the [In-App queue](#in-App-queue), while "non-visual" functions will be triggered directly when invoked and should not contain UI logic.
 
 ## Creating templates and functions
-Templates consist of a name, type, and arguments (and isVisual for Functions). Type and arguments (and isVisual for Functions) are required and names must be unique across the application. The template definitions are validated for correctness and will throw `CustomTemplateException` when an invalid template is created on launching the application. Those exceptions should generally not be caught and template definitions must be valid to be triggered correctly.
+Templates consist of a name, type, and arguments (and isVisual for Functions). Type and arguments (and isVisual for Functions) are required and names must be unique across the application. The template definitions are validated for correctness on launch of the application. When an invalid template is found the application will raise an exception and close with a message explaining the wrong template definition. Make sure to launch the application after each template change to ensure template definitions are valid and can be triggered correctly.
 
 The templates are defined in а JSON format with the following scheme:
 ```json
@@ -42,7 +42,8 @@ The templates are defined in а JSON format with the following scheme:
   }
 }
 ```
-The JSON definitions should be placed in one or more files in `Assets/CleverTap/CustomTemplates`.
+The JSON definitions should be placed in one or more files in `Assets/CleverTap/CustomTemplates`. They will be copied to the exported projects and automatically registered with the SDK.
+For Android the definitions will be within `clevertap-android-wrapper.androidlib/assets/CleverTap/CustomTemplates` and they will be registered through `CleverTapUnityAPI.initialize(Context context)`. All of this is handled automatically if `CleverTapUnityApplication` is used for the application class.
 
 For a working example, see the CTExample project: `CTExample/Assets/CleverTap/templates.json`.
 
