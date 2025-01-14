@@ -1,4 +1,5 @@
 using CleverTapSDK;
+using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
@@ -37,14 +38,14 @@ namespace CTExample
             }
             Logger.Log($"Launching \"{accountName}\" with accountId: {accountId}, accountToken: {accountToken}, accountRegion: {accountRegion}.");
 
-            // add listeners for events that may be triggered on app launch so they can be logged
-            CleverTap.OnCleverTapPushOpenedCallback += CleverTapCallback;
-            CleverTap.OnCleverTapDeepLinkCallback += CleverTapCallback;
-            CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapCallback;
-            CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapCallback;
-            CleverTap.OnCleverTapInAppNotificationDismissedCallback += CleverTapCallback;
+            // Add listeners for events that may be triggered on app launch
+            CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
+            CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
+            CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapInAppNotificationShowCallback;
+            CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapInAppNotificationButtonTapped;
+            CleverTap.OnCleverTapInAppNotificationDismissedCallback += CleverTapInAppNotificationDismissedCallback;
 
-            // todo: add UI for custom templates
+            // Add listeners for Custom Templates
             CleverTap.OnCustomTemplatePresent += CleverTapCustomTemplatePresent;
             CleverTap.OnCustomTemplateClose += CleverTapCustomTemplateClose;
             CleverTap.OnCustomFunctionPresent += CleverTapCustomFunctionPresent;
@@ -57,25 +58,53 @@ namespace CTExample
 #endif
         }
 
-        private void CleverTapCallback(string message)
+        #region Callbacks on app launch
+        private void CleverTapPushOpenedCallback(string message)
         {
+            Logger.Log($"Push Opened callback: {message}");
         }
 
-        private void CleverTapCustomTemplatePresent(CleverTapSDK.Common.CleverTapTemplateContext context)
+        private void CleverTapDeepLinkCallback(string message)
         {
-            context.SetPresented();
-            context.SetDismissed();
+            Logger.Log($"Deeplink callback: {message}");
         }
 
-        private void CleverTapCustomTemplateClose(CleverTapSDK.Common.CleverTapTemplateContext context)
+        private void CleverTapInAppNotificationShowCallback(string message)
         {
-            context.SetDismissed();
+            Logger.Log($"InAppNotification Show callback: {message}");
         }
 
-        private void CleverTapCustomFunctionPresent(CleverTapSDK.Common.CleverTapTemplateContext context)
+        private void CleverTapInAppNotificationButtonTapped(string message)
         {
-            context.SetPresented();
+            Logger.Log($"InAppNotification ButtonTapped: {message}");
+        }
+
+        private void CleverTapInAppNotificationDismissedCallback(string message)
+        {
+            Logger.Log($"InAppNotification Dismissed callback: {message}");
+        }
+        #endregion
+
+        #region Custom Templates
+        private void CleverTapCustomTemplatePresent(CleverTapTemplateContext context)
+        {
+            Logger.Log($"Custom Template present: {context}");
+            var model = new CustomTemplateModel(context);
+            model.Show();
+        }
+
+        private void CleverTapCustomFunctionPresent(CleverTapTemplateContext context)
+        {
+            Logger.Log($"Custom Function present: {context}");
+            var model = new CustomTemplateModel(context, true);
+            model.Show();
+        }
+
+        private void CleverTapCustomTemplateClose(CleverTapTemplateContext context)
+        {
+            Logger.Log($"Custom Template close: {context}");
             context.SetDismissed();
         }
+        #endregion
     }
 }
