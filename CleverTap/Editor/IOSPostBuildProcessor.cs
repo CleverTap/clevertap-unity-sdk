@@ -74,38 +74,10 @@ namespace CleverTapSDK.Private
             // Add linker flags
             proj.AddBuildProperty(projectTarget, "OTHER_LDFLAGS", "-ObjC");
 
-            File.WriteAllText(projPath, proj.WriteToString());
-
-            // Update plist
-            string plistPath = path + "/Info.plist";
-            PlistDocument plist = new PlistDocument();
-            plist.ReadFromString(File.ReadAllText(plistPath));
-
-            // Get root
-            PlistElementDict rootDict = plist.root;
-
             CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
             if (settings != null)
             {
-                rootDict.SetString("CleverTapAccountID", settings.CleverTapAccountId);
-                rootDict.SetString("CleverTapToken", settings.CleverTapAccountToken);
-                if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountRegion))
-                {
-                    rootDict.SetString("CleverTapRegion", settings.CleverTapAccountRegion);
-                }
-                if (!string.IsNullOrWhiteSpace(settings.CleverTapProxyDomain))
-				{
-                    rootDict.SetString("CleverTapProxyDomain", settings.CleverTapProxyDomain);
-                }
-                if (!string.IsNullOrWhiteSpace(settings.CleverTapSpikyProxyDomain))
-                {
-                    rootDict.SetString("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
-                }
-
-                rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
-
-                // Write to file
-                File.WriteAllText(plistPath, plist.WriteToString());
+                UpdatePlistWithSettings(path, settings);
             }
             else
             {
@@ -118,40 +90,73 @@ namespace CleverTapSDK.Private
             bool personalizationEnabled = settings == null || settings.CleverTapEnablePersonalization;
             InsertCodeIntoControllerClass(path, personalizationEnabled);
 
-            // Copy CleverTap folder
-            string sourceFolderPath = Path.Combine(Application.dataPath, "CleverTap");
-			string destinationFolderPath = Path.Combine(path, "CleverTapSDK");
-            EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath);
-
-            string mainTargetGuid = proj.GetUnityMainTargetGuid();
-            // Add folder reference and target membership
-            string folderGuid = proj.AddFolderReference(destinationFolderPath, "CleverTapSDK");
-            proj.AddFileToBuild(mainTargetGuid, folderGuid);
+            AddCleverTapFolder(path, proj);
 
             File.WriteAllText(projPath, proj.WriteToString());
         }
 
-        private static void AddFolderFilesToTarget(PBXProject pbxProject, string folderPath, string relativePath, string targetGuid)
+		/// <summary>
+		/// Writes the CleverTapSettings (account id, token etc.) to the Info.plist file.
+		/// </summary>
+		/// <param name="path">The project path.</param>
+		/// <param name="settings">The settings to use.</param>
+        private static void UpdatePlistWithSettings(string path, CleverTapSettings settings)
         {
-            DirectoryInfo dir = new DirectoryInfo(folderPath);
-            FileInfo[] files = dir.GetFiles();
+            if (settings == null)
+                return;
 
-            foreach (FileInfo file in files)
+            string plistPath = Path.Combine(path, "Info.plist");
+            PlistDocument plist = new PlistDocument();
+            plist.ReadFromString(File.ReadAllText(plistPath));
+
+            PlistElementDict rootDict = plist.root;
+            rootDict.SetString("CleverTapAccountID", settings.CleverTapAccountId);
+            rootDict.SetString("CleverTapToken", settings.CleverTapAccountToken);
+            if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountRegion))
             {
-                // Add file to the Xcode project
-                string filePath = Path.Combine(relativePath, file.Name);
-                string fileGuid = pbxProject.AddFile(filePath, filePath);
-
-                // Add file to the target membership
-                pbxProject.AddFileToBuild(targetGuid, fileGuid);
+                rootDict.SetString("CleverTapRegion", settings.CleverTapAccountRegion);
+            }
+            if (!string.IsNullOrWhiteSpace(settings.CleverTapProxyDomain))
+            {
+                rootDict.SetString("CleverTapProxyDomain", settings.CleverTapProxyDomain);
+            }
+            if (!string.IsNullOrWhiteSpace(settings.CleverTapSpikyProxyDomain))
+            {
+                rootDict.SetString("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
             }
 
-            // Recursively add files in subdirectories
-            DirectoryInfo[] subDirs = dir.GetDirectories();
-            foreach (DirectoryInfo subDir in subDirs)
-            {
-                AddFolderFilesToTarget(pbxProject, subDir.FullName, Path.Combine(relativePath, subDir.Name), targetGuid);
-            }
+            rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
+
+            // Write to file
+            File.WriteAllText(plistPath, plist.WriteToString());
+        }
+
+		/// <summary>
+		/// Copies the CleverTap folder (Assets/CleverTap) to the iOS exported project.
+		/// The copied folder has "Build Rules" - "Apply Once to Folder".
+		/// The folder is added to the "Copy Bundle Resources" Build Phase.
+		/// The folder is with "Location" - "Relative to Group" and appears blue in Xcode.
+		/// The folder has "Target Membership" the main target - "Unity-iPhone".
+		/// </summary>
+		/// <remarks>
+		/// The folder must be copied with a different name than the original one in the Assets (CleverTap -> CleverTapSDK),
+		/// otherwise its contents do not appear correctly in Xcode but will still be copied into the bundle.
+		/// </remarks>
+		/// <param name="path">The project path.</param>
+		/// <param name="proj">The Xcode project.</param>
+        private static void AddCleverTapFolder(string path, PBXProject proj)
+        {
+			// Copy CleverTap folder
+			string cleverTapAssetsFolder = "CleverTap";
+			string cleverTapIOSBuildFolder = "CleverTapSDK";
+            string sourceFolderPath = Path.Combine(Application.dataPath, cleverTapAssetsFolder);
+            string destinationFolderPath = Path.Combine(path, cleverTapIOSBuildFolder);
+            EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath);
+
+            string mainTargetGuid = proj.GetUnityMainTargetGuid();
+            // Add CleverTap folder reference and target membership
+            string folderGuid = proj.AddFolderReference(destinationFolderPath, cleverTapIOSBuildFolder);
+            proj.AddFileToBuild(mainTargetGuid, folderGuid);
         }
 
         private static void InsertCodeIntoControllerClass(string projectPath, bool personalizationEnabled)
