@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 public class CleverTapCustomTemplates {
 
-    private static final String TEMPLATES_DEFINITIONS_ASSETS_FOLDER = "CleverTap/CustomTemplates";
+    private static final String TEMPLATES_DEFINITIONS_ASSETS_FOLDER = "CleverTapSDK/CustomTemplates";
 
     public static void registerCustomTemplates(Context context) {
         try {
