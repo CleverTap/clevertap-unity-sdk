@@ -1,4 +1,4 @@
-﻿#if (UNITY_IOS || UNITY_ANDROID) && UNITY_EDITOR
+﻿#if UNITY_IOS && UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -147,15 +147,13 @@ namespace CleverTapSDK.Private
         private static void AddCleverTapFolder(string path, PBXProject proj)
         {
 			// Copy CleverTap folder
-			string cleverTapAssetsFolder = "CleverTap";
-			string cleverTapIOSBuildFolder = "CleverTapSDK";
-            string sourceFolderPath = Path.Combine(Application.dataPath, cleverTapAssetsFolder);
-            string destinationFolderPath = Path.Combine(path, cleverTapIOSBuildFolder);
+            string sourceFolderPath = Path.Combine(Application.dataPath, EditorUtils.CLEVERTAP_ASSETS_FOLDER);
+            string destinationFolderPath = Path.Combine(path, EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER);
             EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath);
 
             string mainTargetGuid = proj.GetUnityMainTargetGuid();
             // Add CleverTap folder reference and target membership
-            string folderGuid = proj.AddFolderReference(destinationFolderPath, cleverTapIOSBuildFolder);
+            string folderGuid = proj.AddFolderReference(destinationFolderPath, EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER);
             proj.AddFileToBuild(mainTargetGuid, folderGuid);
         }
 

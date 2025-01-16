@@ -4,6 +4,8 @@ namespace CleverTapSDK.Private
 {
 	public static class EditorUtils
 	{
+        public static readonly string CLEVERTAP_ASSETS_FOLDER = "CleverTap";
+		public static readonly string CLEVERTAP_APP_ASSETS_FOLDER = "CleverTapSDK";
         public static void DirectoryCopy(string sourceDirName, string destDirName, bool copyChangedOnly = true, bool copySubDirs = true)
         {
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);

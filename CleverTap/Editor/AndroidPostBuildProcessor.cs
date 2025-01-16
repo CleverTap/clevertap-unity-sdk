@@ -1,4 +1,4 @@
-﻿#if (UNITY_IOS || UNITY_ANDROID) && UNITY_EDITOR
+﻿#if UNITY_ANDROID && UNITY_EDITOR
 using System.IO;
 using System.Xml;
 using UnityEditor;
@@ -12,7 +12,7 @@ namespace CleverTapSDK.Private
         private static readonly string ANDROID_XML_NS_URI = "http://schemas.android.com/apk/res/android";
 
         [PostProcessBuild(99)]
-        public void OnPostprocessBuild(BuildTarget target, string path)
+        public static void OnPostprocessBuild(BuildTarget target, string path)
         {
             if (target == BuildTarget.Android)
             {
@@ -25,8 +25,8 @@ namespace CleverTapSDK.Private
             string androidProjectPath = path + "/unityLibrary/clevertap-android-wrapper.androidlib";
 
             // copy assets to the android project
-            EditorUtils.DirectoryCopy(Path.Combine(Application.dataPath, "/CleverTap"),
-                Path.Combine(androidProjectPath, "/assets/CleverTap"));
+            EditorUtils.DirectoryCopy(Path.Combine(Application.dataPath, EditorUtils.CLEVERTAP_ASSETS_FOLDER),
+                Path.Combine(androidProjectPath, $"assets/{EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER}"));
             // copy CleverTapSettings to the project's AndroidManifest
             CopySettingsToAndroidManifest(androidProjectPath);
         }
@@ -61,12 +61,6 @@ namespace CleverTapSDK.Private
             var namespaceManager = new XmlNamespaceManager(manifestXml.NameTable);
             if (!namespaceManager.HasNamespace("android"))
             {
-                if (manifestNode.Attributes["xmlns:android"] == null)
-                {
-                    var nsAttribute = manifestXml.CreateAttribute("xmlns:android");
-                    nsAttribute.Value = ANDROID_XML_NS_URI;
-                    manifestNode.Attributes.Append(nsAttribute);
-                }
                 namespaceManager.AddNamespace("android", ANDROID_XML_NS_URI);
             }
             var applicationNode = manifestXml.SelectSingleNode("/manifest/application");
