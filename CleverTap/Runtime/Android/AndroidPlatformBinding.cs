@@ -13,6 +13,7 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.OnInitCleverTapInstanceDelegate = cleverTapJniInstance =>
             {
                 cleverTapJniInstance.Call("setInAppNotificationOnShowCallback", new InAppOnShowCallback(CallbackHandler));
+                cleverTapJniInstance.Call("setInAppNotificationOnButtonTappedCallback", new InAppOnButtonTappedCallback(CallbackHandler));
             };
             CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }
@@ -308,6 +309,20 @@ namespace CleverTapSDK.Android {
             internal override void Invoke(string message)
             {
                 CallbackHandler.CleverTapInAppNotificationShowCallback(message);
+            }
+        }
+
+        internal class InAppOnButtonTappedCallback : AndroidPluginCallback
+        {
+            private readonly CleverTapCallbackHandler CallbackHandler;
+            public InAppOnButtonTappedCallback(CleverTapCallbackHandler callbackHandler)
+            {
+                CallbackHandler = callbackHandler;
+            }
+
+            internal override void Invoke(string message)
+            {
+                CallbackHandler.CleverTapInAppNotificationButtonTapped(message);
             }
         }
 
