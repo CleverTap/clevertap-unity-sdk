@@ -15,7 +15,7 @@ public enum CleverTapUnityCallback {
     CLEVERTAP_INBOX_MESSAGES_DID_UPDATE("CleverTapInboxMessagesDidUpdateCallback"),
     CLEVERTAP_ON_INBOX_BUTTON_CLICKED("CleverTapInboxCustomExtrasButtonSelect"),
     CLEVERTAP_ON_INBOX_ITEM_CLICKED("CleverTapInboxItemClicked"),
-    CLEVERTAP_ON_INAPP_BUTTON_CLICKED("CleverTapInAppNotificationButtonTapped", true),
+    CLEVERTAP_ON_INAPP_BUTTON_CLICKED("CleverTapInAppNotificationButtonTapped", true, Mode.DIRECT_CALLBACK),
     CLEVERTAP_DISPLAY_UNITS_UPDATED("CleverTapNativeDisplayUnitsUpdated", true),
     CLEVERTAP_FEATURE_FLAG_UPDATED("CleverTapFeatureFlagsUpdated", true),
     CLEVERTAP_PRODUCT_CONFIG_INITIALIZED("CleverTapProductConfigInitialized", true),

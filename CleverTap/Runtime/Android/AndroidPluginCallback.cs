@@ -1,8 +1,10 @@
 #if UNITY_ANDROID
-namespace CleverTapSDK.Android {
-    internal abstract class AndroidPluginCallback : UnityEngine.AndroidJavaProxy {
+namespace CleverTapSDK.Android
+{
+    internal abstract class AndroidPluginCallback : UnityEngine.AndroidJavaProxy
+    {
 
-        internal AndroidPluginCallback(): base("com.clevertap.unity.PluginCallback") {}
+        internal AndroidPluginCallback() : base("com.clevertap.unity.PluginCallback") { }
 
         internal abstract void Invoke(string message);
     }
