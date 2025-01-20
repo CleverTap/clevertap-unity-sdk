@@ -58,7 +58,7 @@
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomTemplatePresent" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomFunctionPresent" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomTemplateClose" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushPermissionResponseReceived" bufferable:YES],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapOnPushPermissionResponseCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushNotificationPermissionStatus" bufferable:NO]
         ];
     });
