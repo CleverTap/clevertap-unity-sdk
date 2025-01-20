@@ -171,6 +171,26 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        private CleverTapCallbackWithMessageDelegate _OnCleverTapPushNotificationPermissionStatusCallback;
+        public event CleverTapCallbackWithMessageDelegate OnCleverTapPushNotificationPermissionStatusCallback
+        {
+            add
+            {
+                lock (CallbackLock)
+                {
+                    _OnCleverTapPushNotificationPermissionStatusCallback += value;
+                    OnCallbackAdded(CleverTapPushNotificationPermissionStatus);
+                }
+            }
+            remove
+            {
+                lock (CallbackLock)
+                {
+                    _OnCleverTapPushNotificationPermissionStatusCallback -= value;
+                }
+            }
+        }
+
         private CleverTapCallbackWithMessageDelegate _OnCleverTapInAppNotificationButtonTapped;
         public event CleverTapCallbackWithMessageDelegate OnCleverTapInAppNotificationButtonTapped
         {
@@ -568,11 +588,24 @@ namespace CleverTapSDK.Common {
             _OnCleverTapInAppNotificationShowCallback?.Invoke(message);
         }
 
-        // returns the status of push permission response after it's granted/denied
+        /// <summary>
+        /// Returns the status of push permission response after it's granted/denied
+        /// </summary>
+        /// <param name="message">String boolean if permission is accepted.</param>
         public virtual void CleverTapOnPushPermissionResponseCallback(string message) {
-            //Ensure to create call the `CreateNotificationChannel` once notification permission is granted to register for receiving push notifications for Android 13+ devices.
-            CleverTapLogger.Log("unity received push permission response: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+            // Ensure to create call the `CreateNotificationChannel` once notification permission is granted to register for receiving push notifications for Android 13+ devices.
+            CleverTapLogger.Log("unity received push permission response: " + (!string.IsNullOrEmpty(message) ? message : "NULL"));
             _OnCleverTapOnPushPermissionResponseCallback?.Invoke(message);
+        }
+
+        /// <summary>
+        /// IOS Only callback. Use when checking if push permission is granted.
+        /// </summary>
+        /// <param name="message">String boolean if status is enabled.</param>
+        public virtual void CleverTapPushNotificationPermissionStatus(string message)
+        {
+            CleverTapLogger.Log("unity received push status response: " + (!string.IsNullOrEmpty(message) ? message : "NULL"));
+            _OnCleverTapPushNotificationPermissionStatusCallback?.Invoke(message);
         }
 
         // returns when an in-app notification is dismissed by a call to action with custom extras

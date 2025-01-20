@@ -68,6 +68,12 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnCleverTapOnPushPermissionResponseCallback -= value;
         }
 
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapPushNotificationPermissionStatusCallback
+        {
+            add => cleverTapCallbackHandler.OnCleverTapPushNotificationPermissionStatusCallback += value;
+            remove => cleverTapCallbackHandler.OnCleverTapPushNotificationPermissionStatusCallback -= value;
+        }
+
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapInAppNotificationButtonTapped {
             add => cleverTapCallbackHandler.OnCleverTapInAppNotificationButtonTapped += value;
             remove => cleverTapCallbackHandler.OnCleverTapInAppNotificationButtonTapped -= value;
