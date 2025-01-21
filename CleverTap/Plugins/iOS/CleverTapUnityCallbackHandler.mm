@@ -257,21 +257,13 @@
 #pragma mark - Push Permissions
 
 - (void)pushPermissionCallback:(BOOL)isPushEnabled {
-    [self callUnityObject:CleverTapUnityCallbackPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled? @"True": @"False"]];
+    [self callUnityObject:CleverTapUnityCallbackPushNotificationPermissionStatus withMessage:[NSString stringWithFormat:@"%@", isPushEnabled ? @"True": @"False"]];
 }
 
 #pragma mark - Push Permission Delegate
 
 - (void)onPushPermissionResponse:(BOOL)accepted {
-    NSMutableDictionary *jsonDict = [NSMutableDictionary new];
-   
-    jsonDict[@"accepted"] = [NSNumber numberWithBool:accepted];
-    
-    NSString *jsonString = [self dictToJson:jsonDict];
-
-    if (jsonString != nil) {
-        [self callUnityObject:CleverTapUnityCallbackPushPermissionResponseReceived withMessage:jsonString];
-    }
+    [self callUnityObject:CleverTapUnityCallbackPushPermissionResponseReceived withMessage:[NSString stringWithFormat:@"%@", accepted ? @"True": @"False"]];
 }
 
 #pragma mark - Product Config

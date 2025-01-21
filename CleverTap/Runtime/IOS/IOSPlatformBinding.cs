@@ -176,10 +176,17 @@ namespace CleverTapSDK.IOS {
             IOSDllImport.CleverTap_initializeInbox();
         }
 
+        /// <summary>
+        /// Checks if push permission is granted.
+        /// Use the <see cref="OnCleverTapPushNotificationPermissionStatusCallback"/> to get the result.
+        /// </summary>
+        /// <returns>
+        /// Do not use the returned result. Returns false.
+        /// Use the permission status callback for result.
+        /// </returns>
         internal override bool IsPushPermissionGranted() {
             IOSDllImport.CleverTap_isPushPermissionGranted();
-            // Added for iOS
-            return true;
+            return false;
         }
 
 #pragma warning disable CS0809
