@@ -30,7 +30,7 @@ namespace CleverTapSDK.Private
                     bool exists = File.Exists(destPath);
                     if (exists)
                     {
-                        overwrite = File.GetLastWriteTime(destPath) > File.GetLastWriteTime(destPath);
+                        overwrite = file.LastWriteTime > File.GetLastWriteTime(destPath);
                     }
 
                     if (!exists || overwrite)
