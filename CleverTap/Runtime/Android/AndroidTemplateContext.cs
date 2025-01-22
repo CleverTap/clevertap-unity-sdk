@@ -11,12 +11,12 @@ namespace CleverTapSDK.Android {
 
         public override bool? GetBoolean(string name)
         {
-           return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool?>("customTemplateGetBooleanArg", TemplateName);
+           return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool?>("customTemplateGetBooleanArg", TemplateName, name);
         }
 
         public override Dictionary<string, object> GetDictionary(string name)
         {
-            string json = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("customTemplateGetDictionaryJsonArg", TemplateName);
+            string json = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("customTemplateGetDictionaryJsonArg", TemplateName, name);
 
             try
             {
@@ -37,42 +37,42 @@ namespace CleverTapSDK.Android {
 
         public override string GetFile(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("customTemplateGetFileArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("customTemplateGetFileArg", TemplateName, name);
         }
 
         public override byte? GetByte(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<byte?>("customTemplateGetByteArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<byte?>("customTemplateGetByteArg", TemplateName, name);
         }
 
         public override short? GetShort(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<short?>("customTemplateGetShortArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<short?>("customTemplateGetShortArg", TemplateName, name);
         }
 
         public override int? GetInt(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int?>("customTemplateGetIntArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int?>("customTemplateGetIntArg", TemplateName, name);
         }
 
         public override long? GetLong(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long?>("customTemplateGetLongArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long?>("customTemplateGetLongArg", TemplateName, name);
         }
 
         public override float? GetFloat(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<float?>("customTemplateGetFloatArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<float?>("customTemplateGetFloatArg", TemplateName, name);
         }
 
         public override double? GetDouble(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<double?>("customTemplateGetDoubleArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<double?>("customTemplateGetDoubleArg", TemplateName, name);
         }
 
         public override string GetString(string name)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("customTemplateGetStringArg", TemplateName);
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("customTemplateGetStringArg", TemplateName, name);
         }
 
         public override void SetDismissed()
@@ -87,7 +87,7 @@ namespace CleverTapSDK.Android {
 
         public override void TriggerAction(string name)
         {
-            CleverTapAndroidJNI.CleverTapJNIInstance.Call("customTemplateTriggerAction", TemplateName);
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("customTemplateTriggerAction", TemplateName, name);
         }
 
         internal override string GetTemplateString()
