@@ -103,6 +103,20 @@ namespace CleverTapSDK.IOS {
             return json;
         }
 
+        internal override List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
+        {
+            string jsonString = IOSDllImport.CleverTap_getAllInboxMessages();
+            try
+            {
+                return CleverTapInboxMessageJSONParser.ParseJson(jsonString);
+            }
+            catch
+            {
+                CleverTapLogger.LogError("Unable to parse app inbox messages to CleverTapInboxMessage list.");
+                return new List<CleverTapInboxMessage>();
+            }
+        }
+
         internal override string GetCleverTapID() {
             return IOSDllImport.CleverTap_getCleverTapID();
         }

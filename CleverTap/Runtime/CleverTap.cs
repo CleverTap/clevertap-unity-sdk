@@ -212,6 +212,9 @@ namespace CleverTapSDK {
         public static JSONArray GetAllInboxMessages() =>
             cleverTapBinding.GetAllInboxMessages();
 
+        public static List<CleverTapInboxMessage> GetAllInboxMessagesParsed() =>
+            cleverTapBinding.GetAllInboxMessagesParsed();
+
         public static string GetCleverTapID() =>
             cleverTapBinding.GetCleverTapID();
 

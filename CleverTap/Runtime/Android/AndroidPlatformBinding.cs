@@ -125,6 +125,21 @@ namespace CleverTapSDK.Android {
 
             return json;
         }
+
+        internal override List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
+            try
+            {
+                return CleverTapInboxMessageJSONParser.ParseJson(jsonString);
+            }
+            catch
+            {
+                CleverTapLogger.LogError("Unable to parse app inbox messages to CleverTapInboxMessage list.");
+                return new List<CleverTapInboxMessage>();
+            }
+        }
+
         internal override int GetInboxMessageCount() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("getInboxMessageCount");
         }

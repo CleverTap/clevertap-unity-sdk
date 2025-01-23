@@ -97,6 +97,11 @@ namespace CleverTapSDK.Common {
             return new JSONArray();
         }
 
+        internal virtual List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
+        {
+            return new List<CleverTapInboxMessage>();
+        }
+
         internal virtual string GetCleverTapID() {
             return string.Empty;
         }
