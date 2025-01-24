@@ -5,26 +5,48 @@ namespace CleverTapSDK
 {
     public class CleverTapInboxMessageJSONParser
     {
-        public static List<CleverTapInboxMessage> ParseJson(string jsonString)
+        public static List<CleverTapInboxMessage> ParseJsonArray(string jsonString)
         {
-            JSONArray jsonArray = JSON.Parse(jsonString).AsArray;
             var result = new List<CleverTapInboxMessage>();
+            if (string.IsNullOrEmpty(jsonString))
+                return result;
 
+            JSONArray jsonArray = JSON.Parse(jsonString).AsArray;
             foreach (JSONNode jsonNode in jsonArray)
             {
-                var root = new CleverTapInboxMessage
-                {
-                    Id = jsonNode["id"].Value != string.Empty ? jsonNode["id"] : jsonNode["_id"],
-                    Message = ParseMessageData(jsonNode["msg"]),
-                    IsRead = jsonNode["isRead"].AsBool,
-                    DateTs = jsonNode["date"].AsLong,
-                    ExpiresTs = jsonNode["wzrk_ttl"].AsLong,
-                    CampaignId = jsonNode["wzrk_id"]
-                };
-                result.Add(root);
+                var inboxMessage = ParseJsonNode(jsonNode);
+                if (inboxMessage != null)
+                    result.Add(inboxMessage);
             }
 
             return result;
+        }
+
+        public static CleverTapInboxMessage ParseJsonMessage(string jsonString)
+        {
+            if (string.IsNullOrEmpty(jsonString))
+                return null;
+
+            JSONNode jsonNode = JSON.Parse(jsonString);
+            return ParseJsonNode(jsonNode);
+        }
+
+        private static CleverTapInboxMessage ParseJsonNode(JSONNode jsonNode)
+        {
+            if (jsonNode == null || jsonNode.Count == 0)
+                return null;
+
+            var inboxMessage = new CleverTapInboxMessage
+            {
+                Id = jsonNode["id"].Value != string.Empty ? jsonNode["id"] : jsonNode["_id"],
+                Message = ParseMessageData(jsonNode["msg"]),
+                IsRead = jsonNode["isRead"].AsBool,
+                DateTs = jsonNode["date"].AsLong,
+                ExpiresTs = jsonNode["wzrk_ttl"].AsLong,
+                CampaignId = jsonNode["wzrk_id"]
+            };
+
+            return inboxMessage;
         }
 
         private static CleverTapInboxMessage.MessageData ParseMessageData(JSONNode msgNode)

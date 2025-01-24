@@ -123,6 +123,11 @@ namespace CleverTapSDK.Common {
             return new JSONClass();
         }
 
+        internal virtual CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId)
+        {
+            return null;
+        }
+
         internal virtual int GetInboxMessageUnreadCount() {
             return -1;
         }
@@ -137,6 +142,11 @@ namespace CleverTapSDK.Common {
 
         internal virtual JSONArray GetUnreadInboxMessages() {
             return new JSONArray();
+        }
+
+        internal virtual List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed()
+        {
+            return new List<CleverTapInboxMessage>();
         }
 
         internal virtual void InitializeInbox() {
