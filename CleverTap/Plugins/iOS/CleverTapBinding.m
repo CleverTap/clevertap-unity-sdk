@@ -445,7 +445,7 @@ char* CleverTap_getInboxMessageForId(const char* messageId) {
     id ret = [[CleverTapUnityManager sharedInstance] getInboxMessageForId:clevertap_stringToNSString(messageId)];
     NSString *jsonString = clevertap_toJsonString(ret);
     if (jsonString == nil) {
-        return NULL;
+        return clevertap_cStringCopy([@"{}" UTF8String]);
     }
     return clevertap_cStringCopy([jsonString UTF8String]);
 }
