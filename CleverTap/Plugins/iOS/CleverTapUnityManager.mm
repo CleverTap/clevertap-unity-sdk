@@ -986,4 +986,8 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
     return context;
 }
 
+- (void)syncCustomTemplates:(BOOL)isProduction {
+    [self.cleverTap syncCustomTemplates:isProduction];
+}
+
 @end

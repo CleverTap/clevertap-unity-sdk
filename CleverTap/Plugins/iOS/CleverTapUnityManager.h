@@ -171,6 +171,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (int8_t)customTemplateGetByteArg:(NSString *)templateName named:(NSString *)argumentName;
 
+- (void)syncCustomTemplates:(BOOL)isProduction;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -707,3 +707,8 @@ int8_t CleverTap_customTemplateGetByteArg(const char* templateName, const char* 
     return [[CleverTapUnityManager sharedInstance]
             customTemplateGetByteArg:clevertap_stringToNSString(templateName) named:clevertap_stringToNSString(argumentName)];
 }
+
+void CleverTap_syncCustomTemplates(bool isProduction) {
+    return [[CleverTapUnityManager sharedInstance]
+            syncCustomTemplates:isProduction];
+}
