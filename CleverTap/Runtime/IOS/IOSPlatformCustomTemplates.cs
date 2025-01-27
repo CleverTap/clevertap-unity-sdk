@@ -12,12 +12,12 @@ namespace CleverTapSDK.IOS
 
         internal override void SyncCustomTemplates()
         {
-            throw new System.NotImplementedException();
+            IOSDllImport.CleverTap_syncCustomTemplates(false);
         }
 
         internal override void SyncCustomTemplates(bool isProduction)
         {
-            throw new System.NotImplementedException();
+            IOSDllImport.CleverTap_syncCustomTemplates(isProduction);
         }
     }
 }
