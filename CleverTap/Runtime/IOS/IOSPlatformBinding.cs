@@ -149,7 +149,6 @@ namespace CleverTapSDK.IOS {
         internal override JSONClass GetInboxMessageForId(string messageId)
         {
             string jsonString = IOSDllImport.CleverTap_getInboxMessageForId(messageId);
-            CleverTapLogger.Log($"GetInboxMessageForId jsonString: {jsonString}");
             JSONClass json;
             try
             {
@@ -166,7 +165,6 @@ namespace CleverTapSDK.IOS {
         internal override CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId)
         {
             string jsonString = IOSDllImport.CleverTap_getInboxMessageForId(messageId);
-            CleverTapLogger.Log($"GetInboxMessageForIdParsed jsonString: {jsonString}");
             try
             {
                 return CleverTapInboxMessageJSONParser.ParseJsonMessage(jsonString);
