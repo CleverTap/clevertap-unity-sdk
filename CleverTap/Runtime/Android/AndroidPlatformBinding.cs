@@ -111,6 +111,7 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("getCleverTapID");
             return string.Empty;
         }
+
         internal override JSONArray GetAllInboxMessages()
         {
             string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
@@ -119,14 +120,91 @@ namespace CleverTapSDK.Android {
             {
                 json = (JSONArray)JSON.Parse(jsonString);
             }
-            catch
+            catch (Exception ex)
             {
-                CleverTapLogger.LogError("Unable to parse inbox messages JSON");
+                CleverTapLogger.LogError($"Unable to parse inbox messages JSON: {ex}.");
                 json = new JSONArray();
             }
 
             return json;
         }
+
+        internal override List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
+            try
+            {
+                return CleverTapInboxMessageJSONParser.ParseJsonArray(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse inbox messages to CleverTapInboxMessage list: {ex}.");
+                return new List<CleverTapInboxMessage>();
+            }
+        }
+
+        internal override JSONClass GetInboxMessageForId(string messageId)
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getInboxMessageForId", messageId);
+            JSONClass json;
+            try
+            {
+                json = (JSONClass)JSON.Parse(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse inbox message for id: {messageId}. Exception: {ex}.");
+                json = new JSONClass();
+            }
+
+            return json;
+        }
+
+        internal override CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId)
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getInboxMessageForId", messageId);
+            try
+            {
+                return CleverTapInboxMessageJSONParser.ParseJsonMessage(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse inbox message to CleverTapInboxMessage for id: {messageId}. Exception: {ex}.");
+                return null;
+            }
+        }
+
+        internal override JSONArray GetUnreadInboxMessages()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getUnreadInboxMessages");
+            JSONArray json;
+            try
+            {
+                json = (JSONArray)JSON.Parse(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse unread inbox messages JSON: {ex}.");
+                json = new JSONArray();
+            }
+
+            return json;
+        }
+
+        internal override List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getUnreadInboxMessages");
+            try
+            {
+                return CleverTapInboxMessageJSONParser.ParseJsonArray(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse unread inbox messages to CleverTapInboxMessage list: {ex}.");
+                return new List<CleverTapInboxMessage>();
+            }
+        }
+
         internal override int GetInboxMessageCount() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("getInboxMessageCount");
         }

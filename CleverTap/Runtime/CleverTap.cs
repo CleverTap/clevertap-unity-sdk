@@ -237,6 +237,9 @@ namespace CleverTapSDK {
         public static JSONArray GetAllInboxMessages() =>
             cleverTapBinding.GetAllInboxMessages();
 
+        public static List<CleverTapInboxMessage> GetAllInboxMessagesParsed() =>
+            cleverTapBinding.GetAllInboxMessagesParsed();
+
         public static string GetCleverTapID() =>
             cleverTapBinding.GetCleverTapID();
 
@@ -252,6 +255,9 @@ namespace CleverTapSDK {
         public static JSONClass GetInboxMessageForId(string messageId) =>
             cleverTapBinding.GetInboxMessageForId(messageId);
 
+        public static CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId) =>
+            cleverTapBinding.GetInboxMessageForIdParsed(messageId);
+
         public static int GetInboxMessageUnreadCount() =>
             cleverTapBinding.GetInboxMessageUnreadCount();
 
@@ -263,6 +269,9 @@ namespace CleverTapSDK {
 
         public static JSONArray GetUnreadInboxMessages() =>
             cleverTapBinding.GetUnreadInboxMessages();
+
+        public static List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed() =>
+            cleverTapBinding.GetUnreadInboxMessagesParsed();
 
         public static void InitializeInbox() =>
             cleverTapBinding.InitializeInbox();
