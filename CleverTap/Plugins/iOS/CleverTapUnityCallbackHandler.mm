@@ -182,6 +182,14 @@
     }
 }
 
+- (void)inAppNotificationDidShow:(NSDictionary *)notification {
+    NSString *jsonString = [self dictToJson:notification];
+    
+    if (jsonString != nil) {
+        [self callUnityObject:CleverTapUnityCallbackInAppNotificationDidShow withMessage:jsonString];
+    }
+}
+
 #pragma mark - Native Display
 
 - (void)displayUnitsUpdated:(NSArray<CleverTapDisplayUnit *>*)displayUnits {
