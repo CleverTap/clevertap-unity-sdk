@@ -29,7 +29,8 @@ typedef NS_ENUM(NSInteger, CleverTapUnityCallback) {
     CleverTapUnityCallbackCustomFunctionPresent = 23,
     CleverTapUnityCallbackCustomTemplateClose = 24,
     CleverTapUnityCallbackPushPermissionResponseReceived = 25,
-    CleverTapUnityCallbackPushNotificationPermissionStatus = 26
+    CleverTapUnityCallbackPushNotificationPermissionStatus = 26,
+    CleverTapUnityCallbackInAppNotificationDidShow = 27,
 };
 
 @interface CleverTapUnityCallbackInfo : NSObject <NSCopying>
