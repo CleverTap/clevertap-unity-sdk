@@ -60,6 +60,11 @@ static NSTimeInterval launchTime;
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    [[CleverTapUnityManager sharedInstance] handleOpenURL:url];
+    return [super application:app openURL:url options:options];
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     BOOL isOpen = application.applicationState == UIApplicationStateActive ? NO : YES;
 #ifdef NO_AUTOINTEGRATE

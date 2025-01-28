@@ -317,7 +317,7 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 
 #pragma mark - DeepLink Handling
 
-- (void)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
+- (void)handleOpenURL:(NSURL *)url {
     [[CleverTapUnityCallbackHandler sharedInstance] deepLinkCallback:[url absoluteString]];
 }
 

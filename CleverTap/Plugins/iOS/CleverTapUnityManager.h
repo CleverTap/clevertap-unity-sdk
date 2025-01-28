@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
                     openInForeground:(BOOL)openInForeground;
 - (void)sendRemoteNotificationCallbackToUnity:(NSDictionary *)notification isOpen:(BOOL)isOpen;
 
-- (void)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication;
+- (void)handleOpenURL:(NSURL *)url;
 - (void)pushInstallReferrerSource:(NSString *)source
                            medium:(NSString *)medium
                          campaign:(NSString *)campaign;
