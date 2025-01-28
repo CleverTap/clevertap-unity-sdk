@@ -36,7 +36,7 @@
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProfileInitializedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProfileUpdatesCallback" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapDeepLinkCallback" bufferable:YES],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushReceivedCallback" bufferable:YES],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushNotificationTappedWithCustomExtrasCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushOpenedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationDismissedCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationButtonTapped" bufferable:YES],

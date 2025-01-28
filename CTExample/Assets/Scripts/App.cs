@@ -40,6 +40,9 @@ namespace CTExample
 
             // Add listeners for events that may be triggered on app launch
             CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
+#if UNITY_IOS
+            CleverTap.OnCleverTapPushNotificationTappedWithCustomExtrasCallback += CleverTap_OnCleverTapPushNotificationTappedWithCustomExtrasCallback;
+#endif
             CleverTap.OnCleverTapDeepLinkCallback += CleverTapDeepLinkCallback;
             CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapInAppNotificationShowCallback;
             CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapInAppNotificationButtonTapped;
@@ -62,6 +65,11 @@ namespace CTExample
         private void CleverTapPushOpenedCallback(string message)
         {
             Logger.Log($"Push Opened callback: {message}");
+        }
+
+        private void CleverTap_OnCleverTapPushNotificationTappedWithCustomExtrasCallback(string message)
+        {
+            Logger.Log($"Push Tapped with Custom extras callback: {message}");
         }
 
         private void CleverTapDeepLinkCallback(string message)

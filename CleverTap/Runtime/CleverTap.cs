@@ -48,6 +48,12 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnCleverTapPushOpenedCallback -= value;
         }
 
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapPushNotificationTappedWithCustomExtrasCallback
+        {
+            add => cleverTapCallbackHandler.OnCleverTapPushNotificationTappedWithCustomExtrasCallback += value;
+            remove => cleverTapCallbackHandler.OnCleverTapPushNotificationTappedWithCustomExtrasCallback -= value;
+        }
+
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapInitCleverTapIdCallback {
             add => cleverTapCallbackHandler.OnCleverTapInitCleverTapIdCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInitCleverTapIdCallback -= value;

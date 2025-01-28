@@ -6,10 +6,13 @@ public class CleverTapSettings : ScriptableObject
     public string CleverTapAccountId;
     public string CleverTapAccountToken;
     public string CleverTapAccountRegion;
-    public bool CleverTapEnablePersonalization { get; set; } = true;
-    public bool CleverTapDisableIDFV;
     public string CleverTapProxyDomain;
     public string CleverTapSpikyProxyDomain;
+    public bool CleverTapDisableIDFV;
+
+    public bool CleverTapIOSUseAutoIntegrate { get; set; } = true;
+    public bool CleverTapIOSUseUNUserNotificationCenter { get; set; } = true;
+    public bool CleverTapIOSPresentNotificationOnForeground;
 
     public override string ToString()
     {
@@ -19,8 +22,10 @@ public class CleverTapSettings : ScriptableObject
                $"CleverTapAccountRegion: {CleverTapAccountRegion}\n" +
                $"CleverTapProxyDomain: {CleverTapProxyDomain}\n" +
                $"CleverTapSpikyProxyDomain: {CleverTapSpikyProxyDomain}\n" +
-               $"CleverTapEnablePersonalization: {CleverTapEnablePersonalization}\n" +
-               $"CleverTapDisableIDFV: {CleverTapDisableIDFV}";
+               $"CleverTapDisableIDFV: {CleverTapDisableIDFV}\n" +
+               $"CleverTapIOSUseAutoIntegrate: {CleverTapIOSUseAutoIntegrate}\n" +
+               $"CleverTapIOSUseUNUserNotificationCenter: {CleverTapIOSUseUNUserNotificationCenter}\n" +
+               $"CleverTapIOSPresentNotificationOnForeground: {CleverTapIOSPresentNotificationOnForeground}";
     }
 
     internal static readonly string settingsPath = "Assets/CleverTapSettings.asset";

@@ -1,5 +1,4 @@
 ﻿#if UNITY_IOS && UNITY_EDITOR
-using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -10,46 +9,6 @@ namespace CleverTapSDK.Private
 {
     public static class IOSPostBuildProcessor
 	{
-		private static readonly string rn = "\n";
-
-		private static readonly string CODE_LIB_IMPORT =
-		"#import \"CleverTapUnityManager.h\"" + rn;
-
-		private static readonly string CODE_USER_NOTIFICATIONS_IMPORT =
-		"#import <UserNotifications/UserNotifications.h>" + rn;
-
-		private static readonly string PATH_CONTROLLER = "/Classes/UnityAppController.mm";
-
-		private static readonly string SIGNATURE_URL =
-			"- (BOOL)application:(UIApplication*)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation";
-		private static readonly string CODE_URL = rn +
-			"    [[CleverTapUnityManager sharedInstance] handleOpenURL:url sourceApplication:sourceApplication];" + rn;
-
-		private static readonly string SIGNATURE_PUSH_TOKEN =
-			"- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken";
-		private static readonly string CODE_PUSH_TOKEN = rn +
-			"    [[CleverTapUnityManager sharedInstance] setPushToken:deviceToken];" + rn;
-
-		private static readonly string SIGNATURE_DID_FINISH_LAUNCH =
-			"- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions";
-
-		private static readonly string SIGNATURE_NOTIF_LOCAL =
-			"- (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification";
-		private static readonly string SIGNATURE_NOTIF_REMOTE =
-			"- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo";
-		private static readonly string SIGNATURE_NOTIF_REMOTE_BG =
-			"- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler";
-		private static readonly string CODE_NOTIF_LOCAL = rn +
-			"    [[CleverTapUnityManager sharedInstance] registerApplication:application didReceiveRemoteNotification:notification.userInfo];" + rn;
-		private static readonly string CODE_NOTIF = rn +
-			"    [[CleverTapUnityManager sharedInstance] registerApplication:application didReceiveRemoteNotification:userInfo];" + rn;
-		private static readonly string CODE_ENABLE_PERSONALIZATION = rn +
-			"    [CleverTapUnityManager enablePersonalization];" + rn;
-		private static readonly string CODE_ADD_USER_NOTIFICATION_FRAMEWORK = rn +
-			"    [UNUserNotificationCenter currentNotificationCenter].delegate = (id <UNUserNotificationCenterDelegate>)self;" + rn;
-
-        private enum Position { Begin, End };
-
         [PostProcessBuild(99)]
 		public static void OnPostProcessBuild(BuildTarget target, string path)
 		{
@@ -78,6 +37,8 @@ namespace CleverTapSDK.Private
             if (settings != null)
             {
                 UpdatePlistWithSettings(path, settings);
+
+                UpdatePreprocessorMacros(proj, projectTarget, settings);
             }
             else
             {
@@ -86,20 +47,47 @@ namespace CleverTapSDK.Private
                     $"set them manually in the project Info.plist.");
             }
 
-            // Update AppController
-            bool personalizationEnabled = settings == null || settings.CleverTapEnablePersonalization;
-            InsertCodeIntoControllerClass(path, personalizationEnabled);
-
             AddCleverTapFolder(path, proj);
 
             File.WriteAllText(projPath, proj.WriteToString());
         }
 
-		/// <summary>
-		/// Writes the CleverTapSettings (account id, token etc.) to the Info.plist file.
-		/// </summary>
-		/// <param name="path">The project path.</param>
-		/// <param name="settings">The settings to use.</param>
+        /// <summary>
+        /// Updates the "GCC_PREPROCESSOR_DEFINITIONS" build property.
+        /// Adds or removes preprocessor macros of the project Build Settings.
+        /// </summary>
+        /// <param name="proj">The project to update.</param>
+        /// <param name="projectTarget">The project target guid.</param>
+        /// <param name="settings">The CleverTapSettings to use.</param>
+        private static void UpdatePreprocessorMacros(PBXProject proj, string projectTarget, CleverTapSettings settings)
+        {
+            // The UpdateBuildProperty set the property value if no values are present. This overrides the $(inherited) value.
+            // Add the $(inherited) value as a workaround.
+            string preprocessorMacros = "GCC_PREPROCESSOR_DEFINITIONS";
+            if (!settings.CleverTapIOSUseAutoIntegrate)
+            {
+                proj.UpdateBuildProperty(projectTarget, preprocessorMacros, new string[] { "$(inherited)", "NO_AUTOINTEGRATE" }, null);
+            }
+            else
+            {
+                proj.UpdateBuildProperty(projectTarget, preprocessorMacros, null, new string[] { "NO_AUTOINTEGRATE" });
+            }
+
+            if (!settings.CleverTapIOSUseUNUserNotificationCenter)
+            {
+                proj.UpdateBuildProperty(projectTarget, preprocessorMacros, new string[] { "$(inherited)", "NO_UNUSERNOTIFICATIONCENTER" }, null);
+            }
+            else
+            {
+                proj.UpdateBuildProperty(projectTarget, preprocessorMacros, null, new string[] { "NO_UNUSERNOTIFICATIONCENTER" });
+            }
+        }
+
+        /// <summary>
+        /// Writes the CleverTapSettings (account id, token etc.) to the Info.plist file.
+        /// </summary>
+        /// <param name="path">The project path.</param>
+        /// <param name="settings">The settings to use.</param>
         private static void UpdatePlistWithSettings(string path, CleverTapSettings settings)
         {
             if (settings == null)
@@ -126,6 +114,8 @@ namespace CleverTapSDK.Private
             }
 
             rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
+
+            rootDict.SetBoolean("CleverTapPresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
 
             // Write to file
             File.WriteAllText(plistPath, plist.WriteToString());
@@ -156,97 +146,6 @@ namespace CleverTapSDK.Private
             string folderGuid = proj.AddFolderReference(destinationFolderPath, EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER);
             proj.AddFileToBuild(mainTargetGuid, folderGuid);
         }
-
-        private static void InsertCodeIntoControllerClass(string projectPath, bool personalizationEnabled)
-		{
-			string filepath = projectPath + PATH_CONTROLLER;
-			string[] methodSignatures = { SIGNATURE_PUSH_TOKEN, SIGNATURE_URL, SIGNATURE_NOTIF_LOCAL, SIGNATURE_NOTIF_REMOTE, SIGNATURE_NOTIF_REMOTE_BG };
-			string[] valuesToAppend = { CODE_PUSH_TOKEN, CODE_URL, CODE_NOTIF_LOCAL, CODE_NOTIF, CODE_NOTIF };
-			Position[] positionsInMethod = new Position[] { Position.End, Position.Begin, Position.End, Position.End, Position.Begin };
-			InsertCodeIntoClass(filepath, methodSignatures, valuesToAppend, positionsInMethod);
-
-			string[] methodSignaturesRegPush = { SIGNATURE_DID_FINISH_LAUNCH };
-			if (personalizationEnabled)
-			{
-				string[] valuesToAppendRegPush = { CODE_ENABLE_PERSONALIZATION };
-				Position[] positionsInMethodRegPush = new Position[] { Position.Begin };
-				InsertCodeIntoClass(filepath, methodSignaturesRegPush, valuesToAppendRegPush, positionsInMethodRegPush);
-			}
-
-			string[] valuesToAppendUserNotifications = { CODE_ADD_USER_NOTIFICATION_FRAMEWORK };
-			Position[] positionsInMethodRegUserNotifications = new Position[] { Position.Begin };
-			InsertCodeIntoClass(filepath, methodSignaturesRegPush, valuesToAppendUserNotifications, positionsInMethodRegUserNotifications);
-
-		}
-
-		private static void InsertCodeIntoClass(string filepath, string[] methodSignatures, string[] valuesToAppend, Position[] positionsInMethod)
-		{
-			if (!File.Exists(filepath))
-			{
-				return;
-			}
-
-			string fileContent = File.ReadAllText(filepath);
-			List<int> ignoredIndices = new List<int>();
-
-			for (int i = 0; i < valuesToAppend.Length; i++)
-			{
-				string val = valuesToAppend[i];
-
-				if (fileContent.Contains(val))
-				{
-					ignoredIndices.Add(i);
-				}
-			}
-
-			string[] fileLines = File.ReadAllLines(filepath);
-			List<string> newContents = new List<string>();
-			bool found = false;
-			int foundIndex = -1;
-
-			newContents.Add(CODE_LIB_IMPORT);
-			newContents.Add(CODE_USER_NOTIFICATIONS_IMPORT);
-
-			foreach (string line in fileLines)
-			{
-				if (line.Trim().Contains(CODE_USER_NOTIFICATIONS_IMPORT.Trim()))
-				{
-					continue;
-				}
-
-				if (line.Trim().Contains(CODE_LIB_IMPORT.Trim()))
-				{
-					continue;
-				}
-
-				newContents.Add(line + rn);
-				for (int j = 0; j < methodSignatures.Length; j++)
-				{
-					if ((line.Trim().Equals(methodSignatures[j])) && !ignoredIndices.Contains(j))
-					{
-						foundIndex = j;
-						found = true;
-					}
-				}
-
-				if (found)
-				{
-					if ((positionsInMethod[foundIndex] == Position.Begin) && line.Trim().Equals("{"))
-					{
-						newContents.Add(valuesToAppend[foundIndex] + rn);
-						found = false;
-					}
-					else if ((positionsInMethod[foundIndex] == Position.End) && line.Trim().Equals("}"))
-					{
-						newContents = newContents.GetRange(0, newContents.Count - 1);
-						newContents.Add(valuesToAppend[foundIndex] + rn + "}" + rn);
-						found = false;
-					}
-				}
-			}
-			string output = string.Join("", newContents.ToArray());
-			File.WriteAllText(filepath, output);
-		}
 	}
 }
 #endif
