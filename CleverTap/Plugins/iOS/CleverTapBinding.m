@@ -138,6 +138,30 @@ void CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonT
      setInAppNotificationButtonTappedCallback:callback];
 }
 
+void CleverTap_getUserEventLog(const char* eventName, const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserEventLog:clevertap_stringToNSString(eventName) forKey:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+void CleverTap_getUserAppLaunchCount(const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserAppLaunchCount:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+void CleverTap_getUserEventLogCount(const char* eventName, const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserEventLog:clevertap_stringToNSString(eventName) forKey:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+void CleverTap_getUserEventLogHistory(const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserEventLogHistory:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+int64_t CleverTap_getUserLastVisitTs() {
+    return [[CleverTapUnityManager sharedInstance] getUserLastVisitTs];
+}
+
 void CleverTap_setDebugLevel(int level) {
     [CleverTapUnityManager setDebugLevel:level];
 }

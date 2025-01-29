@@ -66,6 +66,7 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_enablePersonalization();
         }
 
+        [Obsolete]
         internal override JSONClass EventGetDetail(string eventName) {
             string jsonString = IOSDllImport.CleverTap_eventGetDetail(eventName);
             JSONClass json;
@@ -78,14 +79,17 @@ namespace CleverTapSDK.IOS
             return json;
         }
 
+        [Obsolete]
         internal override int EventGetFirstTime(string eventName) {
             return IOSDllImport.CleverTap_eventGetFirstTime(eventName);
         }
 
+        [Obsolete]
         internal override int EventGetLastTime(string eventName) {
             return IOSDllImport.CleverTap_eventGetLastTime(eventName);
         }
 
+        [Obsolete]
         internal override int EventGetOccurrences(string eventName) {
             return IOSDllImport.CleverTap_eventGetOccurrences(eventName);
         }
@@ -475,6 +479,7 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_suspendInAppNotifications();
         }
 
+        [Obsolete]
         internal override JSONClass UserGetEventHistory() {
             string jsonString = IOSDllImport.CleverTap_userGetEventHistory();
             JSONClass json;
@@ -487,6 +492,7 @@ namespace CleverTapSDK.IOS
             return json;
         }
 
+        [Obsolete]
         internal override int UserGetPreviousVisitTime() {
             return IOSDllImport.CleverTap_userGetPreviousVisitTime();
         }
@@ -495,8 +501,81 @@ namespace CleverTapSDK.IOS
             return IOSDllImport.CleverTap_userGetScreenCount();
         }
 
+        [Obsolete]
         internal override int UserGetTotalVisits() {
             return IOSDllImport.CleverTap_userGetTotalVisits();
+        }
+
+        private static readonly Dictionary<string, CleverTapCallback<UserEventLog>> userEventLogCallbacks = new Dictionary<string, CleverTapCallback<UserEventLog>>();
+        private static readonly Dictionary<string, CleverTapCallback<int>> userEventLogCountCallbacks = new Dictionary<string, CleverTapCallback<int>>();
+        private static readonly Dictionary<string, CleverTapCallback<Dictionary<string, UserEventLog>>> userEventLogHistoryCallbacks =
+            new Dictionary<string, CleverTapCallback<Dictionary<string, UserEventLog>>>();
+
+        [MonoPInvokeCallback(typeof(UserEventLogCallback))]
+        public static void UserEventLogCallbackFunc(string key, string message)
+        {
+            if (userEventLogCallbacks.ContainsKey(key))
+            {
+                var callback = userEventLogCallbacks[key];
+                callback.Invoke(UserEventLog.Parse(message));
+                userEventLogCallbacks.Remove(key);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(UserEventLogCallback))]
+        public static void UserEventLogCountCallbackFunc(string key, string message)
+        {
+            if (userEventLogCountCallbacks.ContainsKey(key))
+            {
+                var callback = userEventLogCountCallbacks[key];
+                if (int.TryParse(message, out int count))
+                    callback.Invoke(count);
+                userEventLogCountCallbacks.Remove(key);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(UserEventLogCallback))]
+        public static void UserEventLogHistoryCallbackFunc(string key, string message)
+        {
+            if (userEventLogHistoryCallbacks.ContainsKey(key))
+            {
+                var callback = userEventLogHistoryCallbacks[key];
+                callback.Invoke(UserEventLog.ParseLogsDictionary(message));
+                userEventLogHistoryCallbacks.Remove(key);
+            }
+        }
+
+        internal override void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback)
+        {
+            string key = Guid.NewGuid().ToString();
+            userEventLogCallbacks[key] = callback;
+            IOSDllImport.CleverTap_getUserEventLog(eventName, key, UserEventLogCallbackFunc);
+        }
+
+        internal override void GetUserAppLaunchCount(CleverTapCallback<int> callback)
+        {
+            string key = Guid.NewGuid().ToString();
+            userEventLogCountCallbacks[key] = callback;
+            IOSDllImport.CleverTap_getUserAppLaunchCount(key, UserEventLogCountCallbackFunc);
+        }
+
+        internal override void GetUserEventLogCount(string eventName, CleverTapCallback<int> callback)
+        {
+            string key = Guid.NewGuid().ToString();
+            userEventLogCountCallbacks[key] = callback;
+            IOSDllImport.CleverTap_getUserEventLogCount(eventName, key, UserEventLogCountCallbackFunc);
+        }
+
+        internal override void GetUserEventLogHistory(CleverTapCallback<Dictionary<string, UserEventLog>> callback)
+        {
+            string key = Guid.NewGuid().ToString();
+            userEventLogHistoryCallbacks[key] = callback;
+            IOSDllImport.CleverTap_getUserEventLogHistory(key, UserEventLogHistoryCallbackFunc);
+        }
+
+        internal override long GetUserLastVisitTs()
+        {
+            return IOSDllImport.CleverTap_getUserLastVisitTs();
         }
     }
 }

@@ -7,6 +7,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (*UserEventLogCallback) (const char *, const char *);
+
 @interface CleverTapUnityManager : NSObject
 
 + (CleverTapUnityManager *)sharedInstance;
@@ -46,6 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)profileGet:(NSString *)propertyName;
 - (NSString *)profileGetCleverTapID;
 - (NSString *)profileGetCleverTapAttributionIdentifier;
+
+- (void)getUserEventLog:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (void)getUserAppLaunchCount:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (void)getUserEventLogCount:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (void)getUserEventLogHistory:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (long)getUserLastVisitTs;
 
 #pragma mark - User Action Events
 

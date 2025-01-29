@@ -11,6 +11,8 @@ namespace CleverTapSDK.IOS {
         }
 
         internal delegate void InAppNotificationButtonTapped(string customData);
+
+        internal delegate void UserEventLogCallback(string key, string message);
     }
 }
 #endif

@@ -65,6 +65,100 @@ const int PENDING_EVENTS_TIME_OUT = 5;
     [UIApplication sharedApplication].applicationIconBadgeNumber = num;
 }
 
+- (NSDictionary *)userEventLogToDictionary:(CleverTapEventDetail *)event {
+    NSDictionary *json = @{
+        @"countOfEvents": @(event.count),
+        @"eventName": event.eventName,
+        @"normalizedEventName": event.normalizedEventName,
+        @"firstTS": @(event.firstTime),
+        @"lastTS": @(event.lastTime),
+        @"deviceID": event.deviceID
+    };
+    return json;
+}
+
+- (void)getUserEventLog:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        CleverTapEventDetail *event = [[CleverTap sharedInstance] getUserEventLog:eventName];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!event) {
+                callback([key UTF8String], [@"{}" UTF8String]);
+                return;
+            }
+            
+            NSDictionary *json = [self userEventLogToDictionary:event];
+            callback([key UTF8String], [clevertap_toJsonString(json) UTF8String]);
+        });
+    });
+}
+
+- (void)getUserEventLogCount:(nonnull NSString *)eventName forKey:(nonnull NSString *)key withCallback:(nonnull UserEventLogCallback)callback {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        int count = [[CleverTap sharedInstance] getUserEventLogCount:eventName];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *countString = [NSString stringWithFormat:@"%d", count];
+            callback([key UTF8String], [countString UTF8String]);
+        });
+    });
+}
+
+- (void)getUserEventLogHistory:(nonnull NSString *)key withCallback:(nonnull UserEventLogCallback)callback {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *history = [[CleverTap sharedInstance] getUserEventLogHistory];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!history) {
+                callback([key UTF8String], [@"{}" UTF8String]);
+                return;
+            }
+            
+            NSMutableDictionary *result = [NSMutableDictionary new];
+            for (NSString *key in history) {
+                CleverTapEventDetail *event = history[key];
+                result[key] = [self userEventLogToDictionary:event];
+            }
+            
+            NSString *json = clevertap_toJsonString(result);
+            callback([key UTF8String], [json UTF8String]);
+        });
+    });
+}
+
+- (void)getUserAppLaunchCount:(nonnull NSString *)key withCallback:(nonnull UserEventLogCallback)callback {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        int count = [[CleverTap sharedInstance] getUserAppLaunchCount];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *countString = [NSString stringWithFormat:@"%d", count];
+            callback([key UTF8String], [countString UTF8String]);
+        });
+    });
+}
+
+- (long)getUserLastVisitTs {
+    return [self.cleverTap getUserLastVisitTs];
+}
+
+NSString* clevertap_toJsonString(id val) {
+    NSString *jsonString;
+    
+    if (val == nil) {
+        return nil;
+    }
+    
+    if ([val isKindOfClass:[NSArray class]] || [val isKindOfClass:[NSDictionary class]]) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:val options:NSJSONWritingPrettyPrinted error:&error];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        if (error != nil) {
+            jsonString = nil;
+        }
+    } else {
+        jsonString = [NSString stringWithFormat:@"%@", val];
+    }
+    
+    return jsonString;
+}
+
 + (void)setDebugLevel:(int)level {
     [CleverTap setDebugLevel:level];
 }
