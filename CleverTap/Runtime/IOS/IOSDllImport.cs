@@ -322,6 +322,9 @@ namespace CleverTapSDK.IOS {
         [DllImport("__Internal")]
         internal static extern byte CleverTap_customTemplateGetByteArg(string templateName, string argumentName);
 
+        [DllImport("__Internal")]
+        internal static extern byte CleverTap_syncCustomTemplates(bool isProduction);
+
         #endregion
     }
 }
