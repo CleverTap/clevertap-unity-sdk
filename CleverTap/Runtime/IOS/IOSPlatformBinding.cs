@@ -1,15 +1,37 @@
 #if UNITY_IOS
+using System;
+using System.Collections.Generic;
+using AOT;
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
-using System;
-using System.Collections.Generic;
+using static CleverTapSDK.IOS.IOSCallbackHandler;
 
-namespace CleverTapSDK.IOS {
+namespace CleverTapSDK.IOS
+{
     internal class IOSPlatformBinding : CleverTapPlatformBindings {
+
+        private static CleverTapCallbackHandler staticCallbackHandler;
+
         internal IOSPlatformBinding() {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<IOSCallbackHandler>(CleverTapGameObjectName.IOS_CALLBACK_HANDLER);
+            staticCallbackHandler = CallbackHandler;
             CleverTapLogger.Log("Start: CleverTap binding for iOS.");
+
+            IOSDllImport.CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTappedInternal);
+        }
+
+        // Must be static: IL2CPP does not support marshaling delegates that point to instance methods to native code.
+        [MonoPInvokeCallback(typeof(InAppNotificationButtonTapped))]
+        public static void InAppNotificationButtonTappedInternal(string customData)
+        {
+            if (staticCallbackHandler == null)
+            {
+                CleverTapLogger.LogError("CallbackHandler is null. Cannot call CleverTapInAppNotificationButtonTapped.");
+                return;
+            }
+
+            staticCallbackHandler.CleverTapInAppNotificationButtonTapped(customData);
         }
 
         internal override void ActivateProductConfig() {
