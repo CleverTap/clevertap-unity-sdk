@@ -444,6 +444,9 @@ namespace CleverTapSDK {
         public static int UserGetTotalVisits() =>
             cleverTapBinding.UserGetTotalVisits();
 
+        public static void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback) =>
+            cleverTapBinding.GetUserEventLog(eventName, callback);
+
         #endregion
 
         #region Methods - CleverTap Platform Variables

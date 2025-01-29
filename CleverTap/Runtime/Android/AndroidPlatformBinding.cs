@@ -472,6 +472,41 @@ namespace CleverTapSDK.Android {
         internal override int UserGetTotalVisits() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("userGetTotalVisits");
         }
+
+        internal override void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("getUserEventLog", eventName, new UserEventLogCallback(callback));
+        }
+
+        private class UserEventLogCallback: AndroidPluginCallback
+        {
+            private readonly CleverTapCallback<UserEventLog> Callback;
+            public UserEventLogCallback(CleverTapCallback<UserEventLog> callback)
+            {
+                Callback = callback;
+            }
+
+            internal override void Invoke(string message)
+            {
+                try
+                {
+                    var json = JSON.Parse(message);
+                    var userEventLog = new UserEventLog(
+                        json["eventName"],
+                        json["normalizedEventName"],
+                        json["firstTS"].AsLong,
+                        json["lastTS"].AsLong,
+                        json["countOfEvents"].AsInt,
+                        json["deviceID"]
+                    );
+                    Callback?.Invoke(userEventLog);
+                }
+                catch (Exception ex)
+                {
+                    CleverTapLogger.LogError($"Unable to parse user event log JSON: {ex}.");
+                }
+            }
+        }
     }
 }
 #endif

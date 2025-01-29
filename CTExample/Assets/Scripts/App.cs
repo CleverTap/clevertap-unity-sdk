@@ -58,6 +58,11 @@ namespace CTExample
             {
                 CleverTap.PromptForPushPermission(true);
             }
+
+            CleverTap.GetUserEventLog("App Launched", (UserEventLog userEventLog) =>
+            {
+                Logger.Log($"UserEventLog: {userEventLog.EventName}, {userEventLog.NormalizedEventName}, {userEventLog.FirstTS}, {userEventLog.LastTS}, {userEventLog.CountOfEvents}, {userEventLog.DeviceID}");
+            });
 #endif
         }
 

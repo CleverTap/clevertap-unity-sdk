@@ -3,6 +3,8 @@ package com.clevertap.unity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.clevertap.unity.callback.PluginCallback;
+
 public enum CleverTapUnityCallback {
     CLEVERTAP_PROFILE_INITIALIZED_CALLBACK("CleverTapProfileInitializedCallback", true),
     CLEVERTAP_PROFILE_UPDATES_CALLBACK("CleverTapProfileUpdatesCallback"),
