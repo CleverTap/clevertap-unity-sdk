@@ -3,6 +3,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (*InAppNotificationButtonTapped) (const char *);
+
 @interface CleverTapMessageSender : NSObject
 
 + (instancetype)sharedInstance;
@@ -11,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)flushBuffer:(CleverTapUnityCallbackInfo *)callbackInfo;
 - (void)disableBuffer:(CleverTapUnityCallbackInfo *)callbackInfo;
 - (void)resetAllBuffers;
+
+- (void)setInAppNotificationButtonTappedCallback:(InAppNotificationButtonTapped)callback;
 
 @end
 

@@ -7,6 +7,7 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 @interface CleverTapMessageSender()
 
 @property NSDictionary<CleverTapUnityCallbackInfo *, CleverTapMessageBuffer *> *messageBuffers;
+@property (nonatomic) InAppNotificationButtonTapped inAppNotificationButtonTappedCallback;
 
 @end
 
@@ -47,6 +48,15 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
             [buffer addItem:message];
             return;
         }
+        
+        if (callback == CleverTapUnityCallbackInAppNotificationButtonTapped) {
+            // if direct callback is set call it otherwise fallback to UnitySendMessage
+            if (self.inAppNotificationButtonTappedCallback) {
+                self.inAppNotificationButtonTappedCallback([message UTF8String]);
+                return;
+            }
+        }
+        
         [self sendToUnity:callbackInfo withMessage:message];
     }
 }
@@ -59,6 +69,7 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
         NSLog(@"Cannot send nil message to Unity. Callback: %@.", callbackInfo.callbackName);
         return;
     }
+    
     UnitySendMessage([kCleverTapGameObjectName UTF8String], [callbackInfo.callbackName UTF8String], [message UTF8String]);
 }
 
@@ -89,6 +100,10 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
     @synchronized (self) {
         self.messageBuffers = [self createBuffers:NO];
     }
+}
+
+- (void)setInAppNotificationButtonTappedCallback:(InAppNotificationButtonTapped)callback {
+    _inAppNotificationButtonTappedCallback = callback;
 }
 
 @end
