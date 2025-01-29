@@ -216,15 +216,19 @@ namespace CleverTapSDK {
         public static void EnablePersonalization() =>
             cleverTapBinding.EnablePersonalization();
 
+        [Obsolete("This method is deprecated, use GetUserEventLog(eventName, callback) instead.")]
         public static JSONClass EventGetDetail(string eventName) =>
             cleverTapBinding.EventGetDetail(eventName);
 
+        [Obsolete("This method is deprecated, use GetUserEventLog(eventName, callback) instead.")]
         public static int EventGetFirstTime(string eventName) =>
             cleverTapBinding.EventGetFirstTime(eventName);
 
+        [Obsolete("This method is deprecated, use GetUserEventLog(eventName, callback) instead.")]
         public static int EventGetLastTime(string eventName) =>
             cleverTapBinding.EventGetLastTime(eventName);
 
+        [Obsolete("This method is deprecated, use GetUserEventLog(eventName, callback) instead.")]
         public static int EventGetOccurrences(string eventName) =>
             cleverTapBinding.EventGetOccurrences(eventName);
 
@@ -432,20 +436,35 @@ namespace CleverTapSDK {
         public static void SuspendInAppNotifications() =>
             cleverTapBinding.SuspendInAppNotifications();
 
+        [Obsolete("This method is deprecated, use GetUserEventLogHistory() instead.")]
         public static JSONClass UserGetEventHistory() =>
             cleverTapBinding.UserGetEventHistory();
 
+        [Obsolete("This method is deprecated, use GetUserLastVisitTs() instead.")]
         public static int UserGetPreviousVisitTime() =>
             cleverTapBinding.UserGetPreviousVisitTime();
 
         public static int UserGetScreenCount() =>
             cleverTapBinding.UserGetScreenCount();
 
+        [Obsolete("This method is deprecated, use GetUserAppLaunchCount() instead.")]
         public static int UserGetTotalVisits() =>
             cleverTapBinding.UserGetTotalVisits();
 
         public static void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback) =>
             cleverTapBinding.GetUserEventLog(eventName, callback);
+
+        public static void GetUserEventLogCount(string eventName, CleverTapCallback<int> callback) =>
+            cleverTapBinding.GetUserEventLogCount(eventName, callback);
+
+        public static void GetUserAppLaunchCount(CleverTapCallback<int> callback) =>
+            cleverTapBinding.GetUserAppLaunchCount(callback);
+
+        public static void GetUserEventLogHistory(CleverTapCallback<Dictionary<string, UserEventLog>> callback) =>
+            cleverTapBinding.GetUserEventLogHistory(callback);
+
+        public static long GetUserLastVisitTs() =>
+            cleverTapBinding.GetUserLastVisitTs();
 
         #endregion
 
