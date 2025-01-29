@@ -1,6 +1,6 @@
 ﻿#if UNITY_IOS
 using System.Runtime.InteropServices;
-using CleverTapSDK.IOS;
+using static CleverTapSDK.IOS.IOSCallbackHandler;
 
 namespace CleverTapSDK.IOS {
     internal static class IOSDllImport {
@@ -9,6 +9,9 @@ namespace CleverTapSDK.IOS {
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_onCallbackAdded(string name);
+
+        [DllImport("__Internal")]
+        internal static extern byte CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTapped callback);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_launchWithCredentials(string accountID, string token);

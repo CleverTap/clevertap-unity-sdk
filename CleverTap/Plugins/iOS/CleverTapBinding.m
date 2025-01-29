@@ -1,4 +1,5 @@
 #import "CleverTapUnityManager.h"
+#import "CleverTapMessageSender.h"
 
 #pragma mark - Utils
 
@@ -130,6 +131,11 @@ char* clevertap_cStringCopy(const char* string) {
 void CleverTap_onCallbackAdded(const char* callbackName) {
     [[CleverTapUnityManager sharedInstance]
      onCallbackAdded:clevertap_stringToNSString(callbackName)];
+}
+
+void CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTapped callback) {
+    [[CleverTapMessageSender sharedInstance]
+     setInAppNotificationButtonTappedCallback:callback];
 }
 
 void CleverTap_setDebugLevel(int level) {
