@@ -45,7 +45,7 @@ repositories {
 dependencies {
     compileOnly fileTree('libs')
 
-    api 'com.clevertap.android:clevertap-android-sdk:7.1.1'
+    api 'com.clevertap.android:clevertap-android-sdk:7.1.2'
     implementation 'com.google.firebase:firebase-messaging:23.0.6'
     implementation 'androidx.core:core:1.9.0'
 }
