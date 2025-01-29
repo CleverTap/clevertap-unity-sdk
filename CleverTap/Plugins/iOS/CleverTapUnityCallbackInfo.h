@@ -6,7 +6,7 @@ typedef NS_ENUM(NSInteger, CleverTapUnityCallback) {
     CleverTapUnityCallbackProfileInitialized = 0,
     CleverTapUnityCallbackProfileUpdates = 1,
     CleverTapUnityCallbackDeepLink = 2,
-    CleverTapUnityCallbackPushReceived = 3,
+    CleverTapUnityCallbackPushNotificationTappedWithCustomExtras = 3,
     CleverTapUnityCallbackPushOpened = 4,
     CleverTapUnityCallbackInAppNotificationDismissed = 5,
     CleverTapUnityCallbackInAppNotificationButtonTapped = 6,

@@ -91,6 +91,26 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        private CleverTapCallbackWithMessageDelegate _OnCleverTapPushNotificationTappedWithCustomExtrasCallback;
+        public event CleverTapCallbackWithMessageDelegate OnCleverTapPushNotificationTappedWithCustomExtrasCallback
+        {
+            add
+            {
+                lock (CallbackLock)
+                {
+                    _OnCleverTapPushNotificationTappedWithCustomExtrasCallback += value;
+                    OnCallbackAdded(CleverTapPushNotificationTappedWithCustomExtrasCallback);
+                }
+            }
+            remove
+            {
+                lock (CallbackLock)
+                {
+                    _OnCleverTapPushNotificationTappedWithCustomExtrasCallback -= value;
+                }
+            }
+        }
+
         private CleverTapCallbackWithMessageDelegate _OnCleverTapInitCleverTapIdCallback;
         public event CleverTapCallbackWithMessageDelegate OnCleverTapInitCleverTapIdCallback
         {
@@ -554,18 +574,53 @@ namespace CleverTapSDK.Common {
             }
         }
 
-        // returns the data associated with the push notification
-        public virtual void CleverTapPushOpenedCallback(string message) {
-            CleverTapLogger.Log("unity received push opened: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
-            if (String.IsNullOrEmpty(message)) {
+        /// <summary>
+        /// Callback when a push notitication is opened.
+        /// </summary>
+        /// <param name="message">The data associated with the push notification message.</param>
+        public virtual void CleverTapPushOpenedCallback(string message)
+        {
+            CleverTapLogger.Log("unity received push opened: " + (!string.IsNullOrEmpty(message) ? message : "NULL"));
+            if (string.IsNullOrEmpty(message))
+            {
                 return;
             }
 
-            try {
+            try
+            {
                 JSONClass json = (JSONClass)JSON.Parse(message);
-                CleverTapLogger.Log(String.Format("push notification data is {0}", json));
+                CleverTapLogger.Log(string.Format("push notification data is {0}", json));
                 _OnCleverTapPushOpenedCallback?.Invoke(message);
-            } catch {
+            }
+            catch
+            {
+                CleverTapLogger.LogError("unable to parse json");
+            }
+        }
+
+        /// <summary>
+        /// IOS only callback. Called when a push notitication is opened.
+        /// </summary>
+        /// <param name="message">
+        /// The push notification user info without the "aps" param.
+        /// It contains extra key/value pairs set in the CleverTap dashboard for this notification
+        /// </param>
+        public virtual void CleverTapPushNotificationTappedWithCustomExtrasCallback(string message)
+        {
+            CleverTapLogger.Log("unity received push tapped with custom extras: " + (!string.IsNullOrEmpty(message) ? message : "NULL"));
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
+            try
+            {
+                JSONClass json = (JSONClass)JSON.Parse(message);
+                CleverTapLogger.Log(string.Format("push notification data is {0}", json));
+                _OnCleverTapPushNotificationTappedWithCustomExtrasCallback?.Invoke(message);
+            }
+            catch
+            {
                 CleverTapLogger.LogError("unable to parse json");
             }
         }

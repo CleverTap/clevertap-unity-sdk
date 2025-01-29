@@ -72,9 +72,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setPushToken:(NSData *)pushToken;
 - (void)setPushTokenAsString:(NSString *)pushTokenString;
-- (void)registerApplication:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification;
+- (void)didReceiveRemoteNotification:(NSDictionary *)notification
+                              isOpen:(BOOL)isOpen
+                    openInForeground:(BOOL)openInForeground;
+- (void)sendRemoteNotificationCallbackToUnity:(NSDictionary *)notification isOpen:(BOOL)isOpen;
 
-- (void)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication;
+- (void)handleOpenURL:(NSURL *)url;
 - (void)pushInstallReferrerSource:(NSString *)source
                            medium:(NSString *)medium
                          campaign:(NSString *)campaign;

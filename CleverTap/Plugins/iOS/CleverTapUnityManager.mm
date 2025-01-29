@@ -39,6 +39,7 @@
     if (self = [super init]) {
         self.cleverTap = [CleverTap sharedInstance];
         NSLog(@"CleverTap default instance: %@", self.cleverTap);
+        [self.cleverTap setLibrary:@"Unity"];
         self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
         [self.callbackHandler attachInstance:self.cleverTap];
         [self disableMessageBuffers];
@@ -269,13 +270,23 @@ const int PENDING_EVENTS_TIME_OUT = 5;
     [self.cleverTap setPushTokenAsString:pushTokenString];
 }
 
-- (void)handleNotificationWithData:(id)data {
-    [self.cleverTap handleNotificationWithData:data];
+- (void)didReceiveRemoteNotification:(NSDictionary *)notification isOpen:(BOOL)isOpen {
+    [self didReceiveRemoteNotification:notification isOpen:isOpen openInForeground:NO];
 }
 
-- (void)registerApplication:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification {
-    [self handleNotificationWithData:notification];
-    
+- (void)didReceiveRemoteNotification:(NSDictionary *)notification
+                              isOpen:(BOOL)isOpen
+           openInForeground:(BOOL)openInForeground {
+    if (openInForeground) {
+        [self.cleverTap handleNotificationWithData:notification openDeepLinksInForeground:YES];
+    } else {
+        [self.cleverTap handleNotificationWithData:notification];
+    }
+
+    [self sendRemoteNotificationCallbackToUnity:notification isOpen:isOpen];
+}
+
+- (void)sendRemoteNotificationCallbackToUnity:(NSDictionary *)notification isOpen:(BOOL)isOpen {
     // generate a new dictionary that rearrange the notification elements
     NSMutableDictionary *aps = [NSMutableDictionary dictionaryWithDictionary:[notification objectForKey:@"aps"]];
     
@@ -299,15 +310,14 @@ const int PENDING_EVENTS_TIME_OUT = 5;
         
         if (pushParsingError == nil) {
             [[CleverTapUnityCallbackHandler sharedInstance]
-             didReceiveRemoteNotification:application.applicationState data:data];
+             didReceiveRemoteNotification:data isOpen:isOpen];
         }
     }
 }
 
-
 #pragma mark - DeepLink Handling
 
-- (void)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
+- (void)handleOpenURL:(NSURL *)url {
     [[CleverTapUnityCallbackHandler sharedInstance] deepLinkCallback:[url absoluteString]];
 }
 

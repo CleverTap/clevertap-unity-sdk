@@ -20,6 +20,7 @@
 - (void)attachInstance:(CleverTap *)instance {
     [self registerListeners];
     
+    [instance setPushNotificationDelegate:self];
     [instance setInAppNotificationDelegate:self];
     [instance setDisplayUnitDelegate:self];
     [instance setPushPermissionDelegate:self];
@@ -53,12 +54,19 @@
 
 #pragma mark - Remote Notification
 
-- (void)didReceiveRemoteNotification:(UIApplicationState)applicationState data:(NSData *)data {
+- (void)didReceiveRemoteNotification:(NSData *)data isOpen:(BOOL)isOpen {
     NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
-    CleverTapUnityCallback callback = (applicationState == UIApplicationStateActive) ? CleverTapUnityCallbackPushReceived : CleverTapUnityCallbackPushOpened;
+    // CleverTapUnityCallbackPushReceived is not implemented and not supported
+    if (!isOpen)
+        return;
     
-    [self callUnityObject:callback withMessage:dataString];
+    [self callUnityObject:CleverTapUnityCallbackPushOpened withMessage:dataString];
+}
+
+- (void)pushNotificationTappedWithCustomExtras:(NSDictionary *)customExtras {
+    NSString *json = [self dictToJson:customExtras];
+    [self callUnityObject:CleverTapUnityCallbackPushNotificationTappedWithCustomExtras withMessage:json];
 }
 
 #pragma mark - Deeplink

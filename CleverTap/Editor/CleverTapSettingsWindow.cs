@@ -30,6 +30,9 @@ namespace CleverTapSDK.Private
                 return;
             }
 
+            float originalValue = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 180;
+
             GUILayout.Label(windowName, EditorStyles.boldLabel);
 
             settings.CleverTapAccountId = EditorGUILayout.TextField("CleverTapAccountId", settings.CleverTapAccountId);
@@ -38,8 +41,13 @@ namespace CleverTapSDK.Private
             settings.CleverTapProxyDomain = EditorGUILayout.TextField("CleverTapProxyDomain", settings.CleverTapProxyDomain);
             settings.CleverTapSpikyProxyDomain = EditorGUILayout.TextField("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
 
-            settings.CleverTapEnablePersonalization = EditorGUILayout.Toggle("CleverTapEnablePersonalization", settings.CleverTapEnablePersonalization);
+            GUILayout.Label("iOS specific settings", EditorStyles.boldLabel);
             settings.CleverTapDisableIDFV = EditorGUILayout.Toggle("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
+            settings.CleverTapIOSUseAutoIntegrate = EditorGUILayout.Toggle("UseAutoIntegrate", settings.CleverTapIOSUseAutoIntegrate);
+            settings.CleverTapIOSUseUNUserNotificationCenter = EditorGUILayout.Toggle("UseUNUserNotificationCenter", settings.CleverTapIOSUseUNUserNotificationCenter);
+            settings.CleverTapIOSPresentNotificationOnForeground = EditorGUILayout.Toggle("PresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
+
+            EditorGUIUtility.labelWidth = originalValue;
 
             if (GUILayout.Button("Save Settings"))
             {
