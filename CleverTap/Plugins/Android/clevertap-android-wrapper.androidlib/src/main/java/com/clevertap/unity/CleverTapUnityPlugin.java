@@ -21,7 +21,6 @@ import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.clevertap.android.sdk.variables.Var;
 import com.clevertap.unity.callback.PluginCallback;
 import com.clevertap.unity.callback.PluginIntCallback;
-import com.clevertap.unity.callback.PluginLongCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -442,11 +441,8 @@ public class CleverTapUnityPlugin {
         );
     }
 
-    public void getUserLastVisitTs(PluginLongCallback callback) {
-        backgroundExecutor.execute(
-                () -> clevertap.getUserLastVisitTs(),
-                callback::Invoke
-        );
+    public long getUserLastVisitTs() {
+        return clevertap.getUserLastVisitTs();
     }
 
     public String eventGetDetail(final String event) {
