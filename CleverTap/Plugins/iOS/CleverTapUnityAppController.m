@@ -14,9 +14,6 @@
 #pragma mark - CleverTapUnityAppController
 @implementation CleverTapUnityAppController
 
-static NSDictionary *notificationFromLaunch;
-static NSTimeInterval launchTime;
-
 #pragma mark - application:didFinishLaunchingWithOptions:
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Register Custom Templates
@@ -49,13 +46,6 @@ static NSTimeInterval launchTime;
     // Initialize the CleverTapUnityManager
     [CleverTapUnityManager sharedInstance];
     
-    // Handle app launched with remote notification
-    NSDictionary *userInfo = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (userInfo) {
-        notificationFromLaunch = userInfo;
-        launchTime = [[NSDate date] timeIntervalSince1970];
-        [[CleverTapUnityManager sharedInstance] sendRemoteNotificationCallbackToUnity:userInfo isOpen:YES];
-    }
     // Return super application:didFinishLaunchingWithOptions:
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
@@ -85,16 +75,8 @@ static NSTimeInterval launchTime;
     [[CleverTapUnityManager sharedInstance] didReceiveRemoteNotification:userInfo
                                                                   isOpen:YES openInForeground:YES];
 #else
-    // Prevent duplicate handling in case the app is launched with the remote notification
-    BOOL isNotificationFromLaunch = notificationFromLaunch &&
-    [notificationFromLaunch isEqualToDictionary:userInfo] &&
-    launchTime + 1.000 > [[NSDate date] timeIntervalSince1970];
-    
-    if (!isNotificationFromLaunch) {
-        [[CleverTapUnityManager sharedInstance]
-         sendRemoteNotificationCallbackToUnity:userInfo isOpen:YES];
-    }
-    notificationFromLaunch = nil;
+    [[CleverTapUnityManager sharedInstance]
+     sendRemoteNotificationCallbackToUnity:userInfo isOpen:YES];
 #endif
     completionHandler();
 }
