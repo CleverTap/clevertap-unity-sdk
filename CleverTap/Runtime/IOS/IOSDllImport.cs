@@ -11,16 +11,7 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_onCallbackAdded(string name);
 
         [DllImport("__Internal")]
-        internal static extern byte CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTapped callback);
-
-        [DllImport("__Internal")]
-        internal static extern void CleverTap_launchWithCredentials(string accountID, string token);
-
-        [DllImport("__Internal")]
-        internal static extern void CleverTap_launchWithCredentialsForRegion(string accountID, string token, string region);
-
-        [DllImport("__Internal")]
-        internal static extern void CleverTap_launchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string  spikyProxyDomain);
+        internal static extern void CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTapped callback);
 
         [DllImport("__Internal")]
         internal static extern void CleverTap_onUserLogin(string properties);
