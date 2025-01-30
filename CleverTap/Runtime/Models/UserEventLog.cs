@@ -68,6 +68,12 @@ namespace CleverTapSDK
             try
             {
                 var json = JSON.Parse(message);
+                if (json.Count == 0)
+                {
+                    // JSON is an empty object, return null.
+                    return null;
+                }
+
                 var userEventLog = new UserEventLog(
                     json["eventName"],
                     json["normalizedEventName"],
