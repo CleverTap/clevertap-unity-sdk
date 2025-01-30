@@ -69,7 +69,7 @@ public class JsonConverter {
     }
 
     @NonNull
-    public static <T> JSONObject mapToJson(Map<String, T> map, Function.Transformer<T, Object> mapper) {
+    public static <T> JSONObject mapToJson(Map<String, T> map, @NonNull Function.Transformer<T, Object> mapper) {
         JSONObject json = new JSONObject();
         if (map == null) {
             return json;
