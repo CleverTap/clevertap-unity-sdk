@@ -401,6 +401,8 @@ namespace CleverTapSDK.Common {
         }
 
         private CleverTapCallbackWithMessageDelegate _OnCleverTapFeatureFlagsUpdated;
+
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         public event CleverTapCallbackWithMessageDelegate OnCleverTapFeatureFlagsUpdated
         {
             add
@@ -707,25 +709,25 @@ namespace CleverTapSDK.Common {
             _OnCleverTapNativeDisplayUnitsUpdated?.Invoke(message);
         }
 
-        // invoked when Product Experiences - Product Config are fetched 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public virtual void CleverTapProductConfigFetched(string message) {
             CleverTapLogger.Log("unity received product config fetched: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
             _OnCleverTapProductConfigFetched?.Invoke(message);
         }
 
-        // invoked when Product Experiences - Product Config are activated
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public virtual void CleverTapProductConfigActivated(string message) {
             CleverTapLogger.Log("unity received product config activated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
             _OnCleverTapProductConfigActivated?.Invoke(message);
         }
 
-        // invoked when Product Experiences - Product Config are initialized
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public virtual void CleverTapProductConfigInitialized(string message) {
             CleverTapLogger.Log("unity received product config initialized: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
             _OnCleverTapProductConfigInitialized?.Invoke(message);
         }
 
-        // invoked when Product Experiences - Feature Flags are updated 
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         public virtual void CleverTapFeatureFlagsUpdated(string message) {
             CleverTapLogger.Log("unity received feature flags updated: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
             _OnCleverTapFeatureFlagsUpdated?.Invoke(message);

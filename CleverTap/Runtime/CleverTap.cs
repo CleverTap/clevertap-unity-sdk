@@ -128,6 +128,7 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigInitialized -= value;
         }
 
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapFeatureFlagsUpdated {
             add => cleverTapCallbackHandler.OnCleverTapFeatureFlagsUpdated += value;
             remove => cleverTapCallbackHandler.OnCleverTapFeatureFlagsUpdated -= value;
