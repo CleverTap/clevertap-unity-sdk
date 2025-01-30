@@ -1,21 +1,39 @@
-using CleverTapSDK.Utilities;
 using System;
 using System.Collections.Generic;
+using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK
 {
     public class UserEventLog
     {
+        /// <summary>
+        /// The name of the event.
+        /// </summary>
         public string EventName { get; }
 
+        /// <summary>
+        /// The normalized event name.
+        /// </summary>
         public string NormalizedEventName { get; }
 
+        /// <summary>
+        /// The first time the event was recorded as timestamp.
+        /// </summary>
         public long FirstTS { get; }
 
+        /// <summary>
+        /// The last time the event was recorded as timestamp.
+        /// </summary>
         public long LastTS { get; }
 
+        /// <summary>
+        /// The number of times the event was recorded.
+        /// </summary>
         public int CountOfEvents { get; }
 
+        /// <summary>
+        /// The deviceID the event is recorded for.
+        /// </summary>
         public string DeviceID { get; }
 
         public UserEventLog(string eventName, string normalizedEventName, long firstTS, long lastTS, int countOfEvents, string deviceID)
@@ -41,6 +59,12 @@ namespace CleverTapSDK
 
         public static UserEventLog Parse(string message)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                CleverTapLogger.LogError("Cannot parse null or empty UserEventLog JSON string.");
+                return null;
+            }
+
             try
             {
                 var json = JSON.Parse(message);
@@ -56,7 +80,7 @@ namespace CleverTapSDK
             }
             catch (Exception ex)
             {
-                CleverTapLogger.LogError($"Unable to parse user event log JSON: {ex}.");
+                CleverTapLogger.LogError($"Unable to parse UserEventLog JSON: {ex}.");
             }
             return null;
         }
@@ -64,6 +88,12 @@ namespace CleverTapSDK
         public static Dictionary<string, UserEventLog> ParseLogsDictionary(string jsonString)
         {
             var userEventLogs = new Dictionary<string, UserEventLog>();
+            if (string.IsNullOrEmpty(jsonString))
+            {
+                CleverTapLogger.LogError("Cannot parse null or empty UserEventLogs History JSON string.");
+                return userEventLogs;
+            }
+
             try
             {
                 var json = JSON.Parse(jsonString);
