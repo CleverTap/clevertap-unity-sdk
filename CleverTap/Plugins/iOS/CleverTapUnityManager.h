@@ -49,12 +49,6 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (NSString *)profileGetCleverTapID;
 - (NSString *)profileGetCleverTapAttributionIdentifier;
 
-- (void)getUserEventLog:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback;
-- (void)getUserAppLaunchCount:(NSString *)key withCallback:(UserEventLogCallback)callback;
-- (void)getUserEventLogCount:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback;
-- (void)getUserEventLogHistory:(NSString *)key withCallback:(UserEventLogCallback)callback;
-- (long)getUserLastVisitTs;
-
 #pragma mark - User Action Events
 
 - (void)recordScreenView:(NSString *)screenName;
@@ -62,19 +56,25 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (void)recordEvent:(NSString *)event withProps:(NSDictionary *)properties;
 - (void)recordChargedEventWithDetails:(NSDictionary *)chargeDetails andItems:(NSArray *)items;
 
-- (NSTimeInterval)eventGetFirstTime:(NSString *)event;
-- (NSTimeInterval)eventGetLastTime:(NSString *)event;
-- (int)eventGetOccurrences:(NSString *)event;
-- (NSDictionary *)userGetEventHistory;
-- (CleverTapEventDetail *)eventGetDetail:(NSString *)event;
+- (NSTimeInterval)eventGetFirstTime:(NSString *)event __attribute__((deprecated("Deprecated, use getUserEventLog instead")));
+- (NSTimeInterval)eventGetLastTime:(NSString *)event __attribute__((deprecated("Deprecated, use getUserEventLog instead")));
+- (int)eventGetOccurrences:(NSString *)event __attribute__((deprecated("Deprecated, use getUserEventLogCount instead")));
+- (NSDictionary *)userGetEventHistory __attribute__((deprecated("Deprecated, use getUserEventLogHistory instead")));
+- (CleverTapEventDetail *)eventGetDetail:(NSString *)event __attribute__((deprecated("Deprecated, use getUserEventLog instead")));
+
+- (void)getUserEventLog:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (void)getUserAppLaunchCount:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (void)getUserEventLogCount:(NSString *)eventName forKey:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (void)getUserEventLogHistory:(NSString *)key withCallback:(UserEventLogCallback)callback;
+- (long)getUserLastVisitTs;
 
 #pragma mark - User Session
 
 - (NSTimeInterval)sessionGetTimeElapsed;
 - (CleverTapUTMDetail *)sessionGetUTMDetails;
-- (int)userGetTotalVisits;
+- (int)userGetTotalVisits __attribute__((deprecated("Deprecated, use getUserAppLaunchCount instead")));
 - (int)userGetScreenCount;
-- (NSTimeInterval)userGetPreviousVisitTime;
+- (NSTimeInterval)userGetPreviousVisitTime __attribute__((deprecated("Deprecated, use getUserLastVisitTs instead")));
 
 #pragma mark - Push Notifications
 
@@ -138,11 +138,13 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (void)resumeInAppNotifications;
 
 #pragma mark - Push Primer
+
 - (void)promptForPushPermission:(BOOL)showFallbackSettings;
 - (void)promptPushPrimer:(NSDictionary *)json;
 - (void)isPushPermissionGranted;
 
 #pragma mark - Variables
+
 - (void)syncVariables;
 - (void)syncVariables:(BOOL)isProduction;
 - (void)fetchVariables:(int)callbackId;
@@ -153,10 +155,12 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (NSString *)getFileVariableValue:(NSString *)name;
 
 #pragma mark - Client-side In-Apps
+
 - (void)fetchInApps:(int)callbackId;
 - (void)clearInAppResources:(BOOL)expiredOnly;
 
 #pragma mark - Custom Templates
+
 - (void)customTemplateSetPresented:(NSString *)name;
 - (void)customTemplateSetDismissed:(NSString *)name;
 - (void)customTemplateTriggerAction:(NSString *)templateName named:(NSString *)argumentName;
