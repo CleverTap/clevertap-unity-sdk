@@ -1,4 +1,3 @@
-using System.Collections;
 using CleverTapSDK;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
@@ -8,10 +7,7 @@ namespace CTExample
 {
     public class App : MonoBehaviour
     {
-        public string accountName = "ACCOUNT_NAME";
-        public string accountId = "ACCOUNT_ID";
-        [SerializeField] private string accountToken = "ACCOUNT_TOKEN";
-        [SerializeField] private string accountRegion = "";
+        public bool promptPushPermissionOnLaunch;
 
         void Awake()
         {
@@ -19,25 +15,13 @@ namespace CTExample
             Logger.Log($"Setting targetFrameRate to: {(int)Screen.currentResolution.refreshRateRatio.value}");
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
 #endif
-
             // Unity internal Logs
             CleverTap.SetLogLevel(LogLevel.Debug);
             // SDK logs
             CleverTap.SetDebugLevel(3);
+
             // Launch CleverTap
-            if (!string.IsNullOrEmpty(accountRegion))
-            {
-                CleverTap.LaunchWithCredentialsForRegion(accountId, accountToken, accountRegion);
-            }
-            else
-            {
-#if UNITY_WEBGL && !UNITY_EDITOR
-                Logger.LogError("Account region is required for WebGL builds. Ensure your app is also enabled for WebGL.");
-                return;
-#endif
-                CleverTap.LaunchWithCredentials(accountId, accountToken);
-            }
-            Logger.Log($"Launching \"{accountName}\" with accountId: {accountId}, accountToken: {accountToken}, accountRegion: {accountRegion}.");
+            LaunchCleverTap();
 
             // Add listeners for events that may be triggered on app launch
             CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
@@ -54,49 +38,46 @@ namespace CTExample
             CleverTap.OnCustomTemplateClose += CleverTapCustomTemplateClose;
             CleverTap.OnCustomFunctionPresent += CleverTapCustomFunctionPresent;
 
-#if UNITY_ANDROID
-            if (!CleverTap.IsPushPermissionGranted())
+            // Prompt for Push permissions
+            if (promptPushPermissionOnLaunch)
             {
                 CleverTap.PromptForPushPermission(true);
             }
-#endif
-
-            StartCoroutine(GetEventLogs());
         }
 
-        IEnumerator GetEventLogs()
+        #region Launch CleverTap
+        private void LaunchCleverTap()
         {
-            yield return new WaitForSeconds(1);
+            var settings = CleverTapSettingsRuntime.Instance;
 
-            CleverTap.GetUserEventLog("App Launched", (userEventLog) =>
+            if (settings == null)
             {
-                Logger.Log($"Get User Event Log: {userEventLog?.ToString()}");
-            });
+                Debug.LogError("CleverTapSettings have not been set");
+                return;
+            }
 
-            CleverTap.GetUserEventLogCount("App Launched", (count) =>
+            // LaunchWithCredentials is not needed on iOS and Android
+#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
+            if (!string.IsNullOrEmpty(settings.CleverTapAccountToken))
             {
-                Logger.Log($"Get User Event Log Count for: \"App Launched\": {count}");
-            });
-
-            CleverTap.GetUserAppLaunchCount((count) =>
+                CleverTap.LaunchWithCredentialsForRegion(settings.CleverTapAccountId, settings.CleverTapAccountToken, settings.CleverTapAccountRegion);
+            }
+            else
             {
-                Logger.Log($"Get User AppLaunch Count: {count}");
-            });
-
-            CleverTap.GetUserEventLogHistory((history) =>
-            {
-                Logger.Log($"Get User Event Log History: \n");
-                foreach (var item in history)
-                {
-                    var userEventLog = item.Value;
-                    Logger.Log(userEventLog?.ToString());
-                }
-            });
-
-            Logger.Log($"Get User Last Visit Ts: {CleverTap.GetUserLastVisitTs()}");
+#if UNITY_WEBGL && !UNITY_EDITOR
+                Logger.LogError("Account region is required for WebGL builds. Ensure your app is also enabled for WebGL.");
+                return;
+#endif
+                CleverTap.LaunchWithCredentials(settings.CleverTapAccountId, settings.CleverTapAccountToken);
+            }
+#endif
+            Logger.Log($"Launching with accountId: {settings.CleverTapAccountId}," +
+                $" accountToken: {settings.CleverTapAccountToken}," +
+                $" accountRegion: {settings.CleverTapAccountRegion}.");
         }
+        #endregion
 
-        #region Callbacks on app launch
+        #region Callbacks on App Launch
         private void CleverTapPushOpenedCallback(string message)
         {
             Logger.Log($"Push Opened callback: {message}");
@@ -120,6 +101,7 @@ namespace CTExample
         private void CleverTapInAppNotificationButtonTapped(string message)
         {
             Logger.Log($"InAppNotification ButtonTapped: {message}");
+            CleverTap.SuspendInAppNotifications();
         }
 
         private void CleverTapInAppNotificationDismissedCallback(string message)
@@ -149,5 +131,11 @@ namespace CTExample
             context.SetDismissed();
         }
         #endregion
+
+        private void Reset()
+        {
+            // Set default value to be true
+            promptPushPermissionOnLaunch = true;
+        }
     }
 }
