@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using CleverTapSDK.Utilities;
+using System.IO;
 
 namespace CleverTapSDK.Private
 {
@@ -47,16 +49,18 @@ namespace CleverTapSDK.Private
             settings.CleverTapIOSUseUNUserNotificationCenter = EditorGUILayout.Toggle("UseUNUserNotificationCenter", settings.CleverTapIOSUseUNUserNotificationCenter);
             settings.CleverTapIOSPresentNotificationOnForeground = EditorGUILayout.Toggle("PresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
 
+            GUILayout.Label("Other settings", EditorStyles.boldLabel);
+            settings.CleverTapSettingsSaveToJSON = EditorGUILayout.Toggle("Save to streaming assets", settings.CleverTapSettingsSaveToJSON);
+
             EditorGUIUtility.labelWidth = originalValue;
 
             if (GUILayout.Button("Save Settings"))
             {
                 SaveCleverTapSettings();
-                Debug.Log($"{windowName} saved!");
             }
         }
 
-        private static CleverTapSettings LoadCleverTapSettings()
+        private CleverTapSettings LoadCleverTapSettings()
         {
             try
             {
@@ -73,6 +77,14 @@ namespace CleverTapSDK.Private
                     // Refresh the database to make sure the new asset is recognized
                     AssetDatabase.Refresh();
                 }
+                else
+                {
+                    if (settings.CleverTapSettingsSaveToJSON && !File.Exists(CleverTapSettings.jsonPath))
+                    {
+                        SaveSettingsToJson();
+                    }
+                }
+
                 return settings;
             }
             catch (System.Exception ex)
@@ -87,6 +99,34 @@ namespace CleverTapSDK.Private
             // Save settings to .asset file
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssetIfDirty(settings);
+            Debug.Log($"CleverTapSettings saved to {CleverTapSettings.settingsPath}");
+
+            // Save or Delete settings JSON file
+            if (settings.CleverTapSettingsSaveToJSON)
+            {
+                SaveSettingsToJson();
+            }
+            else
+            {
+                DeleteSettingsJson();
+            }
+        }
+
+        private void SaveSettingsToJson()
+        {
+            string json = JsonUtility.ToJson(settings, true);
+            Directory.CreateDirectory(Application.streamingAssetsPath);
+            File.WriteAllText(CleverTapSettings.jsonPath, json);
+            Debug.Log($"CleverTap settings saved to {CleverTapSettings.jsonPath}");
+        }
+
+        private void DeleteSettingsJson()
+        {
+            if (File.Exists(CleverTapSettings.jsonPath))
+            {
+                File.Delete(CleverTapSettings.jsonPath);
+                Debug.Log($"CleverTap settings deleted from: {CleverTapSettings.jsonPath}");
+            }
         }
     }
 }
