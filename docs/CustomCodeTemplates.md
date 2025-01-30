@@ -43,7 +43,10 @@ The templates are defined in а JSON format with the following scheme:
 }
 ```
 The JSON definitions should be placed in one or more files in `Assets/CleverTap/CustomTemplates`. They will be copied to the exported projects and automatically registered with the SDK.
+
 For Android the definitions will be within `clevertap-android-wrapper.androidlib/assets/CleverTap/CustomTemplates` and they will be registered through `CleverTapUnityAPI.initialize(Context context)`. All of this is handled automatically if `CleverTapUnityApplication` is used for the application class.
+
+For iOS the definitions are copied to the project `CleverTap/CustomTemplates` folder which is added to the "Unity-iPhone" target and "Copy Bundle Resources" Build Phase. The templates are automatically registered through the `CleverTapUnityAppController.mm`.
 
 For a working example, see the CTExample project: `CTExample/Assets/CleverTap/templates.json`.
 
