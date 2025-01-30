@@ -283,24 +283,52 @@ namespace CleverTapSDK {
         public static double GetProductConfigLastFetchTimeStamp() =>
             cleverTapBinding.GetProductConfigLastFetchTimeStamp();
 
+        /// <summary>
+        /// Get the value of a product config key. This method only works on iOS Platform.
+        /// Use <see cref="GetProductConfigString(string)"/>, <see cref="GetProductConfigBoolean(string)"/>,
+        /// <see cref="GetProductConfigLong(string)"/>, or <see cref="GetProductConfigDouble(string)"/>
+        /// for Android Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
+        /// <returns>The value for the key as JSONClass</returns>
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static JSONClass GetProductConfigValueFor(string key) =>
             cleverTapBinding.GetProductConfigValueFor(key);
 
+        /// <summary>
+        /// Get the value of a string product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static string GetProductConfigString(string key) =>
             cleverTapBinding.GetProductConfigString(key);
 
+        /// <summary>
+        /// Get the value of a bool product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static bool? GetProductConfigBoolean(string key) =>
             cleverTapBinding.GetProductConfigBoolean(key);
         
 
+        /// <summary>
+        /// Get the value of a long product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static long? GetProductConfigLong(string key) =>
             cleverTapBinding.GetProductConfigLong(key);
         
 
+        /// <summary>
+        /// Get the value of a long product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static double? GetProductConfigDouble(string key) =>
             cleverTapBinding.GetProductConfigDouble(key);    
