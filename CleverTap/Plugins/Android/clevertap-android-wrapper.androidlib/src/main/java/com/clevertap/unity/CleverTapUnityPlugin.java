@@ -841,64 +841,76 @@ public class CleverTapUnityPlugin {
     }
 
     //Feature Flags
-    public Boolean isFeatureFlagInitialized() {
-        return clevertap.featureFlag().isInitialized();
-    }
-
-    public void fetchFeatureFlags() {
-        clevertap.featureFlag().fetchFeatureFlags();
-    }
-
+    @Deprecated
     public Boolean getFeatureFlag(String key, Boolean defaultValue) {
         return clevertap.featureFlag().get(key, defaultValue);
     }
 
     //Product Config
-    public Boolean isProductConfigInitialized() {
-        return clevertap.productConfig().isInitialized();
+    @Deprecated
+    public void setProductConfigMapDefaults(String jsonMap) {
+        Map<String, Object> map = JsonConverter.fromJsonWithConvertedDateValues(jsonMap);
+        if (map == null) {
+            return;
+        }
+        clevertap.productConfig().setDefaults(new HashMap<>(map));
     }
 
-    public void setMapDefaults(HashMap<String, Object> map) {
-        clevertap.productConfig().setDefaults(map);
+    @Deprecated
+    public void setProductConfigMinimumFetchInterval(long fetchIntervalSeconds) {
+        clevertap.productConfig().setMinimumFetchIntervalInSeconds(fetchIntervalSeconds);
     }
 
-    public void fetch() {
+    @Deprecated
+    public void fetchProductConfig() {
         clevertap.productConfig().fetch();
     }
 
-    public void fetch(long minimumIntervalInSeconds) {
+    @Deprecated
+    public void fetchProductConfigWithMinimalInterval(long minimumIntervalInSeconds) {
         clevertap.productConfig().fetch(minimumIntervalInSeconds);
     }
 
-    public void fetchAndActivate() {
+    @Deprecated
+    public void fetchAndActivateProductConfig() {
         clevertap.productConfig().fetchAndActivate();
     }
 
-    public void activate() {
+    @Deprecated
+    public void activateProductConfig() {
         clevertap.productConfig().activate();
     }
 
-    public String getString(String key) {
+    @Deprecated
+    public String getProductConfigString(String key) {
         return clevertap.productConfig().getString(key);
     }
 
-    public Boolean getBoolean(String key) {
-        return clevertap.productConfig().getBoolean(key);
+    @Deprecated
+    public String getProductConfigBoolean(String key) {
+        Boolean config = clevertap.productConfig().getBoolean(key);
+        return config == null ? null : config.toString();
     }
 
-    public long getLong(String key) {
-        return clevertap.productConfig().getLong(key);
+    @Deprecated
+    public String getProductConfigLong(String key) {
+        Long config = clevertap.productConfig().getLong(key);
+        return config == null ? null : config.toString();
     }
 
-    public Double getDouble(String key) {
-        return clevertap.productConfig().getDouble(key);
+    @Deprecated
+    public String getProductConfigDouble(String key) {
+        Double config = clevertap.productConfig().getDouble(key);
+        return config == null ? null : config.toString();
     }
 
+    @Deprecated
     public void productConfigReset() {
         clevertap.productConfig().reset();
     }
 
-    public long getLastFetchTimeStampInMillis() {
+    @Deprecated
+    public long getProductConfigLastFetchTimeStampInMillis() {
         return clevertap.productConfig().getLastFetchTimeStampInMillis();
     }
 

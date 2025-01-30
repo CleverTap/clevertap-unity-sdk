@@ -110,16 +110,19 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnCleverTapNativeDisplayUnitsUpdated -= value;
         }
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigFetched {
             add => cleverTapCallbackHandler.OnCleverTapProductConfigFetched += value;
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigFetched -= value;
         }
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigActivated {
             add => cleverTapCallbackHandler.OnCleverTapProductConfigActivated += value;
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigActivated -= value;
         }
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigInitialized {
             add => cleverTapCallbackHandler.OnCleverTapProductConfigInitialized += value;
             remove => cleverTapCallbackHandler.OnCleverTapProductConfigInitialized -= value;
@@ -171,6 +174,7 @@ namespace CleverTapSDK {
 
         #region Methods - CleverTap Platform Bindings
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void ActivateProductConfig() =>
             cleverTapBinding.ActivateProductConfig();
 
@@ -232,12 +236,15 @@ namespace CleverTapSDK {
         public static int EventGetOccurrences(string eventName) =>
             cleverTapBinding.EventGetOccurrences(eventName);
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void FetchAndActivateProductConfig() =>
             cleverTapBinding.FetchAndActivateProductConfig();
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void FetchProductConfig() =>
             cleverTapBinding.FetchProductConfig();
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void FetchProductConfigWithMinimumInterval(double minimumInterval) =>
             cleverTapBinding.FetchProductConfigWithMinimumInterval(minimumInterval);
 
@@ -256,6 +263,7 @@ namespace CleverTapSDK {
         public static JSONClass GetDisplayUnitForID(string unitID) =>
             cleverTapBinding.GetDisplayUnitForID(unitID);
 
+        [Obsolete("Feature flags are deprecated, use variables instead.")]
         public static bool GetFeatureFlag(string key, bool defaultValue) =>
             cleverTapBinding.GetFeatureFlag(key, defaultValue);
 
@@ -271,11 +279,59 @@ namespace CleverTapSDK {
         public static int GetInboxMessageUnreadCount() =>
             cleverTapBinding.GetInboxMessageUnreadCount();
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static double GetProductConfigLastFetchTimeStamp() =>
             cleverTapBinding.GetProductConfigLastFetchTimeStamp();
 
+        /// <summary>
+        /// Get the value of a product config key. This method only works on iOS Platform.
+        /// Use <see cref="GetProductConfigString(string)"/>, <see cref="GetProductConfigBoolean(string)"/>,
+        /// <see cref="GetProductConfigLong(string)"/>, or <see cref="GetProductConfigDouble(string)"/>
+        /// for Android Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
+        /// <returns>The value for the key as JSONClass</returns>
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static JSONClass GetProductConfigValueFor(string key) =>
             cleverTapBinding.GetProductConfigValueFor(key);
+
+        /// <summary>
+        /// Get the value of a string product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
+        [Obsolete("Product config is deprecated, use variables instead.")]
+        public static string GetProductConfigString(string key) =>
+            cleverTapBinding.GetProductConfigString(key);
+
+        /// <summary>
+        /// Get the value of a bool product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
+        [Obsolete("Product config is deprecated, use variables instead.")]
+        public static bool? GetProductConfigBoolean(string key) =>
+            cleverTapBinding.GetProductConfigBoolean(key);
+        
+
+        /// <summary>
+        /// Get the value of a long product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
+        [Obsolete("Product config is deprecated, use variables instead.")]
+        public static long? GetProductConfigLong(string key) =>
+            cleverTapBinding.GetProductConfigLong(key);
+        
+
+        /// <summary>
+        /// Get the value of a long product config key. This method only works on Android Platform.
+        /// Use <see cref="GetProductConfigValueFor(string)"/> for iOS Platform.
+        /// </summary>
+        /// <param name="key"> The key for the product config</param>
+        [Obsolete("Product config is deprecated, use variables instead.")]
+        public static double? GetProductConfigDouble(string key) =>
+            cleverTapBinding.GetProductConfigDouble(key);    
 
         public static JSONArray GetUnreadInboxMessages() =>
             cleverTapBinding.GetUnreadInboxMessages();
@@ -391,6 +447,7 @@ namespace CleverTapSDK {
         public static void RegisterPush() =>
             cleverTapBinding.RegisterPush();
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void ResetProductConfig() =>
             cleverTapBinding.ResetProductConfig();
 
@@ -418,12 +475,15 @@ namespace CleverTapSDK {
         public static void SetOptOut(bool enabled) =>
             cleverTapBinding.SetOptOut(enabled);
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void SetProductConfigDefaults(Dictionary<string, object> defaults) =>
             cleverTapBinding.SetProductConfigDefaults(defaults);
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void SetProductConfigDefaultsFromPlistFileName(string fileName) =>
             cleverTapBinding.SetProductConfigDefaultsFromPlistFileName(fileName);
 
+        [Obsolete("Product config is deprecated, use variables instead.")]
         public static void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) =>
             cleverTapBinding.SetProductConfigMinimumFetchInterval(minimumFetchInterval);
 

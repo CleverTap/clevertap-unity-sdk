@@ -34,6 +34,7 @@ namespace CleverTapSDK.IOS
             staticCallbackHandler.CleverTapInAppNotificationButtonTapped(customData);
         }
 
+        [Obsolete]
         internal override void ActivateProductConfig() {
             IOSDllImport.CleverTap_activateProductConfig();
         }
@@ -94,14 +95,17 @@ namespace CleverTapSDK.IOS
             return IOSDllImport.CleverTap_eventGetOccurrences(eventName);
         }
 
+        [Obsolete]
         internal override void FetchAndActivateProductConfig() {
             IOSDllImport.CleverTap_fetchAndActivateProductConfig();
         }
 
+        [Obsolete]
         internal override void FetchProductConfig() {
             IOSDllImport.CleverTap_fetchProductConfig();
         }
 
+        [Obsolete]
         internal override void FetchProductConfigWithMinimumInterval(double minimumInterval) {
             IOSDllImport.CleverTap_fetchProductConfigWithMinimumInterval(minimumInterval);
         }
@@ -206,10 +210,12 @@ namespace CleverTapSDK.IOS
             return IOSDllImport.CleverTap_getInboxMessageUnreadCount();
         }
 
+        [Obsolete]
         internal override double GetProductConfigLastFetchTimeStamp() {
             return IOSDllImport.CleverTap_getProductConfigLastFetchTimeStamp();
         }
 
+        [Obsolete]
         internal override JSONClass GetProductConfigValueFor(string key) {
             string jsonString = IOSDllImport.CleverTap_getProductConfigValueFor(key);
             JSONClass json;
@@ -407,6 +413,7 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_registerPush();
         }
 
+        [Obsolete]
         internal override void ResetProductConfig() {
             IOSDllImport.CleverTap_resetProductConfig();
         }
@@ -451,15 +458,18 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_setOptOut(enabled);
         }
 
+        [Obsolete]
         internal override void SetProductConfigDefaults(Dictionary<string, object> defaults) {
             var defaultsString = Json.Serialize(defaults);
             IOSDllImport.CleverTap_setProductConfigDefaults(defaultsString);
         }
 
+        [Obsolete]
         internal override void SetProductConfigDefaultsFromPlistFileName(string fileName) {
             IOSDllImport.CleverTap_setProductConfigDefaultsFromPlistFileName(fileName);
         }
 
+        [Obsolete]
         internal override void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
             IOSDllImport.CleverTap_setProductConfigMinimumFetchInterval(minimumFetchInterval);
         }
