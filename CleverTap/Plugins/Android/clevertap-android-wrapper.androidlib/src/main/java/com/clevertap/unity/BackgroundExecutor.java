@@ -6,8 +6,6 @@ import android.os.Looper;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import kotlin.jvm.functions.Function0;
-
 public class BackgroundExecutor {
 
     private final Executor executor = Executors.newSingleThreadExecutor(runnable -> {
@@ -18,16 +16,14 @@ public class BackgroundExecutor {
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    public <T> void execute(final Function0<T> backgroundWork,
-                            final ResultCallback<T> resultCallback) {
+    /**
+     * Execute work in a background thread and publish the result on the main thread.
+     */
+    public <T> void execute(final Function.Producer<T> backgroundWork,
+                            final Function.Consumer<T> resultCallback) {
         executor.execute(() -> {
-            T result = backgroundWork.invoke();
-            mainHandler.post(() -> resultCallback.onResult(result));
+            T result = backgroundWork.apply();
+            mainHandler.post(() -> resultCallback.apply(result));
         });
-    }
-
-    @FunctionalInterface
-    public interface ResultCallback<T> {
-        void onResult(T result);
     }
 }

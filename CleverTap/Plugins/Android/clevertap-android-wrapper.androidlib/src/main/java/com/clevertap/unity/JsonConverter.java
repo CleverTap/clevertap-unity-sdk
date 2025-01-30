@@ -18,9 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function1;
-
 public class JsonConverter {
     private static final String DATE_PREFIX = "ct_date_";
 
@@ -72,14 +69,14 @@ public class JsonConverter {
     }
 
     @NonNull
-    public static <T> JSONObject mapToJson(Map<String, T> map, Function1<T, Object> mapper) {
+    public static <T> JSONObject mapToJson(Map<String, T> map, Function.Transformer<T, Object> mapper) {
         JSONObject json = new JSONObject();
         if (map == null) {
             return json;
         }
 
         for (String key : map.keySet()) {
-            Object value = mapper.invoke(map.get(key));
+            Object value = mapper.apply(map.get(key));
             try {
                 json.put(key, value);
             } catch (JSONException e) {
