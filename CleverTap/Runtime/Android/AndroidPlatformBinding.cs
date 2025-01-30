@@ -12,8 +12,11 @@ namespace CleverTapSDK.Android {
             CallbackHandler = CreateGameObjectAndAttachCallbackHandler<AndroidCallbackHandler>(CleverTapGameObjectName.ANDROID_CALLBACK_HANDLER);
             CleverTapAndroidJNI.OnInitCleverTapInstanceDelegate = cleverTapJniInstance =>
             {
-                cleverTapJniInstance.Call("setInAppNotificationOnShowCallback", new InAppOnShowCallback(CallbackHandler));
-                cleverTapJniInstance.Call("setInAppNotificationOnButtonTappedCallback", new InAppOnButtonTappedCallback(CallbackHandler));
+                cleverTapJniInstance.Call("setInAppNotificationOnShowCallback",
+                 new AndroidPluginCallback(message => { CallbackHandler.CleverTapInAppNotificationShowCallback(message); }
+                 ));
+                cleverTapJniInstance.Call("setInAppNotificationOnButtonTappedCallback",
+                 new AndroidPluginCallback(message => { CallbackHandler.CleverTapInAppNotificationButtonTapped(message); }));
             };
             CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }
@@ -79,6 +82,7 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("enablePersonalization");
         }
 
+        [Obsolete]
         internal override JSONClass EventGetDetail(string eventName) {
             string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("eventGetDetail", eventName);
             JSONClass json;
@@ -91,14 +95,17 @@ namespace CleverTapSDK.Android {
             return json;
         }
 
+        [Obsolete]
         internal override int EventGetFirstTime(string eventName) {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("eventGetFirstTime", eventName);
         }
 
+        [Obsolete]
         internal override int EventGetLastTime(string eventName) {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("eventGetLastTime", eventName);
         }
 
+        [Obsolete]
         internal override int EventGetOccurrences(string eventName) {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("eventGetOccurrences", eventName);
         }
@@ -221,21 +228,6 @@ namespace CleverTapSDK.Android {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool>("isPushPermissionGranted");
         }
 
-        [Obsolete("This method no longer does anything. Replaced with initialization in the Application class")]
-        internal override void LaunchWithCredentials(string accountID, string token) {
-            
-        }
-
-        [Obsolete("This method no longer does anything. Replaced with initialization in the Application class")]
-        internal override void LaunchWithCredentialsForRegion(string accountID, string token, string region) {
-            
-        }
-        
-        [Obsolete("This method no longer does anything. Replaced with initialization in the Application class")]
-        internal override void LaunchWithCredentialsForProxyServer(string accountID, string token, string proxyDomain, string spikyProxyDomain) {
-            
-        }
-        
         internal override void MarkReadInboxMessageForID(string messageId) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("markReadInboxMessageForId", messageId);
         }
@@ -376,34 +368,6 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("resumeInAppNotifications");
         }
 
-        internal class InAppOnShowCallback : AndroidPluginCallback
-        {
-            private readonly CleverTapCallbackHandler CallbackHandler;
-            public InAppOnShowCallback(CleverTapCallbackHandler callbackHandler)
-            {
-                CallbackHandler = callbackHandler;
-            }
-
-            internal override void Invoke(string message)
-            {
-                CallbackHandler.CleverTapInAppNotificationShowCallback(message);
-            }
-        }
-
-        internal class InAppOnButtonTappedCallback : AndroidPluginCallback
-        {
-            private readonly CleverTapCallbackHandler CallbackHandler;
-            public InAppOnButtonTappedCallback(CleverTapCallbackHandler callbackHandler)
-            {
-                CallbackHandler = callbackHandler;
-            }
-
-            internal override void Invoke(string message)
-            {
-                CallbackHandler.CleverTapInAppNotificationButtonTapped(message);
-            }
-        }
-
         internal override int SessionGetTimeElapsed() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("sessionGetTimeElapsed");
         }
@@ -449,6 +413,7 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("suspendInAppNotifications");
         }
 
+        [Obsolete]
         internal override JSONClass UserGetEventHistory() {
             string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("userGetEventHistory");
             JSONClass json;
@@ -461,6 +426,7 @@ namespace CleverTapSDK.Android {
             return json;
         }
 
+        [Obsolete]
         internal override int UserGetPreviousVisitTime() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("userGetPreviousVisitTime");
         }
@@ -469,43 +435,38 @@ namespace CleverTapSDK.Android {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("userGetScreenCount");
         }
 
+        [Obsolete]
         internal override int UserGetTotalVisits() {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<int>("userGetTotalVisits");
         }
 
         internal override void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback)
         {
-            CleverTapAndroidJNI.CleverTapJNIInstance.Call("getUserEventLog", eventName, new UserEventLogCallback(callback));
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("getUserEventLog", eventName,
+             new AndroidPluginCallback(message => { callback?.Invoke(UserEventLog.Parse(message)); }));
         }
 
-        private class UserEventLogCallback: AndroidPluginCallback
+        internal override void GetUserEventLogCount(string eventName, CleverTapCallback<int> callback)
         {
-            private readonly CleverTapCallback<UserEventLog> Callback;
-            public UserEventLogCallback(CleverTapCallback<UserEventLog> callback)
-            {
-                Callback = callback;
-            }
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("getUserEventLogCount", eventName,
+             new AndroidPluginIntCallback(count => { callback?.Invoke(count); }));
+        }
 
-            internal override void Invoke(string message)
-            {
-                try
-                {
-                    var json = JSON.Parse(message);
-                    var userEventLog = new UserEventLog(
-                        json["eventName"],
-                        json["normalizedEventName"],
-                        json["firstTS"].AsLong,
-                        json["lastTS"].AsLong,
-                        json["countOfEvents"].AsInt,
-                        json["deviceID"]
-                    );
-                    Callback?.Invoke(userEventLog);
-                }
-                catch (Exception ex)
-                {
-                    CleverTapLogger.LogError($"Unable to parse user event log JSON: {ex}.");
-                }
-            }
+        internal override void GetUserAppLaunchCount(CleverTapCallback<int> callback)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("getUserAppLaunchCount",
+             new AndroidPluginIntCallback(count => { callback?.Invoke(count); }));
+        }
+
+        internal override void GetUserEventLogHistory(CleverTapCallback<Dictionary<string, UserEventLog>> callback)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("getUserEventLogHistory",
+             new AndroidPluginCallback(message => { callback?.Invoke(UserEventLog.ParseLogsDictionary(message)); }));
+        }
+
+        internal override long GetUserLastVisitTs()
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long>("getUserLastVisitTs");
         }
     }
 }

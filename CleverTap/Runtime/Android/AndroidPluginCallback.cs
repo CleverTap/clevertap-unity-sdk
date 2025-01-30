@@ -1,26 +1,36 @@
 #if UNITY_ANDROID
 namespace CleverTapSDK.Android
 {
-    internal abstract class AndroidPluginCallback : UnityEngine.AndroidJavaProxy
+    internal delegate void PluginCallbackDelegate<T>(T value);
+
+    internal class AndroidPluginCallback : UnityEngine.AndroidJavaProxy
     {
+        private readonly PluginCallbackDelegate<string> CallbackDelegate;
 
-        internal AndroidPluginCallback() : base("com.clevertap.unity.callback.PluginCallback") { }
+        internal AndroidPluginCallback(PluginCallbackDelegate<string> callbackDelegate) : base("com.clevertap.unity.callback.PluginCallback")
+        {
+            CallbackDelegate = callbackDelegate;
+        }
 
-        internal abstract void Invoke(string message);
+        internal void Invoke(string message)
+        {
+            CallbackDelegate?.Invoke(message);
+        }
     }
 
-    internal abstract class AndroidPluginIntCallback : UnityEngine.AndroidJavaProxy
+    internal class AndroidPluginIntCallback : UnityEngine.AndroidJavaProxy
     {
-        internal AndroidPluginIntCallback() : base("com.clevertap.unity.callback.PluginIntCallback") { }
+        private readonly PluginCallbackDelegate<int> CallbackDelegate;
 
-        internal abstract void Invoke(int value);
-    }
+        internal AndroidPluginIntCallback(PluginCallbackDelegate<int> callbackDelegate) : base("com.clevertap.unity.callback.PluginIntCallback")
+        {
+            CallbackDelegate = callbackDelegate;
+        }
 
-    internal abstract class AndroidPluginLongCallback : UnityEngine.AndroidJavaProxy
-    {
-        internal AndroidPluginLongCallback() : base("com.clevertap.unity.callback.PluginLongCallback") { }
-
-        internal abstract void Invoke(long value);
+        internal void Invoke(int value)
+        {
+            CallbackDelegate?.Invoke(value);
+        }
     }
 }
 #endif
