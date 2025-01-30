@@ -64,6 +64,14 @@ namespace CTExample
             incrementDecrement.name = "Increment/Decrement Property";
             incrementDecrement.transform.SetParent(parent, false);
             incrementDecrement.AddComponent<IncrementDecrementProperty>();
+
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+            Button getUserEventLog = Instantiate(ButtonPrefab);
+            getUserEventLog.name = "Get UserEventLog data";
+            getUserEventLog.transform.SetParent(parent, false);
+            getUserEventLog.GetComponentInChildren<Text>().text = "Get UserEventLog data";
+            getUserEventLog.onClick.AddListener(GetEventLogs);
+#endif
         }
 
         private void AddInfoValues(RectTransform parent)
@@ -75,19 +83,11 @@ namespace CTExample
             sdkVersionKV.SetValue(CleverTapVersion.CLEVERTAP_SDK_VERSION);
             sdkVersion.transform.SetParent(parent, false);
 
-            App app = FindObjectOfType<App>();
-            GameObject accountName = Instantiate(KeyValuePrefab);
-            accountName.name = "AccountName";
-            KeyValue accountNameKV = accountName.GetComponent<KeyValue>();
-            accountNameKV.SetKey("Account Name");
-            accountNameKV.SetValue(app.accountName);
-            accountNameKV.transform.SetParent(parent, false);
-
             GameObject accountId = Instantiate(KeyValuePrefab);
             accountId.name = "AccountId";
             KeyValue accountIdKV = accountId.GetComponent<KeyValue>();
             accountIdKV.SetKey("Account Id");
-            accountIdKV.SetValue(app.accountId);
+            accountIdKV.SetValue(CleverTapSettingsRuntime.Instance?.CleverTapAccountId ?? "");
             accountIdKV.transform.SetParent(parent, false);
 
             CleverTap.OnCleverTapProfileInitializedCallback += CleverTap_OnCleverTapProfileInitializedCallback;
@@ -172,6 +172,36 @@ namespace CTExample
             };
             CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
             Toast.Show("Record \"Date Support Test\" event and Charged event with dates");
+        }
+
+        private void GetEventLogs()
+        {
+            CleverTap.GetUserEventLog("Charged", (userEventLog) =>
+            {
+                Logger.Log($"Get User Event Log: {userEventLog?.ToString()}");
+            });
+
+            CleverTap.GetUserEventLogCount("Home", (count) =>
+            {
+                Logger.Log($"Get User Event Log Count for: \"Home\": {count}");
+            });
+
+            CleverTap.GetUserAppLaunchCount((count) =>
+            {
+                Logger.Log($"Get User AppLaunch Count: {count}");
+            });
+
+            CleverTap.GetUserEventLogHistory((history) =>
+            {
+                Logger.Log($"Get User Event Log History: \n");
+                foreach (var item in history)
+                {
+                    var userEventLog = item.Value;
+                    Logger.Log(userEventLog?.ToString());
+                }
+            });
+
+            Logger.Log($"Get User Last Visit Ts: {CleverTap.GetUserLastVisitTs()}");
         }
     }
 }
