@@ -468,6 +468,89 @@ namespace CleverTapSDK.Android {
         {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long>("getUserLastVisitTs");
         }
+
+        #region Feature Flags
+
+        [Obsolete]
+        internal override bool GetFeatureFlag(string key, bool defaultValue)
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool>("getFeatureFlag", key, defaultValue);
+        }
+        #endregion
+        #region Product Config
+
+        [Obsolete]
+        internal override void SetProductConfigDefaults(Dictionary<string, object> defaults)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("setProductConfigMapDefaults", Json.Serialize(defaults.ConvertDateObjects()));
+        }
+
+        [Obsolete]
+        internal override void SetProductConfigMinimumFetchInterval(double minimumFetchInterval)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("setProductConfigMinimumFetchInterval", (long) minimumFetchInterval);
+        }
+
+        [Obsolete]
+        internal override void ResetProductConfig()
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("productConfigReset");
+        }
+
+        [Obsolete]
+        internal override void ActivateProductConfig()
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("activateProductConfig");
+        }
+
+        [Obsolete]
+        internal override void FetchAndActivateProductConfig()
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchAndActivateProductConfig");
+        }
+
+               [Obsolete]
+        internal override void FetchProductConfig()
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchProductConfig");
+        }
+
+        [Obsolete]
+        internal override void FetchProductConfigWithMinimumInterval(double minimumInterval)
+        {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchProductConfigWithMinimalInterval", (long) minimumInterval);
+        }
+
+        [Obsolete]
+        internal override double GetProductConfigLastFetchTimeStamp()
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long>("getProductConfigLastFetchTimeStampInMillis");    
+        }
+
+        [Obsolete]
+        internal override string GetProductConfigString(string key)
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getProductConfigString", key);
+        }
+
+        [Obsolete]
+        internal override bool? GetProductConfigBoolean(string key)
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool?>("getProductConfigBoolean", key);
+        }
+
+        [Obsolete]
+        internal override long? GetProductConfigLong(string key)
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long?>("getProductConfigLong", key);
+        }
+
+        [Obsolete]
+        internal override double? GetProductConfigDouble(string key)
+        {
+            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<double?>("getProductConfigDouble", key);
+        }
+        #endregion
     }
 }
 #endif

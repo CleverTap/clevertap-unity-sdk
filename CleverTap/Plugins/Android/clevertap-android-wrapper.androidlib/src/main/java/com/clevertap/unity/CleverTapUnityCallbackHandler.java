@@ -335,6 +335,7 @@ class CleverTapUnityCallbackHandler implements SyncListener, InAppNotificationLi
 
     //Feature Flag Listener
     @Override
+    @Deprecated
     public void featureFlagsUpdated() {
         final String message = "CleverTap App Feature Flags Updated";
         sendToUnity(CLEVERTAP_FEATURE_FLAG_UPDATED, message);
@@ -342,18 +343,21 @@ class CleverTapUnityCallbackHandler implements SyncListener, InAppNotificationLi
 
     //Product Config Listener
     @Override
+    @Deprecated
     public void onInit() {
         final String message = "CleverTap App Product Config Initialized";
         sendToUnity(CLEVERTAP_PRODUCT_CONFIG_INITIALIZED, message);
     }
 
     @Override
+    @Deprecated
     public void onFetched() {
         final String message = "CleverTap App Product Config Fetched";
         sendToUnity(CLEVERTAP_PRODUCT_CONFIG_FETCHED, message);
     }
 
     @Override
+    @Deprecated
     public void onActivated() {
         final String message = "CleverTap App Product Config Activated";
         sendToUnity(CLEVERTAP_PRODUCT_CONFIG_ACTIVATED, message);
