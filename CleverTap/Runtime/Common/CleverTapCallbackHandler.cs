@@ -331,7 +331,10 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        [Obsolete]
         private CleverTapCallbackWithMessageDelegate _OnCleverTapProductConfigFetched;
+
+        [Obsolete]
         public event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigFetched
         {
             add
@@ -351,7 +354,10 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        [Obsolete]
         private CleverTapCallbackWithMessageDelegate _OnCleverTapProductConfigActivated;
+
+        [Obsolete]
         public event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigActivated
         {
             add
@@ -371,7 +377,10 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        [Obsolete]
         private CleverTapCallbackWithMessageDelegate _OnCleverTapProductConfigInitialized;
+
+        [Obsolete]
         public event CleverTapCallbackWithMessageDelegate OnCleverTapProductConfigInitialized
         {
             add
