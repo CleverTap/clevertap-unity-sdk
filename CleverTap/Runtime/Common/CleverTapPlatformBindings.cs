@@ -119,7 +119,7 @@ namespace CleverTapSDK.Common {
             return new JSONClass();
         }
 
-        [Obsolete]
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         internal virtual bool GetFeatureFlag(string key, bool defaultValue) {
             // Validate if this is ok?
             return defaultValue;

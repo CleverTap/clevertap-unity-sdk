@@ -168,6 +168,7 @@ namespace CleverTapSDK.IOS
             return json;
         }
 
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         internal override bool GetFeatureFlag(string key, bool defaultValue) {
             return IOSDllImport.CleverTap_getFeatureFlag(key, defaultValue);
         }

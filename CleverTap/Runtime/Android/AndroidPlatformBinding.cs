@@ -471,7 +471,7 @@ namespace CleverTapSDK.Android {
 
         #region Feature Flags
 
-        [Obsolete]
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         internal override bool GetFeatureFlag(string key, bool defaultValue)
         {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool>("getFeatureFlag", key, defaultValue);
