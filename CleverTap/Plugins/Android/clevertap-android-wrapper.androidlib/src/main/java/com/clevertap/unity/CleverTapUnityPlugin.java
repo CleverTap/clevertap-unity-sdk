@@ -849,7 +849,7 @@ public class CleverTapUnityPlugin {
     //Product Config
     @Deprecated
     public void setProductConfigMapDefaults(String jsonMap) {
-        Map<String,Object> map = JsonConverter.fromJsonWithConvertedDateValues(jsonMap);
+        Map<String, Object> map = JsonConverter.fromJsonWithConvertedDateValues(jsonMap);
         if (map == null) {
             return;
         }
@@ -887,18 +887,21 @@ public class CleverTapUnityPlugin {
     }
 
     @Deprecated
-    public Boolean getProductConfigBoolean(String key) {
-        return clevertap.productConfig().getBoolean(key);
+    public String getProductConfigBoolean(String key) {
+        Boolean config = clevertap.productConfig().getBoolean(key);
+        return config == null ? null : config.toString();
     }
 
     @Deprecated
-    public Long getProductConfigLong(String key) {
-        return clevertap.productConfig().getLong(key);
+    public String getProductConfigLong(String key) {
+        Long config = clevertap.productConfig().getLong(key);
+        return config == null ? null : config.toString();
     }
 
     @Deprecated
-    public Double getProductConfigDouble(String key) {
-        return clevertap.productConfig().getDouble(key);
+    public String getProductConfigDouble(String key) {
+        Double config = clevertap.productConfig().getDouble(key);
+        return config == null ? null : config.toString();
     }
 
     @Deprecated

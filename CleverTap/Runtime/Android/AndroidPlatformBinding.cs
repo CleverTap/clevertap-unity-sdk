@@ -536,19 +536,22 @@ namespace CleverTapSDK.Android {
         [Obsolete]
         internal override bool? GetProductConfigBoolean(string key)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<bool?>("getProductConfigBoolean", key);
+            var stringValue = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getProductConfigBoolean", key);
+            return bool.TryParse(stringValue, out var result) ? result : null;
         }
 
         [Obsolete]
         internal override long? GetProductConfigLong(string key)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long?>("getProductConfigLong", key);
+            var stringValue = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getProductConfigLong", key);
+            return long.TryParse(stringValue, out var result) ? result : null;
         }
 
         [Obsolete]
         internal override double? GetProductConfigDouble(string key)
         {
-            return CleverTapAndroidJNI.CleverTapJNIInstance.Call<double?>("getProductConfigDouble", key);
+            var stringValue = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getProductConfigDouble", key);
+            return double.TryParse(stringValue, out var result) ? result : null;
         }
         #endregion
     }
