@@ -150,7 +150,7 @@ void CleverTap_getUserAppLaunchCount(const char* key, UserEventLogCallback callb
 
 void CleverTap_getUserEventLogCount(const char* eventName, const char* key, UserEventLogCallback callback) {
     [[CleverTapUnityManager sharedInstance]
-     getUserEventLog:clevertap_stringToNSString(eventName) forKey:clevertap_stringToNSString(key) withCallback:callback];
+     getUserEventLogCount:clevertap_stringToNSString(eventName) forKey:clevertap_stringToNSString(key) withCallback:callback];
 }
 
 void CleverTap_getUserEventLogHistory(const char* key, UserEventLogCallback callback) {
