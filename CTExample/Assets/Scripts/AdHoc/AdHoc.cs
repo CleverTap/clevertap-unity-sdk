@@ -38,6 +38,12 @@ namespace CTExample
             userLogin.transform.SetParent(parent, false);
             userLogin.AddComponent<UserLogin>();
 
+            Button recordChargedEvent = Instantiate(ButtonPrefab);
+            recordChargedEvent.name = "Record Charged event";
+            recordChargedEvent.transform.SetParent(parent, false);
+            recordChargedEvent.GetComponentInChildren<Text>().text = "Record Charged event";
+            recordChargedEvent.onClick.AddListener(RecordChargedEvent);
+
             Button recordEventsWithDates = Instantiate(ButtonPrefab);
             recordEventsWithDates.name = "RecordEventsWithDates";
             recordEventsWithDates.transform.SetParent(parent, false);
@@ -140,6 +146,46 @@ namespace CTExample
                 };
 
             CleverTap.ProfilePush(profileProperties);
+        }
+
+        private void RecordChargedEvent()
+        {
+            var chargeDetails = new Dictionary<string, object>(){
+                { "Amount", 53.43 },
+                { "Currency", "USD" },
+                { "Payment Mode", "Cash" },
+                { "Date", DateTime.UtcNow },
+                { "Charged ID", 24052013 }
+            };
+            var items = new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "Price", 24.99 },
+                    { "Product category", "books" },
+                    { "Item name", "Achieving inner zen" },
+                    { "Quantity", 1 }
+                },
+                new Dictionary<string, object> {
+                    { "Price", 24.99 },
+                    { "Product category", "books" },
+                    { "Item name", "Taming the chaos" },
+                    { "Quantity", 1 }
+                },
+                new Dictionary<string, object> {
+                    { "Price", 0.49 },
+                    { "Product category", "supplies" },
+                    { "Item name", "Ballpoint pen" },
+                    { "Quantity", 5 }
+                },
+                new Dictionary<string, object> {
+                    { "Price", 1 },
+                    { "Product category", "supplies" },
+                    { "Item name", "Notebook" },
+                    { "Quantity", 5 }
+                }
+            };
+
+            CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
+            Toast.Show("Record Charged event");
         }
 
         private void RecordEventsWithDates()
