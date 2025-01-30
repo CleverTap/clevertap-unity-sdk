@@ -235,6 +235,21 @@ namespace CleverTapSDK.IOS {
         [DllImport("__Internal")]
         internal static extern void CleverTap_isPushPermissionGranted();
 
+        [DllImport("__Internal")]
+        internal static extern long CleverTap_getUserLastVisitTs();
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_getUserEventLog(string eventName, string key, UserEventLogCallback callback);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_getUserAppLaunchCount(string key, UserEventLogCallback callback);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_getUserEventLogCount(string eventName, string key, UserEventLogCallback callback);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_getUserEventLogHistory(string key, UserEventLogCallback callback);
+
         #endregion
 
         #region Variables

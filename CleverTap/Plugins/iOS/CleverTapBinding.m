@@ -69,6 +69,7 @@ NSMutableArray* clevertap_NSArrayFromJsonString(const char* jsonString) {
     return arr;
 }
 
+[[deprecated("Used by deprecated methods only.")]]
 NSMutableDictionary* clevertap_eventDetailToDict(CleverTapEventDetail* detail) {
     
     NSMutableDictionary *_dict = [NSMutableDictionary new];
@@ -136,6 +137,30 @@ void CleverTap_onCallbackAdded(const char* callbackName) {
 void CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTapped callback) {
     [[CleverTapMessageSender sharedInstance]
      setInAppNotificationButtonTappedCallback:callback];
+}
+
+void CleverTap_getUserEventLog(const char* eventName, const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserEventLog:clevertap_stringToNSString(eventName) forKey:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+void CleverTap_getUserAppLaunchCount(const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserAppLaunchCount:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+void CleverTap_getUserEventLogCount(const char* eventName, const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserEventLogCount:clevertap_stringToNSString(eventName) forKey:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+void CleverTap_getUserEventLogHistory(const char* key, UserEventLogCallback callback) {
+    [[CleverTapUnityManager sharedInstance]
+     getUserEventLogHistory:clevertap_stringToNSString(key) withCallback:callback];
+}
+
+int64_t CleverTap_getUserLastVisitTs() {
+    return [[CleverTapUnityManager sharedInstance] getUserLastVisitTs];
 }
 
 void CleverTap_setDebugLevel(int level) {
@@ -314,18 +339,22 @@ void CleverTap_recordChargedEventWithDetailsAndItems(const char* chargeDetails, 
     [[CleverTapUnityManager sharedInstance] recordChargedEventWithDetails:details andItems:_items];
 }
 
+[[deprecated("Deprecated, use getUserEventLog instead")]]
 int CleverTap_eventGetFirstTime(const char* eventName) {
     return [[CleverTapUnityManager sharedInstance] eventGetFirstTime:clevertap_stringToNSString(eventName)];
 }
 
+[[deprecated("Deprecated, use getUserEventLog instead")]]
 int CleverTap_eventGetLastTime(const char* eventName) {
     return [[CleverTapUnityManager sharedInstance] eventGetLastTime:clevertap_stringToNSString(eventName)];
 }
 
+[[deprecated("Deprecated, use getUserEventLogCount instead")]]
 int CleverTap_eventGetOccurrences(const char* eventName) {
     return [[CleverTapUnityManager sharedInstance] eventGetOccurrences:clevertap_stringToNSString(eventName)];
 }
 
+[[deprecated("Deprecated, use getUserEventLogHistory instead")]]
 char* CleverTap_userGetEventHistory() {
     NSDictionary *history = [[CleverTapUnityManager sharedInstance] userGetEventHistory];
     
@@ -364,6 +393,7 @@ int CleverTap_sessionGetTimeElapsed() {
     return [[CleverTapUnityManager sharedInstance] sessionGetTimeElapsed];
 }
 
+[[deprecated("Deprecated, use getUserEventLog instead")]]
 char* CleverTap_eventGetDetail(const char* eventName) {
     CleverTapEventDetail *detail = [[CleverTapUnityManager sharedInstance] eventGetDetail:clevertap_stringToNSString(eventName)];
     
@@ -378,6 +408,7 @@ char* CleverTap_eventGetDetail(const char* eventName) {
     return clevertap_cStringCopy([jsonString UTF8String]);
 }
 
+[[deprecated("Deprecated, use getUserAppLaunchCount instead")]]
 int CleverTap_userGetTotalVisits() {
     return [[CleverTapUnityManager sharedInstance] userGetTotalVisits];
 }
@@ -386,6 +417,7 @@ int CleverTap_userGetScreenCount() {
     return [[CleverTapUnityManager sharedInstance] userGetScreenCount];
 }
 
+[[deprecated("Deprecated, use getUserLastVisitTs instead")]]
 int CleverTap_userGetPreviousVisitTime() {
     return [[CleverTapUnityManager sharedInstance] userGetPreviousVisitTime];
 }

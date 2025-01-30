@@ -1,3 +1,4 @@
+using System.Collections;
 using CleverTapSDK;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
@@ -59,6 +60,40 @@ namespace CTExample
                 CleverTap.PromptForPushPermission(true);
             }
 #endif
+
+            StartCoroutine(GetEventLogs());
+        }
+
+        IEnumerator GetEventLogs()
+        {
+            yield return new WaitForSeconds(1);
+
+            CleverTap.GetUserEventLog("App Launched", (userEventLog) =>
+            {
+                Logger.Log($"Get User Event Log: {userEventLog?.ToString()}");
+            });
+
+            CleverTap.GetUserEventLogCount("App Launched", (count) =>
+            {
+                Logger.Log($"Get User Event Log Count for: \"App Launched\": {count}");
+            });
+
+            CleverTap.GetUserAppLaunchCount((count) =>
+            {
+                Logger.Log($"Get User AppLaunch Count: {count}");
+            });
+
+            CleverTap.GetUserEventLogHistory((history) =>
+            {
+                Logger.Log($"Get User Event Log History: \n");
+                foreach (var item in history)
+                {
+                    var userEventLog = item.Value;
+                    Logger.Log(userEventLog?.ToString());
+                }
+            });
+
+            Logger.Log($"Get User Last Visit Ts: {CleverTap.GetUserLastVisitTs()}");
         }
 
         #region Callbacks on app launch

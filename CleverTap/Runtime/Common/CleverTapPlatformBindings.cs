@@ -1,5 +1,6 @@
 using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -64,18 +65,22 @@ namespace CleverTapSDK.Common {
         internal virtual void EnablePersonalization() {
         }
 
+        [Obsolete]
         internal virtual JSONClass EventGetDetail(string eventName) {
             return new JSONClass();
         }
 
+        [Obsolete]
         internal virtual int EventGetFirstTime(string eventName) {
             return -1;
         }
 
+        [Obsolete]
         internal virtual int EventGetLastTime(string eventName) {
             return -1;
         }
 
+        [Obsolete]
         internal virtual int EventGetOccurrences(string eventName) {
             return -1;
         }
@@ -312,10 +317,12 @@ namespace CleverTapSDK.Common {
         internal virtual void SuspendInAppNotifications() {
         }
 
+        [Obsolete]
         internal virtual JSONClass UserGetEventHistory() {
             return new JSONClass();
         }
 
+        [Obsolete]
         internal virtual int UserGetPreviousVisitTime() {
             return -1;
         }
@@ -324,7 +331,20 @@ namespace CleverTapSDK.Common {
             return -1;
         }
 
+        [Obsolete]
         internal virtual int UserGetTotalVisits() {
+            return -1;
+        }
+
+        internal virtual void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback) { }
+
+        internal virtual void GetUserEventLogCount(string eventName, CleverTapCallback<int> callback) { }
+
+        internal virtual void GetUserAppLaunchCount(CleverTapCallback<int> callback) { }
+
+        internal virtual void GetUserEventLogHistory(CleverTapCallback<Dictionary<string, UserEventLog>> callback) { }
+
+        internal virtual long GetUserLastVisitTs() {
             return -1;
         }
 

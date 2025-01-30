@@ -19,6 +19,8 @@ import com.clevertap.android.sdk.inapp.customtemplates.CustomTemplateContext;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.clevertap.android.sdk.variables.Var;
+import com.clevertap.unity.callback.PluginCallback;
+import com.clevertap.unity.callback.PluginIntCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,8 @@ public class CleverTapUnityPlugin {
 
     private CleverTapAPI clevertap = null;
     private final CleverTapUnityCallbackHandler callbackHandler;
+
+    private final BackgroundExecutor backgroundExecutor;
 
     public static void setDebugLevel(int level) {
         CleverTapAPI.setDebugLevel(level);
@@ -116,6 +120,7 @@ public class CleverTapUnityPlugin {
 
     private CleverTapUnityPlugin(final Context context) {
         callbackHandler = CleverTapUnityCallbackHandler.getInstance();
+        backgroundExecutor = new BackgroundExecutor();
         disableMessageBuffers();
         try {
             clevertap = CleverTapAPI.getDefaultInstance(context);
@@ -232,6 +237,7 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    @Deprecated
     public String profileGetCleverTapAttributionIdentifier() {
         try {
             return clevertap.getCleverTapAttributionIdentifier();
@@ -390,16 +396,53 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    @Deprecated
     public int eventGetFirstTime(final String event) {
         return clevertap.getFirstTime(event);
     }
 
+    @Deprecated
     public int eventGetLastTime(final String event) {
         return clevertap.getLastTime(event);
     }
 
+    @Deprecated
     public int eventGetOccurrences(final String event) {
         return clevertap.getCount(event);
+    }
+
+    public void getUserEventLogCount(final String eventName, PluginIntCallback callback) {
+        backgroundExecutor.execute(
+                () -> clevertap.getUserEventLogCount(eventName),
+                callback::Invoke
+        );
+    }
+
+    public void getUserEventLogHistory(PluginCallback callback) {
+        backgroundExecutor.execute(
+                () -> clevertap.getUserEventLogHistory(),
+                result -> callback.Invoke(
+                        JsonConverter.mapToJson(result, JsonConverter::userEventLogToJSON).toString()
+                )
+        );
+    }
+
+    public void getUserEventLog(final String eventName, PluginCallback callback) {
+        backgroundExecutor.execute(
+                () -> clevertap.getUserEventLog(eventName),
+                result -> callback.Invoke(JsonConverter.userEventLogToJSON(result).toString())
+        );
+    }
+
+    public void getUserAppLaunchCount(PluginIntCallback callback) {
+        backgroundExecutor.execute(
+                () -> clevertap.getUserAppLaunchCount(),
+                callback::Invoke
+        );
+    }
+
+    public long getUserLastVisitTs() {
+        return clevertap.getUserLastVisitTs();
     }
 
     public String eventGetDetail(final String event) {
@@ -412,6 +455,7 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    @Deprecated
     public String userGetEventHistory() {
         try {
             Map<String, EventDetail> history = clevertap.getHistory();
@@ -436,6 +480,7 @@ public class CleverTapUnityPlugin {
         return clevertap.getTimeElapsed();
     }
 
+    @Deprecated
     public int userGetTotalVisits() {
         return clevertap.getTotalVisits();
     }
@@ -444,6 +489,7 @@ public class CleverTapUnityPlugin {
         return clevertap.getScreenCount();
     }
 
+    @Deprecated
     public int userGetPreviousVisitTime() {
         return clevertap.getPreviousVisitTime();
     }

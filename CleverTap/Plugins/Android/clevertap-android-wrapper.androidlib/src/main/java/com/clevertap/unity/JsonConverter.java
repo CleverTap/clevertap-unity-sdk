@@ -2,7 +2,10 @@ package com.clevertap.unity;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
+import com.clevertap.android.sdk.usereventlogs.UserEventLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +66,25 @@ public class JsonConverter {
             Log.e("CleverTap", "Error converting " + json + " from JSON", e);
             return null;
         }
+    }
+
+    @NonNull
+    public static <T> JSONObject mapToJson(Map<String, T> map, @NonNull Function.Transformer<T, Object> mapper) {
+        JSONObject json = new JSONObject();
+        if (map == null) {
+            return json;
+        }
+
+        for (String key : map.keySet()) {
+            Object value = mapper.apply(map.get(key));
+            try {
+                json.put(key, value);
+            } catch (JSONException e) {
+                Log.e("CleverTap", "Error converting map to JSON. key: " + key + " value: " + value, e);
+            }
+        }
+
+        return json;
     }
 
     @SuppressWarnings("unchecked")
@@ -144,5 +166,25 @@ public class JsonConverter {
         }
 
         return array;
+    }
+
+    @NonNull
+    public static JSONObject userEventLogToJSON(UserEventLog eventLog) {
+        JSONObject json = new JSONObject();
+        if (eventLog == null) {
+            return json;
+        }
+
+        try {
+            json.put("eventName", eventLog.getEventName());
+            json.put("normalizedEventName", eventLog.getNormalizedEventName());
+            json.put("firstTs", eventLog.getFirstTs());
+            json.put("lastTs", eventLog.getLastTs());
+            json.put("countOfEvents", eventLog.getCountOfEvents());
+            json.put("deviceID", eventLog.getDeviceID());
+        } catch (JSONException e) {
+            Log.e("CleverTap", "Error converting eventLog to JSON: " + eventLog, e);
+        }
+        return json;
     }
 }
