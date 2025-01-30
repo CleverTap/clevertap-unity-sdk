@@ -224,8 +224,8 @@ const int PENDING_EVENTS_TIME_OUT = 5;
                 return;
             }
             
-            NSDictionary *json = [self userEventLogToDictionary:event];
-            callback([key UTF8String], [[self idToJsonString:json] UTF8String]);
+            NSDictionary *json = [CleverTapUnityManager userEventLogToDictionary:event];
+            callback([key UTF8String], [[CleverTapUnityManager idToJsonString:json] UTF8String]);
         });
     });
 }
@@ -252,10 +252,10 @@ const int PENDING_EVENTS_TIME_OUT = 5;
             NSMutableDictionary *result = [NSMutableDictionary new];
             for (NSString *key in history) {
                 CleverTapEventDetail *event = history[key];
-                result[key] = [self userEventLogToDictionary:event];
+                result[key] = [CleverTapUnityManager userEventLogToDictionary:event];
             }
             
-            NSString *json = [self idToJsonString:result];
+            NSString *json = [CleverTapUnityManager idToJsonString:result];
             callback([key UTF8String], [json UTF8String]);
         });
     });
@@ -278,7 +278,7 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 // Serializes object to JSON string.
 // Uses the same logic as clevertap_toJsonString(val).
 // consider keeping only one of the methods/functions in the future.
-- (NSString *)idToJsonString:(id)val {
++ (NSString *)idToJsonString:(id)val {
     NSString *jsonString;
     
     if (val == nil) {
@@ -300,7 +300,7 @@ const int PENDING_EVENTS_TIME_OUT = 5;
     return jsonString;
 }
 
-- (NSDictionary *)userEventLogToDictionary:(CleverTapEventDetail *)event {
++ (NSDictionary *)userEventLogToDictionary:(CleverTapEventDetail *)event {
     NSDictionary *json = @{
         @"countOfEvents": @(event.count),
         @"eventName": event.eventName,
