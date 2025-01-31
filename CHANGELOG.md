@@ -3,7 +3,7 @@ Change Log
 
 Version  *(, 2025)*
 -------------------------------------------
-- Updated to [CleverTap Android SDK v7.1.2](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.2.2)
+- Updated to [CleverTap Android SDK v7.1.2](https://github.com/CleverTap/clevertap-android-sdk/tree/master_7.1.1)
 - Updated to [CleverTap iOS SDK v7.1.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.1.0)
 - Supports triggering InApps based on first-time event filtering in multiple triggers (iOS and Android SDK updates)
 - Supports [Custom Code Templates](docs/CustomCodeTemplates.md)
