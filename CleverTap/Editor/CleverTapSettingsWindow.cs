@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEditor;
-using CleverTapSDK.Utilities;
+﻿using System;
 using System.IO;
+using UnityEditor;
+using UnityEngine;
 
 namespace CleverTapSDK.Private
 {
@@ -114,18 +114,41 @@ namespace CleverTapSDK.Private
 
         private void SaveSettingsToJson()
         {
-            string json = JsonUtility.ToJson(settings, true);
-            Directory.CreateDirectory(Application.streamingAssetsPath);
-            File.WriteAllText(CleverTapSettings.jsonPath, json);
-            Debug.Log($"CleverTap settings saved to {CleverTapSettings.jsonPath}");
+            try
+            {
+                string json = JsonUtility.ToJson(settings, true);
+                if (!Directory.Exists(Application.streamingAssetsPath))
+                {
+                    Directory.CreateDirectory(Application.streamingAssetsPath);
+                }
+                File.WriteAllText(CleverTapSettings.jsonPath, json);
+                Debug.Log($"CleverTap settings saved to {CleverTapSettings.jsonPath}");
+                AssetDatabase.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to save settings to JSON: {ex.Message}");
+                EditorUtility.DisplayDialog("Error",
+                "Failed to save settings to JSON. Check the console for details.", "OK");
+            }
         }
 
         private void DeleteSettingsJson()
         {
             if (File.Exists(CleverTapSettings.jsonPath))
             {
-                File.Delete(CleverTapSettings.jsonPath);
-                Debug.Log($"CleverTap settings deleted from: {CleverTapSettings.jsonPath}");
+                try
+                {
+                    File.Delete(CleverTapSettings.jsonPath);
+                    Debug.Log($"CleverTap settings deleted from: {CleverTapSettings.jsonPath}");
+                    AssetDatabase.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Failed to delete settings JSON: {ex.Message}");
+                    EditorUtility.DisplayDialog("Error",
+                    "Failed to delete settings JSON. Check the console for details.", "OK");
+                }
             }
         }
     }

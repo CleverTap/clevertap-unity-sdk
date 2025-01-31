@@ -6,7 +6,7 @@ namespace CTExample
     public class CleverTapSettingsRuntime
     {
         // Path must be the same as CleverTapSDK CleverTapSettings JSON path
-        private static readonly string jsonPath = Application.streamingAssetsPath + "/CleverTapSettings.json";
+        private static readonly string jsonPath = Path.Combine(Application.streamingAssetsPath, "CleverTapSettings.json");
         private static CleverTapSettingsRuntime _instance;
         private static bool loaded;
 
@@ -25,6 +25,12 @@ namespace CTExample
                 }
                 return _instance;
             }
+        }
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrEmpty(CleverTapAccountId)
+                   && !string.IsNullOrEmpty(CleverTapAccountToken);
         }
 
         private static CleverTapSettingsRuntime LoadSettings()

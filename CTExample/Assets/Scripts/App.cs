@@ -46,28 +46,43 @@ namespace CTExample
         }
 
         #region Launch CleverTap
+
+        /// <summary>
+        /// Launches CleverTap SDK with credentials from runtime settings.
+        /// On iOS and Android, credentials are automatically loaded from the platform-specific configuration.
+        /// On other platforms, including WebGL, credentials are explicitly set using LaunchWithCredentials.
+        /// </summary>
         private void LaunchCleverTap()
         {
             var settings = CleverTapSettingsRuntime.Instance;
 
             if (settings == null)
             {
-                Debug.LogError("CleverTapSettings have not been set");
+                Logger.LogError("CleverTapSettings have not been set!");
                 return;
             }
 
+            if (!settings.IsValid())
+            {
+                Logger.LogError("CleverTapSettings contains invalid or missing credentials!");
+            }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (string.IsNullOrEmpty(settings.CleverTapAccountRegion))
+            {
+                Logger.LogError("Account region is required for WebGL builds. Ensure your app is also enabled for WebGL.");
+                return;
+            }
+#endif
+
             // LaunchWithCredentials is not needed on iOS and Android
 #if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
-            if (!string.IsNullOrEmpty(settings.CleverTapAccountToken))
+            if (!string.IsNullOrEmpty(settings.CleverTapAccountRegion))
             {
                 CleverTap.LaunchWithCredentialsForRegion(settings.CleverTapAccountId, settings.CleverTapAccountToken, settings.CleverTapAccountRegion);
             }
             else
             {
-#if UNITY_WEBGL && !UNITY_EDITOR
-                Logger.LogError("Account region is required for WebGL builds. Ensure your app is also enabled for WebGL.");
-                return;
-#endif
                 CleverTap.LaunchWithCredentials(settings.CleverTapAccountId, settings.CleverTapAccountToken);
             }
 #endif
@@ -132,9 +147,12 @@ namespace CTExample
         }
         #endregion
 
+        /// <summary>
+        /// Called when the script is added to component the first time or reset button is clicked in the Unity Editor.
+        /// </summary>
         private void Reset()
         {
-            // Set default value to be true
+            // Set default value to be true in the Inspector.
             promptPushPermissionOnLaunch = true;
         }
     }

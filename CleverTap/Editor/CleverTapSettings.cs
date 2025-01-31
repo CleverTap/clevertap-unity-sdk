@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 namespace CleverTapSDK.Private
 {
@@ -85,7 +86,7 @@ namespace CleverTapSDK.Private
                    $"CleverTapSettingsSaveToJSON: {CleverTapSettingsSaveToJSON}";
         }
 
-        internal static readonly string settingsPath = "Assets/CleverTapSettings.asset";
-        internal static readonly string jsonPath = Application.streamingAssetsPath + "/CleverTapSettings.json";
+        internal static readonly string settingsPath = Path.Combine("Assets", "CleverTapSettings.asset");
+        internal static readonly string jsonPath = Path.Combine(Application.streamingAssetsPath, "CleverTapSettings.json");
     }
 }
