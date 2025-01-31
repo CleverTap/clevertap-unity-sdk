@@ -129,7 +129,11 @@ public class CleverTapMessageSender {
     private void sendMessage(@NonNull CleverTapUnityCallback callback, @NonNull String data) {
         switch (callback.mode) {
             case UNITY_PLAYER_MESSAGE: {
-                UnityPlayer.UnitySendMessage(CLEVERTAP_GAME_OBJECT_NAME, callback.callbackName, data);
+                try {
+                    UnityPlayer.UnitySendMessage(CLEVERTAP_GAME_OBJECT_NAME, callback.callbackName, data);
+                } catch (RuntimeException e) {
+                    Log.e(LOG_TAG, "Failed to send message to Unity.", e);
+                }
                 break;
             }
             case DIRECT_CALLBACK: {
