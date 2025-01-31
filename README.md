@@ -26,7 +26,7 @@ You can install the CleverTap Unity SDK using the `.unitypackage` Unity package 
 
 1. Download the latest version of the CleverTap Unity package. Import the `.unitypackage` into your Unity Project. **Go to Assets** > **Import Package** > **Custom Package**. 
 2. Add the **PlayServiceResolver** and the **ExternalDependencyManager** folders. These folders will install the **EDM4U** plugin, which automatically adds all the Android and iOS dependencies when building your project.
-3. Ensure that the scripts inside the `Editor` folder are added (`AndroidPostImport`, `CleverTapPostBuildProcessor.` and the other scripts). The `AndroidPostImport` script sets up `clevertap-android-wrapper` library for Android. `CleverTapPostBuildProcessor` helps iOS and Android setup.
+3. Ensure that the scripts inside the `Editor` folder are added. The `AndroidPostImport` script sets up `clevertap-android-wrapper` library for Android. IOS/Android `PostBuildProcessor` scripts helps iOS and Android setup.
 
 ### Import the CleverTap Unity Package as a Local Dependency
 
@@ -41,6 +41,7 @@ CleverTap API can be accessed anywhere in your project by simply calling the sta
 - Script attachment.
 
 Use the Unity Editor CleverTap Settings dialog (_Assets -> CleverTap Settings_) to automatically set your account configuration for iOS and Android builds.
+
 You can view your `CleverTap Account ID` and `CleverTap Account Token` from the _CleverTap Dashboard -> Settings_.
 
 For Unity Native builds initialize the SDK with the following code:
@@ -56,7 +57,7 @@ Add an event listener for a callback directly through the `CleverTap` static eve
 ```csharp
 CleverTap.OnCleverTapDeepLinkCallback += YOUR_CALLBACK_METHOD;  
 CleverTap.OnCleverTapProfileInitializedCallback += YOUR_CALLBACK_METHOD;  
-CleverTap.OnCleverTapProfileUpdatesCallback += YOUR_CALLBACK_METHOD;
+CleverTap.OnCleverTapInAppNotificationButtonTapped += YOUR_CALLBACK_METHOD;
 ```
 
 ### iOS Instructions

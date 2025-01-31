@@ -1,10 +1,30 @@
 Change Log
 ==========
 
+Version  *(, 2025)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v7.1.2](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.1.2)
+- Updated to [CleverTap iOS SDK v7.1.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.1.0)
+- Supports triggering InApps based on first-time event filtering in multiple triggers (iOS and Android SDK updates)
+- Supports [Custom Code Templates](docs/CustomCodeTemplates.md)
+- Improvements to Android and iOS integration and SDK initialization
+- Improvements to Callbacks
+- Adds `CleverTapInboxMessage` model. Adds new methods that use the model `GetAllInboxMessagesParsed`, `GetUnreadInboxMessagesParsed`, `GetInboxMessageForIdParsed`
+- Adds missing Android `GetUnreadInboxMessages` and `GetInboxMessageForId` bindings
+- Adds iOS `OnCleverTapPushNotificationPermissionStatusCallback` callback
+- Implements `CleverTapInAppNotificationShowCallback` on iOS (available from iOS SDK update)
+- Fixes iOS Push Permission Response Received message
+- Adds UserEventLog methods `GetUserEventLog`, `GetUserEventLogCount`, `GetUserAppLaunchCount`, `GetUserEventLogHistory`, `GetUserLastVisitTs`
+- Deprecates `EventGetDetail`, `EventGetFirstTime`, `EventGetLastTime`, `EventGetOccurrences`, `UserGetEventHistory`, `UserGetPreviousVisitTime`, `UserGetTotalVisits`
+- Deprecates Product Config and Feature Flags methods
+
 Version 4.1.0 *(13 December, 2024)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v7.0.3](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.0.3)
 - Updated to [CleverTap iOS SDK v7.0.3](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.0.3)
+- Supports triggering InApps based on user attribute changes (iOS and Android SDK updates).
+- Supports custom key-value pairs for Image Interstitial and Advanced Builder (iOS and Android SDK updates).
+- Supports previewing in-apps created through the new dashboard advanced builder (iOS and Android SDK updates).
 - Supports launch with proxy and spiky proxy domain
 - Supports file type variables
 - Unity native networking improvements
