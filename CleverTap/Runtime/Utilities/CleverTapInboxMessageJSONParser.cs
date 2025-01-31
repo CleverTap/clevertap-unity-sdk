@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using CleverTapSDK.Utilities;
 
-namespace CleverTapSDK
+namespace CleverTapSDK.Utilities
 {
     public class CleverTapInboxMessageJSONParser
     {
