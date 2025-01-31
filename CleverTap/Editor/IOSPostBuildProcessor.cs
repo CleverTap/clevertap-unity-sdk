@@ -139,7 +139,8 @@ namespace CleverTapSDK.Private
 			// Copy CleverTap folder
             string sourceFolderPath = Path.Combine(Application.dataPath, EditorUtils.CLEVERTAP_ASSETS_FOLDER);
             string destinationFolderPath = Path.Combine(path, EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER);
-            EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath);
+            EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath,
+                true, true, new System.Collections.Generic.HashSet<string>() { EditorUtils.CLEVERTAP_CUSTOM_TEMPLATES_FOLDER });
 
             string mainTargetGuid = proj.GetUnityMainTargetGuid();
             // Add CleverTap folder reference and target membership

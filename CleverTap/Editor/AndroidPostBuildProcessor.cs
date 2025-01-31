@@ -26,7 +26,8 @@ namespace CleverTapSDK.Private
 
             // copy assets to the android project
             EditorUtils.DirectoryCopy(Path.Combine(Application.dataPath, EditorUtils.CLEVERTAP_ASSETS_FOLDER),
-                Path.Combine(androidProjectPath, $"assets/{EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER}"));
+                Path.Combine(androidProjectPath, $"assets/{EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER}"),
+                true, true, new System.Collections.Generic.HashSet<string>() { EditorUtils.CLEVERTAP_CUSTOM_TEMPLATES_FOLDER });
             // copy CleverTapSettings to the project's AndroidManifest
             CopySettingsToAndroidManifest(androidProjectPath);
         }
