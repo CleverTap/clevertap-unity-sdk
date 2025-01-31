@@ -18,6 +18,7 @@ namespace CleverTapSDK.IOS
             staticCallbackHandler = CallbackHandler;
             CleverTapLogger.Log("Start: CleverTap binding for iOS.");
 
+            IOSDllImport.CleverTap_onPlatformInit();
             IOSDllImport.CleverTap_setInAppNotificationButtonTappedCallback(InAppNotificationButtonTappedInternal);
         }
 

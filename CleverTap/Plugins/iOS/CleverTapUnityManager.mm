@@ -42,12 +42,27 @@
         [self.cleverTap setLibrary:@"Unity"];
         self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
         [self.callbackHandler attachInstance:self.cleverTap];
-        [self disableMessageBuffers];
     }
     return self;
 }
 
-const int PENDING_EVENTS_TIME_OUT = 5;
+const double PENDING_EVENTS_TIME_OUT = 10.0;
+
+- (void)onPlatformInit {
+    NSLog(@"CleverTap Platform Init");
+    [self disableMessageBuffers];
+}
+
+- (void)onCallbackAdded:(NSString *)callbackName {
+    CleverTapUnityCallbackInfo *callback = [CleverTapUnityCallbackInfo callbackFromName:callbackName];
+    if (!callback) {
+        NSLog(@"Unsupported callback added: %@", callbackName);
+        return;
+    }
+    
+    [[CleverTapMessageSender sharedInstance] disableBuffer:callback];
+    [[CleverTapMessageSender sharedInstance] flushBuffer:callback];
+}
 
 - (void)disableMessageBuffers {
     // disable buffers after a delay in order to give some time for callback delegates to attach
@@ -83,17 +98,6 @@ const int PENDING_EVENTS_TIME_OUT = 5;
 
 + (void)setLocation:(CLLocationCoordinate2D)location {
     [CleverTap setLocation:location];
-}
-
-- (void)onCallbackAdded:(NSString *)callbackName {
-    CleverTapUnityCallbackInfo *callback = [CleverTapUnityCallbackInfo callbackFromName:callbackName];
-    if (!callback) {
-        NSLog(@"Unsupported callback added: %@", callbackName);
-        return;
-    }
-    
-    [[CleverTapMessageSender sharedInstance] disableBuffer:callback];
-    [[CleverTapMessageSender sharedInstance] flushBuffer:callback];
 }
 
 #pragma mark - Offline API

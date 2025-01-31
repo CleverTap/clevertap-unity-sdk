@@ -8,6 +8,9 @@ namespace CleverTapSDK.IOS {
         #region Bindings
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_onPlatformInit();
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_onCallbackAdded(string name);
 
         [DllImport("__Internal")]
