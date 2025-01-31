@@ -17,6 +17,9 @@ namespace CTExample
 
         public CustomTemplateModel(CleverTapTemplateContext context, bool isFunction = false)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context), "Cannot create template model with null context");
+
             IsFunction = isFunction;
 
             Id = context.TemplateName;

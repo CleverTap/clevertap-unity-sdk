@@ -64,6 +64,7 @@ static NSString * kCleverTapGameObjectName = @"IOSCallbackHandler";
 - (void)sendToUnity:(CleverTapUnityCallbackInfo *)callbackInfo withMessage:(NSString *)message {
     if (!callbackInfo) {
         NSLog(@"Cannot send message for nil callback.");
+        return;
     }
     if (!message) {
         NSLog(@"Cannot send nil message to Unity. Callback: %@.", callbackInfo.callbackName);

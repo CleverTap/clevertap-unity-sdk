@@ -134,7 +134,7 @@ namespace CTExample
 
         private void OnDestroy()
         {
-            Model.OnDismiss?.Invoke();
+            Model?.OnDismiss?.Invoke();
         }
     }
 }

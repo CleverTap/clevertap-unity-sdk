@@ -47,7 +47,7 @@ namespace CleverTapSDK.Private
                 foreach (DirectoryInfo subdir in dirs)
                 {
                     string tempPath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
+                    DirectoryCopy(subdir.FullName, tempPath, copyChangedOnly, copySubDirs);
                 }
             }
         }
