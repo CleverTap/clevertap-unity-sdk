@@ -129,6 +129,10 @@ char* clevertap_cStringCopy(const char* string) {
 
 #pragma mark - Admin
 
+void CleverTap_onPlatformInit(){
+    [[CleverTapUnityManager sharedInstance] onPlatformInit];
+}
+
 void CleverTap_onCallbackAdded(const char* callbackName) {
     [[CleverTapUnityManager sharedInstance]
      onCallbackAdded:clevertap_stringToNSString(callbackName)];

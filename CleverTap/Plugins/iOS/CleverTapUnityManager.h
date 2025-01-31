@@ -13,6 +13,7 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 
 + (CleverTapUnityManager *)sharedInstance;
 
+- (void)onPlatformInit;
 - (void)onCallbackAdded:(NSString *)callbackName;
 
 #pragma mark - Admin
