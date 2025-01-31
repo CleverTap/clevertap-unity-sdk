@@ -1071,7 +1071,7 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
 - (int16_t)customTemplateGetShortArg:(NSString *)templateName named:(NSString *)argumentName {
     CTTemplateContext *context = [self contextNamed:templateName];
     if (context) {
-        return [[context numberNamed:argumentName] charValue];
+        return (int16_t)[[context numberNamed:argumentName] charValue];
     }
     
     return 0;
