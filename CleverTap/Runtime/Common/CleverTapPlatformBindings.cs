@@ -1,5 +1,6 @@
 using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace CleverTapSDK.Common {
 
         #region Default - Platform Bindings
 
+        [Obsolete]
         internal virtual void ActivateProductConfig() {
         }
 
@@ -64,28 +66,35 @@ namespace CleverTapSDK.Common {
         internal virtual void EnablePersonalization() {
         }
 
+        [Obsolete]
         internal virtual JSONClass EventGetDetail(string eventName) {
             return new JSONClass();
         }
 
+        [Obsolete]
         internal virtual int EventGetFirstTime(string eventName) {
             return -1;
         }
 
+        [Obsolete]
         internal virtual int EventGetLastTime(string eventName) {
             return -1;
         }
 
+        [Obsolete]
         internal virtual int EventGetOccurrences(string eventName) {
             return -1;
         }
 
+        [Obsolete]
         internal virtual void FetchAndActivateProductConfig() {
         }
 
+        [Obsolete]
         internal virtual void FetchProductConfig() {
         }
 
+        [Obsolete]
         internal virtual void FetchProductConfigWithMinimumInterval(double minimumInterval) {
         }
 
@@ -97,6 +106,11 @@ namespace CleverTapSDK.Common {
             return new JSONArray();
         }
 
+        internal virtual List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
+        {
+            return new List<CleverTapInboxMessage>();
+        }
+
         internal virtual string GetCleverTapID() {
             return string.Empty;
         }
@@ -105,6 +119,7 @@ namespace CleverTapSDK.Common {
             return new JSONClass();
         }
 
+        [Obsolete("Feature Flags are deprecated, use variables instead.")]
         internal virtual bool GetFeatureFlag(string key, bool defaultValue) {
             // Validate if this is ok?
             return defaultValue;
@@ -118,20 +133,56 @@ namespace CleverTapSDK.Common {
             return new JSONClass();
         }
 
+        internal virtual CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId)
+        {
+            return null;
+        }
+
         internal virtual int GetInboxMessageUnreadCount() {
             return -1;
         }
 
+        [Obsolete]
         internal virtual double GetProductConfigLastFetchTimeStamp() {
             return -1;
         }
 
+        [Obsolete]
         internal virtual JSONClass GetProductConfigValueFor(string key) {
             return new JSONClass();
         }
 
+        [Obsolete]
+        internal virtual string GetProductConfigString(string key)
+        {
+            return null;
+        }
+
+        [Obsolete]
+        internal virtual bool? GetProductConfigBoolean(string key)
+        {
+            return null;
+        }
+
+        [Obsolete]
+        internal virtual long? GetProductConfigLong(string key)
+        {
+            return null;
+        }
+
+        [Obsolete]
+        internal virtual double? GetProductConfigDouble(string key)
+        {
+            return null;
+        }
+
         internal virtual JSONArray GetUnreadInboxMessages() {
             return new JSONArray();
+        }
+
+        internal virtual List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed()
+        {
+            return new List<CleverTapInboxMessage>();
         }
 
         internal virtual void InitializeInbox() {
@@ -250,6 +301,7 @@ namespace CleverTapSDK.Common {
         internal virtual void RegisterPush() {
         }
 
+        [Obsolete]
         internal virtual void ResetProductConfig() {
         }
 
@@ -279,12 +331,15 @@ namespace CleverTapSDK.Common {
         internal virtual void SetOptOut(bool enabled) {
         }
 
+        [Obsolete]
         internal virtual void SetProductConfigDefaults(Dictionary<string, object> defaults) {
         }
 
+        [Obsolete]
         internal virtual void SetProductConfigDefaultsFromPlistFileName(string fileName) {
         }
 
+        [Obsolete]
         internal virtual void SetProductConfigMinimumFetchInterval(double minimumFetchInterval) {
         }
 
@@ -297,10 +352,12 @@ namespace CleverTapSDK.Common {
         internal virtual void SuspendInAppNotifications() {
         }
 
+        [Obsolete]
         internal virtual JSONClass UserGetEventHistory() {
             return new JSONClass();
         }
 
+        [Obsolete]
         internal virtual int UserGetPreviousVisitTime() {
             return -1;
         }
@@ -309,7 +366,20 @@ namespace CleverTapSDK.Common {
             return -1;
         }
 
+        [Obsolete]
         internal virtual int UserGetTotalVisits() {
+            return -1;
+        }
+
+        internal virtual void GetUserEventLog(string eventName, CleverTapCallback<UserEventLog> callback) { }
+
+        internal virtual void GetUserEventLogCount(string eventName, CleverTapCallback<int> callback) { }
+
+        internal virtual void GetUserAppLaunchCount(CleverTapCallback<int> callback) { }
+
+        internal virtual void GetUserEventLogHistory(CleverTapCallback<Dictionary<string, UserEventLog>> callback) { }
+
+        internal virtual long GetUserLastVisitTs() {
             return -1;
         }
 

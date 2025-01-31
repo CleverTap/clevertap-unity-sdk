@@ -5,51 +5,63 @@
 
 #### Update User Profile(Push Profile)
 
-```
-Dictionary<string, string> props = new Dictionary<string, string>();
-props.Add("RegistrationSource", "Android");
+```csharp
+Dictionary<string, object> props = new Dictionary<string, object>();
+props.Add("Name", "Jack Montana");
+props.Add("DOB", DateTime.Now);
+props.Add("FavouriteNumber", 33);
 CleverTap.ProfilePush(props);
 ```
+
 #### Set Multi Values For Key 
 
-``` 
+```csharp
 List<string> stringList = new List<string>();
 stringList.Add("one");
 stringList.Add("two");
-CleverTap.ProfileSetMultiValuesForKey("multiAndroid", stringList);
+CleverTap.ProfileSetMultiValuesForKey("multiKey", stringList);
 ```
+
 #### Remove Multi Value For Key
 
+```csharp
+List<string> stringList = new List<string>();
+stringList.Add("two");
+CleverTap.ProfileRemoveMultiValuesForKey("multiKey", stringList);
 ```
-List<string> stringList2 = new List<string>();
-stringList2.Add("two");
-CleverTap.ProfileRemoveMultiValuesForKey("multiAndroid", stringList2);
-```
+
 #### Add Multi Value For Key
+
+```csharp
+CleverTap.ProfileAddMultiValueForKey("multiKey", "three");
 ```
-CleverTap.ProfileAddMultiValueForKey("multiAndroid", "five");
-```
+
 #### Increment a numerical value for a single-value profile property (if it exists)
-```
+
+```csharp
 CleverTap.ProfileIncrementValueForKey("score", 10); // INTEGER PROFERTY
-CleverTap.ProfileIncrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
+CleverTap.ProfileIncrementValueForKey("profit", 1.5); // DOUBLE PROPERTY
 ```
+
 #### Decrement a numerical value for a single-value profile property (if it exists)
-```
+
+```csharp
 CleverTap.ProfileDecrementValueForKey("score", 10); // INTEGER PROFERTY
-CleverTap.ProfileDecrementValueForKey("profit", 1.5); //DOUBLE PROPERTY
+CleverTap.ProfileDecrementValueForKey("profit", 1.5); // DOUBLE PROPERTY
 ```
+
 #### Create a User profile when user logs in (On User Login)
 
-```
-Dictionary<string, string> newProps = new Dictionary<string, string>();
+```csharp
+Dictionary<string, object> newProps = new Dictionary<string, object>();
 newProps.Add("email", "test@test.com");
 newProps.Add("Identity", "123456");
 CleverTap.OnUserLogin(newProps);
 ```
+
 #### Set Location to User Profile
 
-```
+```csharp
 CleverTap.SetLocation(34.147785, -118.144516);
 ```
 
@@ -57,74 +69,117 @@ CleverTap.SetLocation(34.147785, -118.144516);
 
 #### Record an event  
 
+```csharp
+CleverTap.RecordEvent("My event");
 ```
-CleverTap.RecordEvent("Button Clicked");
+
+```csharp
+Dictionary<string, object> eventProperties = new Dictionary<string, object>
+{
+   { "Item name", "Book 1" },
+   { "Product category", "books" },
+   { "Price", 14.99 }
+};
+CleverTap.RecordEvent("Product Viewed", eventProperties);
 ```
 
 #### Record Charged event
-```
 
-Dictionary<string, object> chargeDetails = new Dictionary<string, object>();
-chargeDetails.Add("Amount", 500);
-chargeDetails.Add("Currency", "USD");
-chargeDetails.Add("Payment Mode", "Credit card");
-
-
-Dictionary<string, object> item = new Dictionary<string, object>();
-item.Add("price", 50);
-item.Add("Product category", "books");
-item.Add("Quantity", 1);
-
-
-Dictionary<string, object> item2 = new Dictionary<string, object>();
-item2.Add("price", 100);
-item2.Add("Product category", "plants");
-item2.Add("Quantity", 10);
-
-List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
-items.Add(item);
-items.Add(item2);
+```csharp
+var chargeDetails = new Dictionary<string, object>(){
+    { "Amount", 53.43 },
+    { "Currency", "USD" },
+    { "Payment Mode", "Cash" },
+    { "Date", DateTime.UtcNow },
+    { "Charged ID", 24052013 }
+};
+var items = new List<Dictionary<string, object>> {
+    new Dictionary<string, object> {
+        { "Price", 24.99 },
+        { "Product category", "books" },
+        { "Item name", "Achieving inner zen" },
+        { "Quantity", 1 }
+    },
+    new Dictionary<string, object> {
+        { "Price", 24.99 },
+        { "Product category", "books" },
+        { "Item name", "Taming the chaos" },
+        { "Quantity", 1 }
+    },
+    new Dictionary<string, object> {
+        { "Price", 0.49 },
+        { "Product category", "supplies" },
+        { "Item name", "Ballpoint pen" },
+        { "Quantity", 5 }
+    },
+    new Dictionary<string, object> {
+        { "Price", 1 },
+        { "Product category", "supplies" },
+        { "Item name", "Notebook" },
+        { "Quantity", 5 }
+    }
+};
 
 CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
-
 ```
+
 ## In-App Notifications
+
+#### On In App Show
+
+```csharp
+CleverTap.OnCleverTapInAppNotificationShowCallback += CleverTapInAppNotificationShowCallback;
+private void CleverTapInAppNotificationShowCallback(string message)
+{
+   Debug.Log($"InAppNotification Show callback: {message}");
+}
+```
 
 #### On In App Button Click
 
-```
-public void onInAppButtonClick(HashMap<String, String> payload) {
-invokeMethodOnUiThread("onInAppButtonClick", payload);
+```csharp
+CleverTap.OnCleverTapInAppNotificationButtonTapped += CleverTapInAppNotificationButtonTapped;
+private void CleverTapInAppNotificationButtonTapped(string message)
+{
+   Debug.Log($"InAppNotification ButtonTapped: {message}");
 }
 ```
+
 #### On Dismissed
 
-```
-void CleverTapInAppNotificationDismissedCallback(string message)
+```csharp
+CleverTap.OnCleverTapInAppNotificationDismissedCallback += CleverTapInAppNotificationDismissedCallback;
+private void CleverTapInAppNotificationDismissedCallback(string message)
 {
-Debug.Log("unity received inapp notification dismissed: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+   Debug.Log($"InAppNotification Dismissed callback: {message}");
 }
 ```
 
 ## In-App Notification Controls
 
-#### Suspend In-App Notifications  
-```
+#### Suspend In-App Notifications
+
+```csharp
 CleverTap.SuspendInAppNotifications();
 ```
-#### Discard In-App Notifications  
-```
+
+#### Discard In-App Notifications
+
+```csharp
 CleverTap.DiscardInAppNotifications();
 ```
-#### Resume In-App Notifications  
-```
+
+#### Resume In-App Notifications
+
+```csharp
 CleverTap.ResumeInAppNotifications();
 ```
 
 ## App Inbox
 
 #### Initialize the CleverTap App Inbox Method
-```
+
+```csharp
 CleverTap.InitializeInbox();
 Debug.Log("InboxInit started");
 ```
@@ -132,40 +187,69 @@ Debug.Log("InboxInit started");
 #### Show the App Inbox
 
 #### Use the below snippet to show default CleverTap's Inbox 
-```
-void LaunchInbox()
-{
-    CleverTap.ShowAppInbox("");
-}
+
+```csharp
+CleverTap.ShowAppInbox("");
 ```
 
 #### Use the below snippet to show custom CleverTap's Inbox
-```
-Dictionary<string, object> StyleConfig = new Dictionary<string, object>();
-StyleConfig.Add("navBarTitle", "My App Inbox");
-StyleConfig.Add("navBarTitleColor", "#FF0000");
-StyleConfig.Add("navBarColor", "#FFFFFF");
-StyleConfig.Add("inboxBackgroundColor", "#AED6F1");
-StyleConfig.Add("backButtonColor", "#00FF00");
-StyleConfig.Add("unselectedTabColor", "#0000FF");
-StyleConfig.Add("selectedTabColor", "#FF0000");
-StyleConfig.Add("noMessageText", "No message(s)");
-StyleConfig.Add("noMessageTextColor", "#FF0000");
 
-//Convert the Dictionary parameters to a string and pass it to `ShowAppInbox()`
-string jsonStr = JsonConvert.SerializeObject(StyleConfig, Formatting.Indented);
+```csharp
+Dictionary<string, object> styleConfig = new Dictionary<string, object>
+{
+    { "navBarTitle", "My App Inbox" },
+    { "navBarTitleColor", "#FF0000" },
+    { "navBarColor", "#FFFFFF" },
+    { "inboxBackgroundColor", "#AED6F1" },
+    { "backButtonColor", "#00FF00" },
+    { "unselectedTabColor", "#0000FF" },
+    { "selectedTabColor", "#FF0000" },
+    { "noMessageText", "No message(s)" },
+    { "noMessageTextColor", "#FF0000" }
+};
+// Convert the Dictionary parameters to a string and pass it to `ShowAppInbox()`
+string jsonStr = Json.Serialize(styleConfig);
 CleverTap.ShowAppInbox(jsonStr);
 ```
 
 #### Dismiss the App Inbox
 
-```
+```csharp
 CleverTap.DismissAppInbox();
 ```
+
+#### Get All Inbox Messages
+
+```csharp
+JSONArray jsonMessages = CleverTap.GetAllInboxMessages();
+List<CleverTapInboxMessage> messages = CleverTap.GetAllInboxMessagesParsed();
+```
+
+#### Get Unread Inbox Messages
+
+```csharp
+JSONArray jsonMessages = CleverTap.GetUnreadInboxMessages();
+List<CleverTapInboxMessage> messages = CleverTap.GetUnreadInboxMessagesParsed();
+```
+
+#### Get Inbox Message
+
+```csharp
+JSONClass jsonMessage = CleverTap.GetInboxMessageForId(id);
+CleverTapInboxMessage message = CleverTap.GetInboxMessageForIdParsed(id);
+```
+
+#### Delete Inbox Message
+
+```csharp
+CleverTap.DeleteInboxMessageForID(id);
+```
+
 ## Enable Debugging
 
 #### Set Debug Level
-```
+
+```csharp
 CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 ```
 
@@ -173,40 +257,39 @@ CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 
 #### Creating Notification Channel
 
+```csharp
+CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 ```
-void OnAndroidInit()
-{
-   CleverTap.LaunchWithCredentialsForRegion(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_ACCOUNT_TOKEN, CLEVERTAP_REGION);
-   CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
-}	
-```
+
 #### Delete Notification Channel
 
-```
+```csharp
 CleverTap.DeleteNotificationChannel("YourChannelId");		
 ```
+
 #### Creating a group notification channel
 
-``` 
+```csharp
 CleverTap.CreateNotificationChannelGroup("YourGroupId", "Your Group Name");		
 ```
+
 #### Delete a group notification channel
 
-```
+```csharp
 CleverTap.DeleteNotificationChannelGroup("YourGroupId");			
 ```
 
-#### Create Notification
+#### Create Notification Channel
 
-```
+```csharp
 CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 ```
 
 ## Push Primer
 
-### Half-Interstial Local In-App 
+### Half-Interstitial Local In-App 
 
-```
+```csharp
 Dictionary<string, object> item = new Dictionary<string, object>();
 item.Add("inAppType", "half-interstitial");
 item.Add("titleText", "Get Notified");
@@ -223,18 +306,20 @@ item.Add("btnBackgroundColor", "#0000FF");
 item.Add("imageUrl", "https://icons.iconarchive.com/icons/treetog/junior/64/camera-icon.png");
 item.Add("btnBorderRadius", "2");
 item.Add("fallbackToSettings", true);
+
 CleverTap.PromptPushPrimer(item);
 ```
 
 ### Alert Local In-App
 
-```
+```csharp
 Dictionary<string, object> item = new Dictionary<string, object>();
 item.Add("inAppType", "half-interstitial");
 item.Add("titleText", "Get Notified");
 item.Add("messageText", "Please enable notifications on your device to use Push Notifications.");
 item.Add("followDeviceOrientation", true);
 item.Add("fallbackToSettings", true);
+
 CleverTap.PromptPushPrimer(item);
 ```
 
@@ -242,13 +327,13 @@ CleverTap.PromptPushPrimer(item);
 ### true - fallbacks to app's notification settings if permission is denied,
 ### false - does not fallback to app's notification settings if permission is denied
 
-```
+```csharp
 CleverTap.PromptForPushPermission(false);
 ```
 
 ### Returns a boolean to indicate whether notification permission is granted or not
 
-```
+```csharp
 bool isPushPermissionGranted = CleverTap.IsPushPermissionGranted();
 ```
 
