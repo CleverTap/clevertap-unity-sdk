@@ -37,20 +37,33 @@ namespace CleverTapSDK.Private
 
             GUILayout.Label(windowName, EditorStyles.boldLabel);
 
-            settings.CleverTapAccountId = EditorGUILayout.TextField("CleverTapAccountId", settings.CleverTapAccountId);
-            settings.CleverTapAccountToken = EditorGUILayout.TextField("CleverTapAccountToken", settings.CleverTapAccountToken);
-            settings.CleverTapAccountRegion = EditorGUILayout.TextField("CleverTapAccountRegion", settings.CleverTapAccountRegion);
-            settings.CleverTapProxyDomain = EditorGUILayout.TextField("CleverTapProxyDomain", settings.CleverTapProxyDomain);
-            settings.CleverTapSpikyProxyDomain = EditorGUILayout.TextField("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
+            settings.CleverTapAccountId = EditorGUILayout.TextField(new GUIContent("CleverTapAccountId", "Clevertap Project ID"),
+                settings.CleverTapAccountId);
+            settings.CleverTapAccountToken = EditorGUILayout.TextField(new GUIContent("CleverTapAccountToken", "Clevertap Project Token"),
+                settings.CleverTapAccountToken);
+            settings.CleverTapAccountRegion = EditorGUILayout.TextField(new GUIContent("CleverTapAccountRegion", "CleverTap Region Code"),
+                settings.CleverTapAccountRegion);
+            settings.CleverTapProxyDomain = EditorGUILayout.TextField(new GUIContent("CleverTapProxyDomain", "Custom Proxy Domain"),
+                settings.CleverTapProxyDomain);
+            settings.CleverTapSpikyProxyDomain = EditorGUILayout.TextField(new GUIContent("CleverTapSpikyProxyDomain", "Spiky Proxy Domain"),
+                settings.CleverTapSpikyProxyDomain);
 
             GUILayout.Label("iOS specific settings", EditorStyles.boldLabel);
-            settings.CleverTapDisableIDFV = EditorGUILayout.Toggle("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
-            settings.CleverTapIOSUseAutoIntegrate = EditorGUILayout.Toggle("UseAutoIntegrate", settings.CleverTapIOSUseAutoIntegrate);
-            settings.CleverTapIOSUseUNUserNotificationCenter = EditorGUILayout.Toggle("UseUNUserNotificationCenter", settings.CleverTapIOSUseUNUserNotificationCenter);
-            settings.CleverTapIOSPresentNotificationOnForeground = EditorGUILayout.Toggle("PresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
+            settings.CleverTapDisableIDFV = EditorGUILayout.Toggle(new GUIContent("CleverTapDisableIDFV", "Disable IDFV use on iOS"),
+                settings.CleverTapDisableIDFV);
+            settings.CleverTapIOSUseAutoIntegrate = EditorGUILayout.Toggle(new GUIContent("UseAutoIntegrate",
+                "Use [CleverTap autoIntegrate] and swizzling on iOS"),
+                settings.CleverTapIOSUseAutoIntegrate);
+            settings.CleverTapIOSUseUNUserNotificationCenter = EditorGUILayout.Toggle(new GUIContent("UseUNUserNotificationCenter",
+                "Boolean whether to set UNUserNotificationCenter delegate on iOS. When disabled, you must implement the delegate yourself and call CleverTap methods."),
+                settings.CleverTapIOSUseUNUserNotificationCenter);
+            settings.CleverTapIOSPresentNotificationOnForeground = EditorGUILayout.Toggle(new GUIContent("PresentNotificationForeground",
+                "Boolean whether to present remote notifications while app is on foreground on iOS."),
+                settings.CleverTapIOSPresentNotificationOnForeground);
 
             GUILayout.Label("Other settings", EditorStyles.boldLabel);
-            settings.CleverTapSettingsSaveToJSON = EditorGUILayout.Toggle("Save to streaming assets", settings.CleverTapSettingsSaveToJSON);
+            settings.CleverTapSettingsSaveToJSON = EditorGUILayout.Toggle(new GUIContent("Save to streaming assets",
+"When enabled, settings will be saved as JSON in StreamingAssets folder for runtime access"), settings.CleverTapSettingsSaveToJSON);
 
             EditorGUIUtility.labelWidth = originalValue;
 
