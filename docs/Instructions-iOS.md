@@ -19,7 +19,9 @@ On iOS, the SDK initialization is done using `[CleverTap autoIntegrate]` in the 
 If you use your own `UnityAppController` override, inherit from the `CleverTapUnityAppController` or call the CleverTap methods.
 
 **Settings**
+
 _Disable IDFV_
+
 Set the `CleverTapDisableIDFV` setting to `true`, to disable the usage of IDFV for CleverTap ID.
 
 _Use autoIntegrate_
