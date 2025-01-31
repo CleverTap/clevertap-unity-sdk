@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version  *(, 2025)*
+Version 5.0.0 *(31 January, 2025)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v7.1.2](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.1.2)
 - Updated to [CleverTap iOS SDK v7.1.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.1.0)
