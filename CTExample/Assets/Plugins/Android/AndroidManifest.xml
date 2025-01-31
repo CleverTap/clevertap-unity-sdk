@@ -33,6 +33,7 @@
         android:debuggable="true"
         android:icon="@drawable/app_icon"
         android:isGame="true"
+        android:name="com.clevertap.unity.CleverTapUnityApplication"
         android:label="@string/app_name"
         android:theme="@style/UnityThemeSelector">
 
@@ -80,19 +81,6 @@
                 <action android:name="com.clevertap.PUSH_EVENT" />
             </intent-filter>
         </service>
-
-        <meta-data
-            android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="Your CleverTap Account ID" />
-
-        <meta-data
-            android:name="CLEVERTAP_TOKEN"
-            android:value="Your CleverTap Account Token" />
-
-        <meta-data
-            android:name="CLEVERTAP_REGION"
-            android:value="Your CleverTap Account Region" />
-
     </application>
 
 </manifest>
