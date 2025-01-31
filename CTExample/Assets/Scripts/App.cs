@@ -116,7 +116,6 @@ namespace CTExample
         private void CleverTapInAppNotificationButtonTapped(string message)
         {
             Logger.Log($"InAppNotification ButtonTapped: {message}");
-            CleverTap.SuspendInAppNotifications();
         }
 
         private void CleverTapInAppNotificationDismissedCallback(string message)
