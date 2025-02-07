@@ -26,7 +26,7 @@ You can install the CleverTap Unity SDK using the `.unitypackage` Unity package 
 
 1. Download the latest version of the CleverTap Unity package. Import the `.unitypackage` into your Unity Project. **Go to Assets** > **Import Package** > **Custom Package**. 
 2. Add the **PlayServiceResolver** and the **ExternalDependencyManager** folders. These folders will install the **EDM4U** plugin, which automatically adds all the Android and iOS dependencies when building your project.
-3. Ensure that the scripts inside the `Editor` folder are added. The `AndroidPostImport` script sets up `clevertap-android-wrapper` library for Android. IOS/Android `PostBuildProcessor` scripts helps iOS and Android setup.
+3. Ensure that the scripts inside the `Editor` folder are added. The `AndroidPostImport` script sets up `clevertap-android-wrapper` library for Android. `IOSPostBuildProcessor` and `AndroidProjectPostProcessor` scripts helps iOS and Android setup.
 
 ### Import the CleverTap Unity Package as a Local Dependency
 
