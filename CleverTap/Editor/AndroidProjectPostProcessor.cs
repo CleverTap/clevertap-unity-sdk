@@ -2,27 +2,20 @@
 using System.IO;
 using System.Xml;
 using UnityEditor;
-using UnityEditor.Callbacks;
+using UnityEditor.Android;
 using UnityEngine;
 
 namespace CleverTapSDK.Private
 {
-    public class AndroidPostBuildProcessor
+    public class AndroidProjectPostProcessor: IPostGenerateGradleAndroidProject
 	{
         private static readonly string ANDROID_XML_NS_URI = "http://schemas.android.com/apk/res/android";
 
-        [PostProcessBuild(99)]
-        public static void OnPostprocessBuild(BuildTarget target, string path)
-        {
-            if (target == BuildTarget.Android)
-            {
-                AndroidPostProcess(path);
-            }
-        }
+        public int callbackOrder => 99;
 
-        private static void AndroidPostProcess(string path)
+        public void OnPostGenerateGradleAndroidProject(string path)
         {
-            string androidProjectPath = path + "/unityLibrary/clevertap-android-wrapper.androidlib";
+            string androidProjectPath = path + "/clevertap-android-wrapper.androidlib";
 
             // copy assets to the android project
             EditorUtils.DirectoryCopy(Path.Combine(Application.dataPath, EditorUtils.CLEVERTAP_ASSETS_FOLDER),
