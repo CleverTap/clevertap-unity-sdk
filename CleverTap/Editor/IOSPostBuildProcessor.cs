@@ -113,6 +113,7 @@ namespace CleverTapSDK.Private
             else
             {
                 Debug.Log($"CleverTapAccountID has not been set.\n" +
+                    $"SDK initialization will fail without this. " +
                     $"Please set it from {CleverTapSettingsWindow.ITEM_NAME} or " +
                     $"manually in the project Info.plist.");
             }
@@ -124,6 +125,7 @@ namespace CleverTapSDK.Private
             else
             {
                 Debug.Log($"CleverTapToken has not been set.\n" +
+                    $"SDK initialization will fail without this. " +
                     $"Please set it from {CleverTapSettingsWindow.ITEM_NAME} or " +
                     $"manually in the project Info.plist.");
             }
@@ -179,7 +181,8 @@ namespace CleverTapSDK.Private
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"Failed to Copy assets to iOS project. Exception: {ex}");
+                Debug.LogError($"Failed to Copy assets to iOS project. " +
+                    $"This affects Custom Templates and App Functions. Exception: {ex}");
                 return;
             }
 
