@@ -1,4 +1,5 @@
 ﻿#if UNITY_IOS && UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -171,8 +172,16 @@ namespace CleverTapSDK.Private
 
             // Copy CleverTap folder
             string destinationFolderPath = Path.Combine(path, EditorUtils.CLEVERTAP_APP_ASSETS_FOLDER);
-            EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath,
-                true, true, new System.Collections.Generic.HashSet<string>() { EditorUtils.CLEVERTAP_CUSTOM_TEMPLATES_FOLDER });
+            HashSet<string> folderNamesToCopy = new HashSet<string>() { EditorUtils.CLEVERTAP_CUSTOM_TEMPLATES_FOLDER };
+            try
+            {
+                EditorUtils.DirectoryCopy(sourceFolderPath, destinationFolderPath, true, true, folderNamesToCopy);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to Copy assets to iOS project. Exception: {ex}");
+                return;
+            }
 
             string mainTargetGuid = proj.GetUnityMainTargetGuid();
             // Add CleverTap folder reference and target membership
