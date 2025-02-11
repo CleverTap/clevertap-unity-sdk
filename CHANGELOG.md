@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 5.0.1 *(11 February, 2025)*
+-------------------------------------------
+- Fixes Android Gradle project build when building bundle/apk
+- Fixes In-app messages not displayed full screen on Android
+- Fixes Android empty assets copying
+- Fixes iOS empty assets copying
+
 Version 5.0.0 *(31 January, 2025)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v7.1.2](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.1.2)
