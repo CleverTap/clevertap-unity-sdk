@@ -72,6 +72,7 @@ namespace CleverTapSDK.Native
         }
 
         #region File Variables
+
         public override event CleverTapCallbackDelegate OnFileReady
         {
             add
@@ -90,6 +91,7 @@ namespace CleverTapSDK.Native
         }
 
         public override bool IsFileReady => false;
+
         #endregion
 
         public override string ToString()
