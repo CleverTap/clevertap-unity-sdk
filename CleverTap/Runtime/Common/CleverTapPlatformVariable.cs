@@ -83,36 +83,50 @@ namespace CleverTapSDK.Common {
             }
         }
 
-        protected virtual Var<T> GetOrDefineVariable<T>(string name, T defaultValue) {
-            var kindName = GetKindNameFromGenericType<T>();
-            if (string.IsNullOrEmpty(kindName)) {
+        protected virtual Var<T> GetOrDefineVariable<T>(string name, T defaultValue)
+        {
+            string kindName = GetKindNameFromGenericType<T>();
+            return GetOrDefineVariable<T>(name, kindName, defaultValue);
+        }
+
+        protected virtual Var<string> GetOrDefineFileVariable(string name)
+        {
+            return GetOrDefineVariable<string>(name, CleverTapVariableKind.FILE, null);
+        }
+
+        protected virtual Var<T> GetOrDefineVariable<T>(string name, string kindName, T defaultValue)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                CleverTapLogger.LogError("CleverTap Error: Variable name cannot be empty.");
+                return null;
+            }
+
+            if (name.StartsWith(".") || name.EndsWith("."))
+            {
+                CleverTapLogger.LogError($"CleverTap Error: Variable name \"{name}\" starts or ends with a `.` which is not allowed");
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(kindName))
+            {
                 CleverTapLogger.LogError("CleverTap Error: Default value for \"" + name + "\" not recognized or supported.");
                 return null;
             }
 
-            if (varCache.ContainsKey(name)) {
-                if (varCache[name].Kind != kindName) {
+            if (varCache.ContainsKey(name))
+            {
+                if (varCache[name].Kind != kindName)
+                {
                     CleverTapLogger.LogError("CleverTap Error: Variable " + "\"" + name + "\" was already defined with a different kind");
                     return null;
                 }
                 return (Var<T>)varCache[name];
             }
-            
+
             return DefineVariable<T>(name, kindName, defaultValue);
         }
 
-        protected virtual Var<string> GetOrDefineFileVariable(string name) {
-            if (varCache.ContainsKey(name)) {
-                if (varCache[name].Kind != CleverTapVariableKind.FILE) {
-                    CleverTapLogger.LogError("CleverTap Error: Variable " + "\"" + name + "\" was already defined with a different kind");
-                    return null;
-                }
-                return (Var<string>)varCache[name];
-            }
-
-            return DefineVariable<string>(name, CleverTapVariableKind.FILE, null);
-        }
-        
         protected virtual string GetKindNameFromGenericType<T>() {
             Type type = typeof(T);
             if (type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(char) || type == typeof(sbyte) || type == typeof(byte)) {
