@@ -1,0 +1,155 @@
+﻿using System;
+using System.Collections.Generic;
+using CleverTapSDK.Utilities;
+using System.Linq;
+
+namespace CleverTapSDK.Native
+{
+    internal static class UnityNativeVariableUtils
+    {
+        internal const string DOT = ".";
+
+        internal static void UpdateValues(string name, string[] nameComponents, object value, Dictionary<string, object> values)
+        {
+            if (nameComponents == null || nameComponents.Length == 0)
+                return;
+
+            object valuesPtr = values;
+            for (int i = 0; i < nameComponents.Length - 1; i++)
+            {
+                valuesPtr = Traverse(valuesPtr, nameComponents[i], true);
+            }
+
+            if (valuesPtr is Dictionary<string, object> dictionary)
+            {
+                dictionary.TryGetValue(nameComponents[^1], out object currentValue);
+
+                if (currentValue is Dictionary<string, object> && value is Dictionary<string, object>)
+                {
+                    value = MergeHelper(value, currentValue);
+                }
+                else if (currentValue != null && currentValue.Equals(value))
+                {
+                    CleverTapLogger.Log($"Variable with name {name} will override value: {currentValue}, with new value: {value}.");
+                }
+
+                dictionary[nameComponents[^1]] = value;
+            }
+        }
+
+        internal static Dictionary<string, object> ConvertDictionaryToNestedDictionaries(Dictionary<string, object> values)
+        {
+            var result = new Dictionary<string, object>();
+
+            foreach (var entry in values)
+            {
+                string key = entry.Key;
+                if (key.Contains(DOT))
+                {
+                    string[] components = GetNameComponents(key);
+                    int namePosition = components.Length - 1;
+                    var currentMap = result;
+
+                    for (int i = 0; i < components.Length; i++)
+                    {
+                        string component = components[i];
+
+                        if (i == namePosition)
+                        {
+                            currentMap[component] = entry.Value;
+                        }
+                        else
+                        {
+                            bool containsKey = currentMap.TryGetValue(component, out var currentValue);
+                            if (!containsKey || currentValue is not Dictionary<string, object>)
+                            {
+                                var nestedMap = new Dictionary<string, object>();
+                                currentMap[component] = nestedMap;
+                                currentMap = nestedMap;
+                            }
+                            else
+                            {
+                                currentMap = (Dictionary<string, object>)currentValue;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    result[key] = entry.Value;
+                }
+            }
+
+            return result;
+        }
+
+        internal static object MergeHelper(object vars, object diff)
+        {
+            if (diff == null)
+            {
+                return vars;
+            }
+            if (diff is ValueType || diff is string || vars is ValueType || vars is string)
+            {
+                return diff;
+            }
+
+            var varsMap = vars as Dictionary<string, object>;
+            var diffMap = diff as Dictionary<string, object>;
+            var varsKeys = varsMap != null ? varsMap.Keys.ToArray() : new string[0];
+            var diffKeys = diffMap != null ? diffMap.Keys.ToArray() : new string[0];
+
+            if (varsMap != null || diffMap != null)
+            {
+                Dictionary<string, object> merged = new Dictionary<string, object>();
+                foreach (var varKey in varsKeys)
+                {
+                    if (diffMap != null)
+                    {
+                        diffMap.TryGetValue(varKey, out object diffVar);
+                        varsMap.TryGetValue(varKey, out object value);
+                        if (diffVar == null && value != null)
+                        {
+                            merged.Add(varKey, value);
+                        }
+                    }
+                }
+                foreach (var diffKey in diffKeys)
+                {
+                    diffMap.TryGetValue(diffKey, out object diffsValue);
+                    varsMap.TryGetValue(diffKey, out object varsValue);
+                    object mergedValues = MergeHelper(varsValue, diffsValue);
+                    merged.Add(diffKey, mergedValues);
+                }
+                return merged;
+            }
+
+            return null;
+        }
+
+        private static object Traverse(object collection, object key, bool autoInsert)
+        {
+            if (collection == null || key == null)
+                return null;
+
+            string keyString = key.ToString();
+            if (collection is Dictionary<string, object> dictionary)
+            {
+                bool containsKey = dictionary.TryGetValue(keyString, out var result);
+                if (!containsKey && autoInsert)
+                {
+                    result = new Dictionary<string, object>();
+                    dictionary[keyString] = result;
+                }
+                return result;
+            }
+
+            return null;
+        }
+
+        internal static string[] GetNameComponents(string name)
+        {
+            return name.Split(DOT);
+        }
+    }
+}

@@ -12,7 +12,7 @@ namespace CleverTapSDK.Native
         internal UnityNativeVar(string name, string kind, T defaultValue) : base(name, kind, defaultValue)
         {
             // TODO: VarCache registerVariable, update values, merge variable
-            nameComponents = GetNameComponents(name);
+            nameComponents = UnityNativeVariableUtils.GetNameComponents(name);
             Update();
         }
 
@@ -63,12 +63,6 @@ namespace CleverTapSDK.Native
         private bool HasVarsRequestCompleted()
         {
             return false;
-        }
-
-        // TODO: Move to VarCache or Utils
-        internal static string[] GetNameComponents(string name)
-        {
-            return name.Split(".");
         }
 
         #region File Variables
