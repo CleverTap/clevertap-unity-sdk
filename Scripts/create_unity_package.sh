@@ -34,7 +34,8 @@ ln -s "$PWD/CleverTap" "$PROJECT/Assets" # Create a symbolic link to CleverTap
 awk '!/com.clevertap.clevertap-sdk-unity/' $MANIFEST_JSON_PATH > temp && mv temp $MANIFEST_JSON_PATH
 
 # Find folders to export
-FOLDERS_TO_EXPORT=$(cd $PROJECT; find Assets/CleverTap/* Assets/PlayServicesResolver Assets/ExternalDependencyManager -type d -prune)
+FOLDERS_TO_EXPORT=$(cd $PROJECT; find Assets/CleverTap/* Assets/PlayServicesResolver Assets/ExternalDependencyManager \
+    -path "Assets/CleverTap/Tests" -prune -o -type d -prune -print)
 
 # Check if script is run from the correct location
 if ! [ -d "$PROJECT" ]; then
