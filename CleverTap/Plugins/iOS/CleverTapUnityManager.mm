@@ -37,20 +37,34 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.cleverTap = [CleverTap sharedInstance];
-        NSLog(@"CleverTap default instance: %@", self.cleverTap);
-        [self.cleverTap setLibrary:@"Unity"];
-        self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
-        [self.callbackHandler attachInstance:self.cleverTap];
+        [self setCleverTapInstance:[CleverTap sharedInstance]];
     }
     return self;
 }
 
-const double PENDING_EVENTS_TIME_OUT = 10.0;
+- (void)setCleverTapInstance:(CleverTap *)instance {
+    if (!instance) {
+        NSLog(@"Cannot set nil CleverTap instance.");
+        return;
+    }
+    NSLog(@"Setting CleverTap instance: %@", instance);
+    self.cleverTap = instance;
+    [self.cleverTap setLibrary:@"Unity"];
+    self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
+    [self.callbackHandler attachInstance:self.cleverTap];
+    if (platformDidInit && shouldDisableBuffers) {
+        [self disableMessageBuffers];
+    }
+}
+
+static BOOL platformDidInit = NO;
 
 - (void)onPlatformInit {
     NSLog(@"CleverTap Platform Init");
-    [self disableMessageBuffers];
+    platformDidInit = YES;
+    if (self.cleverTap && shouldDisableBuffers) {
+        [self disableMessageBuffers];
+    }
 }
 
 - (void)onCallbackAdded:(NSString *)callbackName {
@@ -64,10 +78,14 @@ const double PENDING_EVENTS_TIME_OUT = 10.0;
     [[CleverTapMessageSender sharedInstance] flushBuffer:callback];
 }
 
+const double PENDING_EVENTS_TIME_OUT = 10.0;
+static BOOL shouldDisableBuffers = YES;
+
 - (void)disableMessageBuffers {
     // disable buffers after a delay in order to give some time for callback delegates to attach
     // and receive initially buffered messages. After that all buffers will be cleared and disabled
     // and messages will continue to be sent immediately.
+    shouldDisableBuffers = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(PENDING_EVENTS_TIME_OUT * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"CleverTap resetting all buffers.");
         [[CleverTapMessageSender sharedInstance] resetAllBuffers];

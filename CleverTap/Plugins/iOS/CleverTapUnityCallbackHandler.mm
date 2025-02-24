@@ -13,12 +13,22 @@
     return _sharedObject;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self registerListeners];
+    }
+    return self;
+}
+
 - (void)callUnityObject:(CleverTapUnityCallback)callback withMessage:(NSString *)message {
     [[CleverTapMessageSender sharedInstance] send:callback withMessage:message];
 }
 
 - (void)attachInstance:(CleverTap *)instance {
-    [self registerListeners];
+    if (!instance){
+        return;
+    }
     
     [instance setPushNotificationDelegate:self];
     [instance setInAppNotificationDelegate:self];
