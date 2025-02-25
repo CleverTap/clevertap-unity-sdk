@@ -96,10 +96,22 @@ namespace CleverTapSDK.Native
 
             var varsMap = vars as Dictionary<string, object>;
             var diffMap = diff as Dictionary<string, object>;
+            // Return null if neither vars nor diff is dictionary.
+            if (varsMap == null && diffMap == null)
+            {
+                return null;
+            }
+            if (varsMap == null)
+            {
+                // diff is Dictionary.
+                return diff;
+            }
+
             var varsKeys = varsMap != null ? varsMap.Keys.ToArray() : new string[0];
             var diffKeys = diffMap != null ? diffMap.Keys.ToArray() : new string[0];
 
-            if (varsMap != null || diffMap != null)
+            // varsMap is not null, check diffMap only
+            if (diffMap != null)
             {
                 Dictionary<string, object> merged = new Dictionary<string, object>();
                 foreach (var varKey in varsKeys)
@@ -108,7 +120,7 @@ namespace CleverTapSDK.Native
                     {
                         diffMap.TryGetValue(varKey, out object diffVar);
                         varsMap.TryGetValue(varKey, out object value);
-                        if (diffVar == null && value != null)
+                        if (diffVar == null)
                         {
                             merged.Add(varKey, value);
                         }
