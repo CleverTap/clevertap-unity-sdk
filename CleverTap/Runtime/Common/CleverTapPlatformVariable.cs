@@ -122,7 +122,7 @@ namespace CleverTapSDK.Common
 
             if (string.IsNullOrEmpty(kindName))
             {
-                CleverTapLogger.LogError($"CleverTap Error: Default value for \"{name}\" not recognized or supported.");
+                CleverTapLogger.LogError($"CleverTap Error: Default value for \"{name}\" not recognized or not supported.");
                 return null;
             }
 
