@@ -113,6 +113,21 @@ class CleverTapUnityCallbackHandler implements SyncListener, InAppNotificationLi
         clevertap.onVariablesChangedAndNoDownloadsPending(variablesChangedAndNoDownloadsPendingCallback);
     }
 
+    public void detachFromApiInstance(CleverTapAPI clevertap) {
+        clevertap.unregisterPushPermissionNotificationResponseListener(this);
+        clevertap.setCTPushNotificationListener(null);
+        clevertap.setInAppNotificationListener(null);
+        clevertap.setSyncListener(null);
+        clevertap.setCTNotificationInboxListener(null);
+        clevertap.setInboxMessageButtonListener(null);
+        clevertap.setCTInboxMessageListener(null);
+        clevertap.setInAppNotificationButtonListener(null);
+        clevertap.setDisplayUnitListener(null);
+        clevertap.setCTFeatureFlagsListener(null);
+        clevertap.setCTProductConfigListener(null);
+        clevertap.removeAllVariablesChangedCallbacks();
+    }
+
     //OnInitCleverTapIDListener
     @Override
     public void onInitCleverTapID(String cleverTapID) {

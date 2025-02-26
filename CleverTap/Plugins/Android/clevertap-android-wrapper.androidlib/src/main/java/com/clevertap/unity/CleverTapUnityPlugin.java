@@ -40,6 +40,7 @@ public class CleverTapUnityPlugin {
 
     private static CleverTapUnityPlugin instance = null;
 
+    private static CleverTapAPI initialCleverTapApiInstance = null;
     private CleverTapAPI clevertap = null;
     private final CleverTapUnityCallbackHandler callbackHandler;
 
@@ -50,10 +51,28 @@ public class CleverTapUnityPlugin {
     }
 
     public static synchronized CleverTapUnityPlugin getInstance(final Context context) {
+        // If there is an initialCleverTapApiInstance present, use it to create a new instance
+        // of the plugin regardless if there was another instance previously set.
+        if (initialCleverTapApiInstance != null) {
+            instance = new CleverTapUnityPlugin(initialCleverTapApiInstance);
+            initialCleverTapApiInstance = null;
+            return instance;
+        }
+
         if (instance == null && context != null) {
-            instance = new CleverTapUnityPlugin(context.getApplicationContext());
+            instance = new CleverTapUnityPlugin(CleverTapAPI.getDefaultInstance(context.getApplicationContext()));
         }
         return instance;
+    }
+
+    public static synchronized void setCleverTapApiInstance(final CleverTapAPI cleverTapAPI) {
+        if (cleverTapAPI != null) {
+            if (instance != null) {
+                instance.callbackHandler.detachFromApiInstance(instance.clevertap);
+                instance = null;
+            }
+            initialCleverTapApiInstance = cleverTapAPI;
+        }
     }
 
     public static void createNotificationChannel(Context context, String channelId, String channelName, String channelDescription, int importance, boolean showBadge) {
@@ -118,17 +137,17 @@ public class CleverTapUnityPlugin {
         }
     }
 
-    private CleverTapUnityPlugin(final Context context) {
+    private CleverTapUnityPlugin(final CleverTapAPI cleverTapApi) {
         callbackHandler = CleverTapUnityCallbackHandler.getInstance();
         backgroundExecutor = new BackgroundExecutor();
         disableMessageBuffers();
         try {
-            clevertap = CleverTapAPI.getDefaultInstance(context);
+            clevertap = cleverTapApi;
             if (clevertap != null) {
-                Log.d(LOG_TAG, "getDefaultInstance-" + clevertap);
+                Log.d(LOG_TAG, "Initialized with instance " + clevertap);
             }
         } catch (Throwable t) {
-            Log.e(LOG_TAG, "initialization error", t);
+            Log.e(LOG_TAG, "Initialization error", t);
         }
     }
 

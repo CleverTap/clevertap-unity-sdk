@@ -25,10 +25,17 @@ public class CleverTapUnityAPI {
      */
     public static void initialize(Context context) {
         CleverTapCustomTemplates.registerCustomTemplates(context);
-        CleverTapAPI clevertap = CleverTapAPI.getDefaultInstance(context);
-        if (clevertap != null) {
-            clevertap.setLibrary("Unity");
-            CleverTapUnityCallbackHandler.getInstance().attachToApiInstance(clevertap);
+        setCleverTapApiInstance(CleverTapAPI.getDefaultInstance(context));
+    }
+
+    /**
+     * Set a custom instance of {@link CleverTapAPI} that CleverTapUnity will use.
+     */
+    public static void setCleverTapApiInstance(CleverTapAPI cleverTapApi) {
+        if (cleverTapApi != null) {
+            cleverTapApi.setLibrary("Unity");
+            CleverTapUnityPlugin.setCleverTapApiInstance(cleverTapApi);
+            CleverTapUnityCallbackHandler.getInstance().attachToApiInstance(cleverTapApi);
         }
     }
 
