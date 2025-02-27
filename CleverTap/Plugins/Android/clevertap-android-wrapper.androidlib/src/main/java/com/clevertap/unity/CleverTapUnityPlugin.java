@@ -68,6 +68,10 @@ public class CleverTapUnityPlugin {
     public static synchronized void setCleverTapApiInstance(final CleverTapAPI cleverTapAPI) {
         if (cleverTapAPI != null) {
             if (instance != null) {
+                if (instance.clevertap == cleverTapAPI) {
+                    // the same CleverTapAPI instance is already set
+                    return;
+                }
                 instance.callbackHandler.detachFromApiInstance(instance.clevertap);
                 instance = null;
             }
