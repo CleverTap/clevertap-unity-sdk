@@ -13,44 +13,40 @@ namespace CleverTapSDK.Utilities
                 return;
             }
 
-            if (source is IDictionary sourceDictionary)
+            var sourceDictionary = source as IDictionary;
+            var destinationDictionary = destination as IDictionary;
+            if (sourceDictionary == null && destinationDictionary == null)
             {
-                if (destination is IDictionary destinationDictionary)
+                return;
+            }
+
+            foreach (object key in sourceDictionary.Keys)
+            {
+                object typedKey = Convert.ChangeType(key, destination.GetKeyType());
+                if (sourceDictionary[key] is IDictionary dictionary)
                 {
-                    foreach (object key in sourceDictionary.Keys)
+                    if (destinationDictionary.Contains(typedKey))
                     {
-                        object typedKey = Convert.ChangeType(key, destination.GetKeyType());
-                        if (sourceDictionary[key] is IDictionary dictionary)
-                        {
-                            if (destinationDictionary.Contains(typedKey))
-                            {
-                                FillInValues(sourceDictionary[key],
-                                             destinationDictionary[typedKey]);
-                            }
-                            else if (shouldCopyCollection)
-                            {
-                                //IDictionary copy = new Dictionary<object, object>();
-                                IDictionary copy = CreateNewDictionary(dictionary);
-                                FillInValues(dictionary, copy);
-                                destinationDictionary[typedKey] = copy;
-                            }
-                            else
-                            {
-                                destinationDictionary[typedKey] = dictionary;
-                            }
-                        }
-                        else
-                        {
-                            destinationDictionary[typedKey] =
-                                Convert.ChangeType(sourceDictionary[key],
-                                                   destination.GetValueType());
-                        }
+                        FillInValues(sourceDictionary[key],
+                                     destinationDictionary[typedKey]);
+                    }
+                    else if (shouldCopyCollection)
+                    {
+                        IDictionary copy = CreateNewDictionary(dictionary);
+                        FillInValues(dictionary, copy);
+                        destinationDictionary[typedKey] = copy;
+                    }
+                    else
+                    {
+                        destinationDictionary[typedKey] = dictionary;
                     }
                 }
-            }
-            else
-            {
-                destination = Convert.ChangeType(source, source.GetType());
+                else
+                {
+                    destinationDictionary[typedKey] =
+                        Convert.ChangeType(sourceDictionary[key],
+                                           destination.GetValueType());
+                }
             }
         }
 
