@@ -6,6 +6,8 @@ namespace CleverTapSDK.Native
 {
     internal class UnityNativePlatformVariable : CleverTapPlatformVariable
     {
+        private readonly UnityNativeVarCache nativeVarCache = new UnityNativeVarCache();
+
         internal override void SyncVariables()
         {
             CleverTapLogger.LogError("CleverTap Error: SyncVariables is not supported for this platform.");
@@ -23,7 +25,7 @@ namespace CleverTapSDK.Native
 
         protected override Var<T> DefineVariable<T>(string name, string kind, T defaultValue)
         {
-            UnityNativeVar<T> result = new UnityNativeVar<T>(name, kind, defaultValue);
+            UnityNativeVar<T> result = new UnityNativeVar<T>(name, kind, defaultValue, nativeVarCache);
             varCache.Add(name, result);
             return result;
         }

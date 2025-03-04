@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CleverTapSDK.Utilities;
-using System.Linq;
 
 namespace CleverTapSDK.Native
 {
@@ -9,7 +9,7 @@ namespace CleverTapSDK.Native
     {
         internal const string DOT = ".";
 
-        internal static void UpdateValues(string name, string[] nameComponents, object value, Dictionary<string, object> values)
+        internal static void UpdateValues(string name, string[] nameComponents, object value, IDictionary values)
         {
             if (nameComponents == null || nameComponents.Length == 0)
                 return;
@@ -20,11 +20,11 @@ namespace CleverTapSDK.Native
                 valuesPtr = Traverse(valuesPtr, nameComponents[i], true);
             }
 
-            if (valuesPtr is Dictionary<string, object> dictionary)
+            if (valuesPtr is IDictionary dictionary)
             {
                 dictionary.TryGetValue(nameComponents[^1], out object currentValue);
 
-                if (currentValue is Dictionary<string, object> && value is Dictionary<string, object>)
+                if (currentValue is IDictionary && value is IDictionary)
                 {
                     value = MergeHelper(value, currentValue);
                 }
@@ -94,8 +94,8 @@ namespace CleverTapSDK.Native
                 return diff;
             }
 
-            var varsMap = vars as Dictionary<string, object>;
-            var diffMap = diff as Dictionary<string, object>;
+            var varsMap = vars as IDictionary;
+            var diffMap = diff as IDictionary;
             // Return null if neither vars nor diff is dictionary.
             if (varsMap == null && diffMap == null)
             {
@@ -107,13 +107,14 @@ namespace CleverTapSDK.Native
                 return diff;
             }
 
-            var varsKeys = varsMap != null ? varsMap.Keys.ToArray() : new string[0];
-            var diffKeys = diffMap != null ? diffMap.Keys.ToArray() : new string[0];
+            ICollection varsKeys = varsMap != null ? varsMap.Keys : new string[0];
+            ICollection diffKeys = diffMap != null ? diffMap.Keys : new string[0];
 
             // varsMap is not null, check diffMap only
             if (diffMap != null)
             {
-                Dictionary<string, object> merged = new Dictionary<string, object>();
+                IDictionary merged = Util.CreateNewDictionary(varsMap);
+
                 foreach (var varKey in varsKeys)
                 {
                     if (diffMap != null)
@@ -139,13 +140,13 @@ namespace CleverTapSDK.Native
             return null;
         }
 
-        private static object Traverse(object collection, object key, bool autoInsert)
+        internal static object Traverse(object collection, object key, bool autoInsert)
         {
             if (collection == null || key == null)
                 return null;
 
             string keyString = key.ToString();
-            if (collection is Dictionary<string, object> dictionary)
+            if (collection is IDictionary dictionary)
             {
                 bool containsKey = dictionary.TryGetValue(keyString, out var result);
                 if (!containsKey && autoInsert)
@@ -162,6 +163,25 @@ namespace CleverTapSDK.Native
         internal static string[] GetNameComponents(string name)
         {
             return name.Split(DOT);
+        }
+
+        internal static IDictionary CopyDictionary(IDictionary dictionary)
+        {
+            IDictionary copy = Util.CreateNewDictionary(dictionary);
+            foreach (var key in dictionary.Keys)
+            {
+                var value = dictionary[key];
+                if (value is IDictionary valueDictionary)
+                {
+                    copy[key] = CopyDictionary(valueDictionary);
+                }
+                else
+                {
+                    copy[key] = value;
+                }
+            }
+
+            return copy;
         }
     }
 }
