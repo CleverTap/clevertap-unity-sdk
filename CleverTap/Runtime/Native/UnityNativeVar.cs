@@ -65,7 +65,15 @@ namespace CleverTapSDK.Native
             }
             else
             {
-                value = (T)Convert.ChangeType(newValue, typeof(T));
+                try
+                {
+                    value = (T)Convert.ChangeType(newValue, typeof(T));
+                }
+                catch (Exception ex)
+                {
+                    CleverTapLogger.LogError($"Failed to convert value from {newValue?.GetType()?.Name ?? "null"} " +
+                        $"to {typeof(T).Name} for variable {name}: {ex.Message}");
+                }
             }
 
             if (HasVarsRequestCompleted())

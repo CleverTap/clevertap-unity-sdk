@@ -9,6 +9,13 @@ namespace CleverTapSDK.Native
     {
         internal const string DOT = ".";
 
+        /// <summary>
+        /// Updates a value in a nested dictionary structure based on a hierarchical naming convention.
+        /// </summary>
+        /// <param name="name">The full dot-notation name of the variable</param>
+        /// <param name="nameComponents">Array of name components (split by dots)</param>
+        /// <param name="value">The new value to set</param>
+        /// <param name="values">The dictionary to update</param>
         internal static void UpdateValues(string name, string[] nameComponents, object value, IDictionary values)
         {
             if (nameComponents == null || nameComponents.Length == 0)
@@ -117,14 +124,11 @@ namespace CleverTapSDK.Native
 
                 foreach (var varKey in varsKeys)
                 {
-                    if (diffMap != null)
+                    diffMap.TryGetValue(varKey, out object diffVar);
+                    varsMap.TryGetValue(varKey, out object value);
+                    if (diffVar == null)
                     {
-                        diffMap.TryGetValue(varKey, out object diffVar);
-                        varsMap.TryGetValue(varKey, out object value);
-                        if (diffVar == null)
-                        {
-                            merged.Add(varKey, value);
-                        }
+                        merged.Add(varKey, value);
                     }
                 }
                 foreach (var diffKey in diffKeys)
@@ -132,7 +136,7 @@ namespace CleverTapSDK.Native
                     diffMap.TryGetValue(diffKey, out object diffsValue);
                     varsMap.TryGetValue(diffKey, out object varsValue);
                     object mergedValues = MergeHelper(varsValue, diffsValue);
-                    merged.Add(diffKey, mergedValues);
+                    merged[diffKey] = mergedValues;
                 }
                 return merged;
             }
