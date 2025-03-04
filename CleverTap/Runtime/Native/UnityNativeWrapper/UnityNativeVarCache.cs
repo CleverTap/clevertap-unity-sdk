@@ -13,10 +13,16 @@ namespace CleverTapSDK.Native
         private object merged = null;
         private IDictionary<string, object> valuesFromClient = new Dictionary<string, object>();
 
-        internal int VariablesCount => vars.Count;
+        internal int VariablesCount { get => vars.Count; }
 
         internal void RegisterVariable(IVar variable)
 		{
+            if (variable == null)
+            {
+                CleverTapLogger.LogError("RegisterVariable called with null variable.");
+                return;
+            }
+
             vars[variable.Name] = variable;
 
             object defaultValue = variable.DefaultObjectValue;
@@ -33,7 +39,11 @@ namespace CleverTapSDK.Native
         {
             if (vars.ContainsKey(name))
             {
-                return (Var<T>)vars[name];
+                if (vars[name] is Var<T> typedVar)
+                {
+                    return typedVar;
+                }
+                CleverTapLogger.Log($"GetVariable: Variable '{name}' exists but is not of type {typeof(T).Name}");
             }
             return null;
         }
@@ -94,11 +104,14 @@ namespace CleverTapSDK.Native
 
                 mergedDictionary[firstComponent] = newValue;
 
+                // Build the name progressively to find and update all affected parent variables
                 StringBuilder name = new StringBuilder(firstComponent);
                 for (int i = 1; i < variable.NameComponents.Length; i++)
                 {
+                    // Try to update any existing variable with the current name path
                     vars.TryGetValue(name.ToString(), out IVar existing);
                     existing?.Update();
+                    // Add the next component to the path
                     name.Append(UnityNativeVariableUtils.DOT)
                         .Append(variable.NameComponents[i]);
                 }
