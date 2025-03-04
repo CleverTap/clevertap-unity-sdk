@@ -21,9 +21,7 @@ namespace CleverTapSDK.Native
             {
                 // Copy defaultValue and set to value.
                 // This prevents modifying the defaultValue when updating and merging the value.
-                var dest = Util.CreateNewDictionary(dictionary);
-                Util.FillInValues(dictionary, dest);
-                value = (T)(object)dest;
+                value = (T)(object)UnityNativeVariableUtils.CopyDictionary(dictionary);
             }
             this.varCache = varCache;
             this.varCache.RegisterVariable(this);
