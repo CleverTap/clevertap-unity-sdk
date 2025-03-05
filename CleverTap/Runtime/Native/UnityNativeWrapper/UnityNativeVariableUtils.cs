@@ -114,10 +114,10 @@ namespace CleverTapSDK.Native
                 return diff;
             }
 
-            ICollection varsKeys = varsMap != null ? varsMap.Keys : new string[0];
-            ICollection diffKeys = diffMap != null ? diffMap.Keys : new string[0];
+            ICollection varsKeys = varsMap.Keys;
+            ICollection diffKeys = diffMap.Keys;
 
-            // varsMap is not null, check diffMap only
+            // varsMap is not null, check diffMap only.
             if (diffMap != null)
             {
                 IDictionary merged = Util.CreateNewDictionary(varsMap);
@@ -128,7 +128,7 @@ namespace CleverTapSDK.Native
                     varsMap.TryGetValue(varKey, out object value);
                     if (diffVar == null)
                     {
-                        merged.Add(varKey, value);
+                        merged[varKey] = value;
                     }
                 }
                 foreach (var diffKey in diffKeys)
