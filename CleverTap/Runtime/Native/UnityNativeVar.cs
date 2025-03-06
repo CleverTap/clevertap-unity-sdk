@@ -1,4 +1,6 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System;
+using System.Collections;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 
@@ -7,12 +9,22 @@ namespace CleverTapSDK.Native
     internal class UnityNativeVar<T> : Var<T>
     {
         private bool hadStarted;
+        private readonly UnityNativeVarCache varCache;
         internal string[] nameComponents;
 
-        internal UnityNativeVar(string name, string kind, T defaultValue) : base(name, kind, defaultValue)
+        public override string[] NameComponents => nameComponents;
+
+        internal UnityNativeVar(string name, string kind, T defaultValue, UnityNativeVarCache varCache) : base(name, kind, defaultValue)
         {
-            // TODO: VarCache registerVariable, update values, merge variable
-            nameComponents = GetNameComponents(name);
+            nameComponents = UnityNativeVariableUtils.GetNameComponents(name);
+            if (defaultValue is IDictionary dictionary)
+            {
+                // Copy defaultValue and set to value.
+                // This prevents modifying the defaultValue when updating and merging the value.
+                value = (T)(object)UnityNativeVariableUtils.CopyDictionary(dictionary);
+            }
+            this.varCache = varCache;
+            this.varCache.RegisterVariable(this);
             Update();
         }
 
@@ -33,18 +45,35 @@ namespace CleverTapSDK.Native
             }
         }
 
-        internal void Update()
+        public override void Update()
         {
             T oldValue = value;
-            // TODO: Set value to VarCache merged value 
-
-            if (value == null && oldValue == null)
+            object newValue = varCache.GetMergedValueFromComponentArray(nameComponents);
+            if (newValue == null && oldValue == null)
             {
                 return;
             }
-            if (value != null && value.Equals(oldValue) && hadStarted)
+            if (newValue != null && newValue.Equals(oldValue) && hadStarted)
             {
                 return;
+            }
+
+            if (newValue is IDictionary)
+            {
+                // If the value is a dictionary, copy all the values from the newValue to Value. 
+                Util.FillInValues(newValue, value);
+            }
+            else
+            {
+                try
+                {
+                    value = (T)Convert.ChangeType(newValue, typeof(T));
+                }
+                catch (Exception ex)
+                {
+                    CleverTapLogger.LogError($"Failed to convert value from {newValue?.GetType()?.Name ?? "null"} " +
+                        $"to {typeof(T).Name} for variable {name}: {ex.Message}");
+                }
             }
 
             if (HasVarsRequestCompleted())
@@ -63,12 +92,6 @@ namespace CleverTapSDK.Native
         private bool HasVarsRequestCompleted()
         {
             return false;
-        }
-
-        // TODO: Move to VarCache or Utils
-        internal static string[] GetNameComponents(string name)
-        {
-            return name.Split(".");
         }
 
         #region File Variables
@@ -96,7 +119,7 @@ namespace CleverTapSDK.Native
 
         public override string ToString()
         {
-            return $"Var({name}, {value})";
+            return $"UnityNativeVar({name}, {value})";
         }
     }
 }
