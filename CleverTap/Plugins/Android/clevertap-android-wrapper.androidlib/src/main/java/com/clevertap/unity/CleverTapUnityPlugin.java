@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.clevertap.android.sdk.CTInboxStyleConfig;
@@ -51,31 +52,42 @@ public class CleverTapUnityPlugin {
     }
 
     public static synchronized CleverTapUnityPlugin getInstance(final Context context) {
-        // If there is an initialCleverTapApiInstance present, use it to create a new instance
-        // of the plugin regardless if there was another instance previously set.
-        if (initialCleverTapApiInstance != null) {
-            instance = new CleverTapUnityPlugin(initialCleverTapApiInstance);
-            initialCleverTapApiInstance = null;
+        if (instance != null) {
             return instance;
         }
-
-        if (instance == null && context != null) {
-            instance = new CleverTapUnityPlugin(CleverTapAPI.getDefaultInstance(context.getApplicationContext()));
+        CleverTapAPI cleverTapInstance = null;
+        if (initialCleverTapApiInstance != null) {
+            cleverTapInstance = initialCleverTapApiInstance;
+            initialCleverTapApiInstance = null;
+        } else if (context != null) {
+            cleverTapInstance = CleverTapAPI.getDefaultInstance(context.getApplicationContext());
         }
+
+        if (cleverTapInstance != null) {
+            instance = new CleverTapUnityPlugin(cleverTapInstance);
+            Log.d(LOG_TAG, "Initialized with instance " + cleverTapInstance);
+        } else {
+            Log.e(LOG_TAG, "Initialization error");
+        }
+
         return instance;
     }
 
     public static synchronized void setCleverTapApiInstance(final CleverTapAPI cleverTapAPI) {
         if (cleverTapAPI != null) {
             if (instance != null) {
-                if (instance.clevertap == cleverTapAPI) {
+                CleverTapAPI currentCleverTapAPI = instance.clevertap;
+                if (currentCleverTapAPI == cleverTapAPI) {
                     // the same CleverTapAPI instance is already set
                     return;
                 }
-                instance.callbackHandler.detachFromApiInstance(instance.clevertap);
-                instance = null;
+                if (currentCleverTapAPI != null) {
+                    instance.callbackHandler.detachFromApiInstance(currentCleverTapAPI);
+                }
+                instance.clevertap = cleverTapAPI;
+            } else {
+                initialCleverTapApiInstance = cleverTapAPI;
             }
-            initialCleverTapApiInstance = cleverTapAPI;
         }
     }
 
@@ -141,18 +153,11 @@ public class CleverTapUnityPlugin {
         }
     }
 
-    private CleverTapUnityPlugin(final CleverTapAPI cleverTapApi) {
+    private CleverTapUnityPlugin(final @NonNull CleverTapAPI cleverTapApi) {
         callbackHandler = CleverTapUnityCallbackHandler.getInstance();
         backgroundExecutor = new BackgroundExecutor();
         disableMessageBuffers();
-        try {
-            clevertap = cleverTapApi;
-            if (clevertap != null) {
-                Log.d(LOG_TAG, "Initialized with instance " + clevertap);
-            }
-        } catch (Throwable t) {
-            Log.e(LOG_TAG, "Initialization error", t);
-        }
+        clevertap = cleverTapApi;
     }
 
     private void disableMessageBuffers() {
