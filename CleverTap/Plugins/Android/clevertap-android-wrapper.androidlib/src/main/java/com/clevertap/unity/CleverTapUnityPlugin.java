@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.clevertap.android.sdk.CTInboxStyleConfig;
@@ -73,24 +74,6 @@ public class CleverTapUnityPlugin {
         return instance;
     }
 
-    public static synchronized void setCleverTapApiInstance(final CleverTapAPI cleverTapAPI) {
-        if (cleverTapAPI != null) {
-            if (instance != null) {
-                CleverTapAPI currentCleverTapAPI = instance.clevertap;
-                if (currentCleverTapAPI == cleverTapAPI) {
-                    // the same CleverTapAPI instance is already set
-                    return;
-                }
-                if (currentCleverTapAPI != null) {
-                    instance.callbackHandler.detachFromApiInstance(currentCleverTapAPI);
-                }
-                instance.clevertap = cleverTapAPI;
-            } else {
-                initialCleverTapApiInstance = cleverTapAPI;
-            }
-        }
-    }
-
     public static void createNotificationChannel(Context context, String channelId, String channelName, String channelDescription, int importance, boolean showBadge) {
         try {
             CleverTapAPI.createNotificationChannel(context, channelId, channelName, channelDescription, importance, showBadge);
@@ -150,6 +133,32 @@ public class CleverTapUnityPlugin {
             CleverTapAPI.deleteNotificationChannelGroup(context, groupId);
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Error deleting Notification Channel Group", t);
+        }
+    }
+
+    static synchronized void setCleverTapApiInstance(final CleverTapAPI cleverTapAPI) {
+        if (cleverTapAPI != null) {
+            if (instance != null) {
+                CleverTapAPI currentCleverTapAPI = instance.clevertap;
+                if (currentCleverTapAPI == cleverTapAPI) {
+                    // the same CleverTapAPI instance is already set
+                    return;
+                }
+                instance.clevertap = cleverTapAPI;
+            } else {
+                initialCleverTapApiInstance = cleverTapAPI;
+            }
+        }
+    }
+
+    @Nullable
+    static synchronized CleverTapAPI getCleverTapApiInstance() {
+        if (initialCleverTapApiInstance != null) {
+            return initialCleverTapApiInstance;
+        } else if (instance != null) {
+            return instance.clevertap;
+        } else {
+            return null;
         }
     }
 

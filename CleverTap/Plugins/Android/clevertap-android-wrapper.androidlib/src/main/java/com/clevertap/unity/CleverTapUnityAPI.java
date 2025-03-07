@@ -31,7 +31,7 @@ public class CleverTapUnityAPI {
     /**
      * Set a custom instance of {@link CleverTapAPI} that CleverTapUnity will use.
      */
-    public static void setCleverTapApiInstance(CleverTapAPI cleverTapApi) {
+    public static synchronized void setCleverTapApiInstance(CleverTapAPI cleverTapApi) {
         if (cleverTapApi != null) {
             cleverTapApi.setLibrary("Unity");
             CleverTapUnityPlugin.setCleverTapApiInstance(cleverTapApi);
@@ -47,7 +47,7 @@ public class CleverTapUnityAPI {
      * @param intent   The intent received in {@link Activity#onNewIntent(Intent)}
      */
     public static void onLauncherActivityNewIntent(@NonNull Activity activity, Intent intent) {
-        handleIntent(activity, intent, true);
+        handleIntent(intent, true);
     }
 
     /**
@@ -57,7 +57,7 @@ public class CleverTapUnityAPI {
      * @param activity The launcher Activity
      */
     public static void onLauncherActivityCreate(@NonNull Activity activity) {
-        handleIntent(activity, activity.getIntent(), false);
+        handleIntent(activity.getIntent(), false);
         setInAppActivityFullScreenFromOtherActivity(activity);
     }
 
@@ -82,7 +82,7 @@ public class CleverTapUnityAPI {
         setInAppsFullScreen(activity.getApplication(), isFullScreen);
     }
 
-    private static void handleIntent(@NonNull Activity activity, Intent intent, boolean isOnNewIntent) {
+    private static void handleIntent(Intent intent, boolean isOnNewIntent) {
         if (intent == null || intent.getAction() == null) {
             return;
         }
@@ -101,7 +101,7 @@ public class CleverTapUnityAPI {
             if (isPushNotification) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    CleverTapAPI clevertap = CleverTapAPI.getDefaultInstance(activity);
+                    CleverTapAPI clevertap = CleverTapUnityPlugin.getCleverTapApiInstance();
                     if (clevertap != null) {
                         clevertap.pushNotificationClickedEvent(extras);
                     }
