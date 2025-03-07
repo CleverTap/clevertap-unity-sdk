@@ -16,6 +16,9 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-hls:2.19.1"
     implementation "com.google.android.exoplayer:exoplayer-ui:2.19.1"
 
+    // Optional CleverTap push templates
+    implementation 'com.clevertap.android:push-templates:1.2.4'
+
     // Optional AndroidX Media3 Libraries for CleverTap Audio/Video Inbox Messages. 
     // Audio/Video messages will be dropped without these dependencies
     // implementation "androidx.media3:media3-exoplayer:1.1.1"
