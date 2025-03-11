@@ -3,7 +3,6 @@ package com.clevertap.unity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Build.VERSION_CODES;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -34,6 +33,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressWarnings("unused")
 public class CleverTapUnityPlugin {
@@ -173,7 +174,14 @@ public class CleverTapUnityPlugin {
         // disable buffers after a delay in order to give some time for callback delegates to attach
         // and receive initially buffered messages. After that all buffers will be cleared and disabled
         // and messages will continue to be sent immediately.
-        new Handler().postDelayed(() -> CleverTapMessageSender.getInstance().resetAllBuffers(false), 5000);
+        final Timer disableBuffersTimer = new Timer();
+        disableBuffersTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                CleverTapMessageSender.getInstance().resetAllBuffers(false);
+                disableBuffersTimer.cancel();
+            }
+        }, 5000);
     }
 
     public void onCallbackAdded(String callbackName) {
