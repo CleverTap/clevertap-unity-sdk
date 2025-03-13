@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using UnityEngine;
-using CleverTapSDK.Common;
 
 namespace CleverTapSDK.Native
 {
@@ -21,7 +21,6 @@ namespace CleverTapSDK.Native
         protected int retryCount = 0;
         protected bool isInFlushProcess = false;
         protected Queue<List<UnityNativeEvent>> eventsQueue;
-        protected abstract string RequestPath { get; }
         protected abstract string QueueName { get; }
 
         protected UnityNativeCoreState coreState;
@@ -39,12 +38,13 @@ namespace CleverTapSDK.Native
 
         internal virtual void QueueEvent(UnityNativeEvent newEvent)
         {
-            if (eventsQueue.Count == 0 || eventsQueue.Peek().Count == queueLimit)
+            if (!eventsQueue.TryPeek(out List<UnityNativeEvent> currentList) || currentList.Count == queueLimit)
             {
-                eventsQueue.Enqueue(new List<UnityNativeEvent>());
+                currentList = new List<UnityNativeEvent>();
+                eventsQueue.Enqueue(currentList);
             }
 
-            eventsQueue.Peek().Add(newEvent);
+            currentList.Add(newEvent);
             ResetAndStartTimer();
         }
 
@@ -80,46 +80,56 @@ namespace CleverTapSDK.Native
             {
                 try
                 {
-                    events = eventsQueue.Dequeue();
+                    events = eventsQueue.Peek();
                     var metaEvent = Json.Serialize(BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
                     var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
 
+                    string requestPath = GetRequestPath(events);
                     var queryStringParameters = GetQueryStringParameters();
-                    var request = new UnityNativeRequest(RequestPath, UnityNativeConstants.Network.REQUEST_POST)
+                    var request = new UnityNativeRequest(requestPath, UnityNativeConstants.Network.REQUEST_POST)
                         .SetRequestBody(jsonContent)
                         .SetQueryParameters(queryStringParameters);
 
                     var response = await executeRequest(request);
 
-                    if (CanProcessEventResponse(response))
+                    if (CanProcessEventResponse(response, request, events))
                     {
                         proccesedEvents.AddRange(events);
                         retryCount = 0;
+                        eventsQueue.Dequeue();
                     }
                     else
                     {
-                        // Re-enqueue events in case of error
                         willRetry = true;
-                        QueueEvents(events);
-                        OnEventError();
+                        OnEventsError();
                         CleverTapLogger.Log($"Error sending queue");
                         return proccesedEvents;
                     }
                 }
                 catch (Exception ex)
                 {
-                    willRetry = true;
-                    QueueEvents(events);
-                    OnEventError();
                     CleverTapLogger.Log($"Exception: {ex.Message}, Stack Trace: {ex.StackTrace}");
+                    if (ShouldRetryOnException(ex, events))
+                    {
+                        willRetry = true;
+                        OnEventsError();
+                    }
+                    else
+                    {
+                        // Drop the events
+                        CleverTapLogger.Log($"ShouldRetryOnException returned false. Dropping {events.Count} events from: {QueueName}.");
+                        proccesedEvents.AddRange(events);
+                        retryCount = 0;
+                        eventsQueue.Dequeue();
+                    }
+
                     return proccesedEvents;
                 }
             }
 
             isInFlushProcess = false;
-
             if (eventsQueue.Any())
             {
                 ResetAndStartTimer();
@@ -130,6 +140,11 @@ namespace CleverTapSDK.Native
             }
 
             return proccesedEvents;
+        }
+
+        protected virtual bool ShouldRetryOnException(Exception ex, List<UnityNativeEvent> sentEvents)
+        {
+            return true;
         }
 
         internal List<KeyValuePair<string, string>> GetQueryStringParameters()
@@ -146,7 +161,7 @@ namespace CleverTapSDK.Native
             // Default Query String parameters
             var queryParameters = new List<KeyValuePair<string, string>> {
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
-                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, deviceInfo.SdkVersion),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, deviceInfo.SdkVersion.ToString()),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
             };
@@ -201,9 +216,18 @@ namespace CleverTapSDK.Native
             return preferenceManager.GetLong(UnityNativeConstants.EventMeta.KEY_J, 0);
         }
 
-        protected abstract bool CanProcessEventResponse(UnityNativeResponse response);
+        protected virtual bool CanProcessEventResponse(UnityNativeResponse response,
+            UnityNativeRequest request, List<UnityNativeEvent> sentEvents)
+        {
+            return response.IsSuccess();
+        }
 
-        protected void OnEventError()
+        protected virtual string GetRequestPath(List<UnityNativeEvent> events)
+        {
+            return UnityNativeConstants.Network.REQUEST_PATH_RECORD;
+        }
+
+        protected void OnEventsError()
         {
             retryCount++;
             isInFlushProcess = false;
