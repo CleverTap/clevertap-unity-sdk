@@ -1,6 +1,9 @@
-﻿using System;
+﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native
@@ -47,7 +50,6 @@ namespace CleverTapSDK.Native
         internal static Dictionary<string, object> ConvertDictionaryToNestedDictionaries(Dictionary<string, object> values)
         {
             var result = new Dictionary<string, object>();
-
             foreach (var entry in values)
             {
                 string key = entry.Key;
@@ -87,6 +89,70 @@ namespace CleverTapSDK.Native
                 }
             }
 
+            return result;
+        }
+
+        internal static void ConvertNestedDictionariesToFlat(string prefix, IDictionary map, IDictionary result)
+        {
+            foreach (var key in map.Keys)
+            {
+                string stringKey = key.ToString();
+                object value = map[key];
+                if (value is IDictionary dictionary)
+                {
+                    ConvertNestedDictionariesToFlat(prefix + stringKey + DOT, dictionary, result);
+                }
+                else
+                {
+                    result[prefix + stringKey] = value;
+                }
+            }
+        }
+
+        internal static Dictionary<string, object> GetFlatVarsPayload(IDictionary<string, IVar> varsDictionary)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>
+            {
+                { "type", "varsPayload" }
+            };
+
+            Dictionary<string, object> allVars = new Dictionary<string, object>();
+            foreach (var variable in varsDictionary)
+            {
+                var name = variable.Key;
+                var defaultValue = variable.Value.DefaultObjectValue;
+                if (defaultValue is IDictionary dictionary)
+                {
+                    Dictionary<string, object> valueMap = new Dictionary<string, object>
+                    {
+                        { name, defaultValue }
+                    };
+                    Dictionary<string, object> flattenedValueMap = new Dictionary<string, object>();
+                    ConvertNestedDictionariesToFlat(string.Empty, valueMap, flattenedValueMap);
+                    foreach (var entry in flattenedValueMap)
+                    {
+                        string flattenedKey = entry.Key;
+                        object flattenedValue = entry.Value;
+                        string flattenedValueKind = CleverTapPlatformVariable.GetKindNameFromType(flattenedValue.GetType());
+                        Dictionary<string, object> varData = new Dictionary<string, object>
+                        {
+                            { "type", GetDefineTypeFromKind(flattenedValueKind) },
+                            { "defaultValue", flattenedValue }
+                        };
+                        allVars.Add(flattenedKey, varData);
+                    }
+                }
+                else
+                {
+                    Dictionary<string, object> varData = new Dictionary<string, object>
+                    {
+                        { "type", GetDefineTypeFromKind(variable.Value.Kind) },
+                        { "defaultValue", defaultValue }
+                    };
+                    allVars.Add(name, varData);
+                }
+            }
+            result.Add("vars", allVars);
             return result;
         }
 
@@ -187,5 +253,22 @@ namespace CleverTapSDK.Native
 
             return copy;
         }
+
+        /// <summary>
+        /// Get the variable type to use for the defineVars payload when syncing variables.
+        /// </summary>
+        /// <param name="cleverTapVariableKind">The <see cref="CleverTapVariableKind"/>
+        /// kind.</param>
+        /// <returns>The variable string type conforming to defineVars variable types.</returns>
+        internal static string GetDefineTypeFromKind(string cleverTapVariableKind)
+        {
+            return cleverTapVariableKind switch
+            {
+                CleverTapVariableKind.INT or CleverTapVariableKind.FLOAT => "number",
+                CleverTapVariableKind.BOOLEAN => "boolean",
+                _ => cleverTapVariableKind,
+            };
+        }
     }
 }
+#endif

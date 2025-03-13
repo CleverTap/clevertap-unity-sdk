@@ -13,6 +13,7 @@ namespace CleverTapSDK.Native {
         internal void LaunchWithCredentials(string accountID, string token, string region = null) {
             _eventManager.LaunchWithCredentials(accountID, token, region);
         }
+
         internal void OnUserLogin(Dictionary<string, object> properties) {
             _eventManager.OnUserLogin(properties);
         }
@@ -40,6 +41,11 @@ namespace CleverTapSDK.Native {
 
         internal void EnableDeviceNetworkInfoReporting(bool enabled) {
             _eventManager.EnableDeviceNetworkInfoReporting(enabled);
+        }
+
+        internal void SyncVariables(Dictionary<string, object> varsSyncPayload)
+        {
+            _eventManager.SyncVariables(varsSyncPayload);
         }
     }
 }
