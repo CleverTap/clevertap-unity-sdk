@@ -210,7 +210,7 @@ namespace CleverTapSDK.Native {
             internal const int DEFAUL_REQUEST_TIMEOUT_SEC = 10;
 
             internal const string QUERY_OS = "os";
-            internal const string QUERY_SDК_REVISION = "t";
+            internal const string QUERY_SDK_REVISION = "t";
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
 
