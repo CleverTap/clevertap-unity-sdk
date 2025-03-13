@@ -96,12 +96,14 @@ namespace CleverTapSDK.Native
 
                     if (CanProcessEventResponse(response, request, events))
                     {
+                        // Process and Dequeue the events on success
                         proccesedEvents.AddRange(events);
                         retryCount = 0;
                         eventsQueue.Dequeue();
                     }
                     else
                     {
+                        // Retry the events
                         willRetry = true;
                         OnEventsError();
                         CleverTapLogger.Log($"Error sending queue");
@@ -113,6 +115,7 @@ namespace CleverTapSDK.Native
                     CleverTapLogger.Log($"Exception: {ex.Message}, Stack Trace: {ex.StackTrace}");
                     if (ShouldRetryOnException(ex, events))
                     {
+                        // Retry the events
                         willRetry = true;
                         OnEventsError();
                     }
@@ -142,9 +145,85 @@ namespace CleverTapSDK.Native
             return proccesedEvents;
         }
 
+        /// <summary>
+        /// Decide if the events should be retried.
+        /// If this events should not be retried, they will be dropped.
+        /// This method is only called when <see cref="FlushEventsCore"/> catches an exception.
+        /// Handle unsuccessful request response in <see cref="CanProcessEventResponse"/>.
+        /// </summary>
+        /// <param name="ex">The exception.</param>
+        /// <param name="sentEvents">The events to be sent.</param>
+        /// <returns>True if events should be retried, otherwise false.</returns>
         protected virtual bool ShouldRetryOnException(Exception ex, List<UnityNativeEvent> sentEvents)
         {
             return true;
+        }
+
+        /// <summary>
+        /// Returns if the flush events <see cref="FlushEventsCore"/> response can be processed.
+        /// If the response cannot be processed, the request for the <paramref name="sentEvents"/> events will be retried.
+        /// </summary>
+        /// <param name="response">The response received.</param>
+        /// <param name="request">The request sent.</param>
+        /// <param name="sentEvents">The events sent in the request.</param>
+        /// <returns>True if the response can be processed, otherwise false.</returns>
+        protected virtual bool CanProcessEventResponse(UnityNativeResponse response,
+            UnityNativeRequest request, List<UnityNativeEvent> sentEvents)
+        {
+            return response.IsSuccess();
+        }
+
+        /// <summary>
+        /// Gets the request path.
+        /// The path is used to send a request in <see cref="FlushEventsCore"/>.
+        /// </summary>
+        /// <param name="events">The list of events to be sent.</param>
+        /// <returns>The network request path to use.</returns>
+        protected virtual string GetRequestPath(List<UnityNativeEvent> events)
+        {
+            return UnityNativeConstants.Network.REQUEST_PATH_RECORD;
+        }
+
+        protected void OnEventsError()
+        {
+            retryCount++;
+            isInFlushProcess = false;
+            ResetAndStartTimer();
+        }
+
+        protected virtual void ResetAndStartTimer()
+        {
+            CleverTapLogger.Log($"Calling {QueueName} ResetAndStartTimer, retryCount: {retryCount}");
+            if (retryCount == 0)
+            {
+                RestartTimer(defaultTimerInterval);
+                return;
+            }
+
+            float delay = Mathf.Pow(2, retryCount % 10);
+            CleverTapLogger.Log($"Will retry sending events from queue {QueueName} in {delay}s.");
+            RestartTimer(delay);
+        }
+
+        private void RestartTimer(float duration)
+        {
+            StopTimer();
+            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
+        }
+
+        private IEnumerator TimerCoroutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            OnTimerTick();
+        }
+
+        protected virtual void StopTimer()
+        {
+            if (timerCoroutine != null)
+            {
+                MonoHelper.Instance.StopCoroutine(timerCoroutine);
+                timerCoroutine = null;
+            }
         }
 
         internal List<KeyValuePair<string, string>> GetQueryStringParameters()
@@ -214,59 +293,6 @@ namespace CleverTapSDK.Native
         {
             var preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
             return preferenceManager.GetLong(UnityNativeConstants.EventMeta.KEY_J, 0);
-        }
-
-        protected virtual bool CanProcessEventResponse(UnityNativeResponse response,
-            UnityNativeRequest request, List<UnityNativeEvent> sentEvents)
-        {
-            return response.IsSuccess();
-        }
-
-        protected virtual string GetRequestPath(List<UnityNativeEvent> events)
-        {
-            return UnityNativeConstants.Network.REQUEST_PATH_RECORD;
-        }
-
-        protected void OnEventsError()
-        {
-            retryCount++;
-            isInFlushProcess = false;
-            ResetAndStartTimer();
-        }
-
-        protected virtual void ResetAndStartTimer()
-        {
-            CleverTapLogger.Log($"Calling {QueueName} ResetAndStartTimer, retryCount: {retryCount}");
-            if (retryCount == 0)
-            {
-                RestartTimer(defaultTimerInterval);
-                return;
-            }
-
-            float delay = Mathf.Pow(2, retryCount % 10);
-            CleverTapLogger.Log($"Will retry sending events from queue {QueueName} in {delay}s.");
-            RestartTimer(delay);
-        }
-
-        private void RestartTimer(float duration)
-        {
-            StopTimer();
-            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
-        }
-
-        private IEnumerator TimerCoroutine(float duration)
-        {
-            yield return new WaitForSeconds(duration);
-            OnTimerTick();
-        }
-
-        protected virtual void StopTimer()
-        {
-            if (timerCoroutine != null)
-            {
-                MonoHelper.Instance.StopCoroutine(timerCoroutine);
-                timerCoroutine = null;
-            }
         }
     }
 }
