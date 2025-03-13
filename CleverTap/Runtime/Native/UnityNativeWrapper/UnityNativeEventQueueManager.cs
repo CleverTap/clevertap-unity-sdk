@@ -9,6 +9,8 @@ namespace CleverTapSDK.Native {
         private readonly UnityNativeBaseEventQueue _userEventsQueue;
         private readonly UnityNativeBaseEventQueue _raisedEventsQueue;
 
+        private readonly UnityNativeBaseEventQueue _singleEventsQueue;
+
         internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore) {
             _databaseStore = databaseStore;
             _databaseStore.OnEventStored += OnDatabaseEventStored;
@@ -16,17 +18,28 @@ namespace CleverTapSDK.Native {
             _userEventsQueue.OnEventTimerTick += OnUserEventTimerTick;
             _raisedEventsQueue = new UnityNativeRaisedEventQueue(coreState, networkEngine);
             _raisedEventsQueue.OnEventTimerTick += OnRaisedEventTimerTick;
+            _singleEventsQueue = new UnityNativeSingleEventQueue(coreState, networkEngine);
+            _singleEventsQueue.OnEventTimerTick += OnSingleEventTimerTick;
             // Add the events stored in the DB
             _databaseStore.AddEventsFromDB();
         }
 
         private void OnDatabaseEventStored(UnityNativeEvent newEvent) {
-            switch (newEvent.EventType) {
+            QueueEvent(newEvent);
+        }
+
+        internal void QueueEvent(UnityNativeEvent newEvent)
+        {
+            switch (newEvent.EventType)
+            {
                 case UnityNativeEventType.ProfileEvent:
                     _userEventsQueue.QueueEvent(newEvent);
                     break;
                 case UnityNativeEventType.RaisedEvent:
                     _raisedEventsQueue.QueueEvent(newEvent);
+                    break;
+                case UnityNativeEventType.DefineVarsEvent:
+                    _singleEventsQueue.QueueEvent(newEvent);
                     break;
                 default:
                     break;
@@ -47,6 +60,11 @@ namespace CleverTapSDK.Native {
            await FlushRaisedEvents();
         }
 
+        private async void OnSingleEventTimerTick()
+        {
+            await FlushSingleEvents();
+        }
+
         private async Task FlushUserEvents() {
             CleverTapLogger.Log("Flushing user events");
             var flushedEvents = await _userEventsQueue.FlushEvents();
@@ -57,6 +75,12 @@ namespace CleverTapSDK.Native {
             CleverTapLogger.Log("Flushing raised events");
             var flushedEvents = await _raisedEventsQueue.FlushEvents();
             _databaseStore.DeleteEvents(flushedEvents);
+        }
+
+        private async Task FlushSingleEvents()
+        {
+            CleverTapLogger.Log("Flushing single events");
+            var flushedEvents = await _singleEventsQueue.FlushEvents();
         }
     }
 }
