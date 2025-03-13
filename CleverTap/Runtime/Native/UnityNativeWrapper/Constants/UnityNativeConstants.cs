@@ -210,19 +210,16 @@ namespace CleverTapSDK.Native {
             internal const int DEFAUL_REQUEST_TIMEOUT_SEC = 10;
 
             internal const string QUERY_OS = "os";
-            internal const string QUERY_SKD_REVISION = "t";
+            internal const string QUERY_SDК_REVISION = "t";
             internal const string QUERY_ACCOUNT_ID = "z";
             internal const string QUERY_CURRENT_TIMESTAMP = "ts";
 
             internal const string REQUEST_GET = "GET";
-#if UNITY_WEBGL && !UNITY_EDITOR
+
             internal const string REQUEST_POST = "POST";
             internal const string REQUEST_PATH_RECORD = "a1";
-#else
-            internal const string REQUEST_POST = "POST";
-            internal const string REQUEST_PATH_RECORD = "a1";
-#endif
-            internal const string REQUEST_PATH_USER_VARIABLES = "defineVars";
+
+            internal const string REQUEST_PATH_DEFINE_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
         }
 

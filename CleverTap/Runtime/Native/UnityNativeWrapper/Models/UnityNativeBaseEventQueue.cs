@@ -161,7 +161,7 @@ namespace CleverTapSDK.Native
             // Default Query String parameters
             var queryParameters = new List<KeyValuePair<string, string>> {
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
-                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SKD_REVISION, deviceInfo.SdkVersion.ToString()),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SDК_REVISION, deviceInfo.SdkVersion.ToString()),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)
             };
