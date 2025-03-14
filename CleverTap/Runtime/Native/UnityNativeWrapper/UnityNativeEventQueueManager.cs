@@ -1,30 +1,46 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CleverTapSDK.Utilities;
 
-namespace CleverTapSDK.Native {
-    internal class UnityNativeEventQueueManager {
+namespace CleverTapSDK.Native
+{
+    internal class UnityNativeEventQueueManager
+    {
         private readonly UnityNativeDatabaseStore _databaseStore;
 
         private readonly UnityNativeBaseEventQueue _userEventsQueue;
         private readonly UnityNativeBaseEventQueue _raisedEventsQueue;
-
         private readonly UnityNativeBaseEventQueue _singleEventsQueue;
 
-        internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore) {
+        internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore)
+        {
             _databaseStore = databaseStore;
             _databaseStore.OnEventStored += OnDatabaseEventStored;
+
             _userEventsQueue = new UnityNativeUserEventQueue(coreState, networkEngine);
             _userEventsQueue.OnEventTimerTick += OnUserEventTimerTick;
+            _userEventsQueue.OnEventsProcessed += OnEventsProcessed;
+
             _raisedEventsQueue = new UnityNativeRaisedEventQueue(coreState, networkEngine);
             _raisedEventsQueue.OnEventTimerTick += OnRaisedEventTimerTick;
+            _raisedEventsQueue.OnEventsProcessed += OnEventsProcessed;
+
             _singleEventsQueue = new UnityNativeSingleEventQueue(coreState, networkEngine);
             _singleEventsQueue.OnEventTimerTick += OnSingleEventTimerTick;
+            _singleEventsQueue.OnEventsProcessed += OnEventsProcessed;
+
             // Add the events stored in the DB
             _databaseStore.AddEventsFromDB();
         }
 
-        private void OnDatabaseEventStored(UnityNativeEvent newEvent) {
+        private void OnEventsProcessed(List<UnityNativeEvent> flushedEvents)
+        {
+            _databaseStore.DeleteEvents(flushedEvents);
+        }
+
+        private void OnDatabaseEventStored(UnityNativeEvent newEvent)
+        {
             QueueEvent(newEvent);
         }
 
@@ -46,18 +62,21 @@ namespace CleverTapSDK.Native {
             }
         }
 
-        internal async void FlushQueues() {
+        internal async void FlushQueues()
+        {
             CleverTapLogger.Log("Flushing queues");
             await FlushUserEvents();
             await FlushRaisedEvents();
         }
 
-        private async void OnUserEventTimerTick() {
+        private async void OnUserEventTimerTick()
+        {
             await FlushUserEvents();
         }
 
-        private async void OnRaisedEventTimerTick() {
-           await FlushRaisedEvents();
+        private async void OnRaisedEventTimerTick()
+        {
+            await FlushRaisedEvents();
         }
 
         private async void OnSingleEventTimerTick()
@@ -65,22 +84,22 @@ namespace CleverTapSDK.Native {
             await FlushSingleEvents();
         }
 
-        private async Task FlushUserEvents() {
+        private async Task FlushUserEvents()
+        {
             CleverTapLogger.Log("Flushing user events");
-            var flushedEvents = await _userEventsQueue.FlushEvents();
-            _databaseStore.DeleteEvents(flushedEvents);
+            await _userEventsQueue.FlushEvents();
         }
 
-        private async Task FlushRaisedEvents() {
+        private async Task FlushRaisedEvents()
+        {
             CleverTapLogger.Log("Flushing raised events");
-            var flushedEvents = await _raisedEventsQueue.FlushEvents();
-            _databaseStore.DeleteEvents(flushedEvents);
+            await _raisedEventsQueue.FlushEvents();
         }
 
         private async Task FlushSingleEvents()
         {
             CleverTapLogger.Log("Flushing single events");
-            var flushedEvents = await _singleEventsQueue.FlushEvents();
+            await _singleEventsQueue.FlushEvents();
         }
     }
 }

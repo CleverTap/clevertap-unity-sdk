@@ -89,7 +89,7 @@ namespace CleverTapSDK.Native
             }
             else
             {
-                CleverTapLogger.Log("Varibles Successfully synced");
+                CleverTapLogger.Log("Variables Successfully synced");
             }
             // Do not retry defineVars requests
             return true;

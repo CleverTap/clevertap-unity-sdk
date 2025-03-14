@@ -13,7 +13,7 @@ namespace CleverTapSDK.Native
 
         internal override async Task<List<UnityNativeEvent>> FlushEvents()
         {
-            return await FlushEventsCore(path => networkEngine.ExecuteRequest(path));
+            return await FlushEventsCore(request => networkEngine.ExecuteRequest(request));
         }
     }
 }
