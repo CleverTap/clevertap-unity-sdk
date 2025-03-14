@@ -11,6 +11,7 @@ using UnityEngine;
 namespace CleverTapSDK.Native
 {
     internal delegate void EventTimerTick();
+    internal delegate void EventsProcessed(List<UnityNativeEvent> flushedEvents);
 
     internal abstract class UnityNativeBaseEventQueue
     {
@@ -26,6 +27,8 @@ namespace CleverTapSDK.Native
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
         private Coroutine timerCoroutine;
+
+        internal event EventsProcessed OnEventsProcessed;
 
         internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
         {
@@ -69,6 +72,7 @@ namespace CleverTapSDK.Native
             var proccesedEvents = new List<UnityNativeEvent>();
             if (isInFlushProcess)
             {
+                OnEventsProcessed?.Invoke(proccesedEvents);
                 return proccesedEvents;
             }
 
@@ -107,6 +111,7 @@ namespace CleverTapSDK.Native
                         willRetry = true;
                         OnEventsError();
                         CleverTapLogger.Log($"Error sending queue");
+                        OnEventsProcessed?.Invoke(proccesedEvents);
                         return proccesedEvents;
                     }
                 }
@@ -128,6 +133,7 @@ namespace CleverTapSDK.Native
                         eventsQueue.Dequeue();
                     }
 
+                    OnEventsProcessed?.Invoke(proccesedEvents);
                     return proccesedEvents;
                 }
             }
@@ -142,6 +148,7 @@ namespace CleverTapSDK.Native
                 StopTimer();
             }
 
+            OnEventsProcessed?.Invoke(proccesedEvents);
             return proccesedEvents;
         }
 
