@@ -58,6 +58,7 @@ namespace CleverTapSDK.Native
                     _singleEventsQueue.QueueEvent(newEvent);
                     break;
                 default:
+                    CleverTapLogger.Log($"Unhandled event type: {newEvent.EventType}");
                     break;
             }
         }
