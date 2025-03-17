@@ -69,11 +69,11 @@ namespace CleverTapSDK.Native
 
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
         {
-            var proccesedEvents = new List<UnityNativeEvent>();
+            var processedEvents = new List<UnityNativeEvent>();
             if (isInFlushProcess)
             {
-                OnEventsProcessed?.Invoke(proccesedEvents);
-                return proccesedEvents;
+                OnEventsProcessed?.Invoke(processedEvents);
+                return processedEvents;
             }
 
             isInFlushProcess = true;
@@ -101,7 +101,7 @@ namespace CleverTapSDK.Native
                     if (CanProcessEventResponse(response, request, events))
                     {
                         // Process and Dequeue the events on success
-                        proccesedEvents.AddRange(events);
+                        processedEvents.AddRange(events);
                         retryCount = 0;
                         eventsQueue.Dequeue();
                     }
@@ -111,8 +111,8 @@ namespace CleverTapSDK.Native
                         willRetry = true;
                         OnEventsError();
                         CleverTapLogger.Log($"Error sending queue");
-                        OnEventsProcessed?.Invoke(proccesedEvents);
-                        return proccesedEvents;
+                        OnEventsProcessed?.Invoke(processedEvents);
+                        return processedEvents;
                     }
                 }
                 catch (Exception ex)
@@ -128,13 +128,13 @@ namespace CleverTapSDK.Native
                     {
                         // Drop the events
                         CleverTapLogger.Log($"ShouldRetryOnException returned false. Dropping {events.Count} events from: {QueueName}.");
-                        proccesedEvents.AddRange(events);
+                        processedEvents.AddRange(events);
                         retryCount = 0;
                         eventsQueue.Dequeue();
                     }
 
-                    OnEventsProcessed?.Invoke(proccesedEvents);
-                    return proccesedEvents;
+                    OnEventsProcessed?.Invoke(processedEvents);
+                    return processedEvents;
                 }
             }
 
@@ -148,8 +148,8 @@ namespace CleverTapSDK.Native
                 StopTimer();
             }
 
-            OnEventsProcessed?.Invoke(proccesedEvents);
-            return proccesedEvents;
+            OnEventsProcessed?.Invoke(processedEvents);
+            return processedEvents;
         }
 
         /// <summary>
