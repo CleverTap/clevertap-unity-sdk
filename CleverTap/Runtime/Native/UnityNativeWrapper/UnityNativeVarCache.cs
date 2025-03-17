@@ -9,12 +9,41 @@ namespace CleverTapSDK.Native
 {
     internal class UnityNativeVarCache
 	{
+        internal int VariablesCount { get => vars.Count; }
+
         private readonly IDictionary<string, IVar> vars = new Dictionary<string, IVar>();
         private IDictionary<string, object> diffs = new Dictionary<string, object>();
         private object merged = null;
         private IDictionary<string, object> valuesFromClient = new Dictionary<string, object>();
+        private bool hasVarsRequestCompleted = false;
 
-        internal int VariablesCount { get => vars.Count; }
+        private UnityNativePreferenceManager preferenceManager;
+        private UnityNativeCoreState coreState;
+
+        internal const string DIFFS_KEY = "DIFFS_{0}";
+
+        internal void SetCoreState(UnityNativeCoreState coreState)
+        {
+            if (coreState == null)
+            {
+                CleverTapLogger.LogError("CoreState cannot be null.");
+                return;
+            }
+
+            this.coreState = coreState;
+            preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+        }
+
+        internal bool HasVarsRequestCompleted => hasVarsRequestCompleted;
+        internal void SetHasVarsRequestCompleted(bool completed)
+        {
+            hasVarsRequestCompleted = completed;
+        }
+
+        internal string GetDiffsKey()
+        {
+            return string.Format(DIFFS_KEY, coreState.DeviceInfo.DeviceId);
+        }
 
         internal void RegisterVariable(IVar variable)
 		{
@@ -134,9 +163,32 @@ namespace CleverTapSDK.Native
             }
         }
 
+        internal void LoadDiffs()
+        {
+            string diffsString = preferenceManager.GetString(GetDiffsKey(), "{}");
+            var diffsDict = Json.Deserialize(diffsString) as IDictionary<string, object>;
+
+            ApplyVariableDiffs(diffsDict);
+        }
+
+        internal void SaveDiffs()
+        {
+            string serializedData = Json.Serialize(diffs);
+            preferenceManager.SetString(GetDiffsKey(), serializedData);
+        }
+
         internal Dictionary<string, object> GetDefineVarsPayload()
         {
             return UnityNativeVariableUtils.GetFlatVarsPayload(vars);
+        }
+
+        internal void Reset()
+        {
+            hasVarsRequestCompleted = false;
+            foreach (var variable in vars)
+            {
+                variable.Value?.Reset();
+            }
         }
     }
 }

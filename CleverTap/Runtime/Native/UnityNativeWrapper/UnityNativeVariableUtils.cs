@@ -47,7 +47,7 @@ namespace CleverTapSDK.Native
             }
         }
 
-        internal static Dictionary<string, object> ConvertDictionaryToNestedDictionaries(Dictionary<string, object> values)
+        internal static Dictionary<string, object> ConvertDictionaryToNestedDictionaries(IDictionary<string, object> values)
         {
             var result = new Dictionary<string, object>();
             foreach (var entry in values)
@@ -70,7 +70,7 @@ namespace CleverTapSDK.Native
                         else
                         {
                             bool containsKey = currentMap.TryGetValue(component, out var currentValue);
-                            if (!containsKey || currentValue is not Dictionary<string, object>)
+                            if (!containsKey || currentValue is not IDictionary<string, object>)
                             {
                                 var nestedMap = new Dictionary<string, object>();
                                 currentMap[component] = nestedMap;

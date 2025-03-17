@@ -1,4 +1,5 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System.Collections.Generic;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using UnityEngine;
@@ -7,12 +8,80 @@ namespace CleverTapSDK.Native
 {
     internal class UnityNativePlatformVariable : CleverTapPlatformVariable
     {
-        private readonly UnityNativeVarCache nativeVarCache = new UnityNativeVarCache();
-        private readonly UnityNativeWrapper unityNativeWrapper;
+        private readonly UnityNativeVarCache nativeVarCache;
+        private UnityNativeEventManager unityNativeEventManager;
+        private CleverTapCallbackHandler callbackHandler;
 
-        internal UnityNativePlatformVariable(UnityNativeWrapper unityNativeWrapper) : base()
+        internal UnityNativePlatformVariable() : base()
         {
-            this.unityNativeWrapper = unityNativeWrapper;
+            nativeVarCache = new UnityNativeVarCache();
+        }
+
+        internal void Load(UnityNativeEventManager unityNativeEventManager,
+            CleverTapCallbackHandler callbackHandler,
+            UnityNativeCoreState coreState)
+        {
+            this.unityNativeEventManager = unityNativeEventManager;
+            this.callbackHandler = callbackHandler;
+
+            nativeVarCache.SetCoreState(coreState);
+            nativeVarCache.LoadDiffs();
+        }
+
+        internal void SwitchUser()
+        {
+            nativeVarCache.Reset();
+            nativeVarCache.LoadDiffs();
+        }
+
+        internal void HandleVariablesResponse(object varsResponse)
+        {
+            if (varsResponse is IDictionary<string, object> vars)
+            {
+                HandleVariablesResponseSuccess(vars);
+            }
+            else
+            {
+                HandleVariablesResponseError();
+            }
+        }
+
+        private void HandleVariablesResponseSuccess(IDictionary<string, object> varsJson)
+        {
+            nativeVarCache.SetHasVarsRequestCompleted(true);
+            var diffs = UnityNativeVariableUtils.ConvertDictionaryToNestedDictionaries(varsJson);
+
+            nativeVarCache.ApplyVariableDiffs(diffs);
+            nativeVarCache.SaveDiffs();
+
+            TriggerVariablesChanged();
+            TriggerVariablesFetched(true);
+        }
+
+        internal void HandleVariablesResponseError()
+        {
+            if (!nativeVarCache.HasVarsRequestCompleted)
+            {
+                nativeVarCache.SetHasVarsRequestCompleted(true);
+                TriggerVariablesChanged();
+            }
+
+            TriggerVariablesFetched(false);
+        }
+
+        private void TriggerVariablesChanged()
+        {
+            callbackHandler.CleverTapVariablesChanged("VariablesChanged");
+            callbackHandler.CleverTapVariablesChangedAndNoDownloadsPending("VariablesChangedAndNoDownloadsPending");
+        }
+
+        private void TriggerVariablesFetched(bool success)
+        {
+            var fetchedMessage = new Dictionary<string, object>
+            {
+                { "isSuccess", success }
+            };
+            callbackHandler.CleverTapVariablesFetched(Json.Serialize(fetchedMessage));
         }
 
         internal override void SyncVariables()
@@ -42,13 +111,13 @@ namespace CleverTapSDK.Native
                 }
             }
 
-            if (unityNativeWrapper != null)
+            if (unityNativeEventManager != null)
             {
                 if (nativeVarCache.VariablesCount == 0)
                 {
                     CleverTapLogger.Log("CleverTap: No Variables defined.");
                 }
-                unityNativeWrapper.SyncVariables(nativeVarCache.GetDefineVarsPayload());
+                unityNativeEventManager.SyncVariables(nativeVarCache.GetDefineVarsPayload());
             }
             else
             {
