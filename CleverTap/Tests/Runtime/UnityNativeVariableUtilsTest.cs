@@ -4,7 +4,7 @@ using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Native;
 using NUnit.Framework;
-using UnityEngine;
+using NUnit.Framework.Internal;
 
 public class UnityNativeVariableUtilsTest
 {
@@ -466,6 +466,89 @@ public class UnityNativeVariableUtilsTest
 
         var actual = UnityNativeVariableUtils.GetFlatVarsPayload(vars);
         CollectionAssert.AreEqual(expected, actual);
+    }
+
+    #endregion
+
+    #region ConvertNestedDictionariesToFlat
+
+    [Test]
+    public void ConvertNestedDictionariesToFlat_With_Flat()
+    {
+        var input = new Dictionary<string, object>
+        {
+            { "a", 1 }
+        };
+        var output = new Dictionary<string, object>();
+
+        UnityNativeVariableUtils.ConvertNestedDictionariesToFlat("", input, output);
+        var expected = new Dictionary<string, object>
+        {
+            { "a", 1 }
+        };
+        CollectionAssert.AreEqual(expected, output);
+    }
+
+    [Test]
+    public void ConvertNestedDictionariesToFlat_With_Groups()
+    {
+        var input = new Dictionary<string, object>
+        {
+            { "a", 1},
+            { "group", new Dictionary<string, object>
+                {
+                    { "a", "value" }
+                }
+            },
+            { "group1", new Dictionary<string, object>
+                {
+                    { "group2", new Dictionary<string, object>
+                        {
+                            { "b", 99 }
+                        }
+                    }
+                }
+            }
+        };
+        var output = new Dictionary<string, object>();
+
+        UnityNativeVariableUtils.ConvertNestedDictionariesToFlat("", input, output);
+        var expected = new Dictionary<string, object>
+        {
+            { "a", 1 },
+            { "group.a", "value" },
+            { "group1.group2.b", 99 }
+        };
+        CollectionAssert.AreEqual(expected, output);
+    }
+
+    [Test]
+    public void ConvertNestedDictionariesToFlat_With_Prefix()
+    {
+        var input = new Dictionary<string, object>
+        {
+            { "a", 1 },
+            { "group1", new Dictionary<string, object>
+                {
+                    { "a", "value" },
+                    { "group2", new Dictionary<string, object>
+                        {
+                            { "b", 99 }
+                        }
+                    }
+                }
+            }
+        };
+        var output = new Dictionary<string, object>();
+
+        UnityNativeVariableUtils.ConvertNestedDictionariesToFlat("prefix.", input, output);
+        var expected = new Dictionary<string, object>
+        {
+            { "prefix.a", 1 },
+            { "prefix.group1.a", "value" },
+            { "prefix.group1.group2.b", 99 }
+        };
+        CollectionAssert.AreEqual(expected, output);
     }
 
     #endregion
