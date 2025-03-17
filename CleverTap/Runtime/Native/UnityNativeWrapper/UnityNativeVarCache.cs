@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using CleverTapSDK.Common;
@@ -132,5 +133,11 @@ namespace CleverTapSDK.Native
                 variable?.Update();
             }
         }
+
+        internal Dictionary<string, object> GetDefineVarsPayload()
+        {
+            return UnityNativeVariableUtils.GetFlatVarsPayload(vars);
+        }
     }
 }
+#endif

@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Native;
 using NUnit.Framework;
+using UnityEngine;
 
 public class UnityNativeVariableUtilsTest
 {
@@ -356,6 +359,113 @@ public class UnityNativeVariableUtilsTest
     {
         var input = new Dictionary<string, object>();
         CollectionAssert.AreEqual(input, UnityNativeVariableUtils.ConvertDictionaryToNestedDictionaries(input));
+    }
+
+    #endregion
+
+    #region GetFlatVarsPayload
+
+    [Test]
+    public void GetFlatVarsPayload()
+    {
+        var _cache = new UnityNativeVarCache();
+        var var1 = new UnityNativeVar<string>("var1", CleverTapVariableKind.STRING, "str", _cache);
+        var var2 = new UnityNativeVar<int>("var2", CleverTapVariableKind.INT, 1, _cache);
+        var var3 = new UnityNativeVar<Dictionary<string, object>>("group", CleverTapVariableKind.DICTIONARY,
+            new Dictionary<string, object> { { "var1", "value" }, { "var2", 2 }, { "var3", 99.95} }, _cache);
+        var var4 = new UnityNativeVar<Dictionary<string, string>>("group.group2", CleverTapVariableKind.DICTIONARY,
+            new Dictionary<string, string> { { "var4", "default" } }, _cache);
+        var var5 = new UnityNativeVar<Dictionary<string, object>>("group1", CleverTapVariableKind.DICTIONARY,
+            new Dictionary<string, object> { { "group2", new Dictionary<string, object> { { "var4", 4 } } } }, _cache);
+        var var6 = new UnityNativeVar<double>("var6", CleverTapVariableKind.FLOAT, 1.99, _cache);
+
+        var vars = new Dictionary<string, IVar>
+        {
+            { var1.Name, var1 },
+            { var2.Name, var2 },
+            { var3.Name, var3 },
+            { var4.Name, var4 },
+            { var5.Name, var5 },
+            { var6.Name, var6 }
+        };
+
+        var expected = new Dictionary<string, object>();
+        expected.Add("type", "varsPayload");
+        expected.Add("vars", new Dictionary<string, object>()
+        {
+            {
+                "var1", new Dictionary<string, object>()
+                {
+                    { "type", "string" },
+                    { "defaultValue", "str" }
+                }
+            },
+            {
+                "var2", new Dictionary<string, object>()
+                {
+                    { "type", "number" },
+                    { "defaultValue", 1 }
+                }
+            },
+            {
+                "group.var1", new Dictionary<string, object>()
+                {
+                    { "type", "string" },
+                    { "defaultValue", "value" }
+                }
+            },
+            {
+                "group.var2", new Dictionary<string, object>()
+                {
+                    { "type", "number" },
+                    { "defaultValue", 2 }
+                }
+            },
+            {
+                "group.var3", new Dictionary<string, object>()
+                {
+                    { "type", "number" },
+                    { "defaultValue", 99.95 }
+                }
+            },
+            {
+                "group.group2.var4", new Dictionary<string, object>()
+                {
+                    { "type", "string" },
+                    { "defaultValue", "default" }
+                }
+            },
+            {
+                "group1.group2.var4", new Dictionary<string, object>()
+                {
+                    { "type", "number" },
+                    { "defaultValue", 4 }
+                }
+            },
+            {
+                "var6", new Dictionary<string, object>()
+                {
+                    { "type", "number" },
+                    { "defaultValue", 1.99 }
+                }
+            }
+        });
+
+        var actual = UnityNativeVariableUtils.GetFlatVarsPayload(vars);
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void GetFlatVarsPayload_Empty()
+    {
+        var vars = new Dictionary<string, IVar>();
+
+        var expected = new Dictionary<string, object>();
+        expected.Add("type", "varsPayload");
+        expected.Add("vars", new Dictionary<string, object>());
+
+        var actual = UnityNativeVariableUtils.GetFlatVarsPayload(vars);
+        CollectionAssert.AreEqual(expected, actual);
     }
 
     #endregion

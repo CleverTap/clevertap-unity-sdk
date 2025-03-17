@@ -18,7 +18,6 @@ namespace CTExample
         {
 #if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
             AppInbox.interactable = false;
-            Variables.interactable = false;
 #endif
         }
 

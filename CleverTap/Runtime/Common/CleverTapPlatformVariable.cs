@@ -142,6 +142,11 @@ namespace CleverTapSDK.Common
         protected virtual string GetKindNameFromGenericType<T>()
         {
             Type type = typeof(T);
+            return GetKindNameFromType(type);
+        }
+
+        internal static string GetKindNameFromType(Type type)
+        {
             if (type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(char) || type == typeof(sbyte) || type == typeof(byte))
             {
                 return CleverTapVariableKind.INT;
