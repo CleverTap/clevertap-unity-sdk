@@ -78,6 +78,32 @@ static BOOL platformDidInit = NO;
     [[CleverTapMessageSender sharedInstance] flushBuffer:callback];
 }
 
+- (void)onVariablesCallbackAdded:(NSString *)callbackName callbackId:(int)callbackId {
+    CleverTapUnityCallbackInfo *callback = [CleverTapUnityCallbackInfo callbackFromName:callbackName];
+    if (!callback) {
+        NSLog(@"Unsupported callback added: %@", callbackName);
+        return;
+    }
+    
+    if ([callback isEqual:[CleverTapUnityCallbackInfo infoForCallback:CleverTapUnityCallbackVariablesChanged]]) {
+        [self.cleverTap onVariablesChanged:
+             [[CleverTapUnityCallbackHandler sharedInstance] variablesCallback:CleverTapUnityCallbackVariablesChanged callbackId:callbackId]
+        ];
+    }
+    if ([callback isEqual:[CleverTapUnityCallbackInfo infoForCallback:CleverTapUnityCallbackVariablesChangedAndNoDownloadsPending]]) {
+        [self.cleverTap onVariablesChangedAndNoDownloadsPending:[[CleverTapUnityCallbackHandler sharedInstance] variablesCallback:CleverTapUnityCallbackVariablesChangedAndNoDownloadsPending callbackId:callbackId]];
+    }
+    if ([callback isEqual:[CleverTapUnityCallbackInfo infoForCallback:CleverTapUnityCallbackOneTimeVariablesChanged]]) {
+        [self.cleverTap onceVariablesChanged:
+         [[CleverTapUnityCallbackHandler sharedInstance] variablesCallback:CleverTapUnityCallbackOneTimeVariablesChanged callbackId:callbackId]];
+    }
+    if ([callback isEqual:[CleverTapUnityCallbackInfo infoForCallback:CleverTapUnityCallbackOneTimeVariablesChangedAndNoDownloadsPending]]) {
+        [self.cleverTap onceVariablesChangedAndNoDownloadsPending:
+             [[CleverTapUnityCallbackHandler sharedInstance] variablesCallback:CleverTapUnityCallbackOneTimeVariablesChangedAndNoDownloadsPending callbackId:callbackId]
+        ];
+    }
+}
+
 const double PENDING_EVENTS_TIME_OUT = 10.0;
 static BOOL shouldDisableBuffers = YES;
 

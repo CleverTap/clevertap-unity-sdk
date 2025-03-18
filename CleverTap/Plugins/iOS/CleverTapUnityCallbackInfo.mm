@@ -49,18 +49,20 @@
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProductConfigInitialized" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProductConfigFetched" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapProductConfigActivated" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesChanged" bufferable:YES],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesChanged" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariableValueChanged" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesFetched" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppsFetched" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesChangedAndNoDownloadsPending" bufferable:YES],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariablesChangedAndNoDownloadsPending" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapVariableFileIsReady" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomTemplatePresent" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomFunctionPresent" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapCustomTemplateClose" bufferable:NO],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapOnPushPermissionResponseCallback" bufferable:YES],
             [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapPushNotificationPermissionStatus" bufferable:NO],
-            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationShowCallback" bufferable:YES]
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapInAppNotificationShowCallback" bufferable:YES],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"OneTimeCleverTapVariablesChanged" bufferable:NO],
+            [[CleverTapUnityCallbackInfo alloc] initWithName:@"OneTimeCleverTapVariablesChangedAndNoDownloadsPending" bufferable:NO]
         ];
     });
     return callbacks;
