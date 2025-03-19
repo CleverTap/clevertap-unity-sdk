@@ -20,6 +20,7 @@ import com.clevertap.android.sdk.inapp.customtemplates.CustomTemplateContext;
 import com.clevertap.android.sdk.inbox.CTInboxMessage;
 import com.clevertap.android.sdk.pushnotification.PushConstants;
 import com.clevertap.android.sdk.variables.Var;
+import com.clevertap.unity.CleverTapUnityCallbackHandler.UnityVariablesChangedCallback;
 import com.clevertap.unity.callback.PluginCallback;
 import com.clevertap.unity.callback.PluginIntCallback;
 
@@ -700,6 +701,55 @@ public class CleverTapUnityPlugin {
 
     public void fetchVariables(final int callbackId) {
         clevertap.fetchVariables(callbackHandler.getFetchVariablesCallback(callbackId));
+    }
+
+    public void onVariablesCallbackAdded(String callbackName, int callbackId) {
+        CleverTapUnityCallback callbackType = CleverTapUnityCallback.fromName(callbackName);
+        if (callbackType == null) {
+            Log.e(LOG_TAG, "onVariablesCallbackAdded with null callback");
+            return;
+        }
+
+        UnityVariablesChangedCallback callback = callbackHandler.createVariablesChangedCallback(callbackType, callbackId);
+        switch (callbackType) {
+            case CLEVERTAP_VARIABLES_CHANGED:
+                clevertap.addVariablesChangedCallback(callback);
+                break;
+            case CLEVERTAP_ONE_TIME_VARIABLES_CHANGED:
+                clevertap.addOneTimeVariablesChangedCallback(callback);
+                break;
+            case CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING:
+                clevertap.onVariablesChangedAndNoDownloadsPending(callback);
+                break;
+            case CLEVERTAP_ONE_TIME_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING:
+                clevertap.onceVariablesChangedAndNoDownloadsPending(callback);
+                break;
+            default:
+                Log.e(LOG_TAG, "onVariablesCallbackAdded called with unsupported callback type " + callbackType.callbackName);
+                break;
+        }
+    }
+
+    public void onVariablesCallbackRemoved(int callbackId) {
+        UnityVariablesChangedCallback callback = callbackHandler.getVariablesChangedCallback(callbackId);
+        if (callback != null) {
+            switch (callback.callbackType) {
+                case CLEVERTAP_VARIABLES_CHANGED:
+                    clevertap.removeVariablesChangedCallback(callback);
+                    break;
+                case CLEVERTAP_ONE_TIME_VARIABLES_CHANGED:
+                    clevertap.removeOneTimeVariablesChangedCallback(callback);
+                    break;
+                case CLEVERTAP_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING:
+                    // TODO no corresponding remove method
+                    break;
+                case CLEVERTAP_ONE_TIME_VARIABLES_CHANGED_AND_NO_DOWNLOADS_PENDING:
+                    // TODO no corresponding remove method
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     // InApps
