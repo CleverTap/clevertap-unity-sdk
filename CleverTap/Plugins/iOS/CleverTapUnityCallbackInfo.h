@@ -42,7 +42,8 @@ typedef NS_ENUM(NSInteger, CleverTapUnityCallback) {
 
 + (nullable CleverTapUnityCallbackInfo *)infoForCallback:(CleverTapUnityCallback)callback;
 + (nullable CleverTapUnityCallbackInfo *)callbackFromName:(NSString *)callbackName;
-+ (NSArray<CleverTapUnityCallbackInfo *> *)callbackInfos;
++ (NSDictionary<NSNumber *, CleverTapUnityCallbackInfo *> *)callbackInfos;
++ (nullable NSNumber *)callbackEnumForName:(NSString *)callbackName;
 
 @end
 
