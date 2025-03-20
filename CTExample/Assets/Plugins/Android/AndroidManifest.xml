@@ -33,7 +33,7 @@
         android:debuggable="true"
         android:icon="@drawable/app_icon"
         android:isGame="true"
-        android:name="com.clevertap.unity.CleverTapUnityApplication"
+        android:name="com.clevertap.unity.example.CTExampleApplication"
         android:label="@string/app_name"
         android:theme="@style/UnityThemeSelector">
 
