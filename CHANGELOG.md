@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 5.1.0 *(20 March, 2025)*
+-------------------------------------------
+- Updated to [CleverTap iOS SDK v7.1.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.1.1)
+- Variables Callbacks improvements
+- Allow setting custom instance of CleverTap to iOS CleverTapUnityManager
+- Allow custom instance of CleverTapAPI to be set to Android CleverTapUnityPlugin
+- Replace Handler with Timer in Android CleverTapUnityPlugin
+- Add macro to disable iOS UnityAppController subclass
+
 Version 5.0.1 *(11 February, 2025)*
 -------------------------------------------
 - Fixes Android Gradle project build when building bundle/apk
