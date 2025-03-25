@@ -11,6 +11,7 @@ namespace CleverTapSDK.Native
         private bool hadStarted;
         private readonly UnityNativeVarCache varCache;
         internal string[] nameComponents;
+        internal bool HadStarted => hadStarted;
 
         public override string[] NameComponents => nameComponents;
 

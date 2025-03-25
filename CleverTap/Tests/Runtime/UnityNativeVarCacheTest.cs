@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
@@ -26,7 +26,7 @@ public class UnityNativeVarCacheTest
         if (_coreState != null)
         {
             var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
-            prefManager.DeleteKey(_cache.GetDiffsKey());
+            prefManager.DeleteKey(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId));
             _coreState = null;
         }
     }
@@ -300,7 +300,7 @@ public class UnityNativeVarCacheTest
         string serializedData = Json.Serialize(diffs);
         SetCoreState();
         var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
-        prefManager.SetString(_cache.GetDiffsKey(), serializedData);
+        prefManager.SetString(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId), serializedData);
 
         var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
         var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
@@ -310,6 +310,44 @@ public class UnityNativeVarCacheTest
         Assert.AreEqual(10, var1.Value);
         Assert.AreEqual("new value", var2.Value);
         Assert.AreEqual(30, _cache.GetMergedValue("group1.var3"));
+    }
+
+    [Test]
+    public void SaveDiffs_Saves()
+    {
+        _ = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        _ = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+        var diffs = new Dictionary<string, object>
+        {
+            { "var1", 10 },
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" },
+                { "var3", 30 },
+            }}
+        };
+
+        SetCoreState();
+        _cache.ApplyVariableDiffs(diffs);
+        _cache.SaveDiffs();
+
+        string expected = Json.Serialize(diffs);
+        var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
+        string actual = prefManager.GetString(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId), string.Empty);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void Reset_ClearsState()
+    {
+        _cache.SetHasVarsRequestCompleted(true);
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        Assert.IsTrue(_cache.HasVarsRequestCompleted);
+        Assert.IsTrue(var1.HadStarted);
+
+        _cache.Reset();
+        Assert.IsFalse(_cache.HasVarsRequestCompleted);
+        Assert.IsFalse(var1.HadStarted);
     }
 }
 

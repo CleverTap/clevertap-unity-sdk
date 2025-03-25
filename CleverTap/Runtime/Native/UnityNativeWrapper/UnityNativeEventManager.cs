@@ -26,10 +26,14 @@ namespace CleverTapSDK.Native
         internal UnityNativeCoreState CoreState { get => _coreState; }
         internal UnityNativeCallbackHandler CallbackHandler { get => _callbackHandler; }
 
-        internal UnityNativePlatformVariable platformVariable;
+        internal UnityNativePlatformVariable _platformVariable;
 
-        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) {
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) : this(callbackHandler, null) { }
+
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler, UnityNativePlatformVariable platformVariable)
+        {
             _callbackHandler = callbackHandler;
+            _platformVariable = platformVariable;
         }
 
         private void Initialize(string accountId, string token, string region = null) {
@@ -43,15 +47,7 @@ namespace CleverTapSDK.Native
             _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
             _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
 
-            if (VariableFactory.CleverTapVariable is UnityNativePlatformVariable platformVariable)
-            {
-                this.platformVariable = platformVariable;
-                this.platformVariable.Load(this, CallbackHandler, CoreState);
-            }
-            else
-            {
-                CleverTapLogger.LogError("CleverTapVariable must be UnityNativePlatformVariable.");
-            }
+            _platformVariable?.Load(this, CallbackHandler, CoreState);
 
             // Requires network engine
             SetResponseInterceptors();
@@ -80,9 +76,9 @@ namespace CleverTapSDK.Native
                 new UnityNativeMetadataResponseInterceptor(_preferenceManager)
             };
 
-            if (platformVariable != null)
+            if (_platformVariable != null)
             {
-                responseInterceptors.Add(new UnityNativeVariablesResponseInterceptor(platformVariable));
+                responseInterceptors.Add(new UnityNativeVariablesResponseInterceptor(_platformVariable));
             }
             else
             {
@@ -240,7 +236,7 @@ namespace CleverTapSDK.Native
                 }
 
                 // Load Variables for new user
-                platformVariable.SwitchUser();
+                _platformVariable?.SwitchUser();
 
                 // Load discarded events for new user
                 _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
