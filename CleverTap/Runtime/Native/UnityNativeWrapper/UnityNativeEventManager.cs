@@ -1,13 +1,14 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
-using CleverTapSDK.Common;
-using CleverTapSDK.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CleverTapSDK.Common;
+using CleverTapSDK.Utilities;
 using UnityEngine;
 
-namespace CleverTapSDK.Native {
+namespace CleverTapSDK.Native
+{
     internal class UnityNativeEventManager {
         private static readonly string NATIVE_EVENTS_DB_CACHE = "NativeEventsDbCache";
         private static readonly int DEFER_EVENT_UNTIL_APP_LAUNCHED_SECONDS = 2;
@@ -97,6 +98,20 @@ namespace CleverTapSDK.Native {
             UnityNativeEvent @event = BuildEventWithAppFields(UnityNativeEventType.RaisedEvent, eventDetails, false);
             StoreEvent(@event);
             _eventQueueManager.FlushQueues();
+        }
+
+        internal void SyncVariables(Dictionary<string, object> varsSyncPayload)
+        {
+            if (ShouldDeferEvent(() =>
+            {
+                SyncVariables(varsSyncPayload);
+            }))
+            {
+                return;
+            }
+
+            UnityNativeEvent @event = BuildEvent(UnityNativeEventType.DefineVarsEvent, varsSyncPayload, false);
+            _eventQueueManager.QueueEvent(@event);
         }
         #endregion
 

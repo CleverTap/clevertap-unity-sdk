@@ -6,7 +6,9 @@ using System.Collections.Generic;
 namespace CleverTapSDK.Native {
     internal class UnityNativePlatformBinding : CleverTapPlatformBindings {
         private readonly UnityNativeWrapper _unityNativeWrapper;
-       
+
+        internal UnityNativeWrapper UnityNativeWrapper => _unityNativeWrapper;
+
         internal UnityNativePlatformBinding() {
             UnityNativeCallbackHandler handler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>(CleverTapGameObjectName.UNITY_NATIVE_CALLBACK_HANDLER);
             CallbackHandler = handler;

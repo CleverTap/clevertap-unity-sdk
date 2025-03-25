@@ -152,7 +152,8 @@ namespace CTExample
             var_double.OnValueChanged += Var_double_OnValueChanged;
             var_short.OnValueChanged += Var_short_OnValueChanged;
             var_long.OnValueChanged += Var_long_OnValueChanged;
-            factory_var_file.OnFileReady += Factory_var_file_OnFileReady;
+            if (factory_var_file != null)
+                factory_var_file.OnFileReady += Factory_var_file_OnFileReady;
 
             VariablesDefined = true;
 
@@ -161,10 +162,10 @@ namespace CTExample
 
         private void SyncVariables()
         {
-#if UNITY_ANDROID
-        CleverTap.SyncVariables();
-#elif UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
             CleverTap.SyncVariables(true);
+#else
+            CleverTap.SyncVariables();
 #endif
         }
 
@@ -221,14 +222,17 @@ namespace CTExample
             AddKeyValue(group1.Name, Json.Serialize(group1.Value));
             AddKeyValue(varHello.Name, Json.Serialize(varHello.Value));
 
-            AddKeyValue(factory_var_file.Name, factory_var_file.Value);
-            AddKeyValue(factory_var_file.Name, factory_var_file.FileValue);
+            AddKeyValue(factory_var_file?.Name, factory_var_file?.Value);
+            AddKeyValue(factory_var_file?.Name, factory_var_file?.FileValue);
 
-            AddKeyValue(folder1FileVariable.Name, folder1FileVariable.FileValue);
+            AddKeyValue(folder1FileVariable?.Name, folder1FileVariable?.FileValue);
         }
 
         private void AddKeyValue(string name, string value)
         {
+            if (string.IsNullOrEmpty(name))
+                return;
+
             var parent = VerticalLayoutGroup.GetComponent<RectTransform>();
             GameObject sdkVersion = Instantiate(keyValuePrefab);
             KeyValue sdkVersionKV = sdkVersion.GetComponent<KeyValue>();
