@@ -18,6 +18,7 @@ namespace CleverTapSDK.Native
         private UnityNativeEventManager unityNativeEventManager;
         private CleverTapCallbackHandler callbackHandler;
         private bool hasLoaded;
+        private int fetchVariablesCallbackId = -1;
 
         internal UnityNativePlatformVariable() : this(new UnityNativeVarCache())
         {
@@ -154,7 +155,7 @@ namespace CleverTapSDK.Native
             var fetchedMessage = new Dictionary<string, object>
             {
                 { "isSuccess", success },
-                { "callbackId", callbackId }
+                { "callbackId", fetchVariablesCallbackId }
             };
             callbackHandler.CleverTapVariablesFetched(Json.Serialize(fetchedMessage));
         }
@@ -200,13 +201,11 @@ namespace CleverTapSDK.Native
             }
         }
 
-        private int callbackId = -1;
-
         internal override void FetchVariables(int callbackId)
         {
             if (unityNativeEventManager != null && nativeVarCache != null)
             {
-                this.callbackId = callbackId;
+                fetchVariablesCallbackId = callbackId;
                 unityNativeEventManager.FetchVariables();
             }
             else
