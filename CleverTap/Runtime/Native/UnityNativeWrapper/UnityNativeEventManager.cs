@@ -23,10 +23,7 @@ namespace CleverTapSDK.Native
         private string _accountId;
         private int _enableNetworkInfoReporting = -1;
 
-        internal UnityNativeCoreState CoreState { get => _coreState; }
-        internal UnityNativeCallbackHandler CallbackHandler { get => _callbackHandler; }
-
-        internal UnityNativePlatformVariable _platformVariable;
+        private readonly UnityNativePlatformVariable _platformVariable;
 
         internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) : this(callbackHandler, null) { }
 
@@ -47,7 +44,7 @@ namespace CleverTapSDK.Native
             _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
             _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
 
-            _platformVariable?.Load(this, CallbackHandler, CoreState);
+            _platformVariable?.Load(this, _callbackHandler, _coreState);
 
             // Requires network engine
             SetResponseInterceptors();
