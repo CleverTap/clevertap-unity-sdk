@@ -285,6 +285,57 @@ public class UnityNativeVarCacheTest
     }
 
     [Test]
+    public void ApplyDiffs_UpdatesValues_And_DefaultsValues()
+    {
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        // Update var1
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "var1", 10 }
+        });
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+
+        // Update group1.var2
+        // Update var1 to default value since it is not in the diff
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" }
+            }}
+        });
+        Assert.AreEqual(3, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+
+        // Update to default values since diff is empty dictionary
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>());
+        Assert.AreEqual(3, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+    }
+
+    [Test]
+    public void ApplyDiffs_UpdatesValues_With_Null()
+    {
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "var1", 10 }
+        });
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+
+        // ApplyVariableDiffs with null should not apply the diff
+        _cache.ApplyVariableDiffs(null);
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+    }
+
+    [Test]
     public void LoadDiffs_UpdatesValues()
     {
         var diffs = new Dictionary<string, object>
@@ -310,6 +361,41 @@ public class UnityNativeVarCacheTest
         Assert.AreEqual(10, var1.Value);
         Assert.AreEqual("new value", var2.Value);
         Assert.AreEqual(30, _cache.GetMergedValue("group1.var3"));
+    }
+
+    [Test]
+    public void LoadDiffs_IncorrectData()
+    {
+        var diffs = new Dictionary<string, object>
+        {
+            { "var1", 10 },
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" }
+            }}
+        };
+
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        // Apply new values
+        _cache.ApplyVariableDiffs(diffs);
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+
+        // Persist incorrect data for diffs
+        string serializedData = Json.Serialize("incorrect-value");
+        SetCoreState();
+        var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
+        prefManager.SetString(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId), serializedData);
+
+        // LoadDiffs will read the persisted data
+        Assert.DoesNotThrow(() => _cache.LoadDiffs());
+
+        // Persisted data is incorrect, so LoadDiffs will not apply it
+        // The variable values should remain the same
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
     }
 
     [Test]

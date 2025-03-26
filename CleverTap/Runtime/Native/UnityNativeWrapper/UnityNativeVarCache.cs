@@ -182,9 +182,10 @@ namespace CleverTapSDK.Native
 
             CleverTapLogger.Log($"Loading Variable Diffs for deviceId: {coreState.DeviceInfo.DeviceId}");
             string diffsString = preferenceManager.GetString(GetDiffsKey(coreState.DeviceInfo.DeviceId), "{}");
-            var diffsDict = Json.Deserialize(diffsString) as IDictionary<string, object>;
-
-            ApplyVariableDiffs(diffsDict);
+            if (Json.Deserialize(diffsString) is IDictionary<string, object> diffsDict)
+            {
+                ApplyVariableDiffs(diffsDict);
+            }
         }
 
         internal void SaveDiffs()
@@ -207,6 +208,11 @@ namespace CleverTapSDK.Native
             return UnityNativeVariableUtils.GetFlatVarsPayload(vars);
         }
 
+        /// <summary>
+        /// Resets the state.
+        /// Sets hasVarsRequestCompleted to false, expecting new request. 
+        /// Resets the registered variables.
+        /// </summary>
         internal void Reset()
         {
             hasVarsRequestCompleted = false;
