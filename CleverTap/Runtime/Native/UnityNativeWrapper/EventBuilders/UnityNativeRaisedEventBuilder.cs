@@ -52,6 +52,20 @@ namespace CleverTapSDK.Native {
             return new UnityNativeEventBuilderResult<Dictionary<string, object>>(eventValidationResultsWithErrors, eventDetails);
         }
 
+        internal UnityNativeEventBuilderResult<Dictionary<string, object>> BuildFetchEvent(int type) {
+            var eventDetails = new Dictionary<string, object> {
+                { UnityNativeConstants.Event.EVENT_NAME, UnityNativeConstants.Event.EVENT_WZRK_FETCH }
+            };
+
+            var properties = new Dictionary<string, object> {
+                { "t", type }
+            };
+
+            eventDetails.Add(UnityNativeConstants.Event.EVENT_DATA, properties);
+
+            return new UnityNativeEventBuilderResult<Dictionary<string, object>>(new List<UnityNativeValidationResult>(), eventDetails);
+        }
+
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> BuildChargedEvent(Dictionary<string, object> details, List<Dictionary<string, object>> items) {
             var eventValidationResultsWithErrors = new List<UnityNativeValidationResult>();
             if (details == null || items == null) {

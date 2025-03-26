@@ -123,20 +123,6 @@ namespace CleverTapSDK.Native
             StoreEvent(@event);
             _eventQueueManager.FlushQueues();
         }
-
-        internal void SyncVariables(Dictionary<string, object> varsSyncPayload)
-        {
-            if (ShouldDeferEvent(() =>
-            {
-                SyncVariables(varsSyncPayload);
-            }))
-            {
-                return;
-            }
-
-            UnityNativeEvent @event = BuildEvent(UnityNativeEventType.DefineVarsEvent, varsSyncPayload, false);
-            _eventQueueManager.QueueEvent(@event);
-        }
         #endregion
 
         #region Profile Events
@@ -379,6 +365,43 @@ namespace CleverTapSDK.Native
             var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator).BuildChargedEvent(details, items);
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
+        }
+
+        #endregion
+
+        #region Variables
+
+        internal void SyncVariables(Dictionary<string, object> varsSyncPayload)
+        {
+            if (ShouldDeferEvent(() =>
+            {
+                SyncVariables(varsSyncPayload);
+            }))
+            {
+                return;
+            }
+
+            UnityNativeEvent @event = BuildEvent(UnityNativeEventType.DefineVarsEvent, varsSyncPayload, false);
+            _eventQueueManager.QueueEvent(@event);
+        }
+
+        internal void FetchVariables()
+        {
+            if (ShouldDeferEvent(() =>
+            {
+                FetchVariables();
+            }))
+            {
+                return;
+            }
+
+            var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator)
+                .BuildFetchEvent(UnityNativeConstants.Event.WZRK_FETCH_TYPE_VARIABLES);
+            if (eventBuilderResult.EventResult == null)
+                return;
+            var eventDetails = eventBuilderResult.EventResult;
+            UnityNativeEvent @event = BuildEvent(UnityNativeEventType.FetchEvent, eventDetails, true);
+            _eventQueueManager.QueueEvent(@event);
         }
 
         #endregion

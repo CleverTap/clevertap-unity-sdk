@@ -52,6 +52,7 @@ namespace CleverTapSDK.Native
                     _userEventsQueue.QueueEvent(newEvent);
                     break;
                 case UnityNativeEventType.RaisedEvent:
+                case UnityNativeEventType.FetchEvent:
                     _raisedEventsQueue.QueueEvent(newEvent);
                     break;
                 case UnityNativeEventType.DefineVarsEvent:
