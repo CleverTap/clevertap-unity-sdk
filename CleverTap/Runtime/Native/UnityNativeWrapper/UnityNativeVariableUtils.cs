@@ -94,6 +94,9 @@ namespace CleverTapSDK.Native
 
         internal static void ConvertNestedDictionariesToFlat(string prefix, IDictionary map, IDictionary result)
         {
+            if (map == null || result == null)
+                return;
+
             foreach (var key in map.Keys)
             {
                 string stringKey = key.ToString();
@@ -117,6 +120,13 @@ namespace CleverTapSDK.Native
             };
 
             Dictionary<string, object> allVars = new Dictionary<string, object>();
+            if (varsDictionary == null)
+            {
+                CleverTapLogger.LogError("GetFlatVarsPayload: vars are null. Returning empty vars payload.");
+                result.Add("vars", allVars);
+                return result;
+            }
+
             foreach (var variable in varsDictionary)
             {
                 var name = variable.Key;

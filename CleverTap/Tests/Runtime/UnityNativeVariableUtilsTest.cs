@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Native;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 public class UnityNativeVariableUtilsTest
 {
@@ -468,6 +471,22 @@ public class UnityNativeVariableUtilsTest
         CollectionAssert.AreEqual(expected, actual);
     }
 
+    [Test]
+    public void GetFlatVarsPayload_Null()
+    {
+        // If called with null, an Error should be logged
+        LogAssert.Expect(LogType.Error, new Regex("GetFlatVarsPayload: vars are null." + ".*"));
+
+        Dictionary<string, object> actual = null;
+        Assert.DoesNotThrow(() => actual = UnityNativeVariableUtils.GetFlatVarsPayload(null));
+
+        // It should still return empty vars payload
+        var expected = new Dictionary<string, object>();
+        expected.Add("type", "varsPayload");
+        expected.Add("vars", new Dictionary<string, object>());
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
     #endregion
 
     #region ConvertNestedDictionariesToFlat
@@ -549,6 +568,22 @@ public class UnityNativeVariableUtilsTest
             { "prefix.group1.group2.b", 99 }
         };
         CollectionAssert.AreEqual(expected, output);
+    }
+
+    [Test]
+    public void ConvertNestedDictionariesToFlat_With_Empty()
+    {
+        var input = new Dictionary<string, object>();
+        var output = new Dictionary<string, object>();
+
+        UnityNativeVariableUtils.ConvertNestedDictionariesToFlat("", input, output);
+        CollectionAssert.AreEqual(new Dictionary<string, object>(), output);
+    }
+
+    [Test]
+    public void ConvertNestedDictionariesToFlat_With_Null()
+    {
+        Assert.DoesNotThrow(() => UnityNativeVariableUtils.ConvertNestedDictionariesToFlat("", null, null));
     }
 
     #endregion
