@@ -228,6 +228,14 @@ namespace CleverTapSDK.Native
             return variable;
         }
 
+        /// <summary>
+        /// Defines a file variable with <paramref name="name"/> or gets the variable if already defined.
+        /// Defining and syncing File variables is supported.
+        /// Downloads and callbacks for file variables are not supported.
+        /// Values are URL strings, not the actual files.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <returns>The file variable with type string.</returns>
         protected override Var<string> GetOrDefineFileVariable(string name)
         {
             return DefineVariable<string>(name, CleverTapVariableKind.FILE, null);
