@@ -23,8 +23,14 @@ namespace CleverTapSDK.Native
         private string _accountId;
         private int _enableNetworkInfoReporting = -1;
 
-        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) {
+        private readonly UnityNativePlatformVariable _platformVariable;
+
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) : this(callbackHandler, null) { }
+
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler, UnityNativePlatformVariable platformVariable)
+        {
             _callbackHandler = callbackHandler;
+            _platformVariable = platformVariable;
         }
 
         private void Initialize(string accountId, string token, string region = null) {
@@ -37,6 +43,10 @@ namespace CleverTapSDK.Native
 
             _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
             _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
+
+            _platformVariable?.Load(this, _callbackHandler, _coreState);
+
+            // Requires network engine
             SetResponseInterceptors();
             _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
@@ -52,12 +62,26 @@ namespace CleverTapSDK.Native
             return discardedEventNames;
         }
 
+        /// <summary>
+        /// Sets response interceptors.
+        /// Requires network engine to be initialized.
+        /// </summary>
         private void SetResponseInterceptors() {
             List<IUnityNativeResponseInterceptor> responseInterceptors = new List<IUnityNativeResponseInterceptor>
             {
                 new UnityNativeARPResponseInterceptor(_accountId, _coreState.DeviceInfo.DeviceId, _eventValidator),
                 new UnityNativeMetadataResponseInterceptor(_preferenceManager)
             };
+
+            if (_platformVariable != null)
+            {
+                responseInterceptors.Add(new UnityNativeVariablesResponseInterceptor(_platformVariable));
+            }
+            else
+            {
+                CleverTapLogger.LogError("PlatformVariable is null, cannot process variables responses.");
+            }
+
             _networkEngine.SetResponseInterceptors(responseInterceptors);
         }
         
@@ -191,7 +215,7 @@ namespace CleverTapSDK.Native
             try
             {
                 CleverTapLogger.Log($"asyncProfileSwitchUser:[profile {string.Join(Environment.NewLine, profile)}]" +
-                    $" with Cached GUID {(cacheGuid != null ? cacheGuid : "NULL")}");
+                    $" with Cached GUID {cacheGuid ?? "null"}");
 
                 // Flush the queues
                 _eventQueueManager.FlushQueues();
@@ -207,6 +231,9 @@ namespace CleverTapSDK.Native
                 {
                     _coreState.DeviceInfo.ForceNewDeviceID();
                 }
+
+                // Load Variables for new user
+                _platformVariable?.ResetCache();
 
                 // Load discarded events for new user
                 _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());

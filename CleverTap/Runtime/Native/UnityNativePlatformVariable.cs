@@ -1,18 +1,161 @@
-﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System.Collections.Generic;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
 namespace CleverTapSDK.Native
 {
-    internal class UnityNativePlatformVariable : CleverTapPlatformVariable
+    internal interface IVariablesResponseHandler
     {
-        private readonly UnityNativeVarCache nativeVarCache = new UnityNativeVarCache();
-        private readonly UnityNativeWrapper unityNativeWrapper;
+        void HandleVariablesResponse(IDictionary<string, object> vars);
+        void HandleVariablesResponseError();
+    }
 
-        internal UnityNativePlatformVariable(UnityNativeWrapper unityNativeWrapper) : base()
+    internal class UnityNativePlatformVariable : CleverTapPlatformVariable, IVariablesResponseHandler
+    {
+        private readonly UnityNativeVarCache nativeVarCache;
+        private UnityNativeEventManager unityNativeEventManager;
+        private CleverTapCallbackHandler callbackHandler;
+        private bool hasLoaded;
+
+        internal UnityNativePlatformVariable() : this(new UnityNativeVarCache())
         {
-            this.unityNativeWrapper = unityNativeWrapper;
+        }
+
+        internal UnityNativePlatformVariable(UnityNativeVarCache unityNativeVarCache) : base()
+        {
+            nativeVarCache = unityNativeVarCache;
+        }
+
+        /// <summary>
+        /// Sets the dependencies. Loads variables diffs.
+        /// Call this method as soon as the SDK initializes.
+        /// </summary>
+        /// <param name="unityNativeEventManager">The event manager instance.</param>
+        /// <param name="callbackHandler">The <see cref="CleverTapCallbackHandler"/> to trigger Variables Callbacks.</param>
+        /// <param name="coreState">
+        /// The CoreState instance used accross the SDK instance.
+        /// Requires reference so DeviceInfo updates are reflected.
+        /// </param>
+        internal void Load(UnityNativeEventManager unityNativeEventManager,
+            CleverTapCallbackHandler callbackHandler,
+            UnityNativeCoreState coreState)
+        {
+            if (unityNativeEventManager == null || callbackHandler == null || coreState == null)
+            {
+                CleverTapLogger.LogError("Cannot load UnityNativePlatformVariable with null parameters.");
+                return;
+            }
+
+            hasLoaded = true;
+
+            this.unityNativeEventManager = unityNativeEventManager;
+            this.callbackHandler = callbackHandler;
+
+            nativeVarCache.SetCoreState(coreState);
+            // Load diffs on platform load
+            nativeVarCache.LoadDiffs();
+        }
+
+        internal bool HasVarsRequestCompleted => nativeVarCache.HasVarsRequestCompleted;
+
+        /// <summary>
+        /// Resets the <see cref="UnityNativeVarCache"/> var cache.
+        /// Loads the diffs.
+        /// </summary>
+        internal void ReloadCache()
+        {
+            if (nativeVarCache == null)
+            {
+                CleverTapLogger.LogError("Cannot reload cache - the VarCache is null.");
+                return;
+            }
+
+            nativeVarCache.Reset();
+            nativeVarCache.LoadDiffs();
+        }
+
+        void IVariablesResponseHandler.HandleVariablesResponse(IDictionary<string, object> vars)
+        {
+            if (hasLoaded)
+            {
+                HandleVariablesResponseSuccess(vars);
+            }
+            else
+            {
+                CleverTapLogger.LogError("CleverTap Error: Cannot handle variables success response. The platform variable is not loaded.");
+            }
+        }
+
+        void IVariablesResponseHandler.HandleVariablesResponseError()
+        {
+            if (hasLoaded)
+            {
+                HandleVariablesResponseError();
+            }
+            else
+            {
+                CleverTapLogger.LogError("CleverTap Error: Cannot handle variables error response. The platform variable is not loaded.");
+            }
+        }
+
+        /// <summary>
+        /// Handles variables response success.
+        /// Applies the diffs from the response and saves them.
+        /// Triggers variables callbacks.
+        /// Triggers Variables Fetched with success.
+        /// </summary>
+        /// <param name="varsJson">The variables from the response.</param>
+        internal void HandleVariablesResponseSuccess(IDictionary<string, object> varsJson)
+        {
+            CleverTapLogger.Log("Variables Response Success");
+            nativeVarCache.SetHasVarsRequestCompleted(true);
+
+            var diffs = UnityNativeVariableUtils.ConvertDictionaryToNestedDictionaries(varsJson);
+            nativeVarCache.ApplyVariableDiffs(diffs);
+            nativeVarCache.SaveDiffs();
+
+            TriggerVariablesChanged();
+            TriggerVariablesFetched(true);
+        }
+
+        /// <summary>
+        /// Handles variables response error.
+        /// Marks the vars request as completed <see cref="HasVarsRequestCompleted"/>.
+        /// Triggers Variables Changed callbacks.
+        /// Triggers individual variables Update callbacks.
+        /// Triggers Variables Fetched with error.
+        /// </summary>
+        /// <remarks>
+        /// The vars diffs are already loaded in <see cref="Load" /> or <see cref="ReloadCache" />
+        /// </remarks>
+        internal void HandleVariablesResponseError()
+        {
+            if (!nativeVarCache.HasVarsRequestCompleted)
+            {
+                CleverTapLogger.Log("Handling Variables Response Error");
+                nativeVarCache.SetHasVarsRequestCompleted(true);
+                nativeVarCache.TriggerVariablesUpdate();
+                TriggerVariablesChanged();
+            }
+
+            TriggerVariablesFetched(false);
+        }
+
+        private void TriggerVariablesChanged()
+        {
+            callbackHandler.CleverTapVariablesChanged("VariablesChanged");
+            callbackHandler.CleverTapVariablesChangedAndNoDownloadsPending("VariablesChangedAndNoDownloadsPending");
+        }
+
+        private void TriggerVariablesFetched(bool success)
+        {
+            var fetchedMessage = new Dictionary<string, object>
+            {
+                { "isSuccess", success }
+            };
+            callbackHandler.CleverTapVariablesFetched(Json.Serialize(fetchedMessage));
         }
 
         internal override void SyncVariables()
@@ -42,17 +185,17 @@ namespace CleverTapSDK.Native
                 }
             }
 
-            if (unityNativeWrapper != null)
+            if (unityNativeEventManager != null && nativeVarCache != null)
             {
                 if (nativeVarCache.VariablesCount == 0)
                 {
                     CleverTapLogger.Log("CleverTap: No Variables defined.");
                 }
-                unityNativeWrapper.SyncVariables(nativeVarCache.GetDefineVarsPayload());
+                unityNativeEventManager.SyncVariables(nativeVarCache.GetDefineVarsPayload());
             }
             else
             {
-                CleverTapLogger.LogError("CleverTap Error: Cannot sync variables. The unityNativeWrapper is null.");
+                CleverTapLogger.LogError("CleverTap Error: Cannot sync variables. The platform variable is not loaded.");
             }
         }
 

@@ -47,7 +47,7 @@ namespace CleverTapSDK.Native
             }
         }
 
-        internal static Dictionary<string, object> ConvertDictionaryToNestedDictionaries(Dictionary<string, object> values)
+        internal static Dictionary<string, object> ConvertDictionaryToNestedDictionaries(IDictionary<string, object> values)
         {
             var result = new Dictionary<string, object>();
             foreach (var entry in values)
@@ -70,7 +70,7 @@ namespace CleverTapSDK.Native
                         else
                         {
                             bool containsKey = currentMap.TryGetValue(component, out var currentValue);
-                            if (!containsKey || currentValue is not Dictionary<string, object>)
+                            if (!containsKey || currentValue is not IDictionary<string, object>)
                             {
                                 var nestedMap = new Dictionary<string, object>();
                                 currentMap[component] = nestedMap;
@@ -94,6 +94,9 @@ namespace CleverTapSDK.Native
 
         internal static void ConvertNestedDictionariesToFlat(string prefix, IDictionary map, IDictionary result)
         {
+            if (map == null || result == null)
+                return;
+
             foreach (var key in map.Keys)
             {
                 string stringKey = key.ToString();
@@ -117,6 +120,13 @@ namespace CleverTapSDK.Native
             };
 
             Dictionary<string, object> allVars = new Dictionary<string, object>();
+            if (varsDictionary == null)
+            {
+                CleverTapLogger.LogError("GetFlatVarsPayload: vars are null. Returning empty vars payload.");
+                result.Add("vars", allVars);
+                return result;
+            }
+
             foreach (var variable in varsDictionary)
             {
                 var name = variable.Key;

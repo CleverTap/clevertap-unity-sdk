@@ -21,12 +21,7 @@ namespace CleverTapSDK.Common
 #elif UNITY_IOS && !UNITY_EDITOR
             cleverTapVariable = new IOSPlatformVariable();
 #else
-            var binding = BindingFactory.CleverTapBinding as UnityNativePlatformBinding;
-            if (binding == null)
-            {
-                CleverTapLogger.LogError("UnityNativePlatformVariable requires CleverTapBinding to be UnityNativePlatformBinding.");
-            }
-            cleverTapVariable = new UnityNativePlatformVariable(binding?.UnityNativeWrapper);
+            cleverTapVariable = new UnityNativePlatformVariable();
 #endif
         }
     }

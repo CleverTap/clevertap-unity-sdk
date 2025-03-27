@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Native;
+using CleverTapSDK.Utilities;
 using NUnit.Framework;
 
 public class UnityNativeVarCacheTest
@@ -11,10 +12,23 @@ public class UnityNativeVarCacheTest
     private Dictionary<string, string> _value;
     private Var<Dictionary<string, string>> _variable;
 
+    private UnityNativeCoreState _coreState;
+
     [SetUp]
     public void Setup()
     {
         _cache = new UnityNativeVarCache();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        if (_coreState != null)
+        {
+            var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
+            prefManager.DeleteKey(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId));
+            _coreState = null;
+        }
     }
 
     /// <summary>
@@ -27,6 +41,13 @@ public class UnityNativeVarCacheTest
             { "key", "value" }
         };
         _variable = new UnityNativeVar<Dictionary<string, string>>("testVar", CleverTapVariableKind.DICTIONARY, _value, _cache);
+    }
+
+    private void SetCoreState()
+    {
+        var accountInfo = new UnityNativeAccountInfo("accountId", "token");
+        _coreState = new UnityNativeCoreState(accountInfo);
+        _cache.SetCoreState(_coreState);
     }
 
     [Test]
@@ -143,8 +164,6 @@ public class UnityNativeVarCacheTest
     [Test]
     public void RegisterVariable_With_Group_And_DefaultValue()
     {
-        _cache.ApplyVariableDiffs(new Dictionary<string, object>());
-
         var var1 = new UnityNativeVar<int>("group.var1", CleverTapVariableKind.INT, 1, _cache);
         var var2 = new UnityNativeVar<Dictionary<string, object>>("group", CleverTapVariableKind.DICTIONARY,
     new Dictionary<string, object> { { "var2", 2 } }, _cache);
@@ -161,8 +180,6 @@ public class UnityNativeVarCacheTest
     [Test]
     public void RegisterVariable_With_NestedGroups_And_DefaultValue()
     {
-        _cache.ApplyVariableDiffs(new Dictionary<string, object>());
-
         var var1 = new UnityNativeVar<int>("group1.var1", CleverTapVariableKind.INT, 1, _cache);
         var var2 = new UnityNativeVar<int>("group1.group2.var3", CleverTapVariableKind.INT, 3, _cache);
         var var3 = new UnityNativeVar<Dictionary<string, object>>("group1", CleverTapVariableKind.DICTIONARY, new Dictionary<string, object> { { "var2", 2 }, { "group2", new Dictionary<string, object> { { "var4", 4 } } } }, _cache);
@@ -244,6 +261,179 @@ public class UnityNativeVarCacheTest
         };
         var result = _cache.GetMergedValueFromComponentArray(components, values);
         Assert.IsNull(result);
+    }
+
+    [Test]
+    public void ApplyDiffs_UpdatesValues()
+    {
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "var1", 10 },
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" },
+                { "var3", 30 },
+            }}
+        });
+
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+        Assert.AreEqual(30, _cache.GetMergedValue("group1.var3"));
+    }
+
+    [Test]
+    public void ApplyDiffs_UpdatesValues_And_DefaultsValues()
+    {
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        // Update var1
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "var1", 10 }
+        });
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+
+        // Update group1.var2
+        // Update var1 to default value since it is not in the diff
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" }
+            }}
+        });
+        Assert.AreEqual(3, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+
+        // Update to default values since diff is empty dictionary
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>());
+        Assert.AreEqual(3, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+    }
+
+    [Test]
+    public void ApplyDiffs_UpdatesValues_With_Null()
+    {
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        _cache.ApplyVariableDiffs(new Dictionary<string, object>
+        {
+            { "var1", 10 }
+        });
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+
+        // ApplyVariableDiffs with null should not apply the diff
+        _cache.ApplyVariableDiffs(null);
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("value", var2.Value);
+    }
+
+    [Test]
+    public void LoadDiffs_UpdatesValues()
+    {
+        var diffs = new Dictionary<string, object>
+        {
+            { "var1", 10 },
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" },
+                { "var3", 30 },
+            }}
+        };
+
+        string serializedData = Json.Serialize(diffs);
+        SetCoreState();
+        var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
+        prefManager.SetString(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId), serializedData);
+
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        _cache.LoadDiffs();
+
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+        Assert.AreEqual(30, _cache.GetMergedValue("group1.var3"));
+    }
+
+    [Test]
+    public void LoadDiffs_IncorrectData()
+    {
+        var diffs = new Dictionary<string, object>
+        {
+            { "var1", 10 },
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" }
+            }}
+        };
+
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        var var2 = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+
+        // Apply new values
+        _cache.ApplyVariableDiffs(diffs);
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+
+        // Persist incorrect data for diffs
+        string serializedData = Json.Serialize("incorrect-value");
+        SetCoreState();
+        var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
+        prefManager.SetString(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId), serializedData);
+
+        // LoadDiffs will read the persisted data
+        Assert.DoesNotThrow(() => _cache.LoadDiffs());
+
+        // Persisted data is incorrect, so LoadDiffs will not apply it
+        // The variable values should remain the same
+        Assert.AreEqual(10, var1.Value);
+        Assert.AreEqual("new value", var2.Value);
+    }
+
+    [Test]
+    public void SaveDiffs_Saves()
+    {
+        _ = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        _ = new UnityNativeVar<string>("group1.var2", CleverTapVariableKind.STRING, "value", _cache);
+        var diffs = new Dictionary<string, object>
+        {
+            { "var1", 10 },
+            { "group1", new Dictionary<string, object>
+            {
+                { "var2", "new value" },
+                { "var3", 30 },
+            }}
+        };
+
+        SetCoreState();
+        _cache.ApplyVariableDiffs(diffs);
+        _cache.SaveDiffs();
+
+        string expected = Json.Serialize(diffs);
+        var prefManager = UnityNativePreferenceManager.GetPreferenceManager(_coreState.AccountInfo.AccountId);
+        string actual = prefManager.GetString(_cache.GetDiffsKey(_coreState.DeviceInfo.DeviceId), string.Empty);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void Reset_ClearsState()
+    {
+        _cache.SetHasVarsRequestCompleted(true);
+        var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 3, _cache);
+        Assert.IsTrue(_cache.HasVarsRequestCompleted);
+        Assert.IsTrue(var1.HadStarted);
+
+        _cache.Reset();
+        Assert.IsFalse(_cache.HasVarsRequestCompleted);
+        Assert.IsFalse(var1.HadStarted);
     }
 }
 

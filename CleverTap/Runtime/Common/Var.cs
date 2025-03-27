@@ -14,6 +14,7 @@ namespace CleverTapSDK.Common
         object DefaultObjectValue { get; }
         string[] NameComponents { get; }
         void Update();
+        void Reset();
     }
 
     public abstract class Var<T> : IVar
@@ -78,6 +79,10 @@ namespace CleverTapSDK.Common
         }
 
         public virtual void Update()
+        {
+        }
+
+        public virtual void Reset()
         {
         }
 

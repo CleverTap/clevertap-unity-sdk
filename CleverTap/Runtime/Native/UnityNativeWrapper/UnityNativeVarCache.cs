@@ -1,4 +1,4 @@
-﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +9,44 @@ namespace CleverTapSDK.Native
 {
     internal class UnityNativeVarCache
 	{
+        internal int VariablesCount { get => vars.Count; }
+        internal const string DIFFS_KEY = "DIFFS_{0}";
+
         private readonly IDictionary<string, IVar> vars = new Dictionary<string, IVar>();
         private IDictionary<string, object> diffs = new Dictionary<string, object>();
         private object merged = null;
         private IDictionary<string, object> valuesFromClient = new Dictionary<string, object>();
+        private bool hasVarsRequestCompleted = false;
 
-        internal int VariablesCount { get => vars.Count; }
+        private UnityNativePreferenceManager preferenceManager;
+        private UnityNativeCoreState coreState;
 
-        internal void RegisterVariable(IVar variable)
+        private readonly object DiffsLock = new();
+
+        internal void SetCoreState(UnityNativeCoreState coreState)
+        {
+            if (coreState == null)
+            {
+                CleverTapLogger.LogError("CoreState cannot be null.");
+                return;
+            }
+
+            this.coreState = coreState;
+            preferenceManager = UnityNativePreferenceManager.GetPreferenceManager(coreState.AccountInfo.AccountId);
+        }
+
+        internal bool HasVarsRequestCompleted => hasVarsRequestCompleted;
+        internal void SetHasVarsRequestCompleted(bool completed)
+        {
+            hasVarsRequestCompleted = completed;
+        }
+
+        internal string GetDiffsKey(string deviceId)
+        {
+            return string.Format(DIFFS_KEY, deviceId);
+        }
+
+        internal virtual void RegisterVariable(IVar variable)
 		{
             if (variable == null)
             {
@@ -60,7 +90,7 @@ namespace CleverTapSDK.Native
             return mergedValue;
         }
 
-        internal object GetMergedValueFromComponentArray(object[] components)
+        internal virtual object GetMergedValueFromComponentArray(object[] components)
         {
             return GetMergedValueFromComponentArray(components, merged ?? valuesFromClient);
         }
@@ -121,12 +151,20 @@ namespace CleverTapSDK.Native
 
         internal void ApplyVariableDiffs(IDictionary<string, object> diffs)
         {
-            if (diffs == null)
-                return;
+            lock (DiffsLock)
+            {
+                if (diffs == null)
+                    return;
 
-            this.diffs = diffs;
-            merged = UnityNativeVariableUtils.MergeHelper(valuesFromClient, this.diffs);
+                this.diffs = diffs;
+                merged = UnityNativeVariableUtils.MergeHelper(valuesFromClient, this.diffs);
 
+                TriggerVariablesUpdate();
+            }
+        }
+
+        internal void TriggerVariablesUpdate()
+        {
             foreach (var kv in vars)
             {
                 var variable = kv.Value;
@@ -134,9 +172,54 @@ namespace CleverTapSDK.Native
             }
         }
 
+        internal void LoadDiffs()
+        {
+            if (coreState == null || coreState.AccountInfo == null || coreState.DeviceInfo == null)
+            {
+                CleverTapLogger.LogError("Cannot load diffs before setting the coreState.");
+                return;
+            }
+
+            CleverTapLogger.Log($"Loading Variable Diffs for deviceId: {coreState.DeviceInfo.DeviceId}");
+            string diffsString = preferenceManager.GetString(GetDiffsKey(coreState.DeviceInfo.DeviceId), "{}");
+            if (Json.Deserialize(diffsString) is IDictionary<string, object> diffsDict)
+            {
+                ApplyVariableDiffs(diffsDict);
+            }
+        }
+
+        internal void SaveDiffs()
+        {
+            if (coreState == null || coreState.AccountInfo == null || coreState.DeviceInfo == null)
+            {
+                CleverTapLogger.LogError("Cannot save diffs before setting the coreState.");
+                return;
+            }
+
+            lock (DiffsLock)
+            {
+                string serializedData = Json.Serialize(diffs);
+                preferenceManager.SetString(GetDiffsKey(coreState.DeviceInfo.DeviceId), serializedData);
+            }
+        }
+
         internal Dictionary<string, object> GetDefineVarsPayload()
         {
             return UnityNativeVariableUtils.GetFlatVarsPayload(vars);
+        }
+
+        /// <summary>
+        /// Resets the state.
+        /// Sets hasVarsRequestCompleted to false, expecting new request. 
+        /// Resets the registered variables.
+        /// </summary>
+        internal void Reset()
+        {
+            hasVarsRequestCompleted = false;
+            foreach (var variable in vars)
+            {
+                variable.Value?.Reset();
+            }
         }
     }
 }

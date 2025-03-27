@@ -272,7 +272,7 @@ namespace CleverTapSDK.Native {
                 ProcessIncomingHeaders(response);
             }
 
-            // Intercept reponse before retuning
+            // Intercept response before returning
             if (request.ResponseInterceptors?.Count > 0)
             {
                 foreach (var responseInterceptors in request.ResponseInterceptors)

@@ -11,6 +11,7 @@ namespace CleverTapSDK.Native
         private bool hadStarted;
         private readonly UnityNativeVarCache varCache;
         internal string[] nameComponents;
+        internal bool HadStarted => hadStarted;
 
         public override string[] NameComponents => nameComponents;
 
@@ -83,15 +84,19 @@ namespace CleverTapSDK.Native
             }
         }
 
+        public override void Reset()
+        {
+            hadStarted = false;
+        }
+
+        private bool HasVarsRequestCompleted()
+        {
+            return varCache.HasVarsRequestCompleted;
+        }
+
         public override void ValueChanged()
         {
             _OnValueChanged?.Invoke();
-        }
-
-        // TODO: Move to Variables or VarCache
-        private bool HasVarsRequestCompleted()
-        {
-            return false;
         }
 
         #region File Variables
