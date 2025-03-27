@@ -381,6 +381,7 @@ public class UnityNativeVariableUtilsTest
         var var5 = new UnityNativeVar<Dictionary<string, object>>("group1", CleverTapVariableKind.DICTIONARY,
             new Dictionary<string, object> { { "group2", new Dictionary<string, object> { { "var4", 4 } } } }, _cache);
         var var6 = new UnityNativeVar<double>("var6", CleverTapVariableKind.FLOAT, 1.99, _cache);
+        var var7 = new UnityNativeVar<string>("var7", CleverTapVariableKind.FILE, null, _cache);
 
         var vars = new Dictionary<string, IVar>
         {
@@ -389,7 +390,8 @@ public class UnityNativeVariableUtilsTest
             { var3.Name, var3 },
             { var4.Name, var4 },
             { var5.Name, var5 },
-            { var6.Name, var6 }
+            { var6.Name, var6 },
+            { var7.Name, var7 }
         };
 
         var expected = new Dictionary<string, object>();
@@ -450,6 +452,12 @@ public class UnityNativeVariableUtilsTest
                 {
                     { "type", "number" },
                     { "defaultValue", 1.99 }
+                }
+            },
+            {
+                "var7", new Dictionary<string, object>()
+                {
+                    { "type", "file" }
                 }
             }
         });

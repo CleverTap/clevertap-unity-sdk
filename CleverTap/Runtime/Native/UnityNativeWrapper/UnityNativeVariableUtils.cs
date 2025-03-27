@@ -156,9 +156,14 @@ namespace CleverTapSDK.Native
                 {
                     Dictionary<string, object> varData = new Dictionary<string, object>
                     {
-                        { "type", GetDefineTypeFromKind(variable.Value.Kind) },
-                        { "defaultValue", defaultValue }
+                        { "type", GetDefineTypeFromKind(variable.Value.Kind) }
                     };
+
+                    // File variables do not have a default value
+                    if (variable.Value.Kind != CleverTapVariableKind.FILE)
+                    {
+                        varData.Add("defaultValue", defaultValue);
+                    }
                     allVars.Add(name, varData);
                 }
             }

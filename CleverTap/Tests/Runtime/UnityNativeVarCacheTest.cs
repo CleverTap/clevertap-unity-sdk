@@ -202,6 +202,15 @@ public class UnityNativeVarCacheTest
     }
 
     [Test]
+    public void RegisterVariable_With_File()
+    {
+        var var1 = new UnityNativeVar<string>("var1", CleverTapVariableKind.FILE, null, _cache);
+        Assert.AreEqual(1, _cache.VariablesCount);
+        Assert.IsNull(_cache.GetVariable<string>(var1.Name).Value);
+        Assert.IsNull(_cache.GetMergedValue("var1"));
+    }
+
+    [Test]
     public void GetMergedValue()
     {
         var var1 = new UnityNativeVar<int>("var1", CleverTapVariableKind.INT, 100, _cache);

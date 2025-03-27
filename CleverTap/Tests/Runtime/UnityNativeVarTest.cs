@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using CleverTapSDK.Common;
 using CleverTapSDK.Constants;
 using CleverTapSDK.Native;
+using CleverTapSDK.Utilities;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -110,6 +111,57 @@ public class UnityNativeVarTest
         _intVar.Update();
 
         Assert.AreEqual(1, eventTriggeredCount);
+    }
+
+    [Test]
+    public void Update_String_Value()
+    {
+        var stringVar = new UnityNativeVar<string>("stringVar", CleverTapVariableKind.STRING, "value", _varCache);
+        string newValue = "new value";
+        _varCache.SetValue("stringVar", newValue);
+        stringVar.Update();
+
+        Assert.AreEqual(newValue, stringVar.Value);
+        Assert.AreEqual(newValue, stringVar.StringValue);
+    }
+
+    [Test]
+    public void Update_Dictionary_Value()
+    {
+        var value = new Dictionary<string, object>
+        {
+            { "var1", "value"}
+        };
+        var dictVar = new UnityNativeVar<Dictionary<string, object>>("dictVar", CleverTapVariableKind.DICTIONARY, value, _varCache);
+        Assert.AreEqual(value, dictVar.Value);
+        Assert.AreNotSame(value, dictVar.Value);
+        Assert.AreEqual(Json.Serialize(value), dictVar.StringValue);
+
+        var newValue = new Dictionary<string, object>
+        {
+            { "var1", "new value"},
+            { "var2", "value"}
+        };
+        _varCache.SetValue("dictVar", newValue);
+        dictVar.Update();
+
+        Assert.AreEqual(newValue, dictVar.Value);
+        Assert.AreNotSame(value, dictVar.Value);
+        Assert.AreNotSame(newValue, dictVar.Value);
+        Assert.AreEqual(Json.Serialize(newValue), dictVar.StringValue);
+    }
+
+    [Test]
+    public void Update_File_Variable()
+    {
+        var fileVar = new UnityNativeVar<string>("fileVar", CleverTapVariableKind.FILE, null, _varCache);
+        string url = "https://some-url.com/image.jpeg";
+        _varCache.SetValue("fileVar", url);
+        fileVar.Update();
+
+        Assert.AreEqual(url, fileVar.Value);
+        Assert.AreEqual(url, fileVar.StringValue);
+        Assert.AreEqual(url, fileVar.FileValue);
     }
 
     [Test]

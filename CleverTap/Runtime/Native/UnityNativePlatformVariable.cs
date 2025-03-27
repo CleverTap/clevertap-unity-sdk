@@ -1,6 +1,7 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
 using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
@@ -229,8 +230,7 @@ namespace CleverTapSDK.Native
 
         protected override Var<string> GetOrDefineFileVariable(string name)
         {
-            CleverTapLogger.LogError("CleverTap Error: File Variables are not supported for this platform.");
-            return null;
+            return DefineVariable<string>(name, CleverTapVariableKind.FILE, null);
         }
     }
 }
