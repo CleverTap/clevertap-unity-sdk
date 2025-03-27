@@ -62,31 +62,42 @@ namespace CleverTapSDK.Native
 
         /// <summary>
         /// Resets the <see cref="UnityNativeVarCache"/> var cache.
-        /// Loads the diffs for the new user.
+        /// Loads the diffs.
         /// </summary>
-        internal void SwitchUser()
+        internal void ReloadCache()
         {
             if (nativeVarCache == null)
             {
-                CleverTapLogger.LogError("Cannot switch user - the VarCache is null.");
+                CleverTapLogger.LogError("Cannot reload cache - the VarCache is null.");
                 return;
             }
 
             nativeVarCache.Reset();
-            // Load diffs for the new user
             nativeVarCache.LoadDiffs();
         }
 
         void IVariablesResponseHandler.HandleVariablesResponse(IDictionary<string, object> vars)
         {
             if (hasLoaded)
+            {
                 HandleVariablesResponseSuccess(vars);
+            }
+            else
+            {
+                CleverTapLogger.LogError("CleverTap Error: Cannot handle variables success response. The platform variable is not loaded.");
+            }
         }
 
         void IVariablesResponseHandler.HandleVariablesResponseError()
         {
             if (hasLoaded)
+            {
                 HandleVariablesResponseError();
+            }
+            else
+            {
+                CleverTapLogger.LogError("CleverTap Error: Cannot handle variables error response. The platform variable is not loaded.");
+            }
         }
 
         /// <summary>
@@ -117,7 +128,7 @@ namespace CleverTapSDK.Native
         /// Triggers Variables Fetched with error.
         /// </summary>
         /// <remarks>
-        /// The vars diffs are already loaded in <see cref="Load" /> or <see cref="SwitchUser" />
+        /// The vars diffs are already loaded in <see cref="Load" /> or <see cref="ReloadCache" />
         /// </remarks>
         internal void HandleVariablesResponseError()
         {

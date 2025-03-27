@@ -259,7 +259,8 @@ public class UnityNativePlatformVariableTest
 
         // Change user
         _coreState.DeviceInfo.ForceNewDeviceID();
-        _platformVariable.SwitchUser();
+        // Reload cache
+        _platformVariable.ReloadCache();
         Assert.IsFalse(_platformVariable.HasVarsRequestCompleted);
         Assert.AreEqual(defaultValue, var1.Value);
     }

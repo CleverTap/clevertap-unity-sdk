@@ -233,7 +233,7 @@ namespace CleverTapSDK.Native
                 }
 
                 // Load Variables for new user
-                _platformVariable?.SwitchUser();
+                _platformVariable?.ResetCache();
 
                 // Load discarded events for new user
                 _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
