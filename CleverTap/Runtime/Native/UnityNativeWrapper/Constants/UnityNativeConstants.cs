@@ -108,6 +108,8 @@ namespace CleverTapSDK.Native {
             internal const string EVENT_APP_LUNACH = "App Launched";
             internal const string EVENT_CHARGED = "Charged";
             internal const string EVENT_CHARGED_ITEMS = "Items";
+            internal const string EVENT_WZRK_FETCH = "wzrk_fetch";
+            internal const int WZRK_FETCH_TYPE_VARIABLES = 4;
 
             internal const string EVENT_TYPE = "type";
             internal const string EVENT_TYPE_PROFILE = "profile";

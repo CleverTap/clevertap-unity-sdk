@@ -18,6 +18,7 @@ namespace CleverTapSDK.Native
         private UnityNativeEventManager unityNativeEventManager;
         private CleverTapCallbackHandler callbackHandler;
         private bool hasLoaded;
+        private int fetchVariablesCallbackId = -1;
 
         internal UnityNativePlatformVariable() : this(new UnityNativeVarCache())
         {
@@ -153,7 +154,8 @@ namespace CleverTapSDK.Native
         {
             var fetchedMessage = new Dictionary<string, object>
             {
-                { "isSuccess", success }
+                { "isSuccess", success },
+                { "callbackId", fetchVariablesCallbackId }
             };
             callbackHandler.CleverTapVariablesFetched(Json.Serialize(fetchedMessage));
         }
@@ -201,7 +203,15 @@ namespace CleverTapSDK.Native
 
         internal override void FetchVariables(int callbackId)
         {
-            CleverTapLogger.LogError("CleverTap Error: FetchVariables is not supported for this platform.");
+            if (unityNativeEventManager != null && nativeVarCache != null)
+            {
+                fetchVariablesCallbackId = callbackId;
+                unityNativeEventManager.FetchVariables();
+            }
+            else
+            {
+                CleverTapLogger.LogError("CleverTap Error: Cannot fetch variables. The platform variable is not loaded.");
+            }
         }
 
         protected override Var<T> DefineVariable<T>(string name, string kind, T defaultValue)
