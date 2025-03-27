@@ -397,8 +397,12 @@ namespace CleverTapSDK.Native
 
             var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator)
                 .BuildFetchEvent(UnityNativeConstants.Event.WZRK_FETCH_TYPE_VARIABLES);
-            if (eventBuilderResult.EventResult == null)
+            if (eventBuilderResult.EventResult == null || eventBuilderResult.ValidationResults.Any(vr => !vr.IsSuccess))
+            {
+                CleverTapLogger.LogError($"Failed to build fetch event: " +
+                    $"{ string.Join(", ", eventBuilderResult.ValidationResults.Select(vr => vr.ErrorMessage)) }");
                 return;
+            }
             var eventDetails = eventBuilderResult.EventResult;
             UnityNativeEvent @event = BuildEvent(UnityNativeEventType.FetchEvent, eventDetails, true);
             _eventQueueManager.QueueEvent(@event);
