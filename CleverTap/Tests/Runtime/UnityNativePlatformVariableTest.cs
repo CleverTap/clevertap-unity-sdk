@@ -264,4 +264,13 @@ public class UnityNativePlatformVariableTest
         Assert.IsFalse(_platformVariable.HasVarsRequestCompleted);
         Assert.AreEqual(defaultValue, var1.Value);
     }
+
+    [Test]
+    public void DefineFileVar_Defines()
+    {
+        var var1 = _platformVariable.DefineFileVariable("var1");
+        Assert.AreEqual(CleverTapVariableKind.FILE, var1.Kind);
+        Assert.IsNull(var1.DefaultValue);
+        Assert.IsTrue(var1 is Var<string>);
+    }
 }
