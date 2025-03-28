@@ -20,8 +20,12 @@ namespace CTExample
             // SDK logs
             CleverTap.SetDebugLevel(3);
 
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
             // Launch CleverTap
             LaunchCleverTap();
+#else
+            // CleverTap launches automatically using CleverTapSettings on iOS and Android
+#endif
 
             // Add listeners for events that may be triggered on app launch
             CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
