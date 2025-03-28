@@ -62,13 +62,13 @@ namespace CTExample
 
             if (settings == null)
             {
-                Logger.LogError("CleverTapSettings have not been set!");
+                Logger.LogError("CleverTapSettings have not been set. Cannot launch CleverTap.");
                 return;
             }
 
             if (!settings.IsValid())
             {
-                Logger.LogError("CleverTapSettings contains invalid or missing credentials!");
+                Logger.LogError("CleverTapSettings contains invalid or missing credentials. Cannot launch CleverTap.");
                 return;
             }
 
