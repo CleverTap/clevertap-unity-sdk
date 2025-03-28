@@ -40,7 +40,7 @@ namespace CTExample
                 string json = File.ReadAllText(jsonPath);
                 return JsonUtility.FromJson<CleverTapSettingsRuntime>(json);
             }
-            Debug.LogError("CleverTapSettings JSON not found. \n" +
+            Debug.LogWarning("CleverTapSettings JSON not found. \n" +
                 "If you want to use CleverTapSettings runtime, check the CleverTapSettings \"Save to streaming assets\" option.");
             return null;
         }
