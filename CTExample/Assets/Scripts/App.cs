@@ -69,6 +69,7 @@ namespace CTExample
             if (!settings.IsValid())
             {
                 Logger.LogError("CleverTapSettings contains invalid or missing credentials!");
+                return;
             }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
