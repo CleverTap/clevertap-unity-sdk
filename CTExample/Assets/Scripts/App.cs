@@ -15,6 +15,7 @@ namespace CTExample
             Logger.Log($"Setting targetFrameRate to: {(int)Screen.currentResolution.refreshRateRatio.value}");
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
 #endif
+
             // Unity internal Logs
             CleverTap.SetLogLevel(LogLevel.Debug);
             // SDK logs
@@ -56,9 +57,17 @@ namespace CTExample
         /// On iOS and Android, credentials are automatically loaded from the platform-specific configuration.
         /// On other platforms, including WebGL, credentials are explicitly set using LaunchWithCredentials.
         /// </summary>
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private async void LaunchCleverTap()
+#else
         private void LaunchCleverTap()
+#endif
         {
-            var settings = CleverTapSettingsRuntime.Instance;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            CleverTapSettingsRuntime settings = await CleverTapSettingsRuntime.Instance;
+#else
+            CleverTapSettingsRuntime settings = CleverTapSettingsRuntime.Instance;
+#endif
 
             if (settings == null)
             {
@@ -95,7 +104,7 @@ namespace CTExample
                 $" accountToken: {settings.CleverTapAccountToken}," +
                 $" accountRegion: {settings.CleverTapAccountRegion}.");
         }
-        #endregion
+#endregion
 
         #region Callbacks on App Launch
         private void CleverTapPushOpenedCallback(string message)
