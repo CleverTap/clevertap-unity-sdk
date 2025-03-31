@@ -272,7 +272,7 @@ namespace CleverTapSDK.Native {
                 ProcessIncomingHeaders(response);
             }
 
-            // Intercept reponse before retuning
+            // Intercept response before returning
             if (request.ResponseInterceptors?.Count > 0)
             {
                 foreach (var responseInterceptors in request.ResponseInterceptors)
@@ -369,12 +369,12 @@ namespace CleverTapSDK.Native {
                         return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
 
                     case UnityWebRequest.Result.ProtocolError:
-                        CleverTapLogger.LogError($"Failed ProtocolError: {(HttpStatusCode)unityWebRequest.responseCode}, error: {unityWebRequest.downloadHandler.text}, request: {request.RequestBody}");
-                        return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Internet connection is not reachable");
+                        CleverTapLogger.LogError($"Failed ProtocolError: {(HttpStatusCode)unityWebRequest.responseCode}, error: {unityWebRequest.downloadHandler?.text}, request: {request.RequestBody}");
+                        return new UnityNativeResponse(request, (HttpStatusCode)unityWebRequest.responseCode, unityWebRequest.GetResponseHeaders(), unityWebRequest.downloadHandler?.text, "Protocol Error");
 
                     case UnityWebRequest.Result.DataProcessingError:
                         CleverTapLogger.LogError("Failed Data Processing");
-                        return new UnityNativeResponse(request, HttpStatusCode.InternalServerError, null, null, "Failed to Process Data");
+                        return new UnityNativeResponse(request, (HttpStatusCode)unityWebRequest.responseCode, null, null, "Failed to Process Data");
 
                     default:
                         CleverTapLogger.LogError("Failed");
