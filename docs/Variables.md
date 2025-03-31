@@ -41,6 +41,8 @@ Var<string> fileVar = CleverTap.DefineFileVariable("var_file");
 
 The file variables value is a string with the file path to the file on the device.
 
+_Note that file variables can be defined and synced in Unity Editor and other platforms. However, the use of File Variables is limited to Mobile platforms (iOS, Android) only. The File variables callbacks are not supported for Unity Editor and other builds. In those cases, the File variable value is a string - the file URL. The files are not downloaded._
+
 # Setup Callbacks
 
 CleverTap Unity SDK provides several callbacks for the developer to receive feedback from the SDK. You can use them as per your requirements. Using all of them is not mandatory. They are as follows:
