@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 using NUnit.Framework;
@@ -43,7 +44,7 @@ public class UnityNativeVariablesResponseInterceptorTest
             }
         };
 
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.OK, null, Json.Serialize(content));
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
         _interceptor.Intercept(response);
 
         Assert.IsTrue(_responseHandler.isSuccess);
@@ -53,7 +54,7 @@ public class UnityNativeVariablesResponseInterceptorTest
     [Test]
     public void Intercept_Content_Null()
     {
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.OK, null, null);
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, null);
         _interceptor.Intercept(response);
         // Neither of the methods is called
         Assert.IsNull(_responseHandler.isSuccess);
@@ -62,7 +63,7 @@ public class UnityNativeVariablesResponseInterceptorTest
     [Test]
     public void Intercept_Error()
     {
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.InternalServerError, null, null);
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.InternalServerError, null, null);
         _interceptor.Intercept(response);
         Assert.IsFalse(_responseHandler.isSuccess);
     }
@@ -77,7 +78,7 @@ public class UnityNativeVariablesResponseInterceptorTest
             }
         };
 
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.BadRequest, null, Json.Serialize(content));
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.BadRequest, null, Json.Serialize(content));
         _interceptor.Intercept(response);
 
         Assert.IsFalse(_responseHandler.isSuccess);
@@ -93,7 +94,7 @@ public class UnityNativeVariablesResponseInterceptorTest
             }
         };
 
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.OK, null, Json.Serialize(content));
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
         _interceptor.Intercept(response);
 
         // Neither of the methods is called
@@ -108,7 +109,7 @@ public class UnityNativeVariablesResponseInterceptorTest
             { "vars", null }
         };
 
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.OK, null, Json.Serialize(content));
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
         _interceptor.Intercept(response);
 
         Assert.IsFalse(_responseHandler.isSuccess);
@@ -122,7 +123,7 @@ public class UnityNativeVariablesResponseInterceptorTest
             { "vars", new List<string>() }
         };
 
-        UnityNativeResponse response = new UnityNativeResponse(null, System.Net.HttpStatusCode.OK, null, Json.Serialize(content));
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
         _interceptor.Intercept(response);
 
         Assert.IsFalse(_responseHandler.isSuccess);
