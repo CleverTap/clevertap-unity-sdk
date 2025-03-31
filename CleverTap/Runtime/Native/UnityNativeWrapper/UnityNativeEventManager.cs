@@ -47,6 +47,7 @@ namespace CleverTapSDK.Native
             _platformVariable?.Load(this, _callbackHandler, _coreState);
 
             // Requires network engine
+            SetRequestInterceptors();
             SetResponseInterceptors();
             _eventQueueManager = new UnityNativeEventQueueManager(_coreState, _networkEngine, _databaseStore);
         }
@@ -84,7 +85,20 @@ namespace CleverTapSDK.Native
 
             _networkEngine.SetResponseInterceptors(responseInterceptors);
         }
-        
+
+        /// <summary>
+        /// Sets request interceptors.
+        /// Requires network engine to be initialized.
+        /// </summary>
+        private void SetRequestInterceptors() {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            _networkEngine.SetRequestInterceptors(new List<IUnityNativeRequestInterceptor>
+            {
+                new UnityNativeVariablesRequestInterceptor()
+            });
+#endif
+        }
+
         #region Launch
 
         internal void LaunchWithCredentials(string accountId, string token, string region = null) {
