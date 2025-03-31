@@ -80,7 +80,11 @@ namespace CTExample
 #endif
         }
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private async void AddInfoValues(RectTransform parent)
+#else
         private void AddInfoValues(RectTransform parent)
+#endif
         {
             GameObject sdkVersion = Instantiate(KeyValuePrefab);
             sdkVersion.name = "SDKVersion";
@@ -88,13 +92,24 @@ namespace CTExample
             sdkVersionKV.SetKey("SDK Version");
             sdkVersionKV.SetValue(CleverTapVersion.CLEVERTAP_SDK_VERSION);
             sdkVersion.transform.SetParent(parent, false);
+            sdkVersion.transform.SetSiblingIndex(0);
 
             GameObject accountId = Instantiate(KeyValuePrefab);
             accountId.name = "AccountId";
             KeyValue accountIdKV = accountId.GetComponent<KeyValue>();
             accountIdKV.SetKey("Account Id");
-            accountIdKV.SetValue(CleverTapSettingsRuntime.Instance?.CleverTapAccountId ?? "");
+#if UNITY_WEBGL && !UNITY_EDITOR
+            var settings = await CleverTapSettingsRuntime.Instance;
+#else
+            var settings = CleverTapSettingsRuntime.Instance;
+#endif
+            accountIdKV.SetValue(settings?.CleverTapAccountId ?? "");
             accountIdKV.transform.SetParent(parent, false);
+            accountIdKV.transform.SetSiblingIndex(1);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            RefreshContentHelper.RefreshContentFitters((RectTransform)accountIdKV.transform);
+#endif
 
             CleverTap.OnCleverTapProfileInitializedCallback += CleverTap_OnCleverTapProfileInitializedCallback;
 #if UNITY_ANDROID
@@ -108,8 +123,8 @@ namespace CTExample
             ctidKV.SetKey("CleverTap ID");
             ctidKV.SetValue(CleverTap.ProfileGetCleverTapID());
             CleverTapIDObject.transform.SetParent(parent, false);
+            CleverTapIDObject.transform.SetSiblingIndex(2);
         }
-
 
         private void CleverTap_OnCleverTapProfileInitializedCallback(string message)
         {

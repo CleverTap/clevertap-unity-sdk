@@ -17,7 +17,7 @@ namespace CTExample
             {
                 if (prefabReference == null)
                 {
-                    prefabReference = FindObjectOfType<CustomTemplateReference>();
+                    prefabReference = FindAnyObjectByType<CustomTemplateReference>();
                 }
 
                 return prefabReference;

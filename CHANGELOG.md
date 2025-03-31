@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 5.2.0 *(31 March, 2025)*
+-------------------------------------------
+- Unity Native Variables - allows defining and syncing Variables in Unity Editor and other builds.
+- Compatibility fixes Unity Native for Unity 2021
+- Compatibility fixes WebGL for Unity 6000
+
 Version 5.1.0 *(20 March, 2025)*
 -------------------------------------------
 - Updated to [CleverTap iOS SDK v7.1.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.1.1)

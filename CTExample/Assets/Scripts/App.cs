@@ -15,13 +15,18 @@ namespace CTExample
             Logger.Log($"Setting targetFrameRate to: {(int)Screen.currentResolution.refreshRateRatio.value}");
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
 #endif
+
             // Unity internal Logs
             CleverTap.SetLogLevel(LogLevel.Debug);
             // SDK logs
             CleverTap.SetDebugLevel(3);
 
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
             // Launch CleverTap
             LaunchCleverTap();
+#else
+            // CleverTap launches automatically using CleverTapSettings on iOS and Android
+#endif
 
             // Add listeners for events that may be triggered on app launch
             CleverTap.OnCleverTapPushOpenedCallback += CleverTapPushOpenedCallback;
@@ -52,19 +57,28 @@ namespace CTExample
         /// On iOS and Android, credentials are automatically loaded from the platform-specific configuration.
         /// On other platforms, including WebGL, credentials are explicitly set using LaunchWithCredentials.
         /// </summary>
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private async void LaunchCleverTap()
+#else
         private void LaunchCleverTap()
+#endif
         {
-            var settings = CleverTapSettingsRuntime.Instance;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            CleverTapSettingsRuntime settings = await CleverTapSettingsRuntime.Instance;
+#else
+            CleverTapSettingsRuntime settings = CleverTapSettingsRuntime.Instance;
+#endif
 
             if (settings == null)
             {
-                Logger.LogError("CleverTapSettings have not been set!");
+                Logger.LogError("CleverTapSettings have not been set. Cannot launch CleverTap.");
                 return;
             }
 
             if (!settings.IsValid())
             {
-                Logger.LogError("CleverTapSettings contains invalid or missing credentials!");
+                Logger.LogError("CleverTapSettings contains invalid or missing credentials. Cannot launch CleverTap.");
+                return;
             }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -90,7 +104,7 @@ namespace CTExample
                 $" accountToken: {settings.CleverTapAccountToken}," +
                 $" accountRegion: {settings.CleverTapAccountRegion}.");
         }
-        #endregion
+#endregion
 
         #region Callbacks on App Launch
         private void CleverTapPushOpenedCallback(string message)
