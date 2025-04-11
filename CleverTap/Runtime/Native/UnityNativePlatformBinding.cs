@@ -23,7 +23,12 @@ namespace CleverTapSDK.Native
             handler.platformVariable = platformVariable;
 
             CallbackHandler = handler;
-            _unityNativeEventManager = new UnityNativeEventManager(handler, platformVariable);
+
+            var platformCustomTemplates = CustomTemplatesFactory.CleverTapCustomTemplates as UnityNativePlatformCustomTemplates;
+            if (platformCustomTemplates == null)
+                CleverTapLogger.LogError("CleverTapCustomTemplates must be platformCustomTemplates.");
+
+            _unityNativeEventManager = new UnityNativeEventManager(handler, platformVariable, platformCustomTemplates);
         }
 
         internal override void LaunchWithCredentials(string accountID, string token)

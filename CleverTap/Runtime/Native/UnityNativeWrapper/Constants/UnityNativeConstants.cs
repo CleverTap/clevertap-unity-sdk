@@ -222,6 +222,7 @@ namespace CleverTapSDK.Native {
             internal const string REQUEST_PATH_RECORD = "a1";
 
             internal const string REQUEST_PATH_DEFINE_VARIABLES = "defineVars";
+            internal const string REQUEST_PATH_DEFINE_TEMPLATES = "defineTemplates";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
         }
 
