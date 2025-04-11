@@ -233,6 +233,13 @@ namespace CleverTapSDK.Native {
             internal const string COMMAND_DECREMENT = "$decr";
             internal const string COMMAND_DELETE = "$delete";
         }
+
+        internal static class CustomTemplates
+        {
+            internal const string TEMPLATE_TYPE = "template";
+            internal const string FUNCTION_TYPE = "function";
+            internal const string DOT = ".";
+        }
     }
 }
 #endif
