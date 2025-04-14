@@ -26,7 +26,7 @@ namespace CleverTapSDK.Native
 
             var platformCustomTemplates = CustomTemplatesFactory.CleverTapCustomTemplates as UnityNativePlatformCustomTemplates;
             if (platformCustomTemplates == null)
-                CleverTapLogger.LogError("CleverTapCustomTemplates must be platformCustomTemplates.");
+                CleverTapLogger.LogError("CleverTapCustomTemplates must be UnityNativePlatformCustomTemplates.");
 
             _unityNativeEventManager = new UnityNativeEventManager(handler, platformVariable, platformCustomTemplates);
         }

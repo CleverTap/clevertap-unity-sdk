@@ -1,12 +1,9 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using UnityEngine;
-using static CleverTapSDK.Native.UnityNativeConstants;
 
 namespace CleverTapSDK.Native
 {
@@ -77,7 +74,6 @@ namespace CleverTapSDK.Native
             }
 
             FileInfo[] files = dir.GetFiles();
-            Debug.Log($"files: {string.Join(",", files.Select(f => f.Name).ToList())}");
             HashSet<CustomTemplate> templates = new HashSet<CustomTemplate>();
             foreach (FileInfo file in files)
             {
@@ -89,91 +85,8 @@ namespace CleverTapSDK.Native
                 templates.UnionWith(producer.DefineTemplates());
             }
 
-            var payload = SyncPayload(templates);
+            var payload = CustomTemplateUtils.GetSyncTemplatesPayload(templates);
             unityNativeEventManager.SyncCustomTemplates(payload);
-        }
-
-        private Dictionary<string, object> SyncPayload(HashSet<CustomTemplate> templates)
-        {
-            var payload = new Dictionary<string, object>();
-            payload["type"] = "templatePayload";
-
-            var definitions = new Dictionary<string, object>();
-
-            foreach (var template in templates)
-            {
-                var templateData = new Dictionary<string, object>();
-                templateData["type"] = template.TemplateType;
-
-                var groupedMap = new Dictionary<string, List<TemplateArgument>>();
-                foreach (var arg in template.Arguments)
-                {
-                    var components = arg.Name.Split(CustomTemplates.DOT);
-                    var firstComponent = components[0];
-                    if (!groupedMap.ContainsKey(firstComponent))
-                    {
-                        groupedMap[firstComponent] = new List<TemplateArgument>();
-                    }
-                    groupedMap[firstComponent].Add(arg);
-                }
-
-                var ordered = new HashSet<string>();
-                int order = 0;
-                var arguments = new Dictionary<string, object>();
-
-                foreach (var arg in template.Arguments)
-                {
-                    if (!arg.Name.Contains(CustomTemplates.DOT))
-                    {
-                        var argument = ArgumentPayload(arg, order);
-                        arguments[arg.Name] = argument;
-                        order++;
-                    }
-                    else
-                    {
-                        order = AddGroupArguments(groupedMap, ordered, order, arguments, arg);
-                    }
-                }
-
-                templateData["vars"] = arguments;
-                definitions[template.Name] = templateData;
-            }
-
-            payload["definitions"] = definitions;
-            return payload;
-        }
-
-        private int AddGroupArguments(Dictionary<string, List<TemplateArgument>> groupedMap, HashSet<string> ordered, int order, Dictionary<string, object> arguments, TemplateArgument arg)
-        {
-            var prefix = arg.Name.Split(CustomTemplates.DOT)[0];
-            if (!ordered.Contains(prefix))
-            {
-                ordered.Add(prefix);
-                var groupedArguments = groupedMap[prefix];
-                groupedArguments.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
-
-                foreach (var nestedArg in groupedArguments)
-                {
-                    var argument = ArgumentPayload(nestedArg, order);
-                    arguments[nestedArg.Name] = argument;
-                    order++;
-                }
-            }
-
-            return order;
-        }
-
-        private IDictionary<string, object> ArgumentPayload(TemplateArgument arg, int order)
-        {
-            var argument = new Dictionary<string, object>();
-            if (arg.Value != null)
-            {
-                argument["defaultValue"] = arg.Value;
-            }
-
-            argument["type"] = arg.Type;
-            argument["order"] = order;
-            return argument;
         }
     }
 }
