@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CleverTapSDK.Native;
 using NUnit.Framework;
+using System.Linq;
 using static CleverTapSDK.Native.UnityNativeConstants;
 
 public class CustomTemplateBuilderTest
@@ -51,6 +52,43 @@ public class CustomTemplateBuilderTest
 
         Assert.AreEqual(1, template.Arguments.Count);
         Assert.AreEqual(validName, template.Arguments[0].Name);
+    }
+
+    [Test]
+    public void AddArgument_MaintainsOrder()
+    {
+        InAppTemplateBuilder builder = new InAppTemplateBuilder();
+        builder.SetName("TestTemplate");
+        builder.AddArgument("string", TemplateArgumentType.String, "value");
+        builder.AddArgument("number", TemplateArgumentType.Number, 1);
+        builder.AddArgument("bool", TemplateArgumentType.Bool, true);
+        var template = builder.Build();
+
+        Assert.AreEqual(3, template.Arguments.Count);
+        Assert.AreEqual("string", template.Arguments[0].Name);
+        Assert.AreEqual("number", template.Arguments[1].Name);
+        Assert.AreEqual("bool", template.Arguments[2].Name);
+    }
+
+    [Test]
+    public void AddArgument_AddsWithCorrectValue()
+    {
+        InAppTemplateBuilder builder = new InAppTemplateBuilder();
+        builder.SetName("TestTemplate");
+        builder.AddArgument("string", TemplateArgumentType.String, "some, string.");
+        builder.AddArgument("number", TemplateArgumentType.Number, 1);
+        builder.AddArgument("number1", TemplateArgumentType.Number, 999999999.95f);
+        builder.AddArgument("number2", TemplateArgumentType.Number, 55d);
+        builder.AddArgument("bool", TemplateArgumentType.Bool, true);
+        builder.AddArgument("bool2", TemplateArgumentType.Bool, false);
+        var template = builder.Build();
+
+        Assert.AreEqual("some, string.", template.Arguments.First(a => a.Name == "string").Value);
+        Assert.AreEqual(1, template.Arguments.First(a => a.Name == "number").Value);
+        Assert.AreEqual(999999999.95f, template.Arguments.First(a => a.Name == "number1").Value);
+        Assert.AreEqual(55d, template.Arguments.First(a => a.Name == "number2").Value);
+        Assert.AreEqual(true, template.Arguments.First(a => a.Name == "bool").Value);
+        Assert.AreEqual(false, template.Arguments.First(a => a.Name == "bool2").Value);
     }
 
     [Test]
@@ -195,6 +233,20 @@ public class CustomTemplateBuilderTest
         Assert.AreEqual(1, template.Arguments.Count);
         Assert.AreEqual("fileKey", template.Arguments[0].Name);
         Assert.AreEqual(TemplateArgumentType.File, template.Arguments[0].Type);
+    }
+
+    [Test]
+    public void AddFileArgument_AddsActionTypeArgument()
+    {
+        InAppTemplateBuilder builder = new InAppTemplateBuilder();
+        builder.SetName("TestTemplate");
+
+        builder.AddActionArgument("Open action");
+        var template = builder.Build();
+
+        Assert.AreEqual(1, template.Arguments.Count);
+        Assert.AreEqual("Open action", template.Arguments[0].Name);
+        Assert.AreEqual(TemplateArgumentType.Action, template.Arguments[0].Type);
     }
 
     [Test]
