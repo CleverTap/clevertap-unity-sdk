@@ -15,11 +15,22 @@ namespace CleverTapSDK.Native
         protected HashSet<string> argumentNames = new HashSet<string>();
         protected HashSet<string> parentArgumentNames = new HashSet<string>();
 
+        internal CustomTemplateBuilder(string templateType, bool isVisual)
+        {
+            this.templateType = templateType;
+            this.isVisual = isVisual;
+        }
+
         internal void SetName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new CleverTapTemplateException("CleverTap: Template Name cannot be null, empty or white space.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.name))
+            {
+                throw new CleverTapTemplateException("CleverTap: Template Name already set.");
             }
 
             this.name = name;
@@ -113,32 +124,33 @@ namespace CleverTapSDK.Native
             }
         }
 
-        internal abstract CustomTemplate Build();
+        internal virtual CustomTemplate Build()
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new CleverTapTemplateException("CleverTap: CustomTemplate must have a name.");
+            }
+
+            return new CustomTemplate(name, templateType, isVisual, arguments);
+        }
     }
 
     internal class InAppTemplateBuilder : CustomTemplateBuilder
     {
+        internal InAppTemplateBuilder() : base(CustomTemplates.TEMPLATE_TYPE, true)
+        {
+        }
+
         internal void AddActionArgument(string name)
         {
             AddArgument(name, TemplateArgumentType.Action, null);
-        }
-
-        internal override CustomTemplate Build()
-        {
-            return new CustomTemplate(name, CustomTemplates.TEMPLATE_TYPE, true, arguments);
         }
     }
 
     internal class AppFunctionBuilder : CustomTemplateBuilder
     {
-        internal AppFunctionBuilder(bool isVisual)
+        internal AppFunctionBuilder(bool isVisual) : base(CustomTemplates.FUNCTION_TYPE, isVisual)
         {
-            this.isVisual = isVisual;
-        }
-
-        internal override CustomTemplate Build()
-        {
-            return new CustomTemplate(name, CustomTemplates.FUNCTION_TYPE, isVisual, arguments);
         }
     }
 }
