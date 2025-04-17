@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Text;
 using static CleverTapSDK.Native.UnityNativeConstants;
@@ -154,3 +155,4 @@ namespace CleverTapSDK.Native
         }
     }
 }
+#endif

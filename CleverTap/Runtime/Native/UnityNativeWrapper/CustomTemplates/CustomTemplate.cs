@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 
 namespace CleverTapSDK.Native
@@ -33,3 +34,4 @@ namespace CleverTapSDK.Native
         }
     }
 }
+#endif

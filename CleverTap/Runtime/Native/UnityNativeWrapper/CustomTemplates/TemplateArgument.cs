@@ -1,4 +1,5 @@
-﻿namespace CleverTapSDK.Native
+﻿#if UNITY_EDITOR
+namespace CleverTapSDK.Native
 {
     internal static class TemplateArgumentType
     {
@@ -23,3 +24,4 @@
         }
     }
 }
+#endif

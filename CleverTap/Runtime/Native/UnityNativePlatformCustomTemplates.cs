@@ -35,30 +35,20 @@ namespace CleverTapSDK.Native
             this.unityNativeEventManager = unityNativeEventManager;
         }
 
-        internal override void SyncCustomTemplates() => SyncCustomTemplates(false);
+        internal override void SyncCustomTemplates()
+        {
+#if UNITY_EDITOR
+            SyncCustomTemplates(false);
+#else
+            CleverTapLogger.LogError("CleverTap Error: SyncCustomTemplates is not supported for this platform.");
+#endif
+        }
 
         internal override void SyncCustomTemplates(bool isProduction)
         {
-            if (isProduction)
-            {
-                if (Debug.isDebugBuild)
-                {
-                    CleverTapLogger.Log("Calling SyncCustomTemplates(true) from Debug build. Do not use (isProduction: true) in this case.");
-                }
-                else
-                {
-                    CleverTapLogger.Log("Calling SyncCustomTemplates(true) from Release build. Do not release this build and use with caution.");
-                }
-            }
-            else
-            {
-                if (!Debug.isDebugBuild)
-                {
-                    CleverTapLogger.Log("SyncCustomTemplates() can only be called from Debug builds.");
-                    return;
-                }
-            }
-
+#if !UNITY_EDITOR
+            CleverTapLogger.LogError("CleverTap Error: SyncCustomTemplates(isProduction) is not supported for this platform.");
+#else
             if (unityNativeEventManager == null)
             {
                 CleverTapLogger.LogError("CleverTap Error: Cannot sync custom templates." +
@@ -70,6 +60,8 @@ namespace CleverTapSDK.Native
             DirectoryInfo dir = new DirectoryInfo(sourceFolderPath);
             if (!dir.Exists)
             {
+                CleverTapLogger.LogError($"CleverTap Error: Cannot sync custom templates. " +
+                    $"Directory {sourceFolderPath} does not exist.");
                 return;
             }
 
@@ -87,6 +79,7 @@ namespace CleverTapSDK.Native
 
             var payload = CustomTemplateUtils.GetSyncTemplatesPayload(templates);
             unityNativeEventManager.SyncCustomTemplates(payload);
+#endif
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 
 namespace CleverTapSDK.Native
 {
@@ -7,3 +8,4 @@ namespace CleverTapSDK.Native
         public CleverTapTemplateException(string message) : base(message) { }
     }
 }
+#endif
