@@ -64,6 +64,33 @@ public class JsonTemplateProducerTest
     }
 
     [Test]
+    public void DefineTemplates_InAppTemplate_WithoutArguments_ReturnsTemplate()
+    {
+        string json = @"{
+                ""TestTemplate"": {
+                    ""type"": ""template"",
+                    ""arguments"": {
+                        ""title"": { ""type"": ""string"", ""value"": ""Welcome"" },
+                        ""count"": { ""type"": ""number"", ""value"": 5 },
+                        ""flag"": { ""type"": ""boolean"", ""value"": true }
+                    }
+                }
+            }";
+
+        var producer = new JsonTemplateProducer(json);
+        var templates = producer.DefineTemplates();
+
+        Assert.AreEqual(1, templates.Count);
+        var template = new List<CustomTemplate>(templates)[0];
+        Assert.AreEqual("TestTemplate", template.Name);
+        Assert.AreEqual(3, template.Arguments.Count);
+
+        Assert.AreEqual("Welcome", template.Arguments.First(a => a.Name == "title").Value);
+        Assert.AreEqual(5, template.Arguments.First(a => a.Name == "count").Value);
+        Assert.AreEqual(true, template.Arguments.First(a => a.Name == "flag").Value);
+    }
+
+    [Test]
     public void DefineTemplates_Function_WithIsVisualTrue_ReturnsTemplate()
     {
         string json = @"{
@@ -86,6 +113,21 @@ public class JsonTemplateProducerTest
     }
 
     [Test]
+    public void DefineTemplates_WithoutArguments_ReturnsTemplate()
+    {
+        string json = @"{
+                ""Function1"": {
+                    ""type"": ""function""
+                }
+            }";
+
+        var producer = new JsonTemplateProducer(json);
+        var templates = producer.DefineTemplates();
+
+        Assert.AreEqual(1, templates.Count);
+    }
+
+    [Test]
     public void DefineTemplates_WithFunctionsAndTemplates_ReturnsTemplates()
     {
         string json = @"{
@@ -101,13 +143,13 @@ public class JsonTemplateProducerTest
                     ""arguments"": {
                     }
                 },
-                ""TestTemplate2"": {
+                ""TestTemplate 1"": {
                     ""type"": ""template"",
                     ""arguments"": {
-                        ""title2"": { ""type"": ""string"", ""value"": ""Welcome 2"" },
+                        ""price"": { ""type"": ""number"", ""value"": 99.59 },
                     }
                 },
-                ""TestFunction1"": {
+                ""TestFunction 1"": {
                     ""type"": ""function"",
                     ""isVisual"": false,
                     ""arguments"": {
@@ -118,8 +160,30 @@ public class JsonTemplateProducerTest
 
         var producer = new JsonTemplateProducer(json);
         var templates = producer.DefineTemplates();
-
         Assert.AreEqual(4, templates.Count);
+
+        var templatesList = new List<CustomTemplate>(templates);
+
+        var testTemplate = templatesList.First(t => t.Name == "TestTemplate");
+        var titleArg = testTemplate.Arguments.First(a => a.Name == "title");
+        Assert.AreEqual("Welcome", titleArg.Value);
+        Assert.AreEqual(TemplateArgumentType.String, titleArg.Type);
+
+        var testFunction = templatesList.First(t => t.Name == "TestFunction");
+        Assert.IsTrue(testFunction.IsVisual);
+        Assert.AreEqual(0, testFunction.Arguments.Count);
+
+        var testTemplate1 = templatesList.First(t => t.Name == "TestTemplate 1");
+        var priceArg = testTemplate1.Arguments.First(a => a.Name == "price");
+        Assert.AreEqual(99.59, priceArg.Value);
+        Assert.AreEqual(TemplateArgumentType.Number, priceArg.Type);
+
+        var testFunction1 = templatesList.First(t => t.Name == "TestFunction 1");
+        Assert.IsFalse(testFunction1.IsVisual);
+        Assert.AreEqual(1, testFunction1.Arguments.Count);
+        var titleFunctionArg = testFunction1.Arguments.First(a => a.Name == "title");
+        Assert.AreEqual("Welcome Function", titleFunctionArg.Value);
+        Assert.AreEqual(TemplateArgumentType.String, titleFunctionArg.Type);
     }
 
     [Test]

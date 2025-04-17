@@ -258,6 +258,15 @@ public class CustomTemplateBuilderTest
     }
 
     [Test]
+    public void Build_WithoutArguments_CreatesCorrectTemplat()
+    {
+        InAppTemplateBuilder builder = new InAppTemplateBuilder();
+        builder.SetName("TestTemplate");
+        var template = builder.Build();
+        Assert.AreEqual("TestTemplate", template.Name);
+    }
+
+    [Test]
     public void Build_InAppTemplateBuilder_CreatesCorrectTemplate()
     {
         InAppTemplateBuilder builder = new InAppTemplateBuilder();
