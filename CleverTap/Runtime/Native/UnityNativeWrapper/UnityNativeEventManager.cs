@@ -30,7 +30,7 @@ namespace CleverTapSDK.Native
             : this(callbackHandler, null) { }
 
         internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler, UnityNativePlatformVariable platformVariable)
-            : this(callbackHandler, null, null) { }
+            : this(callbackHandler, platformVariable, null) { }
 
         internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler,
             UnityNativePlatformVariable platformVariable,
