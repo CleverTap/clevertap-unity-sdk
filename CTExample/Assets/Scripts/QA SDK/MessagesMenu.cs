@@ -15,6 +15,7 @@ namespace CTExample
         {
             var parent = verticalLayoutGroup.GetComponent<RectTransform>();
 
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             string suspend = "Suspend In-apps";
             var suspendButton = Instantiate(buttonPrefab);
             suspendButton.name = suspend;
@@ -44,7 +45,9 @@ namespace CTExample
             {
                 CleverTap.ResumeInAppNotifications();
             });
+#endif
 
+#if (UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
             string sync = "Sync Custom Templates";
             var syncButton = Instantiate(buttonPrefab);
             syncButton.name = sync;
@@ -54,7 +57,9 @@ namespace CTExample
             {
                 CleverTap.SyncCustomTemplates(true);
             });
+#endif
 
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             AddSeparator(parent);
 
             var messages = new List<string>(new string[] {
@@ -84,8 +89,10 @@ namespace CTExample
             }
 
             RefreshContentHelper.RefreshContentFitters(parent);
+#endif
         }
 
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
         void AddSeparator(Transform parent)
         {
             var separator = new GameObject();
@@ -98,5 +105,6 @@ namespace CTExample
             rt.sizeDelta = new Vector2(rt.sizeDelta.x, y);
             separator.transform.SetParent(parent, false);
         }
+#endif
     }
 }
