@@ -1,4 +1,5 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.IO;
 using CleverTapSDK.Common;
@@ -69,10 +70,20 @@ namespace CleverTapSDK.Native
             HashSet<CustomTemplate> templates = new HashSet<CustomTemplate>();
             foreach (FileInfo file in files)
             {
-                if (file.Extension != ".json")
+                if (!file.Extension.Equals(".json", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                string json = File.ReadAllText(file.FullName);
+                string json = string.Empty;
+                try
+                {
+                    json = File.ReadAllText(file.FullName);
+                }
+                catch (Exception ex)
+                {
+                    CleverTapLogger.LogError($"CleverTap: Failed to read template file {file.Name}: {ex.Message}");
+                    continue;
+                }
+
                 JsonTemplateProducer producer = new JsonTemplateProducer(json);
                 templates.UnionWith(producer.DefineTemplates());
             }
