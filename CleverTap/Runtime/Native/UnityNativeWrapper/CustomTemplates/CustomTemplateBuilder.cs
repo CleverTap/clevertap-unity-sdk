@@ -65,6 +65,10 @@ namespace CleverTapSDK.Native
                 {
                     AddDictionaryArgument(argName, dict);
                 }
+                else
+                {
+                    throw new CleverTapTemplateException($"CleverTap: Unsupported value type \"{value?.GetType()}\" for argument \"{argName}\".");
+                }
             }
         }
 
