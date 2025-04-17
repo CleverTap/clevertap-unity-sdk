@@ -117,12 +117,6 @@ namespace CleverTapSDK.Native
         private Dictionary<string, object> ObjectArgumentJsonToDictionary(JSONNode json)
         {
             var result = new Dictionary<string, object>();
-            HashSet<string> supported = new HashSet<string>
-            {
-                TemplateArgumentType.Bool,
-                TemplateArgumentType.String,
-                TemplateArgumentType.Number
-            };
 
             foreach (KeyValuePair<string, JSONNode> kv in json.AsObject)
             {
@@ -134,13 +128,23 @@ namespace CleverTapSDK.Native
                 if (type == TemplateArgumentTypeObject)
                 {
                     result[name] = ObjectArgumentJsonToDictionary(val.AsObject);
-                    continue;
                 }
-
-                if (!supported.Contains(type))
+                else if (type == TemplateArgumentType.String)
+                {
+                    result[name] = val.Value;
+                }
+                else if (type == TemplateArgumentType.Number)
+                {
+                    result[name] = val.AsDouble;
+                }
+                else if (type == TemplateArgumentType.Bool)
+                {
+                    result[name] = val.AsBool;
+                }
+                else
+                {
                     throw new CleverTapTemplateException($"Unsupported nested argument type: {type} for argument: {name}");
-
-                result[name] = val.Value;
+                }
             }
 
             return result;

@@ -64,15 +64,12 @@ public class JsonTemplateProducerTest
     }
 
     [Test]
-    public void DefineTemplates_InAppTemplate_WithoutArguments_ReturnsTemplate()
+    public void DefineTemplates_InAppTemplate_WithEmptyArguments_ReturnsTemplate()
     {
         string json = @"{
                 ""TestTemplate"": {
                     ""type"": ""template"",
                     ""arguments"": {
-                        ""title"": { ""type"": ""string"", ""value"": ""Welcome"" },
-                        ""count"": { ""type"": ""number"", ""value"": 5 },
-                        ""flag"": { ""type"": ""boolean"", ""value"": true }
                     }
                 }
             }";
@@ -83,11 +80,7 @@ public class JsonTemplateProducerTest
         Assert.AreEqual(1, templates.Count);
         var template = new List<CustomTemplate>(templates)[0];
         Assert.AreEqual("TestTemplate", template.Name);
-        Assert.AreEqual(3, template.Arguments.Count);
-
-        Assert.AreEqual("Welcome", template.Arguments.First(a => a.Name == "title").Value);
-        Assert.AreEqual(5, template.Arguments.First(a => a.Name == "count").Value);
-        Assert.AreEqual(true, template.Arguments.First(a => a.Name == "flag").Value);
+        Assert.AreEqual(0, template.Arguments.Count);
     }
 
     [Test]
@@ -236,7 +229,8 @@ public class JsonTemplateProducerTest
                                 ""nested"": {
                                     ""type"": ""object"",
                                     ""value"": {
-                                        ""label"": { ""type"": ""string"", ""value"": ""Deep"" }
+                                        ""label"": { ""type"": ""string"", ""value"": ""Timeout"" },
+                                        ""timeout"": { ""type"": ""number"", ""value"": 60.0 }
                                     }
                                 }
                             }
@@ -249,7 +243,23 @@ public class JsonTemplateProducerTest
         var templates = producer.DefineTemplates();
         Assert.AreEqual(1, templates.Count);
         var template = new List<CustomTemplate>(templates)[0];
-        Assert.AreEqual(3, template.Arguments.Count);
+        Assert.AreEqual(4, template.Arguments.Count);
+
+        var enabledArg = template.Arguments.First(a => a.Name == "settings.enabled");
+        Assert.AreEqual(true, enabledArg.Value);
+        Assert.AreEqual(TemplateArgumentType.Bool, enabledArg.Type);
+
+        var thresholdArg = template.Arguments.First(a => a.Name == "settings.threshold");
+        Assert.AreEqual(1.5, thresholdArg.Value);
+        Assert.AreEqual(TemplateArgumentType.Number, thresholdArg.Type);
+
+        var labelArg = template.Arguments.First(a => a.Name == "settings.nested.label");
+        Assert.AreEqual("Timeout", labelArg.Value);
+        Assert.AreEqual(TemplateArgumentType.String, labelArg.Type);
+
+        var timeoutArg = template.Arguments.First(a => a.Name == "settings.nested.timeout");
+        Assert.AreEqual(60.0, timeoutArg.Value);
+        Assert.AreEqual(TemplateArgumentType.Number, timeoutArg.Type);
     }
 
     [Test]
