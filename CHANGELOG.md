@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version VERSION *(DD MONTH, YYYY)*
+-------------------------------------------
+- Allows syncing Custom In-app Templates in the Unity Editor.
+
 Version 5.2.0 *(31 March, 2025)*
 -------------------------------------------
 - Unity Native Variables - allows defining and syncing Variables in Unity Editor and other builds.
