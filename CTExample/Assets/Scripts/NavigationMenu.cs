@@ -47,7 +47,6 @@ namespace CTExample
         {
             var appInboxPanel = FindPanel("AppInbox");
             Enable(appInboxPanel);
-            appInboxPanel.GetComponent<AppInbox>().Restore();
         }
 
         public void DidTapVariablesButton()
