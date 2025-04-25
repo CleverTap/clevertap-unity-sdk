@@ -10,7 +10,7 @@ namespace CTExample
     {
         public Button buttonPrefab;
         public VerticalLayoutGroup verticalLayoutGroup;
-
+        [SerializeField] private GameObject inboxPanel;
         private bool hasInboxInitialized = false;
         private bool shouldShowInbox = false;
 
@@ -25,7 +25,11 @@ namespace CTExample
             var models = new List<ButtonActionModel>
             {
                 new ButtonActionModel("Initialize", (button) => CleverTap.InitializeInbox()),
-                new ButtonActionModel("Show Inbox", (button) => ShowInbox())
+            #if !UNITY_EDITOR
+                // This button is only available on Android and iOS
+                new ButtonActionModel("Show Inbox", (button) => ShowInbox()),
+            #endif
+                new ButtonActionModel("Show Unity App Inbox", (button) => ShowUnityAppInbox())
             };
 
             var parent = verticalLayoutGroup.GetComponent<RectTransform>();
@@ -75,6 +79,11 @@ namespace CTExample
             Logger.Log($"Showing app inbox with config: {jsonStr}");
         }
 
+        private void ShowUnityAppInbox()
+        {
+            inboxPanel.SetActive(true);
+        }
+
         private void CleverTap_OnCleverTapInboxDidInitializeCallback()
         {
             hasInboxInitialized = true;
@@ -89,6 +98,11 @@ namespace CTExample
         public void Restore()
         {
 
+        }
+
+        private void OnDisable()
+        {
+            inboxPanel.SetActive(false);
         }
     }
 }
