@@ -222,6 +222,7 @@ namespace CleverTapSDK.Native {
             internal const string REQUEST_PATH_RECORD = "a1";
 
             internal const string REQUEST_PATH_DEFINE_VARIABLES = "defineVars";
+            internal const string REQUEST_PATH_DEFINE_TEMPLATES = "defineTemplates";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";
         }
 
@@ -232,6 +233,13 @@ namespace CleverTapSDK.Native {
             internal const string COMMAND_INCREMENT = "$incr";
             internal const string COMMAND_DECREMENT = "$decr";
             internal const string COMMAND_DELETE = "$delete";
+        }
+
+        internal static class CustomTemplates
+        {
+            internal const string TEMPLATE_TYPE = "template";
+            internal const string FUNCTION_TYPE = "function";
+            internal const string DOT = ".";
         }
     }
 }
