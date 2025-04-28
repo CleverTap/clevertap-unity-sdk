@@ -25,11 +25,12 @@ namespace CTExample
             var models = new List<ButtonActionModel>
             {
                 new ButtonActionModel("Initialize", (button) => CleverTap.InitializeInbox()),
-            #if !UNITY_EDITOR
+            #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
                 // This button is only available on Android and iOS
                 new ButtonActionModel("Show Inbox", (button) => ShowInbox()),
-            #endif
+            #elif UNITY_EDITOR
                 new ButtonActionModel("Show Unity App Inbox", (button) => ShowUnityAppInbox())
+            #endif
             };
 
             var parent = verticalLayoutGroup.GetComponent<RectTransform>();
