@@ -98,7 +98,10 @@ namespace CTExample
 
         public void Restore()
         {
-
+            if (inboxPanel.activeInHierarchy)
+            {
+                inboxPanel.SetActive(false);
+            }
         }
 
         private void OnDisable()
