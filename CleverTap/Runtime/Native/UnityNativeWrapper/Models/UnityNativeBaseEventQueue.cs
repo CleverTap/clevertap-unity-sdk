@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CleverTapSDK.Common;
 using CleverTapSDK.Utilities;
 using UnityEngine;
+using UnityEditor;
 
 namespace CleverTapSDK.Native
 {
@@ -246,7 +247,7 @@ namespace CleverTapSDK.Native
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
             // Default Query String parameters
             var queryParameters = new List<KeyValuePair<string, string>> {
-                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, deviceInfo.OsName),
+                new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_OS, EditorUserBuildSettings.activeBuildTarget.ToString()),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_SDK_REVISION, deviceInfo.SdkVersion.ToString()),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_ACCOUNT_ID, accountInfo.AccountId),
                 new KeyValuePair<string, string>(UnityNativeConstants.Network.QUERY_CURRENT_TIMESTAMP, timestamp)

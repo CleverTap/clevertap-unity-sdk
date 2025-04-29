@@ -127,6 +127,76 @@ namespace CleverTapSDK.Native
         {
             _unityNativeEventManager.EnableDeviceNetworkInfoReporting(enabled);
         }
+
+        internal override JSONArray GetAllInboxMessages()
+        {
+            return _unityNativeEventManager.GetAllInboxMessages();
+        }
+
+        internal override List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
+        {
+            return _unityNativeEventManager.GetAllInboxMessagesParsed();
+        }
+
+        internal override JSONArray GetUnreadInboxMessages()
+        {
+            return _unityNativeEventManager.GetUnreadInboxMessages();
+        }
+
+        internal override List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed()
+        {
+            return _unityNativeEventManager.GetUnreadInboxMessagesParsed();
+        }
+
+        internal override JSONClass GetInboxMessageForId(string messageId)
+        {
+            return _unityNativeEventManager.GetInboxMessageForId(messageId);
+        }
+
+        internal override CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId)
+        {
+            return _unityNativeEventManager.GetInboxMessageForIdParsed(messageId);
+        }
+
+        internal override int GetInboxMessageCount()
+        {
+            return _unityNativeEventManager.GetInboxMessageCount();
+        }
+
+        internal override int GetInboxMessageUnreadCount()
+        {
+            return _unityNativeEventManager.GetInboxMessageUnreadCount();
+        }
+
+        internal override void MarkReadInboxMessageForID(string messageId)
+        {
+            _unityNativeEventManager.MarkReadInboxMessageForID(messageId);
+        }
+
+        internal override void MarkReadInboxMessagesForIDs(string[] messageIds)
+        {
+           _unityNativeEventManager.MarkReadInboxMessagesForIDs(messageIds);
+        }
+
+        internal override void DeleteInboxMessageForID(string messageId)
+        {
+           _unityNativeEventManager.DeleteInboxMessageForID(messageId);
+        }
+
+        internal override void DeleteInboxMessagesForIDs(string[] messageIds)
+        {
+            _unityNativeEventManager.DeleteInboxMessagesForIDs(messageIds);
+        }
+
+        internal override void RecordInboxNotificationClickedEventForID(string messageId)
+        {
+            _unityNativeEventManager.RecordInboxNotificationClickedEventForID(messageId);
+        }
+
+        internal override void RecordInboxNotificationViewedEventForID(string messageId)
+        {
+            _unityNativeEventManager.RecordInboxNotificationViewedEventForID(messageId);
+        }
     }
 }
 #endif

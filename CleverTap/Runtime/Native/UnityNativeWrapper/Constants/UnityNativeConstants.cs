@@ -95,6 +95,11 @@ namespace CleverTapSDK.Native {
                 return null;
             }
         }
+        
+        internal static class AppInbox
+        {
+            internal const string INBOX_NOTIFS_KEY = "inbox_notifs";
+        }
 
         internal static class Session {
             internal const string SESSION_ID_KEY = "SESSION_ID";
