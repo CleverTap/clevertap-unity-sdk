@@ -48,7 +48,7 @@ namespace CleverTapSDK.Native
 
         public void HandleAppInboxMessages(List<object> appInboxMessages)
         {
-            _unityNativeEventManager?.OnAppInboxMessage(appInboxMessages);
+            _unityNativeEventManager?.OnInboxMessagesReceived(appInboxMessages);
         }
     }
 }

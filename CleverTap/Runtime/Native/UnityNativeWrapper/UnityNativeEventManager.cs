@@ -462,10 +462,10 @@ namespace CleverTapSDK.Native
 
         internal void InitializeAppInbox()
         {
-            UnityNativeAppInboxPersistence.Initialize(_preferenceManager);
+            UnityNativeAppInboxPersistence.Initialize(_preferenceManager, _coreState.DeviceInfo.DeviceId);
         }
 
-        internal void OnAppInboxMessage(List<object> inboxMessages)
+        internal void OnInboxMessagesReceived(List<object> inboxMessages)
         {
             Dictionary<string, object> message;
             string messageId;
@@ -476,11 +476,7 @@ namespace CleverTapSDK.Native
                 message = inboxMessages[i] as Dictionary<string, object>;
                 messageId = message["_id"].ToString();
                 serializedMessage = Json.Serialize(message);
-
-                if (UnityNativeAppInboxPersistence.IsUpdatedOrNewMessage(messageId, serializedMessage))
-                {
-                    UnityNativeAppInboxPersistence.SaveMessage(messageId, serializedMessage);
-                }
+                UnityNativeAppInboxPersistence.SaveMessage(messageId, serializedMessage);
             }
         }
 
@@ -526,22 +522,22 @@ namespace CleverTapSDK.Native
 
         internal void MarkReadInboxMessageForID(string messageId)
         {
-
+            UnityNativeAppInboxPersistence.MarkAsRead(messageId);
         }
 
         internal void MarkReadInboxMessagesForIDs(string[] messageIds)
         {
-
+            UnityNativeAppInboxPersistence.MarkMessagesAsReadForIds(messageIds);
         }
 
         internal void DeleteInboxMessageForID(string messageId)
         {
-
+            UnityNativeAppInboxPersistence.DeleteMessage(messageId);
         }
 
         internal void DeleteInboxMessagesForIDs(string[] messageIds)
         {
-
+            UnityNativeAppInboxPersistence.DeleteMessagesForIds(messageIds);
         }
 
         internal void RecordInboxNotificationClickedEventForID(string messageId)

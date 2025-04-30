@@ -1,4 +1,4 @@
-using UnityEngine;
+#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System.Collections.Generic;
 using CleverTapSDK.Utilities;
 
@@ -10,32 +10,15 @@ namespace CleverTapSDK.Native
     /// </summary>
     internal static class UnityNativeAppInboxPersistence
     {
-        #region Constants
-
-        /// <summary>
-        /// Key used to store all message IDs in the preferences.
-        /// </summary>
-        private const string INBOX_IDS_KEY = "INBOX_IDS_KEY";
-
-        /// <summary>
-        /// Prefix for keys storing read/unread status for each message.
-        /// </summary>
-        private const string READ_PREFIX = "INBOX_READ_";
-
-        /// <summary>
-        /// Prefix for keys storing message contents.
-        /// </summary>
-        private const string MSG_PREFIX = "INBOX_MSG_";
-
-        #endregion
-
         #region Private Static Variables
 
         /// <summary>
         /// Reference to the Unity preference manager used for storage.
         /// </summary>
         private static UnityNativePreferenceManager _preferenceManager = null;
-
+        private static string _readPrefixKey = null;
+        private static string _msgPrefixKey = null;
+        private static string _inboxIdsKey = null;
         #endregion
 
         #region Public Static Methods
@@ -45,9 +28,19 @@ namespace CleverTapSDK.Native
         /// Must be called before using any persistence methods.
         /// </summary>
         /// <param name="preferenceManager">The preference manager used to persist data.</param>
-        public static void Initialize(UnityNativePreferenceManager preferenceManager)
+        /// <param name="deviceId">A unique identifier for the device.</param>
+        public static void Initialize(UnityNativePreferenceManager preferenceManager, string deviceId)
         {
+            if(preferenceManager == null || string.IsNullOrEmpty(deviceId))
+            {
+                CleverTapLogger.LogError("UnityNativeAppInboxPersistence: preferenceManager or deviceId is null");
+                return;
+            }
+
             _preferenceManager = preferenceManager;
+            _inboxIdsKey = $"INBOX_IDS_KEY_{deviceId}";
+            _readPrefixKey = $"READ_PREFIX_{deviceId}";
+            _msgPrefixKey = $"MSG_PREFIX_{deviceId}";
         }
 
         /// <summary>
@@ -58,14 +51,13 @@ namespace CleverTapSDK.Native
         /// <param name="message">Content of the message to be saved.</param>
         public static void SaveMessage(string id, string message)
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return;
             }
 
-            _preferenceManager.SetString(MSG_PREFIX + id, message);
-            MarkAsUnread(id);
+            _preferenceManager.SetString($"{_msgPrefixKey}_{id}", message);
+
             List<string> ids = GetAllMessageIds();
 
             if (!ids.Contains(id))
@@ -82,13 +74,12 @@ namespace CleverTapSDK.Native
         /// <returns>The message content, or null if not found or not initialized.</returns>
         public static string GetMessage(string id)
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return null;
             }
 
-            return _preferenceManager.GetString(MSG_PREFIX + id, string.Empty);
+            return _preferenceManager.GetString($"{_msgPrefixKey}_{id}", string.Empty);
         }
 
         /// <summary>
@@ -97,28 +88,12 @@ namespace CleverTapSDK.Native
         /// <param name="id">The ID of the message to mark as read.</param>
         public static void MarkAsRead(string id)
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return;
             }
 
-            _preferenceManager.SetInt(READ_PREFIX + id, 1);
-        }
-
-        /// <summary>
-        /// Marks a message as unread using the given ID.
-        /// </summary>
-        /// <param name="id">The ID of the message to mark as unread.</param>
-        public static void MarkAsUnread(string id)
-        {
-            if (_preferenceManager == null)
-            {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
-                return;
-            }
-
-            _preferenceManager.SetInt(READ_PREFIX + id, 0);
+            _preferenceManager.SetInt($"{_readPrefixKey}_{id}", 1);
         }
 
         /// <summary>
@@ -128,13 +103,12 @@ namespace CleverTapSDK.Native
         /// <returns>True if the message is read, false otherwise.</returns>
         public static bool IsRead(string id)
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return false;
             }
 
-            return _preferenceManager.GetInt(READ_PREFIX + id, 0) == 1;
+            return _preferenceManager.GetInt($"{_readPrefixKey}_{id}", 0) == 1;
         }
 
         /// <summary>
@@ -143,22 +117,36 @@ namespace CleverTapSDK.Native
         /// <param name="id">The ID of the message to delete.</param>
         public static void DeleteMessage(string id)
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return;
             }
 
-            _preferenceManager.DeleteKey(MSG_PREFIX + id);
-            _preferenceManager.DeleteKey(READ_PREFIX + id);
+            _preferenceManager.DeleteKey($"{_msgPrefixKey}_{id}");
+            _preferenceManager.DeleteKey($"{_readPrefixKey}_{id}");
 
             var ids = GetAllMessageIds();
             if (ids.Remove(id))
             {
                 SaveAllMessageIds(ids);
             }
+        }
 
-            PlayerPrefs.Save();
+
+        /// <summary>
+        /// Deletes only the specified message IDs.
+        /// </summary>
+        public static void DeleteMessagesForIds(string[] ids)
+        {
+            if (!IsInitialized())
+            {
+                return;
+            }
+
+            for (int i = 0, count = ids.Length; i < count; i++)
+            {
+                DeleteMessage(ids[i]);
+            }
         }
 
         /// <summary>
@@ -167,6 +155,11 @@ namespace CleverTapSDK.Native
         /// <returns>A dictionary containing all messages keyed by their IDs.</returns>
         public static Dictionary<string, string> GetAllMessages()
         {
+            if (!IsInitialized())
+            {
+                return null;
+            }
+
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
             List<string> ids = GetAllMessageIds();
@@ -190,9 +183,30 @@ namespace CleverTapSDK.Native
         /// </summary>
         public static void MarkAllAsRead()
         {
+            if (!IsInitialized())
+            {
+                return;
+            }
+
             List<string> ids = GetAllMessageIds();
 
             for (int i = 0, count = ids.Count; i < count; i++)
+            {
+                MarkAsRead(ids[i]);
+            }
+        }
+
+        /// <summary>
+        /// Marks only the specified message IDs as read.
+        /// </summary>
+        public static void MarkMessagesAsReadForIds(string[] ids)
+        {
+            if (!IsInitialized())
+            {
+                return;
+            }
+
+            for (int i = 0, count = ids.Length; i < count; i++)
             {
                 MarkAsRead(ids[i]);
             }
@@ -203,9 +217,8 @@ namespace CleverTapSDK.Native
         /// </summary>
         public static void DeleteAllMessages()
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return;
             }
 
@@ -214,11 +227,11 @@ namespace CleverTapSDK.Native
             for (int i = 0, count = ids.Count; i < count; i++)
             {
                 string id = ids[i];
-                _preferenceManager.DeleteKey(MSG_PREFIX + id);
-                _preferenceManager.DeleteKey(READ_PREFIX + id);
+                _preferenceManager.DeleteKey($"{_msgPrefixKey}_{id}");
+                _preferenceManager.DeleteKey($"{_readPrefixKey}_{id}");
             }
 
-            _preferenceManager.DeleteKey(INBOX_IDS_KEY);
+            _preferenceManager.DeleteKey(_inboxIdsKey);
         }
 
         /// <summary>
@@ -227,6 +240,11 @@ namespace CleverTapSDK.Native
         /// <returns>A dictionary of unread messages keyed by their IDs.</returns>
         public static Dictionary<string, string> GetUnreadMessages()
         {
+            if (!IsInitialized())
+            {
+                return null;
+            }
+
             var allMessages = GetAllMessages();
             var unreadMessages = new Dictionary<string, string>();
 
@@ -240,19 +258,6 @@ namespace CleverTapSDK.Native
 
             return unreadMessages;
         }
-
-        /// <summary>
-        /// Determines if the new message is updated or new by comparing it with the stored version.
-        /// </summary>
-        /// <param name="id">The message ID to check.</param>
-        /// <param name="newMessage">The new message content.</param>
-        /// <returns>True if the message is new or updated; false if it matches the stored version.</returns>
-        public static bool IsUpdatedOrNewMessage(string id, string newMessage)
-        {
-            string existingMessage = GetMessage(id);
-            return existingMessage != newMessage;
-        }
-
         #endregion
 
         #region Private Static Methods
@@ -263,13 +268,12 @@ namespace CleverTapSDK.Native
         /// <returns>A list of message IDs.</returns>
         private static List<string> GetAllMessageIds()
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return null;
             }
 
-            string joined = _preferenceManager.GetString(INBOX_IDS_KEY, string.Empty);
+            string joined = _preferenceManager.GetString(_inboxIdsKey, string.Empty);
 
             if (string.IsNullOrEmpty(joined))
             {
@@ -285,16 +289,35 @@ namespace CleverTapSDK.Native
         /// <param name="ids">List of message IDs to store.</param>
         private static void SaveAllMessageIds(List<string> ids)
         {
-            if (_preferenceManager == null)
+            if (!IsInitialized())
             {
-                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
                 return;
             }
 
             string joined = string.Join(",", ids);
-            _preferenceManager.SetString(INBOX_IDS_KEY, joined);
+            _preferenceManager.SetString(_inboxIdsKey, joined);
+        }
+
+        /// <summary>
+        /// Checks if the UnityNativeInboxPersistence class has been properly initialized
+        /// with a valid <see cref="UnityNativePreferenceManager"/>.
+        /// Logs an error if not initialized.
+        /// </summary>
+        /// <returns>True if initialized; otherwise, false.</returns>
+        private static bool IsInitialized()
+        {
+            if (_preferenceManager == null)
+            {
+                CleverTapLogger.LogError("UnityNativeInboxPersistence is not initialized. Call Initialize() first.");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         #endregion
     }
 }
+#endif
