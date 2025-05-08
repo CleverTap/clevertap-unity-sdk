@@ -31,13 +31,34 @@ namespace CleverTapSDK.Native
         /// <param name="deviceId">A unique identifier for the device.</param>
         public static void Initialize(UnityNativePreferenceManager preferenceManager, string deviceId)
         {
-            if(preferenceManager == null || string.IsNullOrEmpty(deviceId))
+            if (preferenceManager == null || string.IsNullOrEmpty(deviceId))
             {
                 CleverTapLogger.LogError("UnityNativeAppInboxPersistence: preferenceManager or deviceId is null");
                 return;
             }
 
             _preferenceManager = preferenceManager;
+            _inboxIdsKey = $"INBOX_IDS_KEY_{deviceId}";
+            _readPrefixKey = $"READ_PREFIX_{deviceId}";
+            _msgPrefixKey = $"MSG_PREFIX_{deviceId}";
+        }
+
+        /// <summary>
+        /// Updates internal keys used for storing and retrieving inbox-related data
+        /// based on the provided device ID. This ensures all preferences are scoped
+        /// to the current device.
+        /// </summary>
+        /// <param name="deviceId">
+        /// The unique identifier for the device. Must not be null or empty.
+        /// </param>
+        public static void OnInboxStorageIdUpdate(string deviceId)
+        {
+            if (string.IsNullOrEmpty(deviceId))
+            {
+                CleverTapLogger.LogError("UnityNativeAppInboxPersistence: deviceId is null");
+                return;
+            }
+
             _inboxIdsKey = $"INBOX_IDS_KEY_{deviceId}";
             _readPrefixKey = $"READ_PREFIX_{deviceId}";
             _msgPrefixKey = $"MSG_PREFIX_{deviceId}";
@@ -58,7 +79,7 @@ namespace CleverTapSDK.Native
 
             _preferenceManager.SetString($"{_msgPrefixKey}_{id}", message);
 
-            List<string> ids = GetAllMessageIds();
+            HashSet<string> ids = GetAllMessageIds();
 
             if (!ids.Contains(id))
             {
@@ -126,6 +147,7 @@ namespace CleverTapSDK.Native
             _preferenceManager.DeleteKey($"{_readPrefixKey}_{id}");
 
             var ids = GetAllMessageIds();
+
             if (ids.Remove(id))
             {
                 SaveAllMessageIds(ids);
@@ -162,11 +184,10 @@ namespace CleverTapSDK.Native
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
-            List<string> ids = GetAllMessageIds();
+            HashSet<string> ids = GetAllMessageIds();
 
-            for (int i = 0, count = ids.Count; i < count; i++)
+            foreach (string id in ids)
             {
-                string id = ids[i];
                 string msg = GetMessage(id);
 
                 if (!string.IsNullOrEmpty(msg))
@@ -188,11 +209,11 @@ namespace CleverTapSDK.Native
                 return;
             }
 
-            List<string> ids = GetAllMessageIds();
+            HashSet<string> ids = GetAllMessageIds();
 
-            for (int i = 0, count = ids.Count; i < count; i++)
+            foreach (string id in ids)
             {
-                MarkAsRead(ids[i]);
+                MarkAsRead(id);
             }
         }
 
@@ -222,11 +243,10 @@ namespace CleverTapSDK.Native
                 return;
             }
 
-            List<string> ids = GetAllMessageIds();
+            HashSet<string> ids = GetAllMessageIds();
 
-            for (int i = 0, count = ids.Count; i < count; i++)
+            foreach (string id in ids)
             {
-                string id = ids[i];
                 _preferenceManager.DeleteKey($"{_msgPrefixKey}_{id}");
                 _preferenceManager.DeleteKey($"{_readPrefixKey}_{id}");
             }
@@ -263,10 +283,13 @@ namespace CleverTapSDK.Native
         #region Private Static Methods
 
         /// <summary>
-        /// Retrieves a list of all stored message IDs.
+        /// Retrieves all stored message IDs as a HashSet.
         /// </summary>
-        /// <returns>A list of message IDs.</returns>
-        private static List<string> GetAllMessageIds()
+        /// <returns>
+        /// A HashSet containing all message IDs. Returns an empty HashSet if no IDs are stored,
+        /// </returns>
+
+        private static HashSet<string> GetAllMessageIds()
         {
             if (!IsInitialized())
             {
@@ -277,17 +300,17 @@ namespace CleverTapSDK.Native
 
             if (string.IsNullOrEmpty(joined))
             {
-                return new List<string>();
+                return new HashSet<string>();
             }
 
-            return new List<string>(joined.Split(','));
+            return new HashSet<string>(joined.Split(','));
         }
 
         /// <summary>
         /// Stores the given list of message IDs as a comma-separated string.
         /// </summary>
         /// <param name="ids">List of message IDs to store.</param>
-        private static void SaveAllMessageIds(List<string> ids)
+        private static void SaveAllMessageIds(HashSet<string> ids)
         {
             if (!IsInitialized())
             {

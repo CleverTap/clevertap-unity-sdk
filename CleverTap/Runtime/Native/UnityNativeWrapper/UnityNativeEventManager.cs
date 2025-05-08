@@ -285,6 +285,8 @@ namespace CleverTapSDK.Native
                 { "CleverTapID",  _coreState.DeviceInfo.DeviceId },
                 { "CleverTapAccountID", _accountId }
             };
+
+            UpdateInboxStorageId(_coreState.DeviceInfo.DeviceId);
             _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
         }
 
@@ -548,6 +550,11 @@ namespace CleverTapSDK.Native
         internal void RecordInboxNotificationViewedEventForID(string messageId)
         {
 
+        }
+
+        private void UpdateInboxStorageId(string deviceId)
+        {
+            UnityNativeAppInboxPersistence.OnInboxStorageIdUpdate(deviceId);
         }
 
         #endregion
