@@ -114,15 +114,17 @@ namespace CleverTapSDK.Native
                 return;
             }
 
-            id = $"{_readPrefixKey}_{id}";
+            string markId = $"{_readPrefixKey}_{id}";
+            string msg = _preferenceManager.GetString($"{_msgPrefixKey}_{id}", string.Empty);
 
-            // Updating the message to mark it as read
-            string msg = _preferenceManager.GetString(id, string.Empty);
-            Dictionary<string, object> message = Json.Deserialize(msg) as Dictionary<string, object>;
-            message["isRead"] = true;
-            _preferenceManager.SetString(id, Json.Serialize(message));
-
-            _preferenceManager.SetInt(id, 1);
+            if (!string.IsNullOrEmpty(msg))
+            {
+                // Updating the message to mark it as read
+                Dictionary<string, object> message = Json.Deserialize(msg) as Dictionary<string, object>;
+                message["isRead"] = true;
+                _preferenceManager.SetString(markId, Json.Serialize(message));
+                _preferenceManager.SetInt(markId, 1);
+            }
         }
 
         /// <summary>
