@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using System.Collections.Generic;
 using CleverTapSDK.Native;
 
 public class UnityNativeAppInboxPersistenceTests

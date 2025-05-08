@@ -1,12 +1,14 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Native
 {
     internal class UnityNativeAppInboxResponseInterceptor : IUnityNativeResponseInterceptor
     {
+        internal List<object> appInboxMessages = null;
         private readonly UnityNativeEventManager _unityNativeEventManager = null;
 
         public UnityNativeAppInboxResponseInterceptor(UnityNativeEventManager unityNativeEventManager)
@@ -16,7 +18,9 @@ namespace CleverTapSDK.Native
 
         UnityNativeResponse IUnityNativeResponseInterceptor.Intercept(UnityNativeResponse response)
         {
-            if (response == null || string.IsNullOrEmpty(response.Content))
+            this.appInboxMessages = null;
+
+            if (response == null || response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(response.Content))
             {
                 // Response or response content is null. This is the case for the handshake response.
                 return response;
@@ -24,23 +28,19 @@ namespace CleverTapSDK.Native
 
             Dictionary<string, object> result = Json.Deserialize(response.Content) as Dictionary<string, object>;
 
-            try
+            if (result != null && result.ContainsKey(UnityNativeConstants.AppInbox.INBOX_NOTIFS_KEY))
             {
-                if (result != null && result.ContainsKey(UnityNativeConstants.AppInbox.INBOX_NOTIFS_KEY))
+                if (result[UnityNativeConstants.AppInbox.INBOX_NOTIFS_KEY] is List<object> messages)
                 {
-                    List<object> messages = (List<object>)result[UnityNativeConstants.AppInbox.INBOX_NOTIFS_KEY];
-                    
                     if (messages == null || messages.Count == 0)
                     {
                         return response;
                     }
-
-                    HandleAppInboxMessages(messages);
+                    else
+                    {
+                        HandleAppInboxMessages(messages);
+                    }
                 }
-            }
-            catch (Exception exception)
-            {
-                CleverTapLogger.Log($"Failed to process App Inbox, Exception: {exception.Message}, Stack Trace: {exception.StackTrace}");
             }
 
             return response;
@@ -48,6 +48,7 @@ namespace CleverTapSDK.Native
 
         public void HandleAppInboxMessages(List<object> appInboxMessages)
         {
+            this.appInboxMessages = appInboxMessages;
             _unityNativeEventManager?.OnInboxMessagesReceived(appInboxMessages);
         }
     }

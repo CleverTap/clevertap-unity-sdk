@@ -1,13 +1,16 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Net;
 using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 using NUnit.Framework;
+using UnityEditor.VersionControl;
 
 public class UnityNativeAppInboxResponseInterceptorTest
 {
     private IUnityNativeResponseInterceptor _interceptor;
+    private UnityNativeAppInboxResponseInterceptor _unityNativeAppInboxResponseInterceptor;
     private readonly UnityNativeEventManager _unityNativeEventManager = null;
 
     [SetUp]
@@ -21,7 +24,8 @@ public class UnityNativeAppInboxResponseInterceptorTest
     {
         var content = new Dictionary<string, object>
         {
-            { "inbox_notifs", new List<object>()
+            {
+                "inbox_notifs", new List<object>()
                 {
                     new Dictionary<string, object>
                     {
@@ -31,43 +35,39 @@ public class UnityNativeAppInboxResponseInterceptorTest
             }
         };
 
-        try
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        List<object> expectedMessages = new List<object>
         {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+            new Dictionary<string, object>
+            {
+                { "_id", "msg1" },
+            }
+        };
+
+        Assert.AreEqual(expectedMessages, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 
     [Test]
     public void Intercept_Content_Null()
     {
-        try
-        {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, null);
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, null);
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 
     [Test]
     public void Intercept_Error()
     {
-        try
-        {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.InternalServerError, null, null);
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.InternalServerError, null, null);
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 
     [Test]
@@ -79,21 +79,17 @@ public class UnityNativeAppInboxResponseInterceptorTest
                 {
                     new Dictionary<string, object>
                     {
-                        { "id", "msg1" },
+                        { "_id", "msg1" },
                     }
                 }
             }
         };
 
-        try
-        {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.BadRequest, null, Json.Serialize(content));
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.BadRequest, null, Json.Serialize(content));
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 
     [Test]
@@ -105,58 +101,61 @@ public class UnityNativeAppInboxResponseInterceptorTest
                 {
                     new Dictionary<string, object>
                     {
-                        { "ids", "msg1" },
+                        { "_id", "msg1" },
                     }
                 }
             }
         };
 
-        try
-        {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 
     [Test]
-    public void Intercept_Success_With_Vars_Null()
+    public void Intercept_Success_With_Null()
     {
         var content = new Dictionary<string, object>
         {
             { "inbox_notifs", null }
         };
 
-        try
-        {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 
     [Test]
-    public void Intercept_Success_With_Vars_Not_List()
+    public void Intercept_Success_Not_List()
     {
         var content = new Dictionary<string, object>
         {
-            { "inbox_notifs", new Dictionary<string,Object>() }
+            { "inbox_notifs", new Dictionary<string, int>() }
         };
 
-        try
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+    }
+
+    [Test]
+    public void Intercept_Success_With_EmptyList()
+    {
+        var content = new Dictionary<string, object>
         {
-            UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
-            _interceptor.Intercept(response);
-        }
-        catch (System.Exception e)
-        {
-            Assert.Fail($"Exception: {e.Message}, Stack Trace: {e.StackTrace}");
-        }
+            { "inbox_notifs", new List<object>() }
+        };
+
+        UnityNativeResponse response = new UnityNativeResponse(HttpStatusCode.OK, null, Json.Serialize(content));
+        _interceptor.Intercept(response);
+        _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
+
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
     }
 }
