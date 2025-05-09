@@ -1,11 +1,8 @@
-using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Net;
 using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 using NUnit.Framework;
-using UnityEditor.VersionControl;
 
 public class UnityNativeAppInboxResponseInterceptorTest
 {
