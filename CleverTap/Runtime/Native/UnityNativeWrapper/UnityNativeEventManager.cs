@@ -23,6 +23,7 @@ namespace CleverTapSDK.Native
         private UnityNativeEventValidator _eventValidator;
         private string _accountId;
         private int _enableNetworkInfoReporting = -1;
+        private bool _isAppInboxInitialized = false;
 
         private readonly UnityNativePlatformVariable _platformVariable;
 
@@ -285,9 +286,10 @@ namespace CleverTapSDK.Native
                 { "CleverTapID",  _coreState.DeviceInfo.DeviceId },
                 { "CleverTapAccountID", _accountId }
             };
+            _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
 
             UpdateInboxStorageId(_coreState.DeviceInfo.DeviceId);
-            _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
+            _callbackHandler.CleverTapInboxDidInitializeCallback(null);
         }
 
         internal UnityNativeEvent ProfilePush(Dictionary<string, object> properties)
@@ -470,8 +472,14 @@ namespace CleverTapSDK.Native
 
         internal void OnInboxMessagesReceived(List<object> inboxMessages)
         {
+            if (!_isAppInboxInitialized)
+            {
+                InitializeInbox();
+                _isAppInboxInitialized = true;
+            }
+
             PersistInboxMessages(inboxMessages);
-            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
+            OnMessagesUpdate();
         }
 
         internal JSONArray GetAllInboxMessages()
@@ -529,24 +537,25 @@ namespace CleverTapSDK.Native
         internal void MarkReadInboxMessageForID(string messageId)
         {
             UnityNativeAppInboxPersistence.MarkAsRead(messageId);
-            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
+            OnMessagesUpdate();
         }
 
         internal void MarkReadInboxMessagesForIDs(string[] messageIds)
         {
             UnityNativeAppInboxPersistence.MarkMessagesAsReadForIds(messageIds);
+            OnMessagesUpdate();
         }
 
         internal void DeleteInboxMessageForID(string messageId)
         {
             UnityNativeAppInboxPersistence.DeleteMessage(messageId);
-            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
+            OnMessagesUpdate();
         }
 
         internal void DeleteInboxMessagesForIDs(string[] messageIds)
         {
             UnityNativeAppInboxPersistence.DeleteMessagesForIds(messageIds);
-            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
+            OnMessagesUpdate();
         }
 
         internal void RecordInboxNotificationClickedEventForID(string messageId)
@@ -564,7 +573,7 @@ namespace CleverTapSDK.Native
             Dictionary<string, object> message;
             string messageId;
             string serializedMessage;
-            
+
             for (int i = 0, count = messages.Count; i < count; i++)
             {
                 message = messages[i] as Dictionary<string, object>;
@@ -575,13 +584,39 @@ namespace CleverTapSDK.Native
             }
         }
 
+        private void OnMessagesUpdate()
+        {
+            CheckAndRemoveExpiredMessages();
+            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
+        }
+
+        private void CheckAndRemoveExpiredMessages()
+        {
+            List<CleverTapInboxMessage> messages = GetAllInboxMessagesParsed();
+
+            if (messages == null || messages.Count == 0)
+            {
+                return;
+            }
+
+            DateTime utcNow = DateTime.UtcNow;
+
+            foreach (CleverTapInboxMessage message in messages)
+            {
+                if (message.ExpiresUtcDate.HasValue && message.ExpiresUtcDate.Value <= utcNow)
+                {
+                    UnityNativeAppInboxPersistence.DeleteMessage(message.Id);
+                }
+            }
+        }
+
         private void UpdateInboxStorageId(string deviceId)
         {
             UnityNativeAppInboxPersistence.OnInboxStorageIdUpdate(deviceId);
         }
 
         #endregion
- 
+
         #region Private
 
         private bool ShouldDeferEvent(Action action)
