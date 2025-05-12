@@ -462,69 +462,74 @@ namespace CleverTapSDK.Native
 
         #region AppInbox
 
-        internal void InitializeAppInbox()
+        internal void InitializeInbox()
         {
             UnityNativeAppInboxPersistence.Initialize(_preferenceManager, _coreState.DeviceInfo.DeviceId);
+            _callbackHandler.CleverTapInboxDidInitializeCallback(null);
         }
 
         internal void OnInboxMessagesReceived(List<object> inboxMessages)
         {
-            Dictionary<string, object> message;
-            string messageId;
-            string serializedMessage;
-
-            for (int i = 0, count = inboxMessages.Count; i < count; i++)
-            {
-                message = inboxMessages[i] as Dictionary<string, object>;
-                messageId = message["_id"].ToString();
-                serializedMessage = Json.Serialize(message);
-                UnityNativeAppInboxPersistence.SaveMessage(messageId, serializedMessage);
-            }
+            PersistInboxMessages(inboxMessages);
+            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
         }
 
         internal JSONArray GetAllInboxMessages()
         {
-            return new JSONArray();
+            Dictionary<string, string> allMessages = UnityNativeAppInboxPersistence.GetAllMessages();
+            JSONArray messages = CleverTapInboxMessageJSONParser.ToJSONArray(allMessages);
+            return messages;
         }
 
         internal List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
         {
-            return new List<CleverTapInboxMessage>();
+            Dictionary<string, string> allMessages = UnityNativeAppInboxPersistence.GetAllMessages();
+            List<CleverTapInboxMessage> messages = CleverTapInboxMessageJSONParser.ParseMessagesDict(allMessages);
+            return messages;
         }
 
         internal JSONArray GetUnreadInboxMessages()
         {
-            return new JSONArray();
+            Dictionary<string, string> unreadMessages = UnityNativeAppInboxPersistence.GetUnreadMessages();
+            JSONArray messages = CleverTapInboxMessageJSONParser.ToJSONArray(unreadMessages);
+            return messages;
         }
 
         internal List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed()
         {
-            return new List<CleverTapInboxMessage>();
+            Dictionary<string, string> unreadMessages = UnityNativeAppInboxPersistence.GetUnreadMessages();
+            List<CleverTapInboxMessage> messages = CleverTapInboxMessageJSONParser.ParseMessagesDict(unreadMessages);
+            return messages;
         }
 
         internal JSONClass GetInboxMessageForId(string messageId)
         {
-            return new JSONClass();
+            string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+            JSONClass jsonClass = CleverTapInboxMessageJSONParser.ToJSONClass(messageString);
+            return jsonClass;
         }
 
         internal CleverTapInboxMessage GetInboxMessageForIdParsed(string messageId)
         {
-            return new CleverTapInboxMessage();
+            string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+            CleverTapInboxMessage message = CleverTapInboxMessageJSONParser.ParseJsonMessage(messageString);
+            return message;
         }
 
         internal int GetInboxMessageCount()
         {
-            return 0;
+            return UnityNativeAppInboxPersistence.GetAllMessages().Count;
         }
 
         internal int GetInboxMessageUnreadCount()
         {
-            return 0;
+            return UnityNativeAppInboxPersistence.GetUnreadMessages().Count;
         }
 
         internal void MarkReadInboxMessageForID(string messageId)
         {
             UnityNativeAppInboxPersistence.MarkAsRead(messageId);
+            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
         }
 
         internal void MarkReadInboxMessagesForIDs(string[] messageIds)
@@ -535,11 +540,13 @@ namespace CleverTapSDK.Native
         internal void DeleteInboxMessageForID(string messageId)
         {
             UnityNativeAppInboxPersistence.DeleteMessage(messageId);
+            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
         }
 
         internal void DeleteInboxMessagesForIDs(string[] messageIds)
         {
             UnityNativeAppInboxPersistence.DeleteMessagesForIds(messageIds);
+            _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
         }
 
         internal void RecordInboxNotificationClickedEventForID(string messageId)
@@ -552,13 +559,29 @@ namespace CleverTapSDK.Native
 
         }
 
+        private void PersistInboxMessages(List<object> messages)
+        {
+            Dictionary<string, object> message;
+            string messageId;
+            string serializedMessage;
+            
+            for (int i = 0, count = messages.Count; i < count; i++)
+            {
+                message = messages[i] as Dictionary<string, object>;
+                messageId = message["_id"].ToString();
+                message["isRead"] = UnityNativeAppInboxPersistence.IsRead(messageId);
+                serializedMessage = Json.Serialize(message);
+                UnityNativeAppInboxPersistence.SaveMessage(messageId, serializedMessage);
+            }
+        }
+
         private void UpdateInboxStorageId(string deviceId)
         {
             UnityNativeAppInboxPersistence.OnInboxStorageIdUpdate(deviceId);
         }
 
         #endregion
-
+ 
         #region Private
 
         private bool ShouldDeferEvent(Action action)

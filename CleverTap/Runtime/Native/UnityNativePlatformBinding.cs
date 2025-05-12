@@ -128,6 +128,11 @@ namespace CleverTapSDK.Native
             _unityNativeEventManager.EnableDeviceNetworkInfoReporting(enabled);
         }
 
+        internal override void InitializeInbox()
+        {
+            _unityNativeEventManager.InitializeInbox();     
+        }
+
         internal override JSONArray GetAllInboxMessages()
         {
             return _unityNativeEventManager.GetAllInboxMessages();
