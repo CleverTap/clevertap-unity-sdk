@@ -269,6 +269,9 @@ namespace CleverTapSDK.Native
 
                 RecordAppLaunch();
 
+                UpdateInboxStorageId(_coreState.DeviceInfo.DeviceId);
+                _callbackHandler.CleverTapInboxDidInitializeCallback(null);
+
                 if (profile != null)
                 {
                     ProfilePush(profile);
@@ -286,10 +289,8 @@ namespace CleverTapSDK.Native
                 { "CleverTapID",  _coreState.DeviceInfo.DeviceId },
                 { "CleverTapAccountID", _accountId }
             };
-            _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
 
-            UpdateInboxStorageId(_coreState.DeviceInfo.DeviceId);
-            _callbackHandler.CleverTapInboxDidInitializeCallback(null);
+            _callbackHandler.CleverTapProfileInitializedCallback(Json.Serialize(eventInfo));
         }
 
         internal UnityNativeEvent ProfilePush(Dictionary<string, object> properties)
@@ -479,11 +480,13 @@ namespace CleverTapSDK.Native
             }
 
             PersistInboxMessages(inboxMessages);
+            CheckAndRemoveExpiredMessages();
             OnMessagesUpdate();
         }
 
         internal JSONArray GetAllInboxMessages()
         {
+            CheckAndRemoveExpiredMessages();
             Dictionary<string, string> allMessages = UnityNativeAppInboxPersistence.GetAllMessages();
             JSONArray messages = CleverTapInboxMessageJSONParser.ToJSONArray(allMessages);
             return messages;
@@ -491,6 +494,7 @@ namespace CleverTapSDK.Native
 
         internal List<CleverTapInboxMessage> GetAllInboxMessagesParsed()
         {
+            CheckAndRemoveExpiredMessages();
             Dictionary<string, string> allMessages = UnityNativeAppInboxPersistence.GetAllMessages();
             List<CleverTapInboxMessage> messages = CleverTapInboxMessageJSONParser.ParseMessagesDict(allMessages);
             return messages;
@@ -586,13 +590,13 @@ namespace CleverTapSDK.Native
 
         private void OnMessagesUpdate()
         {
-            CheckAndRemoveExpiredMessages();
             _callbackHandler.CleverTapInboxMessagesDidUpdateCallback(null);
         }
 
         private void CheckAndRemoveExpiredMessages()
         {
-            List<CleverTapInboxMessage> messages = GetAllInboxMessagesParsed();
+            Dictionary<string, string> allMessages = UnityNativeAppInboxPersistence.GetAllMessages();
+            List<CleverTapInboxMessage> messages = CleverTapInboxMessageJSONParser.ParseMessagesDict(allMessages);
 
             if (messages == null || messages.Count == 0)
             {
