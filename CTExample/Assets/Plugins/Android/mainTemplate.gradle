@@ -29,6 +29,7 @@ dependencies {
 android {
 	namespace "com.unity3d.player"
     ndkPath "**NDKPATH**"
+    ndkVersion '23.1.7779620'
 
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
