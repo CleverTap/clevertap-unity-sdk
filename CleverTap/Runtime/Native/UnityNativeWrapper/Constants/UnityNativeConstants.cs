@@ -209,9 +209,11 @@ namespace CleverTapSDK.Native {
         internal static class Network {
             internal const string CT_BASE_URL = "clevertap-prod.com";
             internal const string REDIRECT_DOMAIN_KEY = "CLTAP_REDIRECT_DOMAIN_KEY";
+            internal const string SPIKY_DOMAIN_KEY = "CLTAP_SPIKY_DOMAIN_KEY";
             internal const string HEADER_ACCOUNT_ID_NAME = "X-CleverTap-Account-Id";
             internal const string HEADER_ACCOUNT_TOKEN_NAME = "X-CleverTap-Token";
             internal const string HEADER_DOMAIN_NAME = "X-WZRK-RD";
+            internal const string SPIKY_HEADER_DOMAIN_NAME = "X-WZRK-SPIKY-RD";
             internal const string HEADER_DOMAIN_MUTE = "X-WZRK-MUTE";
 
             internal const int DEFAUL_REQUEST_TIMEOUT_SEC = 10;
@@ -225,6 +227,7 @@ namespace CleverTapSDK.Native {
 
             internal const string REQUEST_POST = "POST";
             internal const string REQUEST_PATH_RECORD = "a1";
+            internal const string SPIKY_SUFFIX = "-spiky";
 
             internal const string REQUEST_PATH_DEFINE_VARIABLES = "defineVars";
             internal const string REQUEST_PATH_HAND_SHAKE = "hello";

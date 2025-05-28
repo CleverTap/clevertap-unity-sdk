@@ -4,6 +4,7 @@ namespace CleverTapSDK.Native
     [System.Serializable]
     internal enum UnityNativeEventType
     {
+        None = 0,
         PageEvent = 1,
         PingEvent = 2,
         ProfileEvent = 3,

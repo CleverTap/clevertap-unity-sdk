@@ -12,6 +12,7 @@ namespace CleverTapSDK.Native
         private readonly UnityNativeBaseEventQueue _userEventsQueue;
         private readonly UnityNativeBaseEventQueue _raisedEventsQueue;
         private readonly UnityNativeBaseEventQueue _singleEventsQueue;
+        private readonly UnityNativeBaseEventQueue _notificationViewedEventQueue;
 
         internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore)
         {
@@ -29,6 +30,10 @@ namespace CleverTapSDK.Native
             _singleEventsQueue = new UnityNativeSingleEventQueue(coreState, networkEngine);
             _singleEventsQueue.OnEventTimerTick += OnSingleEventTimerTick;
             _singleEventsQueue.OnEventsProcessed += OnEventsProcessed;
+
+            _notificationViewedEventQueue = new UnityNativeNotificationViewEventQueue(coreState, networkEngine);
+            _notificationViewedEventQueue.OnEventTimerTick += OnNotificationViewEventTimerTick;
+            _notificationViewedEventQueue.OnEventsProcessed += OnEventsProcessed;
 
             // Add the events stored in the DB
             _databaseStore.AddEventsFromDB();
@@ -58,6 +63,9 @@ namespace CleverTapSDK.Native
                 case UnityNativeEventType.DefineVarsEvent:
                     _singleEventsQueue.QueueEvent(newEvent);
                     break;
+                case UnityNativeEventType.NotificationViewEvent:
+                    _notificationViewedEventQueue.QueueEvent(newEvent);
+                    break;
                 default:
                     CleverTapLogger.Log($"Unhandled event type: {newEvent.EventType}");
                     break;
@@ -86,6 +94,11 @@ namespace CleverTapSDK.Native
             await FlushSingleEvents();
         }
 
+        private async void OnNotificationViewEventTimerTick()
+        {
+            await FlushNotificationViewEvents();
+        }
+
         private async Task FlushUserEvents()
         {
             CleverTapLogger.Log("Flushing user events");
@@ -102,6 +115,12 @@ namespace CleverTapSDK.Native
         {
             CleverTapLogger.Log("Flushing single events");
             await _singleEventsQueue.FlushEvents();
+        }
+
+        private async Task FlushNotificationViewEvents()
+        {
+            CleverTapLogger.Log("Flushing notification view events");
+            await _notificationViewedEventQueue.FlushEvents();
         }
     }
 }

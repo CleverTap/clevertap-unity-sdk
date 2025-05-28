@@ -79,12 +79,11 @@ namespace CleverTapSDK.Native {
         private KeyValuePair<string, string>? _authorization;
         private IReadOnlyList<IUnityNativeRequestInterceptor> _requestInterceptors;
         private IReadOnlyList<IUnityNativeResponseInterceptor> _responseInterceptors;
-
         private int responseFailureCount;
-
         private UnityNativePreferenceManager _preferenceManager;
 
-        private UnityNativeNetworkEngine() {
+        private UnityNativeNetworkEngine()
+        {
         }
 
         internal static UnityNativeNetworkEngine Create(string accountId) {
@@ -145,8 +144,27 @@ namespace CleverTapSDK.Native {
             Application.internetReachability != NetworkReachability.NotReachable;
 
 
-        internal bool NeedHandshakeForDomain()
+        internal bool NeedHandshakeForDomain(UnityNativeEventType eventType = UnityNativeEventType.None)
         {
+            if (eventType == UnityNativeEventType.NotificationViewEvent)
+            {
+                if (!string.IsNullOrEmpty(_region))
+                {
+                    SetBaseURI($"{_region}{UnityNativeConstants.Network.SPIKY_SUFFIX}.{UnityNativeConstants.Network.CT_BASE_URL}");
+                }
+                else
+                {
+                    string cachedSpikyDomain = GetSpikyDomain();
+
+                    if (!string.IsNullOrEmpty(cachedSpikyDomain))
+                    {
+                        SetBaseURI(cachedSpikyDomain);
+                    }
+                }
+
+                return false;
+            }
+
             bool needHandshakeDueToFailure = responseFailureCount > 5;
 
             if (needHandshakeDueToFailure)
@@ -185,6 +203,9 @@ namespace CleverTapSDK.Native {
         internal bool ProcessIncomingHeaders(UnityNativeResponse response) {
             if (response != null && response.Headers != null)
             {
+                string domainName = null;
+                string spikyDomainName = null;
+
                 if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_MUTE))
                 {
                     _mute = bool.Parse(response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_MUTE]);
@@ -194,13 +215,32 @@ namespace CleverTapSDK.Native {
 
                 if (response.Headers.ContainsKey(UnityNativeConstants.Network.HEADER_DOMAIN_NAME))
                 {
-                    string newDomain = response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
-                    if (!string.IsNullOrEmpty(newDomain))
+                    domainName = response.Headers[UnityNativeConstants.Network.HEADER_DOMAIN_NAME];
+
+                    if (!string.IsNullOrEmpty(domainName))
                     {
-                        CleverTapLogger.Log($"Setting new domain name: {newDomain}");
-                        SetBaseURI(newDomain);
-                        SetRedirectDomain(newDomain);
+                        CleverTapLogger.Log($"Setting new domain name: {domainName}");
+                        SetBaseURI(domainName);
+                        SetRedirectDomain(domainName);
                     }
+                    else
+                    { 
+                        return true;
+                    }
+                }
+
+                if (response.Headers.ContainsKey(UnityNativeConstants.Network.SPIKY_HEADER_DOMAIN_NAME))
+                {
+                    spikyDomainName = response.Headers[UnityNativeConstants.Network.SPIKY_HEADER_DOMAIN_NAME];
+                }
+
+                if (string.IsNullOrEmpty(spikyDomainName))
+                {
+                    SetSpikyDomain(domainName);
+                }
+                else
+                { 
+                    SetSpikyDomain(spikyDomainName);
                 }
             }
 
@@ -215,12 +255,30 @@ namespace CleverTapSDK.Native {
             }
             _preferenceManager.SetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, newDomain);
         }
+        
+        internal void SetSpikyDomain(string spikyDomainName)
+        {
+            if (string.IsNullOrEmpty(spikyDomainName))
+            {
+                _preferenceManager.DeleteKey(UnityNativeConstants.Network.SPIKY_DOMAIN_KEY);
+                return;
+            }
 
-        internal string GetRedirectDomain() {
-            return _preferenceManager.GetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, null);
+            _preferenceManager.SetString(UnityNativeConstants.Network.SPIKY_DOMAIN_KEY, spikyDomainName);
         }
 
-        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request) {
+        internal string GetRedirectDomain()
+        {
+            return _preferenceManager.GetString(UnityNativeConstants.Network.REDIRECT_DOMAIN_KEY, null);
+        }
+        
+        internal string GetSpikyDomain()
+        {
+            return _preferenceManager.GetString(UnityNativeConstants.Network.SPIKY_DOMAIN_KEY, null);
+        }
+
+        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request, UnityNativeEventType eventType = UnityNativeEventType.None)
+        {
             return await RunOnMainThread(async () =>
             {
                 if (request == null)
@@ -228,7 +286,7 @@ namespace CleverTapSDK.Native {
                     return null;
                 }
 
-                if (NeedHandshakeForDomain())
+                if (NeedHandshakeForDomain(eventType))
                 {
                     bool success = await InitHandShake();
                     if (success)
@@ -344,6 +402,7 @@ namespace CleverTapSDK.Native {
             UnityWebRequest unityWebRequest = null;
             try {
                 unityWebRequest = request.BuildRequest(_baseURI);
+
                 CleverTapLogger.Log("Sending web request");
                 // Workaround for async
                 var unityWebRequestAsyncOperation = unityWebRequest.SendWebRequest();
