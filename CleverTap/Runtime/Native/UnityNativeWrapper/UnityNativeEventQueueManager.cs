@@ -31,7 +31,7 @@ namespace CleverTapSDK.Native
             _singleEventsQueue.OnEventTimerTick += OnSingleEventTimerTick;
             _singleEventsQueue.OnEventsProcessed += OnEventsProcessed;
 
-            _notificationViewedEventQueue = new UnityNativeNotificationViewEventQueue(coreState, networkEngine);
+            _notificationViewedEventQueue = new UnityNativeNotificationViewedEventQueue(coreState, networkEngine);
             _notificationViewedEventQueue.OnEventTimerTick += OnNotificationViewEventTimerTick;
             _notificationViewedEventQueue.OnEventsProcessed += OnEventsProcessed;
 

@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 
 namespace CleverTapSDK.Native
 {
-    internal class UnityNativeNotificationViewEventQueue : UnityNativeBaseEventQueue
+    internal class UnityNativeNotificationViewedEventQueue : UnityNativeBaseEventQueue
     {
         protected override string QueueName => "NOTIFICATION_VIEW_EVENT";
 
         private UnityNativeNetworkEngine _networkEngine;
 
-        internal UnityNativeNotificationViewEventQueue(UnityNativeCoreState coreState,
+        internal UnityNativeNotificationViewedEventQueue(UnityNativeCoreState coreState,
             UnityNativeNetworkEngine networkEngine) :
             base(coreState, networkEngine)
         {
