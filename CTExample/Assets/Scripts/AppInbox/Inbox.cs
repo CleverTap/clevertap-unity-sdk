@@ -43,6 +43,7 @@ namespace CTExample
         private void CleverTap_OnCleverTapInboxMessagesDidUpdateCallback()
         {
             UpdateHeader();
+            SpawnMessageItems(CleverTap.GetAllInboxMessagesParsed());
         }
 
         private void OnMessageButtonClicked()
@@ -96,8 +97,16 @@ namespace CTExample
         private void OnMessageDelete(string messageId)
         {
             CleverTap.DeleteInboxMessageForID(messageId);
-            _messageItemPool.ReturnToPool(_messageItemRegistry[messageId]);
-            _messageItemRegistry.Remove(messageId);
+            
+            if (_messageItemRegistry.TryGetValue(messageId, out MessageItem item))
+            {
+                _messageItemPool.ReturnToPool(item);
+                _messageItemRegistry.Remove(messageId);
+            }
+            else
+            {
+                Logger.LogWarning($"Attempted to delete message ID {messageId} that is not in the registry");
+            }
 
             if (_messageItemRegistry.Count == 0)
             { 

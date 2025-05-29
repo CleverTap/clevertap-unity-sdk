@@ -94,7 +94,7 @@ namespace CTExample
 
             _linksParent.gameObject.SetActive(true);
 
-            for (int i = 0; i < _contentList[0].Action.Links.Count; i++)
+            for (int i = 0,count = _contentList[0].Action.Links.Count; i < count; i++)
             {
                 InboxLink link = Instantiate(_linkPrefab, _linksParent);
                 link.gameObject.SetActive(true);
@@ -109,7 +109,7 @@ namespace CTExample
             inboxLinks.Clear();
         }
 
-        public string GetTimeAgo(DateTime? deliveryTime)
+        private static string GetTimeAgo(DateTime? deliveryTime)
         {
             if (deliveryTime == null)
                 return "Unknown time";
