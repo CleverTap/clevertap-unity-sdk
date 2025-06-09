@@ -813,51 +813,6 @@ public class CleverTapUnityPlugin {
         }
     }
 
-    public Byte customTemplateGetByteArg(String templateName, String argName) {
-        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
-        if (templateContext != null) {
-            return templateContext.getByte(argName);
-        } else {
-            return null;
-        }
-    }
-
-    public Short customTemplateGetShortArg(String templateName, String argName) {
-        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
-        if (templateContext != null) {
-            return templateContext.getShort(argName);
-        } else {
-            return null;
-        }
-    }
-
-    public Integer customTemplateGetIntArg(String templateName, String argName) {
-        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
-        if (templateContext != null) {
-            return templateContext.getInt(argName);
-        } else {
-            return null;
-        }
-    }
-
-    public Long customTemplateGetLongArg(String templateName, String argName) {
-        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
-        if (templateContext != null) {
-            return templateContext.getLong(argName);
-        } else {
-            return null;
-        }
-    }
-
-    public Float customTemplateGetFloatArg(String templateName, String argName) {
-        CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
-        if (templateContext != null) {
-            return templateContext.getFloat(argName);
-        } else {
-            return null;
-        }
-    }
-
     public Double customTemplateGetDoubleArg(String templateName, String argName) {
         CustomTemplateContext templateContext = clevertap.getActiveContextForTemplate(templateName);
         if (templateContext != null) {
