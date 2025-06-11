@@ -79,7 +79,6 @@ namespace CleverTapSDK.Native
         }
 
         internal UnityWebRequest BuildRequest(string baseURL) {
-
             Uri uri = BuildURI(baseURL);
             UnityWebRequest request;
             if (_method == UnityNativeConstants.Network.REQUEST_GET) {
@@ -127,9 +126,17 @@ namespace CleverTapSDK.Native
         }
 
         private Uri BuildURI(string baseURL) {
+            string uriString;
 
-            string uriString = string.IsNullOrEmpty(_requestBaseURL)?$"{baseURL}/{_path}":$"{_requestBaseURL}/{_path}";
-
+            if (string.IsNullOrEmpty(_requestBaseURL))
+            {
+                uriString = $"{baseURL}/{_path}";
+            }
+            else
+            {
+                uriString = _requestBaseURL.Equals(baseURL) ? $"{baseURL}/{_path}" : $"{_requestBaseURL}/{_path}";
+            }
+            
             if (_queryParameters?.Count > 0)
             {
                 uriString += "?";

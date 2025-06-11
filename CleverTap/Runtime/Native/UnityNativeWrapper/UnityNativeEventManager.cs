@@ -564,21 +564,15 @@ namespace CleverTapSDK.Native
 
         internal void RecordInboxNotificationClickedEventForID(string messageId)
         {
-            Dictionary<string, object> eventPayload = new Dictionary<string, object>
-            {
-                { "messageId", messageId }
-            };
-
+            string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+            Dictionary<string, object> eventPayload = Json.Deserialize(messageString) as Dictionary<string, object>;
             NotificationClickedEvent(eventPayload);
         }
 
         internal void RecordInboxNotificationViewedEventForID(string messageId)
         {
-            Dictionary<string, object> eventPayload = new Dictionary<string, object>
-            {
-                { "messageId", messageId }
-            };
-
+            string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+            Dictionary<string, object> eventPayload = Json.Deserialize(messageString) as Dictionary<string, object>;
             NotificationViewedEvent(eventPayload);
         }
 
@@ -685,7 +679,7 @@ namespace CleverTapSDK.Native
         #endregion
 
         #region Notification Events
-        internal UnityNativeEvent NotificationViewedEvent(Dictionary<string, object> properties = null)
+        internal UnityNativeEvent NotificationViewedEvent(Dictionary<string, object> properties)
         {
             if (ShouldDeferEvent(() =>
             {
@@ -695,7 +689,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeNotificationViewedEventBuilder(_eventValidator).Build(properties);
+            var eventBuilderResult = new UnityNativeNotificationEventBuilder(_eventValidator).BuildNotificationViewedEvent(properties);
             
             if (eventBuilderResult.EventResult == null)
                 return null;
@@ -704,7 +698,7 @@ namespace CleverTapSDK.Native
             return BuildEvent(UnityNativeEventType.NotificationViewEvent, eventDetails);
         }
 
-        internal UnityNativeEvent NotificationClickedEvent(Dictionary<string, object> properties = null)
+        internal UnityNativeEvent NotificationClickedEvent(Dictionary<string, object> properties)
         {
             if (ShouldDeferEvent(() =>
             {
@@ -714,9 +708,11 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator).Build("unity_notification_clicked", properties);
+            var eventBuilderResult = new UnityNativeNotificationEventBuilder(_eventValidator).BuildNotificationClickedEvent(properties);
+
             if (eventBuilderResult.EventResult == null)
                 return null;
+
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }

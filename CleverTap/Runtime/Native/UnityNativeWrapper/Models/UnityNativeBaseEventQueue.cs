@@ -195,7 +195,7 @@ namespace CleverTapSDK.Native
 
         protected virtual string GetRequestBaseURL()
         {
-            return null;
+            return networkEngine.BaseURI;
         }
 
         protected void OnEventsError()

@@ -87,7 +87,8 @@ namespace CleverTapSDK.Native
         private IReadOnlyList<IUnityNativeResponseInterceptor> _responseInterceptors;
         private int responseFailureCount;
         private UnityNativePreferenceManager _preferenceManager;
-        public string SpikyURI => _spikyURI;
+        internal string SpikyURI => _spikyURI;
+        internal string BaseURI => _baseURI;
 
         private UnityNativeNetworkEngine()
         {
