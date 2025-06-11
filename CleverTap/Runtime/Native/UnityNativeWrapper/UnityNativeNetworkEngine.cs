@@ -87,9 +87,11 @@ namespace CleverTapSDK.Native
         private IReadOnlyList<IUnityNativeResponseInterceptor> _responseInterceptors;
         private int responseFailureCount;
         private UnityNativePreferenceManager _preferenceManager;
+        public string SpikyURI => _spikyURI;
 
         private UnityNativeNetworkEngine()
         {
+
         }
 
         internal static UnityNativeNetworkEngine Create(string accountId)
@@ -163,40 +165,25 @@ namespace CleverTapSDK.Native
             Application.internetReachability != NetworkReachability.NotReachable;
 
 
-        internal bool NeedHandshakeForDomain(UnityNativeEventType eventType = UnityNativeEventType.None)
+        internal bool NeedHandshakeForDomain()
         {
-            if (eventType == UnityNativeEventType.NotificationViewEvent)
-            {
-                if (!string.IsNullOrEmpty(_region))
-                {
-                    SetBaseURI($"{_region.Trim().ToLower()}.{UnityNativeConstants.Network.CT_BASE_URL}");
-                    SetSpikyBaseURI($"{_region}{UnityNativeConstants.Network.SPIKY_SUFFIX}.{UnityNativeConstants.Network.CT_BASE_URL}");
-                    return false;
-                }
-
-                string cachedSpikyDomain = GetSpikyDomain();
-
-                if (!string.IsNullOrEmpty(cachedSpikyDomain))
-                {
-                    SetSpikyBaseURI(cachedSpikyDomain);
-                    return false;
-                }
-            }
-
             bool needHandshakeDueToFailure = responseFailureCount > 5;
 
             if (needHandshakeDueToFailure)
             {
                 SetBaseURI(null);
                 SetRedirectDomain(null);
+                SetSpikyBaseURI(null);
             }
 
             if (!string.IsNullOrEmpty(_region))
             {
                 string region = _region.Trim().ToLower();
                 string uri = $"{region}.{UnityNativeConstants.Network.CT_BASE_URL}";
-                CleverTapLogger.Log($"Setting domain name with region: {uri}");
+                string spikyUri = $"{region}{UnityNativeConstants.Network.SPIKY_SUFFIX}.{UnityNativeConstants.Network.CT_BASE_URL}";
                 SetBaseURI(uri);
+                SetSpikyBaseURI(spikyUri);
+                CleverTapLogger.Log($"Setting domain name with region: {uri}");
                 return false;
             }
 
@@ -204,6 +191,12 @@ namespace CleverTapSDK.Native
             if (!string.IsNullOrEmpty(domain))
             {
                 SetBaseURI(domain);
+            }
+
+            string cachedSpikyDomain = GetSpikyDomain();
+            if (!string.IsNullOrEmpty(cachedSpikyDomain))
+            {
+                SetSpikyBaseURI(cachedSpikyDomain);
             }
 
             return _baseURI == null || needHandshakeDueToFailure;
@@ -286,7 +279,7 @@ namespace CleverTapSDK.Native
             return _preferenceManager.GetString(UnityNativeConstants.Network.SPIKY_DOMAIN_KEY, null);
         }
 
-        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request, UnityNativeEventType eventType = UnityNativeEventType.None)
+        internal async Task<UnityNativeResponse> ExecuteRequest(UnityNativeRequest request)
         {
             return await RunOnMainThread(async () =>
             {
@@ -295,12 +288,12 @@ namespace CleverTapSDK.Native
                     return null;
                 }
 
-                if (NeedHandshakeForDomain(eventType))
+                if (NeedHandshakeForDomain())
                 {
                     bool success = await InitHandShake();
                     if (success)
                     {
-                        return await ExecuteRequestAfterHandshake(request, eventType);
+                        return await ExecuteRequestAfterHandshake(request);
                     }
                     else
                     {
@@ -309,12 +302,12 @@ namespace CleverTapSDK.Native
                 }
                 else
                 {
-                    return await ExecuteRequestAfterHandshake(request, eventType);
+                    return await ExecuteRequestAfterHandshake(request);
                 }
             });
         }
 
-        private async Task<UnityNativeResponse> ExecuteRequestAfterHandshake(UnityNativeRequest request, UnityNativeEventType eventType = UnityNativeEventType.None)
+        private async Task<UnityNativeResponse> ExecuteRequestAfterHandshake(UnityNativeRequest request)
         {
             if (request == null)
             {
@@ -332,7 +325,7 @@ namespace CleverTapSDK.Native
                 }
             }
 
-            var response = await SendRequest(request, eventType);
+            var response = await SendRequest(request);
             CleverTapLogger.Log($"Response: content: {response.Content} headers: {Json.Serialize(response.Headers)}");
 
             if (response.IsSuccess())
@@ -419,7 +412,7 @@ namespace CleverTapSDK.Native
             }
         }
 
-        private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request, UnityNativeEventType eventType = UnityNativeEventType.None)
+        private async Task<UnityNativeResponse> SendRequest(UnityNativeRequest request)
         {
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
@@ -428,9 +421,10 @@ namespace CleverTapSDK.Native
             }
 
             UnityWebRequest unityWebRequest = null;
+
             try
             {
-                unityWebRequest = request.BuildRequest((eventType == UnityNativeEventType.NotificationViewEvent) ? _spikyURI : _baseURI);
+                unityWebRequest = request.BuildRequest(_baseURI);
 
                 CleverTapLogger.Log("Sending web request");
                 // Workaround for async

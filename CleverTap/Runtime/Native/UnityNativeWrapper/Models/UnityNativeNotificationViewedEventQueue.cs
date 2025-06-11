@@ -6,20 +6,23 @@ namespace CleverTapSDK.Native
 {
     internal class UnityNativeNotificationViewedEventQueue : UnityNativeBaseEventQueue
     {
-        protected override string QueueName => "NOTIFICATION_VIEW_EVENT";
-
-        private UnityNativeNetworkEngine _networkEngine;
+        protected override string QueueName => nameof(UnityNativeNotificationViewedEventQueue);
 
         internal UnityNativeNotificationViewedEventQueue(UnityNativeCoreState coreState,
             UnityNativeNetworkEngine networkEngine) :
             base(coreState, networkEngine)
         {
-            _networkEngine = networkEngine;
+  
+        }
+
+        protected override string GetRequestBaseURL()
+        {
+            return networkEngine.SpikyURI;
         }
 
         internal override async Task<List<UnityNativeEvent>> FlushEvents()
         {
-            return await FlushEventsCore(request => networkEngine.ExecuteRequest(request, UnityNativeEventType.NotificationViewEvent));
+            return await FlushEventsCore(request => networkEngine.ExecuteRequest(request));
         }
     }
 }

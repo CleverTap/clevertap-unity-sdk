@@ -106,7 +106,8 @@ namespace CleverTapSDK.Native {
             internal const string LAST_SESSION_TIME_KEY = "LAST_SESSION_TIME";
         }
 
-        internal static class Event {
+        internal static class Event
+        {
             internal const string EVENT_NAME = "evtName";
             internal const string EVENT_DATA = "evtData";
 
@@ -154,6 +155,9 @@ namespace CleverTapSDK.Native {
             internal const string LIBRARY = "lib";
 
             internal const string LOCALE_IDENTIFIER = "locale";
+
+            internal const string CLTAP_NOTIFICATION_CLICKED_EVENT_NAME = "Notification Clicked";
+            internal const string CLTAP_NOTIFICATION_VIEWED_EVENT_NAME = "Notification Viewed";
         }
 
         internal static class EventMeta {

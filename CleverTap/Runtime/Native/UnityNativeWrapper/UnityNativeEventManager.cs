@@ -695,9 +695,11 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeNotificationViewedEventBuilder(_eventValidator).Build("unity_notification_viewed", properties);
+            var eventBuilderResult = new UnityNativeNotificationViewedEventBuilder(_eventValidator).Build(properties);
+            
             if (eventBuilderResult.EventResult == null)
                 return null;
+                
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.NotificationViewEvent, eventDetails);
         }
