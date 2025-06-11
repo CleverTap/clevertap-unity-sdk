@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 
 namespace CleverTapSDK.Native
 {
-    internal class UnityNativeNotificationEventBuilder
+    internal class UnityNativeNotificationEventsBuilder
     {
-        internal UnityNativeNotificationEventBuilder(UnityNativeEventValidator eventValidator) { }
+        internal UnityNativeNotificationEventsBuilder(UnityNativeEventValidator eventValidator) { }
 
         internal UnityNativeEventBuilderResult<Dictionary<string, object>> BuildNotificationClickedEvent(Dictionary<string, object> properties)
         {

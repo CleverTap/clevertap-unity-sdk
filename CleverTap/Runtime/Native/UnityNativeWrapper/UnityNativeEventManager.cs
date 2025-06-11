@@ -689,7 +689,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeNotificationEventBuilder(_eventValidator).BuildNotificationViewedEvent(properties);
+            var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationViewedEvent(properties);
             
             if (eventBuilderResult.EventResult == null)
                 return null;
@@ -708,7 +708,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeNotificationEventBuilder(_eventValidator).BuildNotificationClickedEvent(properties);
+            var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationClickedEvent(properties);
 
             if (eventBuilderResult.EventResult == null)
                 return null;
