@@ -718,13 +718,6 @@ namespace CleverTapSDK.Native
             _coreState.SessionManager.SessionData[UnityNativeConstants.EventMeta.WZRK_REF] = eventDetails[UnityNativeConstants.Event.EVENT_DATA];
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
-
-        private Dictionary<string, object> GetWZRKFields(Dictionary<string, object> properties)
-        {
-
-            return null;
-        }
-
         #endregion
     }
 }
