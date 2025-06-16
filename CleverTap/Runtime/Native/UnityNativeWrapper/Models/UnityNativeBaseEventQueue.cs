@@ -284,8 +284,14 @@ namespace CleverTapSDK.Native
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },
                 { UnityNativeConstants.EventMeta.ARP_KEY, GetARP() },
                 { UnityNativeConstants.EventMeta.KEY_I, GetI() },
-                { UnityNativeConstants.EventMeta.KEY_J, GetJ() }
+                { UnityNativeConstants.EventMeta.KEY_J, GetJ() },
             };
+
+            object wzrkRef = GetWZRKRef();
+
+            if (wzrkRef != null)
+                metaDetails[UnityNativeConstants.EventMeta.WZRK_REF] = wzrkRef;
+
             return metaDetails;
         }
 
@@ -304,6 +310,19 @@ namespace CleverTapSDK.Native
 
             return new Dictionary<string, object>();
         }
+
+        private object GetWZRKRef()
+        {
+            if (coreState.SessionManager.SessionData.TryGetValue(UnityNativeConstants.EventMeta.WZRK_REF, out object wzrkRefObj))
+            {
+                return wzrkRefObj;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         private long GetI()
         {

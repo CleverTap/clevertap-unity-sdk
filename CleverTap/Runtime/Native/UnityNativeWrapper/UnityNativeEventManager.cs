@@ -690,11 +690,12 @@ namespace CleverTapSDK.Native
             }
 
             var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationViewedEvent(properties);
-            
+
             if (eventBuilderResult.EventResult == null)
                 return null;
-                
+
             var eventDetails = eventBuilderResult.EventResult;
+            _coreState.SessionManager.SessionData[UnityNativeConstants.EventMeta.WZRK_REF] = eventDetails[UnityNativeConstants.Event.EVENT_DATA];
             return BuildEvent(UnityNativeEventType.NotificationViewEvent, eventDetails);
         }
 
@@ -714,8 +715,16 @@ namespace CleverTapSDK.Native
                 return null;
 
             var eventDetails = eventBuilderResult.EventResult;
+            _coreState.SessionManager.SessionData[UnityNativeConstants.EventMeta.WZRK_REF] = eventDetails[UnityNativeConstants.Event.EVENT_DATA];
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
+
+        private Dictionary<string, object> GetWZRKFields(Dictionary<string, object> properties)
+        {
+
+            return null;
+        }
+
         #endregion
     }
 }
