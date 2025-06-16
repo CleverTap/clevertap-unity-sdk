@@ -89,7 +89,6 @@ namespace CleverTapSDK.Native
         private UnityNativePreferenceManager _preferenceManager;
         internal string SpikyURI => _spikyURI;
         internal string BaseURI => _baseURI;
-        internal IReadOnlyDictionary<string, string> Headers => _headers;
 
         private UnityNativeNetworkEngine()
         {
@@ -369,7 +368,6 @@ namespace CleverTapSDK.Native
                     }
                     request.SetHeaders(allHeaders);
                 }
-
             }
 
             // Set Timeout
