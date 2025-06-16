@@ -67,6 +67,7 @@ namespace CleverTapSDK.Native
             StopTimer();
         }
 
+
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
         {
             var processedEvents = new List<UnityNativeEvent>();
@@ -92,9 +93,11 @@ namespace CleverTapSDK.Native
 
                     string baseURL = GetRequestBaseURL();
                     string requestPath = GetRequestPath(events);
+                    var requestHeaders = GetRequestHeader();
                     var queryStringParameters = GetQueryStringParameters();
                     var request = new UnityNativeRequest(requestPath, UnityNativeConstants.Network.REQUEST_POST)
                         .SetBaseURL(baseURL)
+                        .SetHeaders(requestHeaders)
                         .SetRequestBody(jsonContent)
                         .SetQueryParameters(queryStringParameters);
 
@@ -196,6 +199,11 @@ namespace CleverTapSDK.Native
         protected virtual string GetRequestBaseURL()
         {
             return networkEngine.BaseURI;
+        }
+
+        protected virtual Dictionary<string, string> GetRequestHeader()
+        {
+            return (Dictionary<string, string>)networkEngine.Headers;
         }
 
         protected void OnEventsError()
