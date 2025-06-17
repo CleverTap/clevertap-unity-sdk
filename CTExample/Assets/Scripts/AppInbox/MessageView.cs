@@ -15,7 +15,7 @@ namespace CTExample
 
         public void Initialize(CleverTapInboxMessage message)
         {
-            if(message?.Message?.Content != null && message.Message.Content.Count > 0)
+            if(message?.Message?.Content == null && message.Message.Content.Count == 0)
             {
                 _titleText.SetText(InvalidMessageString);
                 return;

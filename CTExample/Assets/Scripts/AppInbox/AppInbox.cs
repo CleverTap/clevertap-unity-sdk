@@ -82,10 +82,13 @@ namespace CTExample
 
         private void ShowUnityAppInbox()
         {
-            if (hasInboxInitialized)
-                inboxPanel.SetActive(true);
-            else
-                Logger.LogWarning("Inbox not initialized. Please initialize the inbox first.");
+            if (!hasInboxInitialized)
+            {
+                Logger.LogWarning("Inbox not initialized.");
+                return;
+            }
+
+            inboxPanel.SetActive(true);
         }
 
         private void CleverTap_OnCleverTapInboxDidInitializeCallback()

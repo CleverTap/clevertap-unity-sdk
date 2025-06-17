@@ -25,8 +25,20 @@ namespace CTExample
                 switch (_link.Type)
                 {
                     case LinkType.URL:
-                        Application.OpenURL(_link.Url.Android.Text);
+                        string url = null;
+#if UNITY_ANDROID && UNITY_EDITOR
+                        url = _link.Url.Android.Text;
+                        if (!string.IsNullOrEmpty(url))
+                            Application.OpenURL(url);
+#endif
+
+#if UNITY_IOS && UNITY_EDITOR
+                        url = _link.Url.IOS.Text;
+                        if (!string.IsNullOrEmpty(url))
+                            Application.OpenURL(url);
+#endif
                         break;
+                        
                     case LinkType.CopyText:
                         CopyText(_link.Text);
                         break;
@@ -41,6 +53,7 @@ namespace CTExample
 
                         Toast.Show(keyvalues);
                         break;
+
                     default:
                         Toast.Show("Unknown link type");
                         break;

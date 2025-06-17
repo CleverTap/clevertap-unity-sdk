@@ -58,7 +58,7 @@ namespace CTExample
 
         private void SpawnMessageItems(List<CleverTapInboxMessage> messages)
         {
-            _messageItemPool.ReleaseAll();
+            _messageItemPool.DeactivateAll();
             
             if (messages == null || messages.Count == 0)
             {
@@ -100,7 +100,7 @@ namespace CTExample
             
             if (_messageItemRegistry.TryGetValue(messageId, out MessageItem item))
             {
-                _messageItemPool.ReturnToPool(item);
+                _messageItemPool.SetMessageItemAsInactive(item);
                 _messageItemRegistry.Remove(messageId);
             }
             else

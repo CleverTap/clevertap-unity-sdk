@@ -29,17 +29,12 @@ namespace CTExample
             return newItem;
         }
 
-        public void ReturnToPool(MessageItem item)
+        public void SetMessageItemAsInactive(MessageItem item)
         {
-            if (!_pool.Contains(item))
-            {
-                _pool.Add(item);
-            }
-
             item.gameObject.SetActive(false);
         }
 
-        public void ReleaseAll()
+        public void DeactivateAll()
         {
             foreach (var item in _pool)
             {
