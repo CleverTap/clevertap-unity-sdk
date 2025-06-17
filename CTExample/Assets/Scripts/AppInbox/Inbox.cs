@@ -91,6 +91,7 @@ namespace CTExample
 
         private void OnMessageRead(string messageId)
         {
+            CleverTap.RecordInboxNotificationClickedEventForID(messageId);
             CleverTap.MarkReadInboxMessageForID(messageId);
         }
 

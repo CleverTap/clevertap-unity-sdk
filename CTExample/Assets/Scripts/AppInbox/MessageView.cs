@@ -23,6 +23,7 @@ namespace CTExample
 
             _titleText.SetText(message.Message.Content[0].Title.Text);
             _messageText.SetText(message.Message.Content[0].Message.Text);
+            CleverTap.RecordInboxNotificationViewedEventForID(message.Id);
         }
 
         private void OnClose()
