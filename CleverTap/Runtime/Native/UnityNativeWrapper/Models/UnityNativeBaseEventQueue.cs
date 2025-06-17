@@ -67,7 +67,6 @@ namespace CleverTapSDK.Native
             StopTimer();
         }
 
-
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
         {
             var processedEvents = new List<UnityNativeEvent>();
@@ -277,11 +276,10 @@ namespace CleverTapSDK.Native
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },
                 { UnityNativeConstants.EventMeta.ARP_KEY, GetARP() },
                 { UnityNativeConstants.EventMeta.KEY_I, GetI() },
-                { UnityNativeConstants.EventMeta.KEY_J, GetJ() },
+                { UnityNativeConstants.EventMeta.KEY_J, GetJ() }
             };
 
             object wzrkRef = GetWZRKRef();
-
             if (wzrkRef != null)
                 metaDetails[UnityNativeConstants.EventMeta.WZRK_REF] = wzrkRef;
 
@@ -310,12 +308,8 @@ namespace CleverTapSDK.Native
             {
                 return wzrkRefObj;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
-
 
         private long GetI()
         {
