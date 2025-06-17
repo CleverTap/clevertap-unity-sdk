@@ -564,12 +564,16 @@ namespace CleverTapSDK.Native
 
         internal void RecordInboxNotificationClickedEventForID(string messageId)
         {
-
+            string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+            Dictionary<string, object> eventPayload = Json.Deserialize(messageString) as Dictionary<string, object>;
+            NotificationClickedEvent(eventPayload);
         }
 
         internal void RecordInboxNotificationViewedEventForID(string messageId)
         {
-
+            string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+            Dictionary<string, object> eventPayload = Json.Deserialize(messageString) as Dictionary<string, object>;
+            NotificationViewedEvent(eventPayload);
         }
 
         private void PersistInboxMessages(List<object> messages)
@@ -672,6 +676,46 @@ namespace CleverTapSDK.Native
             _databaseStore.AddEvent(evt);
         }
 
+        #endregion
+
+        #region Notification Events
+        internal UnityNativeEvent NotificationViewedEvent(Dictionary<string, object> properties)
+        {
+            if (ShouldDeferEvent(() =>
+            {
+                NotificationViewedEvent(properties);
+            }))
+            {
+                return null;
+            }
+
+            var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationViewedEvent(properties);
+            
+            if (eventBuilderResult.EventResult == null)
+                return null;
+                
+            var eventDetails = eventBuilderResult.EventResult;
+            return BuildEvent(UnityNativeEventType.NotificationViewEvent, eventDetails);
+        }
+
+        internal UnityNativeEvent NotificationClickedEvent(Dictionary<string, object> properties)
+        {
+            if (ShouldDeferEvent(() =>
+            {
+                NotificationClickedEvent(properties);
+            }))
+            {
+                return null;
+            }
+
+            var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationClickedEvent(properties);
+
+            if (eventBuilderResult.EventResult == null)
+                return null;
+
+            var eventDetails = eventBuilderResult.EventResult;
+            return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
+        }
         #endregion
     }
 }

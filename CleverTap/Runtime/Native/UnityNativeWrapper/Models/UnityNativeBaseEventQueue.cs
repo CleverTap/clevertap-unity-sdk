@@ -90,9 +90,11 @@ namespace CleverTapSDK.Native
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
                     var jsonContent = "[" + string.Join(",", allEventsJson) + "]";
 
+                    string baseURL = GetRequestBaseURL();
                     string requestPath = GetRequestPath(events);
                     var queryStringParameters = GetQueryStringParameters();
                     var request = new UnityNativeRequest(requestPath, UnityNativeConstants.Network.REQUEST_POST)
+                        .SetBaseURL(baseURL)
                         .SetRequestBody(jsonContent)
                         .SetQueryParameters(queryStringParameters);
 
@@ -189,6 +191,11 @@ namespace CleverTapSDK.Native
         protected virtual string GetRequestPath(List<UnityNativeEvent> events)
         {
             return UnityNativeConstants.Network.REQUEST_PATH_RECORD;
+        }
+
+        protected virtual string GetRequestBaseURL()
+        {
+            return networkEngine.BaseURI;
         }
 
         protected void OnEventsError()
