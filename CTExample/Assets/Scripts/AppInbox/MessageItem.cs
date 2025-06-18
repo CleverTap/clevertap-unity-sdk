@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using CleverTapSDK;
 using TMPro;
@@ -10,6 +11,9 @@ namespace CTExample
 {
     public sealed class MessageItem : MonoBehaviour
     {
+        private static RectTransform _layoutRoot = null;
+        [SerializeField] private RawImage _messageImage = null;
+        [SerializeField] private RawImage _messageIconImage = null;
         [SerializeField] private TMP_Text _titleText = null;
         [SerializeField] private TMP_Text _messageText = null;
         [SerializeField] private Button _readButton = null;
@@ -19,6 +23,11 @@ namespace CTExample
         [SerializeField] private Transform _linksParent = null;
         [SerializeField] private InboxLink _linkPrefab = null;
         [SerializeField] private TMP_Text _deliveryTimeText = null;
+
+        [Header("Corousel")]
+        [Space, SerializeField] private Button _nextButton = null;
+        [SerializeField] private Button _prevButton = null;
+        private List<Content> _messageContents = new List<Content>();
 
         private List<InboxLink> inboxLinks = new List<InboxLink>();
         private MessageView _messageView = null;
@@ -31,9 +40,13 @@ namespace CTExample
 
         private void OnEnable()
         {
+            _layoutRoot = _layoutRoot ?? transform.parent.GetComponent<RectTransform>();
+
             _readButton.onClick.AddListener(OnReadButtonClick);
             _deleteButton.onClick.AddListener(OnDeleteButtonClick);
             _callToActionButton.onClick.AddListener(OnCallToAction);
+            _nextButton.onClick.AddListener(Next);
+            _prevButton.onClick.AddListener(Prev);
         }
 
         private void OnDisable()
@@ -41,6 +54,8 @@ namespace CTExample
             _readButton.onClick.RemoveListener(OnReadButtonClick);
             _deleteButton.onClick.RemoveListener(OnDeleteButtonClick);
             _callToActionButton.onClick.RemoveListener(OnCallToAction);
+            _nextButton.onClick.RemoveListener(Next);
+            _prevButton.onClick.RemoveListener(Prev);
         }
 
         public void Initialize(MessageView messageView, CleverTapInboxMessage itemData, Action<string> OnReadAction, Action<string> OnDeleteAction)
@@ -49,12 +64,47 @@ namespace CTExample
             _messageData = itemData;
             _onReadAction = OnReadAction;
             _onDeleteAction = OnDeleteAction;
+            _messageContents = itemData.Message.Content;
             _messageContent = itemData.Message.Content[0];
 
+            if (itemData.Message.MessageType == Inbox.MessageType.CAROUSEL)
+            {
+                _nextButton.gameObject.SetActive(true);
+                _prevButton.gameObject.SetActive(true);
+            }
+
+            if (itemData.Message.MessageType == Inbox.MessageType.MESSAGE_ICON)
+            {
+                _messageIconImage.gameObject.SetActive(true);
+                _messageImage = _messageIconImage;
+            }
+
+            UpdateMessageItem();
+            _deliveryTimeText.SetText(GetTimeAgo(itemData.DateUtcDate));
+        }
+
+
+        private void Next()
+        {
+            _messageContent = _messageContents.Count > 1 ? _messageContents[(_messageContents.IndexOf(_messageContent) + 1) % _messageContents.Count] : _messageContent;
+            UpdateMessageItem();
+        }
+
+        private void Prev()
+        {
+            _messageContent = _messageContents.Count > 1 ? _messageContents[(_messageContents.IndexOf(_messageContent) - 1 + _messageContents.Count) % _messageContents.Count] : _messageContent;
+            UpdateMessageItem();
+        }
+
+        private void UpdateMessageItem()
+        {
             _titleText.text = _messageContent.Title.Text;
             _messageText.text = _messageContent.Message.Text;
 
-            _unReadIndicator.SetActive(!itemData.IsRead);
+            if (_messageContent.Media != null && !string.IsNullOrEmpty(_messageContent.Media.Url))
+            {
+                MessageMediaDownloader.Instance.GetImage(_messageContent.Media.Url, SetMessageImage);
+            }
 
             if (_messageContent.Action.HasLinks)
             {
@@ -64,8 +114,21 @@ namespace CTExample
             {
                 _linksParent.gameObject.SetActive(false);
             }
+        }
 
-            _deliveryTimeText.SetText(GetTimeAgo(itemData.DateUtcDate));
+        private void SetMessageImage(Texture2D texture)
+        {
+            if (texture != null)
+            {
+                _messageImage.texture = texture;
+                _messageImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                _messageImage.gameObject.SetActive(false);
+            }
+
+            UpdateLayout();
         }
 
         private void OnReadButtonClick()
@@ -94,30 +157,19 @@ namespace CTExample
 
 #if UNITY_ANDROID && UNITY_EDITOR
                 url = _messageContent.Action.Url.Android.Text;
-
+#elif UNITY_IOS && UNITY_EDITOR
+                url = _messageContent.Action.Url.IOS.Text;
+#else
+                url = _messageContent.Action.Url.Android.Text;
+#endif
                 if (!string.IsNullOrEmpty(url))
                 {
                     ReadMessage();
                     Application.OpenURL(url);
                 }
 
-                return;
-#endif
-
-#if UNITY_IOS && UNITY_EDITOR
-                url = _messageContent.Action.Url.Android.Text;
-
-                if (!string.IsNullOrEmpty(url))
-                { 
-                    ReadMessage();
-                    Application.OpenURL(url);
-                }
-
-                return
-#endif
+                OnReadButtonClick();
             }
-            
-            OnReadButtonClick();
         }
 
         private void CreateLinks()
@@ -139,6 +191,17 @@ namespace CTExample
         {
             inboxLinks.ForEach((i) => { Destroy(i.gameObject); });
             inboxLinks.Clear();
+        }
+
+        private void UpdateLayout()
+        {
+            StartCoroutine(UpdateCanvasAndLayout());
+        }
+
+        private static IEnumerator UpdateCanvasAndLayout()
+        {
+            yield return null;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_layoutRoot);
         }
 
         private static string GetTimeAgo(DateTime? deliveryTime)

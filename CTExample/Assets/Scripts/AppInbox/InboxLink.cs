@@ -26,21 +26,21 @@ namespace CTExample
                 {
                     case LinkType.URL:
                         string url = null;
+
 #if UNITY_ANDROID && UNITY_EDITOR
                         url = _link.Url.Android.Text;
-                        if (!string.IsNullOrEmpty(url))
-                            Application.OpenURL(url);
-#endif
-
-#if UNITY_IOS && UNITY_EDITOR
+#elif UNITY_IOS && UNITY_EDITOR
                         url = _link.Url.IOS.Text;
+#else
+                        url = _link.Url.Android.Text;
+#endif
                         if (!string.IsNullOrEmpty(url))
                             Application.OpenURL(url);
-#endif
+
                         break;
-                        
+                 
                     case LinkType.CopyText:
-                        CopyText(_link.Text);
+                        CopyText(_link.CopyText.Text);
                         break;
                     case LinkType.KeyValue:
                         string keyvalues = null;

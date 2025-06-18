@@ -59,7 +59,7 @@ namespace CTExample
         private void SpawnMessageItems(List<CleverTapInboxMessage> messages)
         {
             _messageItemPool.DeactivateAll();
-            
+
             if (messages == null || messages.Count == 0)
             {
                 UpdateStatusMessage("No Messages");
@@ -98,7 +98,7 @@ namespace CTExample
         private void OnMessageDelete(string messageId)
         {
             CleverTap.DeleteInboxMessageForID(messageId);
-            
+
             if (_messageItemRegistry.TryGetValue(messageId, out MessageItem item))
             {
                 _messageItemPool.SetMessageItemAsInactive(item);
@@ -110,7 +110,7 @@ namespace CTExample
             }
 
             if (_messageItemRegistry.Count == 0)
-            { 
+            {
                 UpdateStatusMessage("No Messages");
             }
         }
@@ -125,6 +125,13 @@ namespace CTExample
 
             if (_inboxUnreadMessagesCountText != null)
                 _inboxUnreadMessagesCountText.text = $"Unread Messages: {unreadMessages}";
+        }
+
+        public static class MessageType
+        {
+            public const string SIMPLE = "simple";
+            public const string MESSAGE_ICON = "message-icon";
+            public const string CAROUSEL = "carousel";
         }
     }
 }
