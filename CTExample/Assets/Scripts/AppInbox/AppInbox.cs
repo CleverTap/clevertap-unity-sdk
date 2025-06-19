@@ -14,7 +14,7 @@ namespace CTExample
         private bool hasInboxInitialized = false;
         private bool shouldShowInbox = false;
 
-        void Start()
+        private void Awake()
         {
             CleverTap.OnCleverTapInboxDidInitializeCallback += CleverTap_OnCleverTapInboxDidInitializeCallback;
             CreateButtonActions();

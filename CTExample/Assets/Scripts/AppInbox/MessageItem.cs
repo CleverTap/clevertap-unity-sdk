@@ -35,8 +35,8 @@ namespace CTExample
         private Action<string> _onReadAction = null;
         private Action<string> _onDeleteAction = null;
         private Content _messageContent = null;
-
-        public string MessageId => _messageData?.Id;
+        private bool _isCarousel = false;
+        private bool _isMessageIcon = false;
 
         private void OnEnable()
         {
@@ -67,17 +67,14 @@ namespace CTExample
             _messageContents = itemData.Message.Content;
             _messageContent = itemData.Message.Content[0];
 
-            if (itemData.Message.MessageType == Inbox.MessageType.CAROUSEL)
-            {
-                _nextButton.gameObject.SetActive(true);
-                _prevButton.gameObject.SetActive(true);
-            }
+            _isCarousel = itemData.Message.MessageType == Inbox.MessageType.CAROUSEL;
+            _isMessageIcon = itemData.Message.MessageType == Inbox.MessageType.MESSAGE_ICON;
 
-            if (itemData.Message.MessageType == Inbox.MessageType.MESSAGE_ICON)
-            {
-                _messageIconImage.gameObject.SetActive(true);
-                _messageImage = _messageIconImage;
-            }
+            _nextButton.gameObject.SetActive(_isCarousel);
+            _prevButton.gameObject.SetActive(_isCarousel);
+            _messageIconImage.gameObject.SetActive(_isMessageIcon);
+
+            _unReadIndicator.SetActive(!itemData.IsRead);
 
             UpdateMessageItem();
             _deliveryTimeText.SetText(GetTimeAgo(itemData.DateUtcDate));
@@ -120,12 +117,23 @@ namespace CTExample
         {
             if (texture != null)
             {
-                _messageImage.texture = texture;
-                _messageImage.gameObject.SetActive(true);
+                if (_isMessageIcon)
+                {
+                    _messageIconImage.texture = texture;
+                    _messageIconImage.gameObject.SetActive(true);
+                    _messageImage.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _messageImage.texture = texture;
+                    _messageImage.gameObject.SetActive(true);
+                    _messageIconImage.gameObject.SetActive(false);
+                }
             }
             else
             {
                 _messageImage.gameObject.SetActive(false);
+                _messageIconImage.gameObject.SetActive(false);
             }
 
             UpdateLayout();
@@ -133,9 +141,10 @@ namespace CTExample
 
         private void OnReadButtonClick()
         {
-            ReadMessage();
             _messageView.gameObject.SetActive(true);
-            _messageView.Initialize(_messageData);
+            _messageView.Initialize(_messageContent);
+            CleverTap.RecordInboxNotificationViewedEventForID(_messageData.Id);
+            ReadMessage();
         }
 
         private void ReadMessage()
