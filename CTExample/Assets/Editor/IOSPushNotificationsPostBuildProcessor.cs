@@ -35,25 +35,24 @@ public static class IOSPushNotificationsPostBuildProcessor
     {
         if (target == BuildTarget.iOS)
         {
-            PostProcess(path);
+            Debug.Log("[CTExample] IOSPushNotificationsPostBuildProcessor");
+            ConfigurePushNotificationExtensions(path);
         }
     }
 
-    private static void PostProcess(string path)
-    {
-        Debug.Log("[CTExample] IOSPushNotificationsPostBuildProcessor");
-
-        AddPushNotificationExtensions(path);
-    }
-
-    private static void AddPushNotificationExtensions(string pathToBuildProject)
+    private static void ConfigurePushNotificationExtensions(string pathToBuildProject)
     {
         string notificationServiceTargetGuid = AddNotificationService(pathToBuildProject);
         string notificationContentTargetGuid = AddNotificationContent(pathToBuildProject);
-
         AddPodsForPushNotificationExtensions(pathToBuildProject);
+
         AddAppGroups(pathToBuildProject, notificationServiceTargetGuid, notificationContentTargetGuid);
 
+        ConfigurePushImpressionsCredentials(pathToBuildProject);
+    }
+
+    private static void ConfigurePushImpressionsCredentials(string pathToBuildProject)
+    {
         if (EnablePushImpressions)
         {
             CleverTapSettings settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
