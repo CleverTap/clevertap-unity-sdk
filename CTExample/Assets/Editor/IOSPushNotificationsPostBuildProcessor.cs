@@ -292,7 +292,7 @@ namespace CTExample
             }
             catch (Exception e)
             {
-                throw new BuildFailedException($"[CTExample] Failed to copy files from {destinationPath} to {sourcePath}: {e.Message}");
+                throw new BuildFailedException($"[CTExample] Failed to copy files from {sourcePath} to {destinationPath}: {e.Message}");
             }
         }
 
