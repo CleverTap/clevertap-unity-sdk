@@ -23,6 +23,14 @@ namespace CTExample
         private static readonly string CTExampleNotificationService = "CTExampleNotificationService";
         private static readonly string CTExampleNotificationContent = "CTExampleNotificationContent";
 
+        private static readonly string CTNotificationServicePod = "CTNotificationService";
+        private static readonly string CTNotificationServiceVersion = "0.1.7";
+
+        private static readonly string CTNotificationContentPod = "CTNotificationContent";
+        private static readonly string CTNotificationContentVersion = "0.2.7";
+
+        private static readonly string CleverTapIOSSDKPod = "CleverTap-iOS-SDK";
+
         private static string TeamID => PlayerSettings.iOS.appleDeveloperTeamID;
         private static string TargetVersion => PlayerSettings.iOS.targetOSVersionString;
         private static string BundleId => Application.identifier;
@@ -39,8 +47,15 @@ namespace CTExample
         {
             if (target == BuildTarget.iOS)
             {
-                Debug.Log("[CTExample] IOSPushNotificationsPostBuildProcessor");
-                ConfigurePushNotificationExtensions(path);
+                try
+                {
+                    Debug.Log("[CTExample] IOSPushNotificationsPostBuildProcessor");
+                    ConfigurePushNotificationExtensions(path);
+                }
+                catch (Exception e)
+                {
+                    throw new BuildFailedException($"[CTExample] Failed to configure push notification extensions: {e.Message}");
+                }
             }
         }
 
@@ -115,7 +130,7 @@ namespace CTExample
             var notificationServiceDependencies = new List<string>
             {
                 $"  target '{CTExampleNotificationService}' do",
-                "    pod 'CTNotificationService', '0.1.7'",
+                $"    pod '{CTNotificationServicePod}', '{CTNotificationServiceVersion}'",
                 "  end",
             };
 
@@ -124,16 +139,16 @@ namespace CTExample
                 string iOSSDKVersion = GetCleverTapIOSSDKVersion(lines);
                 if (string.IsNullOrEmpty(iOSSDKVersion))
                 {
-                    throw new BuildFailedException($"[CTExample] Could not find 'CleverTap-iOS-SDK' version in Podfile.");
+                    throw new BuildFailedException($"[CTExample] Could not find '{CleverTapIOSSDKPod}' version in Podfile.");
                 }
 
-                notificationServiceDependencies.Insert(1, $"    pod 'CleverTap-iOS-SDK', {iOSSDKVersion}");
+                notificationServiceDependencies.Insert(1, $"    pod '{CleverTapIOSSDKPod}', {iOSSDKVersion}");
             }
 
             var dependencies = new List<string>
             {
                 $"  target '{CTExampleNotificationContent}' do",
-                "    pod 'CTNotificationContent', '0.2.7'",
+                $"    pod '{CTNotificationContentPod}', '{CTNotificationContentVersion}'",
                 "  end"
             };
             dependencies.AddRange(notificationServiceDependencies);
@@ -146,7 +161,7 @@ namespace CTExample
 
         private static string GetCleverTapIOSSDKVersion(List<string> podfileLines)
         {
-            int targetLineIndex = podfileLines.FindIndex(line => line.Contains("pod 'CleverTap-iOS-SDK'"));
+            int targetLineIndex = podfileLines.FindIndex(line => line.Contains($"pod '{CleverTapIOSSDKPod}'"));
             if (targetLineIndex == -1)
             {
                 return string.Empty;
