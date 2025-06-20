@@ -99,10 +99,15 @@ public static class IOSPushNotificationsPostBuildProcessor
             "  end",
         };
 
-        string iOSSDKVersion = GetCleverTapiOSSDKVersion(lines);
-        if (EnablePushImpressions && !string.IsNullOrEmpty(iOSSDKVersion))
+        if (EnablePushImpressions)
         {
-            notificationServiceDependencies.Insert(1, $"pod 'CleverTap-iOS-SDK', {iOSSDKVersion}");
+            string iOSSDKVersion = GetCleverTapIOSSDKVersion(lines);
+            if (string.IsNullOrEmpty(iOSSDKVersion))
+            {
+                throw new BuildFailedException($"[CTExample] Could not find 'CleverTap-iOS-SDK' version in Podfile.");
+            }
+
+            notificationServiceDependencies.Insert(1, $"    pod 'CleverTap-iOS-SDK', {iOSSDKVersion}");
         }
 
         var dependencies = new List<string>
@@ -119,7 +124,7 @@ public static class IOSPushNotificationsPostBuildProcessor
         File.WriteAllLines(podfilePath, lines);
     }
 
-    private static string GetCleverTapiOSSDKVersion(List<string> podfileLines)
+    private static string GetCleverTapIOSSDKVersion(List<string> podfileLines)
     {
         int targetLineIndex = podfileLines.FindIndex(line => line.Contains("pod 'CleverTap-iOS-SDK'"));
         if (targetLineIndex == -1)
@@ -261,7 +266,7 @@ public static class IOSPushNotificationsPostBuildProcessor
         }
         else
         {
-            Debug.Log($"CleverTapAccountID has not been set.\n" +
+            Debug.LogError($"CleverTapAccountID has not been set.\n" +
                 $"SDK initialization will fail without this. " +
                 $"Please set it from {CleverTapSettingsWindow.ITEM_NAME} or " +
                 $"manually in the project Info.plist.");
@@ -273,7 +278,7 @@ public static class IOSPushNotificationsPostBuildProcessor
         }
         else
         {
-            Debug.Log($"CleverTapToken has not been set.\n" +
+            Debug.LogError($"CleverTapToken has not been set.\n" +
                 $"SDK initialization will fail without this. " +
                 $"Please set it from {CleverTapSettingsWindow.ITEM_NAME} or " +
                 $"manually in the project Info.plist.");
