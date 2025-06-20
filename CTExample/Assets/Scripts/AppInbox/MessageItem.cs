@@ -164,9 +164,9 @@ namespace CTExample
             {
                 string url;
 
-#if UNITY_ANDROID && UNITY_EDITOR
+#if UNITY_ANDROID
                 url = _messageContent.Action.Url.Android.Text;
-#elif UNITY_IOS && UNITY_EDITOR
+#elif UNITY_IOS
                 url = _messageContent.Action.Url.IOS.Text;
 #else
                 url = _messageContent.Action.Url.Android.Text;

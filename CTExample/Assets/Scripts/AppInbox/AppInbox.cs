@@ -28,9 +28,8 @@ namespace CTExample
             #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
                 // This button is only available on Android and iOS
                 new ButtonActionModel("Show Inbox", (button) => ShowInbox()),
-            #elif UNITY_EDITOR
-                new ButtonActionModel("Show Unity App Inbox", (button) => ShowUnityAppInbox())
             #endif
+                new ButtonActionModel("Show Unity App Inbox", (button) => ShowUnityAppInbox())
             };
 
             var parent = verticalLayoutGroup.GetComponent<RectTransform>();

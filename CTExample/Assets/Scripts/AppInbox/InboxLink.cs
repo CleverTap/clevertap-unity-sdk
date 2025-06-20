@@ -27,9 +27,9 @@ namespace CTExample
                     case LinkType.URL:
                         string url = null;
 
-#if UNITY_ANDROID && UNITY_EDITOR
+#if UNITY_ANDROID
                         url = _link.Url.Android.Text;
-#elif UNITY_IOS && UNITY_EDITOR
+#elif UNITY_IOS
                         url = _link.Url.IOS.Text;
 #else
                         url = _link.Url.Android.Text;
