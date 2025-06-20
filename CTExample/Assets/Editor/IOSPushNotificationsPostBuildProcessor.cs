@@ -45,14 +45,19 @@ namespace CTExample
 
         private static void ConfigurePushNotificationExtensions(string pathToBuildProject)
         {
+            // Add and configure the Notification Service Extenstion. Record Push Impressions if enabled.
             string notificationServiceTargetGuid = AddNotificationService(pathToBuildProject);
+            // Add and configure the Notification Content Extenstion
             string notificationContentTargetGuid = AddNotificationContent(pathToBuildProject);
+            // Update Podfile to add the extensions' dependencies
             AddPodsForPushNotificationExtensions(pathToBuildProject);
             // Disable the CleverTapUnityAppController in favor of the CTExampleUnityAppController which inherits from it
             DisableCleverTapAppController(pathToBuildProject);
 
+            // If App Groups should be set, add the group to the Main target, Notification Service and Notification Content targets
             AddAppGroups(pathToBuildProject, notificationServiceTargetGuid, notificationContentTargetGuid);
 
+            // Set the CleverTap credentials to be able to create the default instance and record the impression events
             ConfigurePushImpressionsCredentials(pathToBuildProject);
         }
 
