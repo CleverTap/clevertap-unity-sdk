@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CleverTapSDK.Private;
@@ -251,17 +252,31 @@ namespace CTExample
 
         private static void CopyFilesToBuildFolder(string destinationPath, string sourcePath)
         {
-            if (!Directory.Exists(destinationPath))
-                Directory.CreateDirectory(destinationPath);
-
-            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            if (!Directory.Exists(sourcePath))
             {
-                Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
+                throw new BuildFailedException($"[CTExample] Source directory not found: {sourcePath}");
             }
 
-            foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+            try
             {
-                File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+                if (!Directory.Exists(destinationPath))
+                {
+                    Directory.CreateDirectory(destinationPath);
+                }
+
+                foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
+                }
+
+                foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new BuildFailedException($"[CTExample] Failed to copy files from {destinationPath} to {sourcePath}: {e.Message}");
             }
         }
 
@@ -283,9 +298,16 @@ namespace CTExample
         private static void UpdatePlistWithSettings(string path, CleverTapSettings settings)
         {
             if (settings == null)
-                return;
+            {
+                throw new BuildFailedException("[CTExample] CleverTapSettings is null. Cannot configure push impressions.");
+            }
 
             string plistPath = Path.Combine(path, InfoPropertyList);
+            if (!File.Exists(plistPath))
+            {
+                throw new BuildFailedException($"[CTExample] Info.plist not found at: {plistPath}");
+            }
+
             PlistDocument plist = new PlistDocument();
             plist.ReadFromString(File.ReadAllText(plistPath));
 
@@ -296,7 +318,7 @@ namespace CTExample
             }
             else
             {
-                Debug.LogError($"CleverTapAccountID has not been set.\n" +
+                throw new BuildFailedException($"CleverTapAccountID has not been set.\n" +
                     $"SDK initialization will fail without this. " +
                     $"Please set it from {CleverTapSettingsWindow.ITEM_NAME} or " +
                     $"manually in the project Info.plist.");
@@ -308,7 +330,7 @@ namespace CTExample
             }
             else
             {
-                Debug.LogError($"CleverTapToken has not been set.\n" +
+                throw new BuildFailedException($"CleverTapToken has not been set.\n" +
                     $"SDK initialization will fail without this. " +
                     $"Please set it from {CleverTapSettingsWindow.ITEM_NAME} or " +
                     $"manually in the project Info.plist.");
