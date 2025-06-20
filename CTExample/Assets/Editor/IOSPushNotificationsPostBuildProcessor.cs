@@ -161,21 +161,22 @@ namespace CTExample
 
         private static string GetCleverTapIOSSDKVersion(List<string> podfileLines)
         {
-            int targetLineIndex = podfileLines.FindIndex(line => line.Contains($"pod '{CleverTapIOSSDKPod}'"));
+            int targetLineIndex = podfileLines.FindIndex(line => line.Contains("pod 'CleverTap-iOS-SDK'"));
             if (targetLineIndex == -1)
             {
                 return string.Empty;
             }
 
-            string line = podfileLines[targetLineIndex];
-            string[] parts = line.Split(",", System.StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length != 2)
+            string line = podfileLines[targetLineIndex].Trim();
+            int commaIndex = line.IndexOf(',');
+            if (commaIndex == -1)
             {
                 return string.Empty;
             }
 
-            string version = parts[1].Trim();
-            return version;
+            // Extract everything after the first comma
+            string dependencySpec = line.Substring(commaIndex + 1).Trim();
+            return dependencySpec;
         }
 
         private static string AddNotificationService(string pathToBuildProject)
