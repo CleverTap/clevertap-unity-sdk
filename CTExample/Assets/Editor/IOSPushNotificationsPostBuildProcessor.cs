@@ -161,6 +161,12 @@ public static class IOSPushNotificationsPostBuildProcessor
         PBXProject proj = new PBXProject();
         proj.ReadFromFile(projPath);
 
+        string targetGuid = proj.TargetGuidByName(CTExampleNotificationService);
+        if (!string.IsNullOrEmpty(targetGuid))
+        {
+            return targetGuid;
+        }
+
         string appTargetGuid = proj.GetUnityMainTargetGuid();
         string extensionTargetGuid = proj.AddAppExtension(appTargetGuid, CTExampleNotificationService, $"{BundleId}.{CTExampleNotificationService}", $"{CTExampleNotificationService}/{InfoPropertyList}");
 
@@ -196,6 +202,12 @@ public static class IOSPushNotificationsPostBuildProcessor
         string projPath = PBXProject.GetPBXProjectPath(pathToBuildProject);
         PBXProject proj = new PBXProject();
         proj.ReadFromFile(projPath);
+
+        string targetGuid = proj.TargetGuidByName(CTExampleNotificationContent);
+        if (!string.IsNullOrEmpty(targetGuid))
+        {
+            return targetGuid;
+        }
 
         string appTargetGuid = proj.GetUnityMainTargetGuid();
         string extensionTargetGuid = proj.AddAppExtension(appTargetGuid, CTExampleNotificationContent, $"{BundleId}.{CTExampleNotificationContent}", $"{CTExampleNotificationContent}/{InfoPropertyList}");
