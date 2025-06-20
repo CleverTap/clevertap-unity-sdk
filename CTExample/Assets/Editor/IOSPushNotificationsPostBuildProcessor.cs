@@ -14,6 +14,7 @@ public static class IOSPushNotificationsPostBuildProcessor
     private static readonly string UserNotificationsFramework = "UserNotifications.framework";
     private static readonly string UserNotificationsUIFramework = "UserNotificationsUI.framework";
     private static readonly string IPHONEOS_DEPLOYMENT_TARGET = "IPHONEOS_DEPLOYMENT_TARGET";
+    private static readonly string GCC_PREPROCESSOR_DEFINITIONS = "GCC_PREPROCESSOR_DEFINITIONS";
     private static readonly string InfoPropertyList = "Info.plist";
 
     private static readonly string CTExampleNotificationService = "CTExampleNotificationService";
@@ -45,10 +46,21 @@ public static class IOSPushNotificationsPostBuildProcessor
         string notificationServiceTargetGuid = AddNotificationService(pathToBuildProject);
         string notificationContentTargetGuid = AddNotificationContent(pathToBuildProject);
         AddPodsForPushNotificationExtensions(pathToBuildProject);
+        // Disable the CleverTapUnityAppController in favor of the CTExampleUnityAppController which inherits from it
+        DisableCleverTapAppController(pathToBuildProject);
 
         AddAppGroups(pathToBuildProject, notificationServiceTargetGuid, notificationContentTargetGuid);
 
         ConfigurePushImpressionsCredentials(pathToBuildProject);
+    }
+
+    private static void DisableCleverTapAppController(string pathToBuildProject)
+    {
+        string projPath = PBXProject.GetPBXProjectPath(pathToBuildProject);
+        PBXProject proj = new PBXProject();
+        proj.ReadFromFile(projPath);
+        proj.UpdateBuildProperty(proj.GetUnityFrameworkTargetGuid(), GCC_PREPROCESSOR_DEFINITIONS, new string[] { "$(inherited)", "CT_NO_APP_CONTROLLER_SUBCLASS" }, null);
+        proj.WriteToFile(projPath);
     }
 
     private static void ConfigurePushImpressionsCredentials(string pathToBuildProject)
@@ -165,14 +177,13 @@ public static class IOSPushNotificationsPostBuildProcessor
 
         proj.AddBuildProperty(extensionTargetGuid, IPHONEOS_DEPLOYMENT_TARGET, TargetVersion);
 
-        string preprocessorMacros = "GCC_PREPROCESSOR_DEFINITIONS";
         if (EnablePushImpressions)
         {
-            proj.UpdateBuildProperty(extensionTargetGuid, preprocessorMacros, new string[] { "$(inherited)", RecordPushImpressionsMacro }, null);
+            proj.UpdateBuildProperty(extensionTargetGuid, GCC_PREPROCESSOR_DEFINITIONS, new string[] { "$(inherited)", RecordPushImpressionsMacro }, null);
         }
         else
         {
-            proj.UpdateBuildProperty(extensionTargetGuid, preprocessorMacros, null, new string[] { RecordPushImpressionsMacro });
+            proj.UpdateBuildProperty(extensionTargetGuid, GCC_PREPROCESSOR_DEFINITIONS, null, new string[] { RecordPushImpressionsMacro });
         }
 
         proj.WriteToFile(projPath);
