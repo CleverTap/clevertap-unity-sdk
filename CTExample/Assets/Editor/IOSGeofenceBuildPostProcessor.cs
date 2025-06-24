@@ -106,13 +106,13 @@ namespace CTExample
             }
 
             int insertionIndex = targetLineIndex + 1;
-            if (lines[insertionIndex] == dependency)
+            if (lines[insertionIndex].Trim() == dependency.Trim())
             {
                 // Dependency already added
                 return;
             }
 
-            if (lines[insertionIndex].Contains(CleverTapGeofenceSDKPod))
+            if (lines[insertionIndex].TrimStart().StartsWith($"pod '{CleverTapGeofenceSDKPod}'"))
             {
                 // Update the dependency
                 lines[insertionIndex] = dependency;
