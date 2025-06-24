@@ -3,6 +3,10 @@
 #import <CleverTapGeofence/CleverTapGeofence-Swift.h>
 #import <CoreLocation/CLLocationManager.h>
 
+@interface CTExampleUnityAppController ()
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@end
+
 @implementation CTExampleUnityAppController
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions {
@@ -13,6 +17,7 @@
     BOOL result = [super application:application didFinishLaunchingWithOptions:launchOptions];
     
     // Request location permission
+    self.locationManager = [[CLLocationManager alloc] init];
     [self requestLocationAlwaysPermission];
     
     // Ensure that Geofence SDK init is done after CleverTap SDK init
@@ -33,21 +38,25 @@
 }
 
 - (void)requestLocationAlwaysPermission {
-    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+    if (!self.locationManager) {
+        NSLog(@"LocationManager is not initialized");
+        return;
+    }
+    
     CLAuthorizationStatus status;
     if (@available(iOS 14.0, *)) {
-        status = locationManager.authorizationStatus;
+        status = self.locationManager.authorizationStatus;
     } else {
         status = [CLLocationManager authorizationStatus];
     }
     
     if (status == kCLAuthorizationStatusNotDetermined) {
-        if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-            [locationManager requestWhenInUseAuthorization];
+        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            [self.locationManager requestWhenInUseAuthorization];
         }
     } else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            [locationManager requestAlwaysAuthorization];
+        if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+            [self.locationManager requestAlwaysAuthorization];
         }
     }
 }
