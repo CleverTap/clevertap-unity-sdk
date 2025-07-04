@@ -101,7 +101,14 @@ namespace CleverTapSDK.Native {
             internal const string LAST_SESSION_TIME_KEY = "LAST_SESSION_TIME";
         }
 
-        internal static class Event {
+        internal static class NativeDisplay
+        {
+            internal const string DISPLAY_UNIT_KEY = "adUnit_notifs";
+            internal const string FEATURE_DISPLAY_UNIT = "DisplayUnit : ";
+        }
+
+        internal static class Event
+        {
             internal const string EVENT_NAME = "evtName";
             internal const string EVENT_DATA = "evtData";
 

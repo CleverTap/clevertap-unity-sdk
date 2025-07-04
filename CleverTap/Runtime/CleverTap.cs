@@ -252,6 +252,12 @@ namespace CleverTapSDK {
         public static JSONArray GetAllDisplayUnits() =>
             cleverTapBinding.GetAllDisplayUnits();
 
+        public static List<CleverTapDisplayUnit> GetAllDisplayUnitsParsed() =>
+            cleverTapBinding.GetAllDisplayUnitsParsed();
+
+        internal static CleverTapDisplayUnit GetDisplayUnitForIdParsed(string unitId) =>
+            cleverTapBinding.GetDisplayUnitForIdParsed(unitId);
+
         public static JSONArray GetAllInboxMessages() =>
             cleverTapBinding.GetAllInboxMessages();
 
