@@ -10,21 +10,32 @@ ext {
     compileSdkVersionVal = 35
     targetSdkVersionVal = compileSdkVersionVal
 
-    libraryVersion = "3.1.0"
+    libraryVersion = "5.3.0"
 }
 
 android {
-    // Checking if namespace exists is needed for 2021.3 (AGP 4.0.1)
-    // When 2021.3 is dropped, remove this check
+    // Checks if new new build properties exists are needed for 2021.3 (AGP 4.0.1)
+    // When 2021.3 is dropped, remove these checks
     if (project.android.hasProperty("namespace")) {
         namespace "com.clevertap.unity"
     }
-    compileSdk compileSdkVersionVal
+    if (project.android.hasProperty('compileSdk')) {
+        compileSdk compileSdkVersionVal
+    } else {
+        compileSdkVersion compileSdkVersionVal
+    }
 
     defaultConfig {
-        minSdk mindSdkVersionVal
-        targetSdk targetSdkVersionVal
-
+        if (project.android.hasProperty('minSdk')) {
+            minSdk mindSdkVersionVal
+        } else {
+            minSdkVersion mindSdkVersionVal
+        }
+        if (project.android.hasProperty('targetSdk')) {
+            targetSdk targetSdkVersionVal
+        } else {
+            targetSdkVersion targetSdkVersionVal
+        }
         versionCode libraryVersion.replaceAll('\\.', '').toInteger()
         versionName libraryVersion
     }
@@ -48,7 +59,7 @@ repositories {
 dependencies {
     compileOnly fileTree('libs')
 
-    api 'com.clevertap.android:clevertap-android-sdk:7.4.0'
+    api 'com.clevertap.android:clevertap-android-sdk:7.4.1'
     implementation 'com.google.firebase:firebase-messaging:24.0.0'
     implementation 'androidx.core:core:1.13.0'
 }

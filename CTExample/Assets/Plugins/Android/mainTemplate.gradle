@@ -18,13 +18,13 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-ui:2.19.1"
 
     // Optional CleverTap push templates
-    implementation 'com.clevertap.android:push-templates:1.4.0'
+    implementation 'com.clevertap.android:push-templates:2.1.0'
 
     // Optional CleverTap Geofence libraries
-    // implementation 'com.clevertap.android:clevertap-geofence-sdk:1.3.0'
-    // implementation 'com.google.android.gms:play-services-location:21.0.0'
-    // implementation 'androidx.work:work-runtime:2.7.1' // required for FETCH_LAST_LOCATION_PERIODIC
-    // implementation 'androidx.concurrent:concurrent-futures:1.1.0' // required for FETCH_LAST_LOCATION_PERIODIC
+    implementation 'com.clevertap.android:clevertap-geofence-sdk:1.3.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.0'
+    implementation 'androidx.work:work-runtime:2.7.1' // required for FETCH_LAST_LOCATION_PERIODIC
+    implementation 'androidx.concurrent:concurrent-futures:1.1.0' // required for FETCH_LAST_LOCATION_PERIODIC
 
     // Optional AndroidX Media3 Libraries for CleverTap Audio/Video Inbox Messages. 
     // Audio/Video messages will be dropped without these dependencies
