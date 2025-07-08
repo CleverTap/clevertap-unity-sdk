@@ -23,7 +23,10 @@ import org.json.JSONObject;
 
 public class GeofenceExampleActivity extends CleverTapOverrideActivity implements CTGeofenceAPI.OnGeofenceApiInitializedListener, CTGeofenceEventsListener, CTLocationUpdatesListener {
 
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 3212;
+
     private CTGeofenceAPI geofenceAPI;
+    private boolean didAskForPermission = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +40,19 @@ public class GeofenceExampleActivity extends CleverTapOverrideActivity implement
     @Override
     protected void onResume() {
         super.onResume();
+        if (didAskForPermission) {
+            return;
+        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED) {
             initGeofenceApi();
         } else {
+            didAskForPermission = true;
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1
+                    REQUEST_CODE_LOCATION_PERMISSION
             );
         }
     }
@@ -52,7 +60,7 @@ public class GeofenceExampleActivity extends CleverTapOverrideActivity implement
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             initGeofenceApi();
         }
     }
