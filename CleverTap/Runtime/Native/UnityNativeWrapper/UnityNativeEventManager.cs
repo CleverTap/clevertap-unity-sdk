@@ -551,6 +551,13 @@ namespace CleverTapSDK.Native
             for (int i = 0, count = displayUnitsParsed.Count; i < count; i++)
             {
                 CleverTapDisplayUnit displayUnit = displayUnitsParsed[i];
+
+                if (string.IsNullOrEmpty(displayUnit?.Id))
+                {
+                    CleverTapLogger.LogError($"{UnityNativeConstants.NativeDisplay.FEATURE_DISPLAY_UNIT}Display unit has null or empty ID, skipping.");
+                    continue;
+                }
+
                 _displayUnitsCache.Add(displayUnit.Id, displayUnit);
             }
 

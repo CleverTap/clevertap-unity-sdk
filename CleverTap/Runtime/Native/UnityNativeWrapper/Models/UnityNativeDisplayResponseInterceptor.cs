@@ -25,13 +25,23 @@ namespace CleverTapSDK.Native
                 return response;
             }
 
-            Dictionary<string, object> result = Json.Deserialize(response.Content) as Dictionary<string, object>;
+            Dictionary<string, object> result = null;
+
+            try
+            {
+                result = Json.Deserialize(response.Content) as Dictionary<string, object>;
+            }
+            catch (System.Exception ex)
+            {
+                CleverTapLogger.LogError($"Failed to deserialize display units response: {ex.Message}");
+                return response;
+            }
 
             if (result != null && result.ContainsKey(UnityNativeConstants.NativeDisplay.DISPLAY_UNIT_KEY))
             {
                 if (result[UnityNativeConstants.NativeDisplay.DISPLAY_UNIT_KEY] is List<object> units)
                 {
-                    if (units == null || units.Count == 0)
+                    if (units.Count == 0)
                     {
                         return response;
                     }

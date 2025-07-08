@@ -25,7 +25,6 @@ namespace CTExample
         private List<CleverTapDisplayUnit.DisplayUnitContent> _displayUnitContents;
         private CleverTapDisplayUnit _displayUnitData = null;
         private Action<string> _onReadAction = null;
-        private Action<string> _onDeleteAction = null;
         private CleverTapDisplayUnit.DisplayUnitContent _displayUnitContent = null;
         private bool _isCarousel = false;
         private bool _isMessageIcon = false;
@@ -62,10 +61,8 @@ namespace CTExample
             _displayUnitIconImage.gameObject.SetActive(_isMessageIcon);
 
             UpdateMessageItem();
-
             CleverTap.RecordDisplayUnitViewedEventForID(_displayUnitData.Id);
         }
-
 
         private void Next()
         {
@@ -121,7 +118,7 @@ namespace CTExample
 
         private void OnReadButtonClick()
         {
-            CleverTap.RecordInboxNotificationViewedEventForID(_displayUnitData.Id);
+            CleverTap.RecordDisplayUnitViewedEventForID(_displayUnitData.Id);
             ReadMessage();
         }
 

@@ -28,11 +28,21 @@ namespace CTExample
 
         private void GetDisplayUnit()
         {
-            CleverTapDisplayUnit displayUnit = CleverTap.GetAllDisplayUnitsParsed().FirstOrDefault();
+            List<CleverTapDisplayUnit> displayUnits = CleverTap.GetAllDisplayUnitsParsed();
+
+            if (displayUnits == null)
+            {
+                Debug.LogWarning("Display units list is null.");
+                return;
+            }
+
+            CleverTapDisplayUnit displayUnit = displayUnits.FirstOrDefault();
 
             if (displayUnit != null)
             {
-                Debug.Log($"Display Unit ID: {displayUnit.Id}, Title: {displayUnit.Content.FirstOrDefault().Title.Text}");
+                CleverTapDisplayUnit.DisplayUnitContent content = displayUnit.Content?.FirstOrDefault();
+                string titleText = content?.Title?.Text ?? "N/A";
+                Debug.Log($"Display Unit ID: {displayUnit.Id}, Title: {titleText}");
             }
             else
             {
@@ -56,13 +66,15 @@ namespace CTExample
 
         private void ShowDisplayUnit()
         {
-            CleverTapDisplayUnit displayUnit = CleverTap.GetAllDisplayUnitsParsed().FirstOrDefault();
+            List<CleverTapDisplayUnit> displayUnits = CleverTap.GetAllDisplayUnitsParsed();
 
-            if (displayUnit == null)
+            if (displayUnits == null || displayUnits.Count == 0)
             {
-                Debug.LogWarning("DisplayUnit: ShowDisplayUnit() - No display unit found.");
+                Debug.LogWarning("DisplayUnit: ShowDisplayUnit() - Display units list is null or no display units.");
                 return;
             }
+
+            CleverTapDisplayUnit displayUnit = displayUnits.FirstOrDefault();
 
             _getDisplayUnitForIdButton.gameObject.SetActive(false);
             _getAllDisplayUnitsButton.gameObject.SetActive(false);
