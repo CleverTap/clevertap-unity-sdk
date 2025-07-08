@@ -197,16 +197,6 @@ public class CleverTapUnityPlugin {
         CleverTapMessageSender.getInstance().flushBuffer(callback);
     }
 
-    public void setPushToken(String token, String region, String type) {
-        if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.FCM)) {
-            clevertap.pushFcmRegistrationId(token, true);
-        } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.BPS)) {
-            clevertap.pushBaiduRegistrationId(token, true);
-        } else if (PushConstants.PushType.valueOf(type.toLowerCase()).equals(PushConstants.PushType.HPS)) {
-            clevertap.pushHuaweiRegistrationId(token, true);
-        }
-    }
-
     public void setOptOut(boolean value) {
         try {
             clevertap.setOptOut(value);
