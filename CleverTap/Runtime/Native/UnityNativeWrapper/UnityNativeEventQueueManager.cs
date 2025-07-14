@@ -61,6 +61,7 @@ namespace CleverTapSDK.Native
                     _raisedEventsQueue.QueueEvent(newEvent);
                     break;
                 case UnityNativeEventType.DefineVarsEvent:
+                case UnityNativeEventType.DefineCustomTemplatesEvent:
                     _singleEventsQueue.QueueEvent(newEvent);
                     break;
                 case UnityNativeEventType.NotificationViewEvent:

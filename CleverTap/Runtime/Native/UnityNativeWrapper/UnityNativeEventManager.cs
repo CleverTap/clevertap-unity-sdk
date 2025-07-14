@@ -26,13 +26,21 @@ namespace CleverTapSDK.Native
         private bool _isAppInboxInitialized = false;
 
         private readonly UnityNativePlatformVariable _platformVariable;
+        private readonly UnityNativePlatformCustomTemplates _platformCustomTemplates;
 
-        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler) : this(callbackHandler, null) { }
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler)
+            : this(callbackHandler, null) { }
 
         internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler, UnityNativePlatformVariable platformVariable)
+            : this(callbackHandler, platformVariable, null) { }
+
+        internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler,
+            UnityNativePlatformVariable platformVariable,
+            UnityNativePlatformCustomTemplates platformCustomTemplates)
         {
             _callbackHandler = callbackHandler;
             _platformVariable = platformVariable;
+            _platformCustomTemplates = platformCustomTemplates;
         }
 
         private void Initialize(string accountId, string token, string region = null)
@@ -48,6 +56,7 @@ namespace CleverTapSDK.Native
             _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
 
             _platformVariable?.Load(this, _callbackHandler, _coreState);
+            _platformCustomTemplates?.Load(this);
 
             // Requires network engine
             SetRequestInterceptors();
@@ -458,6 +467,24 @@ namespace CleverTapSDK.Native
             }
             var eventDetails = eventBuilderResult.EventResult;
             UnityNativeEvent @event = BuildEvent(UnityNativeEventType.FetchEvent, eventDetails, true);
+            _eventQueueManager.QueueEvent(@event);
+        }
+
+        #endregion
+
+        #region Custom Templates
+
+        internal void SyncCustomTemplates(Dictionary<string, object> syncPayload)
+        {
+            if (ShouldDeferEvent(() =>
+            {
+                SyncCustomTemplates(syncPayload);
+            }))
+            {
+                return;
+            }
+
+            UnityNativeEvent @event = BuildEvent(UnityNativeEventType.DefineCustomTemplatesEvent, syncPayload, false);
             _eventQueueManager.QueueEvent(@event);
         }
 
