@@ -588,12 +588,12 @@ namespace CleverTapSDK.Native
 
         internal void RecordDisplayUnitClickedEventForID(string unitId)
         {
-            //Todo - Implemented Notification Clicked Event in UnityNativeAppInbox feature, that method can be used here as well.
+            //Note - Implemented Notification Clicked Event in UnityNativeAppInbox feature, that method can be called here as well.
         }
 
         internal void RecordDisplayUnitViewedEventForID(string unitId)
         {
-            //Todo - Implemented Notification Viewed Event in UnityNativeAppInbox feature, that method can be used here as well.
+            //Note - Implemented Notification Viewed Event in UnityNativeAppInbox feature, that method can be called here as well.
         }
 
         private void ResetDisplayUnits()

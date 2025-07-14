@@ -1,19 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using CleverTapSDK.Common;
+using CleverTapSDK.Constants;
 using CleverTapSDK.Native;
 using CleverTapSDK.Utilities;
 using NUnit.Framework;
+using UnityEngine;
 
 public class UnityNativeDisplayResponseInterceptorTest
 {
     private IUnityNativeResponseInterceptor _interceptor;
     private UnityNativeDisplayResponseInterceptor _unityNativeDisplayResponseInterceptor;
-    private readonly UnityNativeEventManager _unityNativeEventManager = null;
+    private UnityNativeCallbackHandler _callbackHandler = null;
+    private UnityNativeEventManager _unityNativeEventManager = null;
 
     [SetUp]
     public void Setup()
     {
+        _callbackHandler = CreateGameObjectAndAttachCallbackHandler<UnityNativeCallbackHandler>(CleverTapGameObjectName.UNITY_NATIVE_CALLBACK_HANDLER);
+        _unityNativeEventManager = new UnityNativeEventManager(_callbackHandler);
         _interceptor = new UnityNativeDisplayResponseInterceptor(_unityNativeEventManager);
+    }
+
+    private T CreateGameObjectAndAttachCallbackHandler<T>(string objectName) where T : CleverTapCallbackHandler
+    {
+        var gameObject = new GameObject(objectName);
+        gameObject.AddComponent<T>();
+        GameObject.DontDestroyOnLoad(gameObject);
+        return gameObject.GetComponent<T>();
     }
 
     [Test]

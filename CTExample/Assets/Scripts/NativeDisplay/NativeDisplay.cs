@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using System.Linq;
 using CleverTapSDK;
@@ -19,6 +20,7 @@ namespace CTExample
             _getAllDisplayUnitsButton.gameObject.SetActive(true);
             _showDisplayUnitButton.gameObject.SetActive(true);
         }
+
         private void Start()
         {
             _getDisplayUnitForIdButton.onClick.AddListener(GetDisplayUnit);
@@ -28,7 +30,7 @@ namespace CTExample
 
         private void GetDisplayUnit()
         {
-            List<CleverTapDisplayUnit> displayUnits = CleverTap.GetAllDisplayUnitsParsed();
+            var displayUnits = CleverTap.GetAllDisplayUnitsParsed();
 
             if (displayUnits == null)
             {
@@ -40,8 +42,8 @@ namespace CTExample
 
             if (displayUnit != null)
             {
-                CleverTapDisplayUnit.DisplayUnitContent content = displayUnit.Content?.FirstOrDefault();
-                string titleText = content?.Title?.Text ?? "N/A";
+                var content = displayUnit.Content?.FirstOrDefault();
+                var titleText = content?.Title?.Text ?? "N/A";
                 Debug.Log($"Display Unit ID: {displayUnit.Id}, Title: {titleText}");
             }
             else
@@ -88,6 +90,13 @@ namespace CTExample
             _displayUnitView.gameObject.SetActive(false);
         }
 
+        private void OnDestroy()
+        {
+            _getDisplayUnitForIdButton.onClick.RemoveListener(GetDisplayUnit);
+            _getAllDisplayUnitsButton.onClick.RemoveListener(GetAllDisplayUnits);
+            _showDisplayUnitButton.onClick.RemoveListener(ShowDisplayUnit);
+        }
+
         public void Restore()
         {
             _getDisplayUnitForIdButton.gameObject.SetActive(true);
@@ -101,6 +110,5 @@ namespace CTExample
             public const string MESSAGE_ICON = "message-icon";
             public const string CAROUSEL = "carousel";
         }
-
     }
 }

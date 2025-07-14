@@ -7,10 +7,22 @@ namespace CleverTapSDK.Utilities
         public static List<CleverTapDisplayUnit> ParseJsonArray(string jsonString)
         {
             var result = new List<CleverTapDisplayUnit>();
+
             if (string.IsNullOrEmpty(jsonString))
                 return result;
 
-            JSONArray jsonArray = JSON.Parse(jsonString).AsArray;
+            JSONArray jsonArray;
+
+            try
+            {
+                jsonArray = JSON.Parse(jsonString).AsArray;
+            }
+            catch (System.Exception ex)
+            {
+                CleverTapLogger.LogError($"Failed to parse display units JSON: {ex.Message}");
+                return result;
+            }
+
             foreach (JSONNode jsonNode in jsonArray)
             {
                 var inboxMessage = ParseJsonNode(jsonNode);
@@ -46,6 +58,10 @@ namespace CleverTapSDK.Utilities
         private static List<CleverTapDisplayUnit.DisplayUnitContent> ParseContentList(JSONArray contentArray)
         {
             var contents = new List<CleverTapDisplayUnit.DisplayUnitContent>();
+
+            if (contentArray == null || contentArray.Count == 0)
+                return contents;
+
             foreach (JSONNode item in contentArray)
             {
                 var content = new CleverTapDisplayUnit.DisplayUnitContent
@@ -109,7 +125,7 @@ namespace CleverTapSDK.Utilities
                     Text = item["text"],
                     Color = item["color"],
                     BackgroundColor = item["bg"],
-                    CopyText = new CleverTapDisplayUnit.TextValue { Text = item["copyText"]["text"] },
+                    CopyText = item["copyText"] != null ? new CleverTapDisplayUnit.TextValue { Text = item["copyText"]["text"] } : null,
                     Url = ParseUrl(item["url"]),
                     KeyValuePairs = ParseDictionary(item["kv"])
                 };
