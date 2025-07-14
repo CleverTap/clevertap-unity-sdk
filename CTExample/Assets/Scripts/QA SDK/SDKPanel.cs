@@ -8,9 +8,11 @@ namespace CTExample
         public GameObject optionsPanel;
 
         public GameObject messagesPanel;
+        public GameObject nativeDisplayPanel;
         public GameObject pushPanel;
 
         public Button messagesButton;
+        public Button displayUnitsButton;
         public Button pushButton;
 
         public Button consoleButton;
@@ -25,6 +27,7 @@ namespace CTExample
             pushButton.interactable = false;
 #endif
             messagesButton.onClick.AddListener(DidTapMessages);
+            displayUnitsButton.onClick.AddListener(DidTapDisplayUnits);
             pushButton.onClick.AddListener(DidTapPush);
             consoleButton.onClick.AddListener(DidTapConsole);
 
@@ -37,16 +40,26 @@ namespace CTExample
             optionsPanel.SetActive(true);
             messagesPanel.SetActive(false);
             pushPanel.SetActive(false);
+            nativeDisplayPanel.SetActive(false);
         }
 
         public void DidTapMessages()
         {
+            nativeDisplayPanel.SetActive(false);
             optionsPanel.SetActive(false);
             messagesPanel.SetActive(true);
         }
 
+        public void DidTapDisplayUnits()
+        {
+            nativeDisplayPanel.SetActive(true);
+            optionsPanel.SetActive(false);
+            messagesPanel.SetActive(false);
+        }
+
         public void DidTapPush()
         {
+            nativeDisplayPanel.SetActive(false);
             optionsPanel.SetActive(false);
             pushPanel.SetActive(true);
         }

@@ -101,8 +101,17 @@ namespace CleverTapSDK.Common {
         internal virtual JSONArray GetAllDisplayUnits() {
             return new JSONArray();
         }
+                
+        internal virtual List<CleverTapDisplayUnit> GetAllDisplayUnitsParsed() {
+            return new List<CleverTapDisplayUnit>();
+        }
 
-        internal virtual JSONArray GetAllInboxMessages() {
+        internal virtual CleverTapDisplayUnit GetDisplayUnitForIdParsed(string unitId) {
+            return new CleverTapDisplayUnit();
+        }
+
+        internal virtual JSONArray GetAllInboxMessages()
+        {
             return new JSONArray();
         }
 

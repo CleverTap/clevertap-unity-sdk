@@ -132,6 +132,26 @@ namespace CleverTapSDK.Native
         {
             _unityNativeEventManager.EnableDeviceNetworkInfoReporting(enabled);
         }
+
+        internal override List<CleverTapDisplayUnit> GetAllDisplayUnitsParsed()
+        {
+            return _unityNativeEventManager.GetAllDisplayUnits();
+        }
+
+        internal override CleverTapDisplayUnit GetDisplayUnitForIdParsed(string unitId)
+        {
+            return _unityNativeEventManager.GetDisplayUnitForId(unitId);
+        }
+
+        internal override void RecordDisplayUnitViewedEventForID(string unitId)
+        {
+            _unityNativeEventManager.RecordDisplayUnitViewedEventForID(unitId);
+        }
+
+        internal override void RecordDisplayUnitClickedEventForID(string unitId)
+        {
+            _unityNativeEventManager.RecordDisplayUnitClickedEventForID(unitId);
+        }
     }
 }
 #endif
