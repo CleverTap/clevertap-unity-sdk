@@ -7,12 +7,16 @@ namespace CleverTapSDK.Native
 {
     internal class UnityNativeAppInboxResponseInterceptor : IUnityNativeResponseInterceptor
     {
-        internal List<object> appInboxMessages = null;
+        private List<object> appInboxMessages = null;
+
+        // Internal property to expose inbox messages for unit testing
+        internal List<object> AppInboxMessages => appInboxMessages;
+
         private readonly UnityNativeEventManager _unityNativeEventManager = null;
 
         public UnityNativeAppInboxResponseInterceptor(UnityNativeEventManager unityNativeEventManager)
         {
-            _unityNativeEventManager = unityNativeEventManager;
+            _unityNativeEventManager = unityNativeEventManager ?? throw new System.ArgumentNullException(nameof(unityNativeEventManager));
         }
 
         UnityNativeResponse IUnityNativeResponseInterceptor.Intercept(UnityNativeResponse response)
@@ -25,7 +29,17 @@ namespace CleverTapSDK.Native
                 return response;
             }
 
-            Dictionary<string, object> result = Json.Deserialize(response.Content) as Dictionary<string, object>;
+            Dictionary<string, object> result = null;
+
+            try
+            {
+                result = Json.Deserialize(response.Content) as Dictionary<string, object>;
+            }
+            catch (System.Exception ex)
+            {
+                CleverTapLogger.LogError($"Failed to deserialize response content: {ex.Message}");
+                return response;
+            }
 
             if (result != null && result.ContainsKey(UnityNativeConstants.AppInbox.INBOX_NOTIFS_KEY))
             {

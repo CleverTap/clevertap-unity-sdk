@@ -17,26 +17,39 @@ namespace CTExample
 
         public void GetImage(string url, Action<Texture2D> onImage)
         {
+            if (string.IsNullOrEmpty(url) || onImage == null)
+            {
+                Debug.LogError("Invalid parameters for GetImage");
+                return;
+            }
+
             string fileName = GetFileNameFromUrl(url);
-            string savePath = Path.Combine(Application.streamingAssetsPath, fileName);
+            string savePath = Path.Combine(Application.persistentDataPath, "ImageCache", fileName);
+
+            // Ensure cache directory exists
+            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
 
             if (File.Exists(savePath))
             {
-                byte[] imageData = File.ReadAllBytes(savePath);
-                Texture2D texture = new Texture2D(2, 2);
-                texture.LoadImage(imageData);
-                onImage?.Invoke(texture);
-            }
-            else
-            {
-                StartCoroutine(DownloadImage(url, onImage));
+                try
+                {
+                    byte[] imageData = File.ReadAllBytes(savePath);
+                    Texture2D texture = new Texture2D(2, 2);
+                    texture.LoadImage(imageData);
+                    onImage?.Invoke(texture);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Failed to load cached image: {ex.Message}");
+                    StartCoroutine(DownloadImage(url, onImage));
+                }
             }
         }
 
         private IEnumerator DownloadImage(string url, Action<Texture2D> image)
         {
             string fileName = GetFileNameFromUrl(url);
-            string savePath = Path.Combine(Application.streamingAssetsPath, fileName);
+            string savePath = Path.Combine(Application.persistentDataPath, "ImageCache", fileName);
 
             UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
             yield return request.SendWebRequest();
@@ -44,21 +57,51 @@ namespace CTExample
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Image download failed: " + request.error);
+                image?.Invoke(null);
             }
             else
             {
-                Texture2D downloadedTexture = DownloadHandlerTexture.GetContent(request);
-                byte[] bytes = downloadedTexture.EncodeToJPG();
-                File.WriteAllBytes(savePath, bytes);
-                image?.Invoke(downloadedTexture);
+                try
+                {
+                    Texture2D downloadedTexture = DownloadHandlerTexture.GetContent(request);
+                    byte[] bytes = downloadedTexture.EncodeToJPG();
+
+                    // Ensure directory exists before writing
+                    Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                    File.WriteAllBytes(savePath, bytes);
+
+                    image?.Invoke(downloadedTexture);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Failed to save downloaded image: {ex.Message}");
+                    image?.Invoke(null);
+                }
             }
+
+            request.Dispose();
         }
 
         public static string GetFileNameFromUrl(string url)
         {
-            Uri uri = new Uri(url);
-            string filename = Path.GetFileName(uri.AbsolutePath);
-            return filename;
+            try
+            {
+                Uri uri = new Uri(url);
+                string filename = Path.GetFileName(uri.AbsolutePath);
+                return string.IsNullOrEmpty(filename) ? "default_image.jpg" : filename;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Invalid URL format: {ex.Message}");
+                return $"image_{url.GetHashCode()}.jpg";
+            }
+        }
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
         }
     }
 }

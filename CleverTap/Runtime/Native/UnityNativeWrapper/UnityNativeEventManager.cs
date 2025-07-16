@@ -592,14 +592,40 @@ namespace CleverTapSDK.Native
         internal void RecordInboxNotificationClickedEventForID(string messageId)
         {
             string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+
+            if (string.IsNullOrEmpty(messageString))
+            {
+                CleverTapLogger.LogError($"Message not found for id: {messageId}");
+                return;
+            }
+
             Dictionary<string, object> eventPayload = Json.Deserialize(messageString) as Dictionary<string, object>;
+
+            if (eventPayload == null)
+            {
+                CleverTapLogger.LogError($"Failed to deserialize message for id: {messageId}");
+                return;
+            }
             NotificationClickedEvent(eventPayload);
         }
 
         internal void RecordInboxNotificationViewedEventForID(string messageId)
         {
             string messageString = UnityNativeAppInboxPersistence.GetMessage(messageId);
+
+            if (string.IsNullOrEmpty(messageString))
+            {
+                CleverTapLogger.LogError($"Message not found for id: {messageId}");
+                return;
+            }
             Dictionary<string, object> eventPayload = Json.Deserialize(messageString) as Dictionary<string, object>;
+
+            if (eventPayload == null)
+            {
+                CleverTapLogger.LogError($"Failed to deserialize message for id: {messageId}");
+                return;
+            }
+
             NotificationViewedEvent(eventPayload);
         }
 
@@ -612,6 +638,13 @@ namespace CleverTapSDK.Native
             for (int i = 0, count = messages.Count; i < count; i++)
             {
                 message = messages[i] as Dictionary<string, object>;
+
+                if (message == null || !message.ContainsKey("_id"))
+                {
+                    CleverTapLogger.LogError($"Invalid message format at index {i}");
+                    continue;
+                }
+
                 messageId = message["_id"].ToString();
                 message["isRead"] = UnityNativeAppInboxPersistence.IsRead(messageId);
                 serializedMessage = Json.Serialize(message);

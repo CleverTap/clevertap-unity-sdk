@@ -122,6 +122,13 @@ namespace CleverTapSDK.Native
             {
                 // Updating the message to mark it as read
                 Dictionary<string, object> message = Json.Deserialize(msg) as Dictionary<string, object>;
+                
+                if (message == null)
+                {
+                    CleverTapLogger.LogError($"Failed to deserialize message with id: {id}");
+                    return;
+                }
+
                 message["isRead"] = true;
                 _preferenceManager.SetString(msgId, Json.Serialize(message));
                 _preferenceManager.SetInt(markId, 1);

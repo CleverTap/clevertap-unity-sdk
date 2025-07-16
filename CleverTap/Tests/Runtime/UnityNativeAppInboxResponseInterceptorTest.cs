@@ -44,7 +44,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
             }
         };
 
-        Assert.AreEqual(expectedMessages, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(expectedMessages, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -54,7 +54,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -64,7 +64,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -86,7 +86,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -108,7 +108,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -123,7 +123,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -138,7 +138,7 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 
     [Test]
@@ -153,6 +153,6 @@ public class UnityNativeAppInboxResponseInterceptorTest
         _interceptor.Intercept(response);
         _unityNativeAppInboxResponseInterceptor = (UnityNativeAppInboxResponseInterceptor)_interceptor;
 
-        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.appInboxMessages);
+        Assert.AreEqual(null, _unityNativeAppInboxResponseInterceptor.AppInboxMessages);
     }
 }

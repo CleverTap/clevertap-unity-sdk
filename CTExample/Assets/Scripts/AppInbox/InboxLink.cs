@@ -43,7 +43,7 @@ namespace CTExample
                         CopyText(_link.CopyText.Text);
                         break;
                     case LinkType.KeyValue:
-                        string keyvalues = null;
+                        string keyvalues = string.Empty;
 
                         foreach (KeyValuePair<string, string> kvp in _link.KeyValuePairs)
                         {

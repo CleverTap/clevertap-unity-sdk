@@ -65,6 +65,13 @@ namespace CTExample
             _onReadAction = OnReadAction;
             _onDeleteAction = OnDeleteAction;
             _messageContents = itemData.Message.Content;
+
+            if (_messageContents == null || _messageContents.Count == 0)
+            {
+                Logger.LogError("Message has no content");
+                return;
+            }
+            
             _messageContent = itemData.Message.Content[0];
 
             _isCarousel = itemData.Message.MessageType == Inbox.MessageType.CAROUSEL;
