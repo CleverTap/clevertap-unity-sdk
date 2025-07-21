@@ -10,11 +10,11 @@ namespace CTExample
     {
         public Button buttonPrefab;
         public VerticalLayoutGroup verticalLayoutGroup;
-
+        [SerializeField] private GameObject inboxPanel;
         private bool hasInboxInitialized = false;
         private bool shouldShowInbox = false;
 
-        void Start()
+        private void Awake()
         {
             CleverTap.OnCleverTapInboxDidInitializeCallback += CleverTap_OnCleverTapInboxDidInitializeCallback;
             CreateButtonActions();
@@ -25,7 +25,11 @@ namespace CTExample
             var models = new List<ButtonActionModel>
             {
                 new ButtonActionModel("Initialize", (button) => CleverTap.InitializeInbox()),
-                new ButtonActionModel("Show Inbox", (button) => ShowInbox())
+            #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+                // This button is only available on Android and iOS
+                new ButtonActionModel("Show Inbox", (button) => ShowInbox()),
+            #endif
+                new ButtonActionModel("Show Unity App Inbox", (button) => ShowUnityAppInbox())
             };
 
             var parent = verticalLayoutGroup.GetComponent<RectTransform>();
@@ -75,9 +79,21 @@ namespace CTExample
             Logger.Log($"Showing app inbox with config: {jsonStr}");
         }
 
+        private void ShowUnityAppInbox()
+        {
+            if (!hasInboxInitialized)
+            {
+                Logger.LogWarning("Inbox not initialized.");
+                return;
+            }
+
+            inboxPanel.SetActive(true);
+        }
+
         private void CleverTap_OnCleverTapInboxDidInitializeCallback()
         {
             hasInboxInitialized = true;
+
             if (shouldShowInbox)
             {
                 ShowInbox();
@@ -88,7 +104,15 @@ namespace CTExample
 
         public void Restore()
         {
+            if (inboxPanel.activeInHierarchy)
+            {
+                inboxPanel.SetActive(false);
+            }
+        }
 
+        private void OnDisable()
+        {
+            inboxPanel.SetActive(false);
         }
     }
 }
