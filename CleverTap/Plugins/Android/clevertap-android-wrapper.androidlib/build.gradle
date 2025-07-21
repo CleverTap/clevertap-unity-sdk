@@ -52,14 +52,10 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compileOnly fileTree('libs')
 
-    api 'com.clevertap.android:clevertap-android-sdk:7.4.1'
-    implementation 'com.google.firebase:firebase-messaging:24.0.0'
-    implementation 'androidx.core:core:1.13.0'
+    api 'com.clevertap.android:clevertap-android-sdk:7.5.0'
+    implementation "androidx.core:core:1.13.0"
+    implementation "com.google.firebase:firebase-messaging:24.0.0"
 }
