@@ -13,6 +13,7 @@ namespace CTExample
     {
         private static RectTransform _layoutRoot = null;
         [SerializeField] private RawImage _messageImage = null;
+        [SerializeField] private RawImage _messageicon = null;
         [SerializeField] private RawImage _messageIconImage = null;
         [SerializeField] private TMP_Text _titleText = null;
         [SerializeField] private TMP_Text _messageText = null;
@@ -71,7 +72,7 @@ namespace CTExample
                 Logger.LogError("Message has no content");
                 return;
             }
-            
+
             _messageContent = itemData.Message.Content[0];
 
             _isCarousel = itemData.Message.MessageType == Inbox.MessageType.CAROUSEL;
@@ -80,6 +81,7 @@ namespace CTExample
             _nextButton.gameObject.SetActive(_isCarousel);
             _prevButton.gameObject.SetActive(_isCarousel);
             _messageIconImage.gameObject.SetActive(_isMessageIcon);
+            _messageicon.gameObject.SetActive(_isMessageIcon);
 
             _unReadIndicator.SetActive(!itemData.IsRead);
 
@@ -108,6 +110,19 @@ namespace CTExample
             if (_messageContent.Media != null && !string.IsNullOrEmpty(_messageContent.Media.Url))
             {
                 MessageMediaDownloader.Instance.GetImage(_messageContent.Media.Url, SetMessageImage);
+            }
+
+            if (_messageContent.Icon.Url != null && !string.IsNullOrEmpty(_messageContent.Icon.Url))
+            {
+                MessageMediaDownloader.Instance.GetImage(_messageContent.Icon.Url, (texture) =>
+                {
+                    _messageicon.texture = texture;
+                });
+            }
+            else
+            {
+                _isMessageIcon = false;
+                _messageIconImage.gameObject.SetActive(false);
             }
 
             if (_messageContent.Action.HasLinks)

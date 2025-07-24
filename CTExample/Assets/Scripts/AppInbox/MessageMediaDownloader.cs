@@ -17,32 +17,19 @@ namespace CTExample
 
         public void GetImage(string url, Action<Texture2D> onImage)
         {
-            if (string.IsNullOrEmpty(url) || onImage == null)
-            {
-                Debug.LogError("Invalid parameters for GetImage");
-                return;
-            }
-
             string fileName = GetFileNameFromUrl(url);
-            string savePath = Path.Combine(Application.persistentDataPath, "ImageCache", fileName);
-
-            // Ensure cache directory exists
-            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            string savePath = Path.Combine(Application.streamingAssetsPath, fileName);
 
             if (File.Exists(savePath))
             {
-                try
-                {
-                    byte[] imageData = File.ReadAllBytes(savePath);
-                    Texture2D texture = new Texture2D(2, 2);
-                    texture.LoadImage(imageData);
-                    onImage?.Invoke(texture);
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"Failed to load cached image: {ex.Message}");
-                    StartCoroutine(DownloadImage(url, onImage));
-                }
+                byte[] imageData = File.ReadAllBytes(savePath);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                onImage?.Invoke(texture);
+            }
+            else
+            {
+                StartCoroutine(DownloadImage(url, onImage));
             }
         }
 
