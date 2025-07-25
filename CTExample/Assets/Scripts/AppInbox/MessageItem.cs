@@ -198,8 +198,6 @@ namespace CTExample
                     ReadMessage();
                     Application.OpenURL(url);
                 }
-
-                OnReadButtonClick();
             }
         }
 
