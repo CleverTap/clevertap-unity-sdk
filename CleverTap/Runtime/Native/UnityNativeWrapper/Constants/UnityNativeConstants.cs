@@ -12,7 +12,7 @@ namespace CleverTapSDK.Native {
 #if UNITY_WEBGL
             internal const string UNITY_GUID_PREFIX = ""; // No Device prefix
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            internal const string UNITY_GUID_PREFIX = "__";
+            internal const string UNITY_GUID_PREFIX = "^";
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
             internal const string UNITY_GUID_PREFIX = "~";
 #elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
