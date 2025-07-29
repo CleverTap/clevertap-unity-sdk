@@ -165,7 +165,7 @@ namespace CTExample
         {
             _messageView.gameObject.SetActive(true);
             _messageView.Initialize(_messageContent, _messageData.Message.Tags);
-            CleverTap.RecordInboxNotificationViewedEventForID(_messageData.Id);
+            CleverTap.RecordInboxNotificationClickedEventForID(_messageData.Id);
             ReadMessage();
         }
 

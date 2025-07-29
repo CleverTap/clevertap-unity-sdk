@@ -12,7 +12,7 @@ namespace CleverTapSDK.Native {
 #if UNITY_WEBGL
             internal const string UNITY_GUID_PREFIX = ""; // No Device prefix
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            internal const string UNITY_GUID_PREFIX = "^";
+            internal const string UNITY_GUID_PREFIX = "__";
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
             internal const string UNITY_GUID_PREFIX = "~";
 #elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
@@ -196,7 +196,7 @@ namespace CleverTapSDK.Native {
             internal static readonly IReadOnlyList<string> VALUE_NOT_ALLOWED_CHARS = new List<string> { "'", "\"", "\\" };
 
             internal static readonly IReadOnlyList<string> RESTRICTED_NAMES = new List<string>() {
-                "Notification Sent", "Notification Viewed", "Notification Clicked",
+                "Notification Sent",
                 "UTM Visited", "App Launched", "Stayed", "App Uninstalled",
                 "wzrk_d", "wzrk_fetch", "SCCampaignOptOut", "Geocluster Entered", "Geocluster Exited"
             };
