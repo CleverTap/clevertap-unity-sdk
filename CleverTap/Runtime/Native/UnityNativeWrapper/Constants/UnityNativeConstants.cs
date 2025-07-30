@@ -196,7 +196,7 @@ namespace CleverTapSDK.Native {
             internal static readonly IReadOnlyList<string> VALUE_NOT_ALLOWED_CHARS = new List<string> { "'", "\"", "\\" };
 
             internal static readonly IReadOnlyList<string> RESTRICTED_NAMES = new List<string>() {
-                "Notification Sent",
+                "Notification Sent", "Notification Viewed", "Notification Clicked",
                 "UTM Visited", "App Launched", "Stayed", "App Uninstalled",
                 "wzrk_d", "wzrk_fetch", "SCCampaignOptOut", "Geocluster Entered", "Geocluster Exited"
             };
