@@ -10,6 +10,7 @@ Version 5.3.0 *(7 August, 2025)*
 - Updated to [CleverTap Android SDK v7.5.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.5.0)
 - Updated to [CleverTap iOS SDK v7.3.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.3.1)
 - Supports - Unity Native App Inbox
+- Adds support for Unity 6
 
 Version 5.2.0 *(31 March, 2025)*
 -------------------------------------------
