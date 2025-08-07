@@ -11,6 +11,9 @@ Version 5.3.0 *(7 August, 2025)*
 - Updated to [CleverTap iOS SDK v7.3.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.3.1)
 - Supports - Unity Native App Inbox
 - Adds support for Unity 6
+- Added geofencing support with example activity for Android & iOS, including permissions and initialization.
+- Enabled iOS push notification service & content extensions with sample implementations.
+- Added custom in-app template sync support in Unity Editor.
 
 Version 5.2.0 *(31 March, 2025)*
 -------------------------------------------
