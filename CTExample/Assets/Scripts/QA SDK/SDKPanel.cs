@@ -18,8 +18,10 @@ namespace CTExample
 
         void Start()
         {
-#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
+#if !(UNITY_IOS || UNITY_ANDROID) || !UNITY_EDITOR
             messagesButton.interactable = false;
+#endif
+#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
             pushButton.interactable = false;
 #endif
             messagesButton.onClick.AddListener(DidTapMessages);

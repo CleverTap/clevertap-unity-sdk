@@ -131,7 +131,11 @@ and
 
 ## Syncing in-app templates to the dashboard
 
-For the templates to be usable in campaigns they must be synced with the dashboard. When all templates and functions are defined, they can be synced by calling `CleverTap.SyncCustomTemplates()` in your Unity application. The syncing can only be done in debug builds and with an SDK user marked as a "test user". We recommend only calling this function while developing the templates and deleting the invocation in release builds.
+For the templates to be usable in campaigns they must be synced with the dashboard. When all templates and functions are defined, they can be synced by calling `CleverTap.SyncCustomTemplates()` in your Unity application. 
+
+Syncing in-app templates is supported on iOS and Android builds. The syncing can only be done in debug builds and with an SDK user marked as a "test user". We recommend only calling this function while developing the templates and deleting the invocation in release builds.
+
+If you are using CleverTap Unity SDK VERSION you can sync the templates directly from the *Unity Editor*. Call `CleverTap.SyncCustomTemplates()` in your application and run it in the Unity Editor.
 
 ## Presenting templates
 

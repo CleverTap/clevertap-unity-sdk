@@ -14,13 +14,6 @@ namespace CTExample
 
         public List<GameObject> panels = new List<GameObject>();
 
-        private void Awake()
-        {
-#if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
-            AppInbox.interactable = false;
-#endif
-        }
-
         void Start()
         {
             SDK.onClick.AddListener(DidTapSDKButton);
