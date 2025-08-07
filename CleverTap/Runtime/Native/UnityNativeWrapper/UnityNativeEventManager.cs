@@ -606,6 +606,7 @@ namespace CleverTapSDK.Native
                 CleverTapLogger.LogError($"Failed to deserialize message for id: {messageId}");
                 return;
             }
+
             NotificationClickedEvent(eventPayload);
         }
 
@@ -756,7 +757,7 @@ namespace CleverTapSDK.Native
 
             var eventDetails = eventBuilderResult.EventResult;
             _coreState.SessionManager.SessionData[UnityNativeConstants.EventMeta.WZRK_REF] = eventDetails[UnityNativeConstants.Event.EVENT_DATA];
-            return BuildEvent(UnityNativeEventType.NotificationViewEvent, eventDetails);
+            return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
 
         internal UnityNativeEvent NotificationClickedEvent(Dictionary<string, object> properties)
