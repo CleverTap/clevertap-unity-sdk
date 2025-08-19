@@ -600,19 +600,24 @@ namespace CleverTapSDK.Utilities
 
             private void SerializeOther(object value)
             {
-                if (value is float
-                    || value is int
+                if (value is float)
+                {
+                    builder.Append(((float)value).ToString("R", CultureInfo.InvariantCulture));
+                }
+                else if (value is int
                     || value is uint
                     || value is long
-                    || value is double
                     || value is sbyte
                     || value is byte
                     || value is short
                     || value is ushort
-                    || value is ulong
-                    || value is decimal)
+                    || value is ulong)
                 {
-                    this.builder.Append(value.ToString());
+                    builder.Append(value);
+                }
+                else if (value is double || value is decimal)
+                {
+                    builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.InvariantCulture));
                 }
                 else
                 {
