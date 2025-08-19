@@ -5,6 +5,10 @@ Version VERSION *(DD MONTH, YYYY)*
 -------------------------------------------
 - Allows syncing Custom In-app Templates in the Unity Editor.
 
+Version 5.3.1 *(19 August, 2025)*
+-------------------------------------------
+- Fix - JSON serialization to use InvariantCulture for consistent number formatting.
+
 Version 5.3.0 *(7 August, 2025)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v7.5.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.5.0)
