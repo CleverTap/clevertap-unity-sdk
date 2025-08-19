@@ -613,11 +613,18 @@ namespace CleverTapSDK.Utilities
                     || value is ushort
                     || value is ulong)
                 {
-                    builder.Append(value);
+                    builder.Append(Convert.ToString(value, CultureInfo.InvariantCulture));
                 }
-                else if (value is double || value is decimal)
+                else if (value is double)
                 {
-                    builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.InvariantCulture));
+                    builder.Append(((double)value).ToString("R", CultureInfo.InvariantCulture));
+                }
+                else if (value is decimal)
+                {
+                    // Use invariant culture; "G" for decimals yields up to 29 digits without culture-specific separators.
+                    builder.Append(((decimal)value).ToString(CultureInfo.InvariantCulture));
+                    // Alternatively, to limit to 29 digits explicitly:
+                    // builder.Append(((decimal)value).ToString("G29", CultureInfo.InvariantCulture));
                 }
                 else
                 {
