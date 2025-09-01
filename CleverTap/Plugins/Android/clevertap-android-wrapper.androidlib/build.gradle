@@ -10,7 +10,7 @@ ext {
     compileSdkVersionVal = 35
     targetSdkVersionVal = compileSdkVersionVal
 
-    libraryVersion = "5.3.0"
+    libraryVersion = "5.3.2"
 }
 
 android {
