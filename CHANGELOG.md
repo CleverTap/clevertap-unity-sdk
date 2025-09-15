@@ -5,6 +5,11 @@ Version VERSION *(DD MONTH, YYYY)*
 -------------------------------------------
 - Allows syncing Custom In-app Templates in the Unity Editor.
 
+Version 5.3.3 *(15 September, 2025)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v7.5.2](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.5.2)
+- Updated to [CleverTap iOS SDK v7.3.3](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.3.3)
+
 Version 5.3.2 *(1 September, 2025)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v7.5.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.5.1)
