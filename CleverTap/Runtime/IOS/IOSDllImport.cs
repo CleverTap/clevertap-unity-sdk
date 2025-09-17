@@ -92,6 +92,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_setOptOut(bool enabled);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_setOptOutWithSystemEvents(bool enabled, bool allowSystemEvents);
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_enableDeviceNetworkInfoReporting(bool enabled);
 
         [DllImport("__Internal")]

@@ -400,6 +400,10 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("setOptOut", value);
         }
 
+        internal override void SetOptOut(bool value1, bool value2) {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("setOptOut", value1, value2);
+        }
+
         internal override void ShowAppInbox(string styleConfig) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("showAppInbox", styleConfig);
         }

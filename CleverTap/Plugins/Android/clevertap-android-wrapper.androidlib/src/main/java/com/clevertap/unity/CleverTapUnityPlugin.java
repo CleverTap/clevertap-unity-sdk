@@ -205,6 +205,14 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    public void setOptOut(boolean userOptOut, boolean allowSystemEvents) {
+        try {
+            clevertap.setOptOut(userOptOut, allowSystemEvents);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "setOptOut error", t);
+        }
+    }
+
     public void enableDeviceNetworkInfoReporting(boolean value) {
         try {
             clevertap.enableDeviceNetworkInfoReporting(value);

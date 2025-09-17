@@ -34,6 +34,7 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 #pragma mark - Opt-out API
 
 - (void)setOptOut:(BOOL)enabled;
+- (void)setOptOut:(BOOL)enabled allowSystemEvents:(BOOL)allowSystemEvents;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
 
 #pragma mark - User Profile

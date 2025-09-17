@@ -460,6 +460,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_setOptOut(enabled);
         }
 
+        internal override void SetOptOut(bool enabled, bool allowSystemEvents) {
+            IOSDllImport.CleverTap_setOptOutWithSystemEvents(enabled, allowSystemEvents);
+        }
+
         [Obsolete]
         internal override void SetProductConfigDefaults(Dictionary<string, object> defaults) {
             var defaultsString = Json.Serialize(defaults);

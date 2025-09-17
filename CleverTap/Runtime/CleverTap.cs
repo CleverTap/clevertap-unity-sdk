@@ -476,6 +476,9 @@ namespace CleverTapSDK {
         public static void SetOptOut(bool enabled) =>
             cleverTapBinding.SetOptOut(enabled);
 
+        public static void SetOptOut(bool enabled, bool allowSystemEvents) =>
+            cleverTapBinding.SetOptOut(enabled, allowSystemEvents);
+
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static void SetProductConfigDefaults(Dictionary<string, object> defaults) =>
             cleverTapBinding.SetProductConfigDefaults(defaults);
