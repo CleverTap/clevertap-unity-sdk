@@ -158,6 +158,11 @@ static BOOL shouldDisableBuffers = YES;
 - (void)setOptOut:(BOOL)enabled{
     [self.cleverTap setOptOut:enabled];
 }
+
+- (void)setOptOut:(BOOL)enabled allowSystemEvents:(BOOL)allowSystemEvents {
+    [self.cleverTap setOptOut:enabled allowSystemEvents:allowSystemEvents];
+}
+
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled{
     [self.cleverTap enableDeviceNetworkInfoReporting:enabled];
 }

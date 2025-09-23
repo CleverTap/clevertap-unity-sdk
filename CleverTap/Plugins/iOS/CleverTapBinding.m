@@ -211,6 +211,10 @@ void CleverTap_setOptOut(const BOOL enabled) {
     [[CleverTapUnityManager sharedInstance] setOptOut:enabled];
 }
 
+void CleverTap_setOptOutWithSystemEvents(const BOOL enabled, const BOOL allowSystemEvents) {
+    [[CleverTapUnityManager sharedInstance] setOptOut:enabled allowSystemEvents:allowSystemEvents];
+}
+
 void CleverTap_enableDeviceNetworkInfoReporting(const BOOL enabled) {
     [[CleverTapUnityManager sharedInstance] enableDeviceNetworkInfoReporting:enabled];
 }
