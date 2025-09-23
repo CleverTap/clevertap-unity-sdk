@@ -331,6 +331,9 @@ namespace CleverTapSDK.Common {
         internal virtual void SetOptOut(bool enabled) {
         }
 
+        internal virtual void SetOptOut(bool enabled, bool allowSystemEvent) {
+        }
+
         [Obsolete]
         internal virtual void SetProductConfigDefaults(Dictionary<string, object> defaults) {
         }
