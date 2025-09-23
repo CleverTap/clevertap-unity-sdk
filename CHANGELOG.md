@@ -5,6 +5,10 @@ Version VERSION *(DD MONTH, YYYY)*
 -------------------------------------------
 - Allows syncing Custom In-app Templates in the Unity Editor.
 
+Version 5.3.4 *(23 September, 2025)*
+-------------------------------------------
+- Introduced enhanced setOptOut(boolean userOptOut, boolean allowSystemEvents) overload for finer control over system events.
+
 Version 5.3.3 *(15 September, 2025)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v7.5.2](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.5.2)
