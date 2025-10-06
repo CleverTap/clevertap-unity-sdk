@@ -28,6 +28,7 @@ namespace CleverTapSDK.Native
         }
 
         internal int? Timeout => _timeout;
+        internal string Path => _path;
         internal IReadOnlyList<KeyValuePair<string, string>> QueryParameters => _queryParameters;
         internal string RequestBody => _requestBody;
         internal IReadOnlyDictionary<string, string> Headers => _headers;
