@@ -7,7 +7,7 @@ Version VERSION *(DD MONTH, YYYY)*
 
 Version 5.3.5 *(6 October, 2025)*
 -------------------------------------------
-- Fix: [#218] Added internal Path property in UnityNativeRequest to resolve request.Path access issue.
+- Fix: [#218](https://github.com/CleverTap/clevertap-unity-sdk/issues/218) Added internal Path property in UnityNativeRequest to resolve request.Path access issue.
 
 Version 5.3.4 *(23 September, 2025)*
 -------------------------------------------
