@@ -5,6 +5,10 @@ Version VERSION *(DD MONTH, YYYY)*
 -------------------------------------------
 - Allows syncing Custom In-app Templates in the Unity Editor.
 
+Version 5.3.5 *(6 October, 2025)*
+-------------------------------------------
+- Fix: Added internal Path property in UnityNativeRequest to resolve request.Path access issue
+
 Version 5.3.4 *(23 September, 2025)*
 -------------------------------------------
 - Introduced enhanced setOptOut(boolean userOptOut, boolean allowSystemEvents) overload for finer control over system events.
