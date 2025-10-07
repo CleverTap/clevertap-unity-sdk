@@ -1,13 +1,9 @@
 Change Log
 ==========
 
-Version VERSION *(DD MONTH, YYYY)*
--------------------------------------------
-- Allows syncing Custom In-app Templates in the Unity Editor.
-
 Version 5.3.5 *(6 October, 2025)*
 -------------------------------------------
-- Fix: [#218] Added internal Path property in UnityNativeRequest to resolve request.Path access issue.
+- Fix: Added internal Path property in UnityNativeRequest to resolve request.Path access issue [#218](https://github.com/CleverTap/clevertap-unity-sdk/issues/218)
 
 Version 5.3.4 *(23 September, 2025)*
 -------------------------------------------
