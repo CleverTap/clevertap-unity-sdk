@@ -145,7 +145,7 @@ namespace CleverTapSDK.Android {
             }
             catch (Exception ex)
             {
-                CleverTapLogger.LogError($"Unable to parse inbox messages JSON: {ex}.");
+                CleverTapLogger.LogError($"Unable to parse display unit JSON: {ex}.");
                 json = new JSONClass();
             }
 
