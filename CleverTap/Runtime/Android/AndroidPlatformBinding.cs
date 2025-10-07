@@ -137,7 +137,7 @@ namespace CleverTapSDK.Android {
 
         internal override JSONClass GetDisplayUnitForID(string unitID) {
 
-            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages", unitID);
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getDisplayUnitForId", unitID);
             JSONClass json;
             try
             {
