@@ -119,6 +119,47 @@ namespace CleverTapSDK.Android {
             return string.Empty;
         }
 
+        internal override JSONArray GetAllDisplayUnits() {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllDisplayUnits");
+            JSONArray json;
+            try
+            {
+                json = (JSONArray)JSON.Parse(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse display units JSON: {ex}.");
+                json = new JSONArray();
+            }
+
+            return json;
+        }
+
+        internal override JSONClass GetDisplayUnitForID(string unitID) {
+
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages", unitID);
+            JSONClass json;
+            try
+            {
+                json = (JSONClass)JSON.Parse(jsonString);
+            }
+            catch (Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse inbox messages JSON: {ex}.");
+                json = new JSONClass();
+            }
+
+            return json;
+        }
+
+        internal override void RecordDisplayUnitClickedEventForID(string unitID) {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("pushDisplayUnitClickedEventForID", unitID);
+        }
+
+        internal override void RecordDisplayUnitViewedEventForID(string unitID) {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("pushDisplayUnitViewedEventForID", unitID);
+        }
+
         internal override JSONArray GetAllInboxMessages()
         {
             string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
