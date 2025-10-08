@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 5.3.6 *(8 October, 2025)*
+-------------------------------------------
+- Aligned AndroidPlatformBinding by linking Native Display methods from androidlib to C#, ensuring consistent CleverTap SDK behavior across platforms.
+
 Version 5.3.5 *(6 October, 2025)*
 -------------------------------------------
 - Fix: Added internal Path property in UnityNativeRequest to resolve request.Path access issue [#218](https://github.com/CleverTap/clevertap-unity-sdk/issues/218)
