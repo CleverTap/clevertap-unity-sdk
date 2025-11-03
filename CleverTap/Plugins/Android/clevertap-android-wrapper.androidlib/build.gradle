@@ -7,10 +7,10 @@ ext {
     libraryDescription = 'The CleverTap Android Wrapper for Unity SDK'
 
     mindSdkVersionVal = 21
-    compileSdkVersionVal = 35
+    compileSdkVersionVal = 36
     targetSdkVersionVal = compileSdkVersionVal
 
-    libraryVersion = "5.3.3"
+    libraryVersion = "5.3.7"
 }
 
 android {
@@ -55,7 +55,7 @@ android {
 dependencies {
     compileOnly fileTree('libs')
 
-    api 'com.clevertap.android:clevertap-android-sdk:7.5.2'
+    api 'com.clevertap.android:clevertap-android-sdk:7.6.0'
     implementation "androidx.core:core:1.13.0"
     implementation "com.google.firebase:firebase-messaging:24.0.0"
 }
