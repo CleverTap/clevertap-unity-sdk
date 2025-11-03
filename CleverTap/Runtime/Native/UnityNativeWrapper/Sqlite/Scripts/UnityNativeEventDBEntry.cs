@@ -2,21 +2,18 @@
 using System;
 using SQLite4Unity3d;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace CleverTapSDK.Native
 {
     internal class UnityNativeEventDBEntry
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        public int Id { get; set; }
-#else
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-#endif
+        [Preserve] public int Id { get; set; }
 
-        public UnityNativeEventType EventType { get; set; }
-        public string JsonContent { get; set; }
-        public long Timestamp { get; set; }
+        [Preserve] public UnityNativeEventType EventType { get; set; }
+        [Preserve] public string JsonContent { get; set; }
+        [Preserve] public long Timestamp { get; set; }
 
         public UnityNativeEventDBEntry()
         {

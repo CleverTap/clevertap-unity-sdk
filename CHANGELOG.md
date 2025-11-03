@@ -1,5 +1,10 @@
 Change Log
 ==========
+Version 5.3.7 *(3 November, 2025)*
+-------------------------------------------
+- Added - "Preserve" attribute to address IL2CPP stripping of non-referenced property setters in UnityNativeEventDBEntry.
+- Updated to [CleverTap Android SDK v7.6.0](https://github.com/CleverTap/clevertap-android-sdk/tree/corev7.6.0_ptv2.2.0)
+- Updated to [CleverTap iOS SDK v7.3.4](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.3.4)
 
 Version 5.3.6 *(8 October, 2025)*
 -------------------------------------------
