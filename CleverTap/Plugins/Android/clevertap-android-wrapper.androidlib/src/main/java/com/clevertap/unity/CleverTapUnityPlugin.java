@@ -687,7 +687,13 @@ public class CleverTapUnityPlugin {
         if (value instanceof Map) {
             return new JSONObject((Map<?, ?>) value).toString();
         } else if (value instanceof String) {
-            return "\"" + value + "\"";
+            String stringValue = (String) value;
+            String parsedJson = tryParseJson(stringValue);
+            
+            if (parsedJson != null)
+                return parsedJson;
+
+            return "\"" + stringValue + "\"";
         } else {
             return value.toString();
         }
@@ -1243,5 +1249,20 @@ public class CleverTapUnityPlugin {
         }
 
         return array;
+    }
+
+    private String tryParseJson(String stringValue) {
+        if (stringValue == null) return null;
+        stringValue = stringValue.trim();
+
+        try {
+            if (stringValue.startsWith("{")) {
+                return new JSONObject(stringValue).toString();
+            } else if (stringValue.startsWith("[")) {
+                return new JSONArray(stringValue).toString();
+            }
+        } catch (Exception ignored) {}
+
+        return null;
     }
 }
