@@ -1,5 +1,12 @@
 Change Log
 ==========
+Version 5.4.0 *(25 November, 2025)*
+-------------------------------------------
+- Improved JSON Handling: Platform string variables that contain JSON data are now correctly detected and returned as proper JSON objects instead of plain quoted strings.
+- Unity 2021 Compatibility in UnityNativeRequest: Added support for Unity 2021* by including the required using System.Text; directive.
+- Updated to [CleverTap Android SDK v7.7.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.7.0)
+- Updated to [CleverTap iOS SDK v7.4.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.4.0)
+
 Version 5.3.7 *(3 November, 2025)*
 -------------------------------------------
 - Added - "Preserve" attribute to address IL2CPP stripping of non-referenced property setters in UnityNativeEventDBEntry.
