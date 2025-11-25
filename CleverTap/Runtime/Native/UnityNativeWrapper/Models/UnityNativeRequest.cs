@@ -1,6 +1,9 @@
 ﻿#if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+#if !UNITY_2022_1_OR_NEWER
+using System.Text;
+#endif
 using CleverTapSDK.Utilities;
 using UnityEngine.Networking;
 
