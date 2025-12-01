@@ -44,6 +44,7 @@ For CleverTap integration, ensure that the **Activity** option is selected in:
 
 ```text
 Project Settings → Player → Android → Other Settings → Application Entry Point
+```
 
 ```xml
 
