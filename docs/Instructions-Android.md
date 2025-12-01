@@ -33,7 +33,7 @@
         ```
         Otherwise use `com.clevertap.unity.CleverTapOverrideActivity` as shown in the Manifest below.
         
-        #### Unity 6 – Application Entry Point Consideration
+#### Unity 6 – Application Entry Point Consideration
         In **Unity 6**, the Android Player settings provide two application entry point options:
 
         - **Activity**
@@ -41,9 +41,9 @@
 
         For CleverTap integration, ensure that the **Activity** option is selected in:
 
-        ```
-        Project Settings → Player → Android → Other Settings → Application Entry Point
-        ```
++        ```text
++        Project Settings → Player → Android → Other Settings → Application Entry Point
++        ```
 ```xml
 
 <?xml version="1.0" encoding="utf-8"?>
