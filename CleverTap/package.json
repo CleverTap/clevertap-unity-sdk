@@ -1,6 +1,6 @@
 {
     "name": "com.clevertap.clevertap-sdk-unity",
-    "version": "5.4.0",
+    "version": "5.4.1",
     "displayName": "CleverTap",
     "description": "The CleverTap Unity SDK for App Analytics and Engagement.",
     "documentationUrl": "https://www.clevertap.com/docs",
