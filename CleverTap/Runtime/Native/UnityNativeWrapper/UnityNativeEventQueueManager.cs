@@ -1,4 +1,5 @@
 #if (!UNITY_IOS && !UNITY_ANDROID) || UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CleverTapSDK.Utilities;
@@ -8,11 +9,11 @@ namespace CleverTapSDK.Native
     internal class UnityNativeEventQueueManager
     {
         private readonly UnityNativeDatabaseStore _databaseStore;
-
         private readonly UnityNativeBaseEventQueue _userEventsQueue;
         private readonly UnityNativeBaseEventQueue _raisedEventsQueue;
         private readonly UnityNativeBaseEventQueue _singleEventsQueue;
         private readonly UnityNativeBaseEventQueue _notificationViewedEventQueue;
+        public Action<UnityNativeEvent> OnEventProcessed { get; set; }
 
         internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore)
         {
@@ -41,6 +42,9 @@ namespace CleverTapSDK.Native
 
         private void OnEventsProcessed(List<UnityNativeEvent> flushedEvents)
         {
+            foreach (UnityNativeEvent item in flushedEvents)
+                OnEventProcessed?.Invoke(item);
+
             _databaseStore.DeleteEvents(flushedEvents);
         }
 
