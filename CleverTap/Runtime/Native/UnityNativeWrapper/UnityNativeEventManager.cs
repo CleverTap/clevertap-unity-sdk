@@ -138,11 +138,12 @@ namespace CleverTapSDK.Native
 
         internal void RecordAppLaunch()
         {
-            _isAppLaunchEventProcessed = false;
             if (_coreState.SessionManager.CurrentSession.IsAppLaunched)
             {
                 return;
             }
+
+            _isAppLaunchEventProcessed = false;
 
             _networkEngine.SetHeaders(new Dictionary<string, string>() {
                 { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, _accountId },
@@ -157,14 +158,21 @@ namespace CleverTapSDK.Native
             UnityNativeEvent @event = BuildEventWithAppFields(UnityNativeEventType.RaisedEvent, eventDetails, false);
             StoreEvent(@event);
 
-            _eventQueueManager.FlushQueues();
             _eventQueueManager.OnEventProcessed += OnAppLaunchProcessed;
+            _eventQueueManager.FlushQueues();
         }
 
-        private void OnAppLaunchProcessed(UnityNativeEvent nativeEvent)
+        private void OnAppLaunchProcessed(UnityNativeEvent processedEvent)
         {
-            _isAppLaunchEventProcessed = true;
-            _eventQueueManager.OnEventProcessed -= OnAppLaunchProcessed;
+            Dictionary<string, object> eventData = Json.Deserialize(processedEvent.JsonContent) as Dictionary<string, object>;
+
+            if (eventData != null &&
+                eventData.TryGetValue(UnityNativeConstants.Event.EVENT_NAME, out var eventName) &&
+                eventName?.ToString() == UnityNativeConstants.Event.EVENT_APP_LUNACH)
+            {
+                _isAppLaunchEventProcessed = true;
+                _eventQueueManager.OnEventProcessed -= OnAppLaunchProcessed;
+            }
         }
         #endregion
 

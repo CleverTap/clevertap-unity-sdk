@@ -13,7 +13,7 @@ namespace CleverTapSDK.Native
         private readonly UnityNativeBaseEventQueue _raisedEventsQueue;
         private readonly UnityNativeBaseEventQueue _singleEventsQueue;
         private readonly UnityNativeBaseEventQueue _notificationViewedEventQueue;
-        public Action<UnityNativeEvent> OnEventProcessed { get; set; }
+        internal Action<UnityNativeEvent> OnEventProcessed { get; set; }
 
         internal UnityNativeEventQueueManager(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, UnityNativeDatabaseStore databaseStore)
         {
