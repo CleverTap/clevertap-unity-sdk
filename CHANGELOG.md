@@ -1,5 +1,9 @@
 Change Log
 ==========
+Version 5.4.1 *(9 January, 2026)*
+-------------------------------------------
+- Updated x64 and x86 sqlite3.dll binaries and updated their .meta files - SQLite version has been updated to 3.51.1 (latest).
+
 Version 5.4.0 *(25 November, 2025)*
 -------------------------------------------
 - Improved JSON Handling: Platform string variables that contain JSON data are now correctly detected and returned as proper JSON objects instead of plain quoted strings.
