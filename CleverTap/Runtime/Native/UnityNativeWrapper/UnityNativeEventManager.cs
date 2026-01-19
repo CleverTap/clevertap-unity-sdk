@@ -24,6 +24,7 @@ namespace CleverTapSDK.Native
         private string _accountId;
         private int _enableNetworkInfoReporting = -1;
         private bool _isAppInboxInitialized = false;
+        private bool _isAppLaunchEventProcessed = false;
 
         private readonly UnityNativePlatformVariable _platformVariable;
         private readonly UnityNativePlatformCustomTemplates _platformCustomTemplates;
@@ -142,6 +143,8 @@ namespace CleverTapSDK.Native
                 return;
             }
 
+            _isAppLaunchEventProcessed = false;
+
             _networkEngine.SetHeaders(new Dictionary<string, string>() {
                 { UnityNativeConstants.Network.HEADER_ACCOUNT_ID_NAME, _accountId },
             });
@@ -154,7 +157,22 @@ namespace CleverTapSDK.Native
 
             UnityNativeEvent @event = BuildEventWithAppFields(UnityNativeEventType.RaisedEvent, eventDetails, false);
             StoreEvent(@event);
+
+            _eventQueueManager.OnEventProcessed += OnAppLaunchProcessed;
             _eventQueueManager.FlushQueues();
+        }
+
+        private void OnAppLaunchProcessed(UnityNativeEvent processedEvent)
+        {
+            Dictionary<string, object> eventData = Json.Deserialize(processedEvent.JsonContent) as Dictionary<string, object>;
+
+            if (eventData != null &&
+                eventData.TryGetValue(UnityNativeConstants.Event.EVENT_NAME, out var eventName) &&
+                eventName?.ToString() == UnityNativeConstants.Event.EVENT_APP_LUNACH)
+            {
+                _isAppLaunchEventProcessed = true;
+                _eventQueueManager.OnEventProcessed -= OnAppLaunchProcessed;
+            }
         }
         #endregion
 
@@ -692,7 +710,7 @@ namespace CleverTapSDK.Native
         {
             if (_coreState == null ||
                 _coreState.SessionManager == null ||
-                !_coreState.SessionManager.CurrentSession.IsAppLaunched)
+                !_coreState.SessionManager.CurrentSession.IsAppLaunched || !_isAppLaunchEventProcessed)
             {
                 CleverTapLogger.Log($"App Launched not yet processed, re-queuing event after {DEFER_EVENT_UNTIL_APP_LAUNCHED_SECONDS}s.");
                 MonoHelper.Instance.StartCoroutine(DeferEventCoroutine(action));
