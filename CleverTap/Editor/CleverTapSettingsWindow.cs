@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using CleverTapSDK.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +10,8 @@ namespace CleverTapSDK.Private
         private static readonly string windowName = "CleverTap Settings";
 
         private CleverTapSettings settings;
+        private SerializedObject serializedSettings;
+        private Vector2 scrollPosition;
 
         // Add menu item to open the window
         [MenuItem(ITEM_NAME)]
@@ -21,52 +22,51 @@ namespace CleverTapSDK.Private
 
         private void OnEnable()
         {
+            // Load or create the ScriptableObject
             settings = LoadCleverTapSettings();
+            
+            if (settings != null)
+            {
+                serializedSettings = new SerializedObject(settings);
+            }
         }
 
         private void OnGUI()
         {
-            if (settings == null)
+            if (settings == null || serializedSettings == null)
             {
                 GUILayout.Label("Error loading settings", EditorStyles.boldLabel);
                 return;
             }
 
-            float originalValue = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = 180;
-
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            
             GUILayout.Label(windowName, EditorStyles.boldLabel);
+            EditorGUILayout.Space();
 
-            settings.CleverTapAccountId = EditorGUILayout.TextField(new GUIContent("CleverTapAccountId", "Clevertap Project ID"),
-                settings.CleverTapAccountId);
-            settings.CleverTapAccountToken = EditorGUILayout.TextField(new GUIContent("CleverTapAccountToken", "Clevertap Project Token"),
-                settings.CleverTapAccountToken);
-            settings.CleverTapAccountRegion = EditorGUILayout.TextField(new GUIContent("CleverTapAccountRegion", "CleverTap Region Code"),
-                settings.CleverTapAccountRegion);
-            settings.CleverTapProxyDomain = EditorGUILayout.TextField(new GUIContent("CleverTapProxyDomain", "Custom Proxy Domain"),
-                settings.CleverTapProxyDomain);
-            settings.CleverTapSpikyProxyDomain = EditorGUILayout.TextField(new GUIContent("CleverTapSpikyProxyDomain", "Spiky Proxy Domain"),
-                settings.CleverTapSpikyProxyDomain);
+            // Update the SerializedObject to get latest values
+            serializedSettings.Update();
 
-            GUILayout.Label("iOS specific settings", EditorStyles.boldLabel);
-            settings.CleverTapDisableIDFV = EditorGUILayout.Toggle(new GUIContent("CleverTapDisableIDFV", "Disable IDFV use on iOS"),
-                settings.CleverTapDisableIDFV);
-            settings.CleverTapIOSUseAutoIntegrate = EditorGUILayout.Toggle(new GUIContent("UseAutoIntegrate",
-                "Use [CleverTap autoIntegrate] and swizzling on iOS"),
-                settings.CleverTapIOSUseAutoIntegrate);
-            settings.CleverTapIOSUseUNUserNotificationCenter = EditorGUILayout.Toggle(new GUIContent("UseUNUserNotificationCenter",
-                "Boolean whether to set UNUserNotificationCenter delegate on iOS. When disabled, you must implement the delegate yourself and call CleverTap methods."),
-                settings.CleverTapIOSUseUNUserNotificationCenter);
-            settings.CleverTapIOSPresentNotificationOnForeground = EditorGUILayout.Toggle(new GUIContent("PresentNotificationForeground",
-                "Boolean whether to present remote notifications while app is on foreground on iOS."),
-                settings.CleverTapIOSPresentNotificationOnForeground);
+            // Display all properties of the ScriptableObject
+            SerializedProperty property = serializedSettings.GetIterator();
+            property.NextVisible(true); // Skip the script property
+            
+            while (property.NextVisible(false))
+            {
+                EditorGUILayout.PropertyField(property, true);
+            }
 
-            GUILayout.Label("Other settings", EditorStyles.boldLabel);
-            settings.CleverTapSettingsSaveToJSON = EditorGUILayout.Toggle(new GUIContent("Save to streaming assets",
-"When enabled, settings will be saved as JSON in StreamingAssets folder for runtime access"), settings.CleverTapSettingsSaveToJSON);
+            // Apply any changes
+            if (serializedSettings.ApplyModifiedProperties())
+            {
+                EditorUtility.SetDirty(settings);
+            }
 
-            EditorGUIUtility.labelWidth = originalValue;
+            EditorGUILayout.EndScrollView();
 
+            EditorGUILayout.Space();
+            
+            // Save button
             if (GUILayout.Button("Save Settings"))
             {
                 SaveCleverTapSettings();
@@ -82,20 +82,22 @@ namespace CleverTapSDK.Private
 
                 if (settings == null)
                 {
-                    Debug.Log("Asset not found. Creating asset.");
+                    Debug.Log("CleverTapSettings asset not found. Creating new asset.");
                     // Create a new instance if it doesn't exist
                     settings = CreateInstance<CleverTapSettings>();
+                    
+                    // Initialize with default environment values
+                    var defaultDict = new System.Collections.Generic.Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>();
+                    foreach (CleverTapEnvironmentKey env in System.Enum.GetValues(typeof(CleverTapEnvironmentKey)))
+                    {
+                        defaultDict[env] = new CleverTapEnvironmentCredential();
+                    }
+                    
+                    settings.Environments = SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>.FromDictionary(defaultDict);
+                    
                     AssetDatabase.CreateAsset(settings, CleverTapSettings.settingsPath);
                     AssetDatabase.SaveAssets();
-                    // Refresh the database to make sure the new asset is recognized
                     AssetDatabase.Refresh();
-                }
-                else
-                {
-                    if (settings.CleverTapSettingsSaveToJSON && !File.Exists(CleverTapSettings.jsonPath))
-                    {
-                        SaveSettingsToJson();
-                    }
                 }
 
                 return settings;
@@ -109,12 +111,12 @@ namespace CleverTapSDK.Private
 
         private void SaveCleverTapSettings()
         {
-            // Save settings to .asset file
+            // Save the ScriptableObject asset
             EditorUtility.SetDirty(settings);
-            AssetDatabase.SaveAssetIfDirty(settings);
+            AssetDatabase.SaveAssets();
             Debug.Log($"CleverTapSettings saved to {CleverTapSettings.settingsPath}");
 
-            // Save or Delete settings JSON file
+            // Save to JSON if enabled
             if (settings.CleverTapSettingsSaveToJSON)
             {
                 SaveSettingsToJson();
@@ -130,37 +132,37 @@ namespace CleverTapSDK.Private
             try
             {
                 string json = JsonUtility.ToJson(settings, true);
-                if (!Directory.Exists(Application.streamingAssetsPath))
+                if (!System.IO.Directory.Exists(Application.streamingAssetsPath))
                 {
-                    Directory.CreateDirectory(Application.streamingAssetsPath);
+                    System.IO.Directory.CreateDirectory(Application.streamingAssetsPath);
                 }
-                File.WriteAllText(CleverTapSettings.jsonPath, json);
+                System.IO.File.WriteAllText(CleverTapSettings.jsonPath, json);
                 Debug.Log($"CleverTap settings saved to {CleverTapSettings.jsonPath}");
                 AssetDatabase.Refresh();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Debug.LogError($"Failed to save settings to JSON: {ex.Message}");
                 EditorUtility.DisplayDialog("Error",
-                "Failed to save settings to JSON. Check the console for details.", "OK");
+                    "Failed to save settings to JSON. Check the console for details.", "OK");
             }
         }
 
         private void DeleteSettingsJson()
         {
-            if (File.Exists(CleverTapSettings.jsonPath))
+            if (System.IO.File.Exists(CleverTapSettings.jsonPath))
             {
                 try
                 {
-                    File.Delete(CleverTapSettings.jsonPath);
+                    System.IO.File.Delete(CleverTapSettings.jsonPath);
                     Debug.Log($"CleverTap settings deleted from: {CleverTapSettings.jsonPath}");
                     AssetDatabase.Refresh();
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Debug.LogError($"Failed to delete settings JSON: {ex.Message}");
                     EditorUtility.DisplayDialog("Error",
-                    "Failed to delete settings JSON. Check the console for details.", "OK");
+                        "Failed to delete settings JSON. Check the console for details.", "OK");
                 }
             }
         }

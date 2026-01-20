@@ -27,6 +27,10 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 + (void)registerPush;
 + (void)setApplicationIconBadgeNumber:(int)num;
 
+#pragma mark - Unity Helpers
+
++ (NSString * _Nullable)getUnityPlayerPrefsString:(NSString *)key;
+
 #pragma mark - Offline API
 
 - (void)setOffline:(BOOL)enabled;

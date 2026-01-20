@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using CleverTapSDK.Utilities;
 using UnityEngine;
 #if UNITY_WEBGL && !UNITY_EDITOR
 using System.Threading.Tasks;
@@ -22,9 +24,13 @@ namespace CTExample
         private static readonly object _lock = new object();
 #endif
 
-        public string CleverTapAccountId;
-        public string CleverTapAccountToken;
-        public string CleverTapAccountRegion;
+        public CleverTapEnvironmentKey DefaultEnvironment = Debug.isDebugBuild ? Enum.Parse<CleverTapEnvironmentKey>(PlayerPrefs.GetString("CleverTapEnvironment", "PROD"))
+        : CleverTapEnvironmentKey.PROD;
+       
+        public SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> Environments = new SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>();
+        public string CleverTapAccountId => Environments.ToDictionary()[DefaultEnvironment].CleverTapAccountId;
+        public string CleverTapAccountToken => Environments.ToDictionary()[DefaultEnvironment].CleverTapAccountToken;
+        public string CleverTapAccountRegion => Environments.ToDictionary()[DefaultEnvironment].CleverTapAccountRegion;
 
 #if !(UNITY_WEBGL && !UNITY_EDITOR)
         public static CleverTapSettingsRuntime Instance

@@ -28,11 +28,41 @@
 #endif
     
 #ifdef NO_AUTOINTEGRATE
-    NSString *_accountId = [self metaDataForAttribute:CT_ACCOUNT_ID_LABEL];
-    NSString *_accountToken = [self metaDataForAttribute:CT_TOKEN_LABEL];
-    NSString *_accountRegion = [self metaDataForAttribute:CT_REGION_LABEL];
-    NSString *_proxyDomain = [self metaDataForAttribute:CT_PROXY_DOMAIN_LABEL];
-    NSString *_spikyProxyDomain = [self metaDataForAttribute:CT_SPIKY_PROXY_DOMAIN_LABEL];
+
+    NSString *envSuffix = @"";
+    #ifdef DEBUG
+    // Development builds: Read environment from PlayerPrefs
+    NSString *environment = [CleverTapUnityManager getUnityPlayerPrefsString:@"CleverTapEnvironment"];
+    if (environment && environment.length > 0) {
+        envSuffix = [NSString stringWithFormat:@"_%@", environment];
+        NSLog(@"[CleverTap] DEBUG build - Using environment from PlayerPrefs: %@", environment);
+    } else {
+        // No PlayerPrefs set, check for default environment from plist
+        NSString *defaultEnv = [self metaDataForAttribute:@"CleverTapDefaultEnv"];
+        if (defaultEnv && defaultEnv.length > 0) {
+            envSuffix = [NSString stringWithFormat:@"_%@", defaultEnv];
+            NSLog(@"[CleverTap] DEBUG build - Using default environment from plist: %@", defaultEnv);
+        } else {
+            NSLog(@"[CleverTap] DEBUG build - No environment set, using primary");
+        }
+    }
+#else
+    // Release builds: Always use primary environment (base keys)
+    NSLog(@"[CleverTap] RELEASE build - Using primary environment");
+#endif
+    
+    NSString *accountIdKey = [CT_ACCOUNT_ID_LABEL stringByAppendingString:envSuffix];
+    NSString *tokenKey = [CT_TOKEN_LABEL stringByAppendingString:envSuffix];
+    NSString *regionKey = [CT_REGION_LABEL stringByAppendingString:envSuffix];
+    NSString *proxyDomainKey = [CT_PROXY_DOMAIN_LABEL stringByAppendingString:envSuffix];
+    NSString *spikyProxyDomainKey = [CT_SPIKY_PROXY_DOMAIN_LABEL stringByAppendingString:envSuffix];
+
+    NSString *_accountId = [self metaDataForAttribute:accountIdKey];
+    NSString *_accountToken = [self metaDataForAttribute:tokenKey];
+    NSString *_accountRegion = [self metaDataForAttribute:regionKey];
+    NSString *_proxyDomain = [self metaDataForAttribute:proxyDomainKey];
+    NSString *_spikyProxyDomain = [self metaDataForAttribute:spikyProxyDomainKey];
+
     if (_accountRegion) {
         [CleverTap setCredentialsWithAccountID:_accountId token:_accountToken region:_accountRegion];
     } else {

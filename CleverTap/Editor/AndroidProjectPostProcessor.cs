@@ -5,6 +5,7 @@ using System.Xml;
 using UnityEditor;
 using UnityEditor.Android;
 using UnityEngine;
+using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Private
 {
@@ -19,7 +20,8 @@ namespace CleverTapSDK.Private
             string androidProjectPath = path + "/clevertap-android-wrapper.androidlib";
 
             CopyAssetsToAndroidProject(androidProjectPath);
-            CopySettingsToAndroidManifest(androidProjectPath);
+            bool isDevelopmentBuild = EditorUserBuildSettings.development;
+            CopySettingsToAndroidManifest(androidProjectPath, isDevelopmentBuild);
         }
 
         private static void CopyAssetsToAndroidProject(string androidProjectPath)
@@ -34,7 +36,7 @@ namespace CleverTapSDK.Private
                 new HashSet<string>() { EditorUtils.CLEVERTAP_CUSTOM_TEMPLATES_FOLDER });
         }
 
-        private static void CopySettingsToAndroidManifest(string androidProjectPath)
+        private static void CopySettingsToAndroidManifest(string androidProjectPath, bool isDevelopmentBuild)
         {
             var settings = AssetDatabase.LoadAssetAtPath<CleverTapSettings>(CleverTapSettings.settingsPath);
             if (settings == null)
@@ -42,6 +44,20 @@ namespace CleverTapSDK.Private
                 Debug.Log($"CleverTapSettings have not been set.\n" +
                 $"Please update them from {CleverTapSettingsWindow.ITEM_NAME} or " +
                 $"set them manually in the project's AndroidManifest.xml.");
+                return;
+            }
+
+            Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environmentCredentials = settings.Environments.ToDictionary();
+
+            if (environmentCredentials == null || environmentCredentials.Count == 0)
+            {
+                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                return;
+            }
+
+            if (!environmentCredentials.TryGetValue(settings.DefaultEnvionment, out CleverTapEnvironmentCredential environmentCredential))
+            {
+                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvionment}");
                 return;
             }
 
@@ -73,11 +89,29 @@ namespace CleverTapSDK.Private
                 manifestNode.AppendChild(applicationNode);
             }
 
-            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_ACCOUNT_ID", settings.CleverTapAccountId);
-            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_TOKEN", settings.CleverTapAccountToken);
-            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_REGION", settings.CleverTapAccountRegion);
-            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_PROXY_DOMAIN", settings.CleverTapProxyDomain);
-            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_SPIKY_PROXY_DOMAIN", settings.CleverTapSpikyProxyDomain);
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_ACCOUNT_ID", environmentCredential.CleverTapAccountId);
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_TOKEN", environmentCredential.CleverTapAccountToken);
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_REGION", environmentCredential.CleverTapAccountRegion);
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_PROXY_DOMAIN", environmentCredential.CleverTapProxyDomain);
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_SPIKY_PROXY_DOMAIN", environmentCredential.CleverTapSpikyProxyDomain);
+
+            if (isDevelopmentBuild)
+            {
+                Debug.Log($"[CleverTap] Development Build - Writing {environmentCredentials.Count} additional environment(s) to AndroidManifest.xml");
+                UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_DEFAULT_ENV", settings.DefaultEnvionment.ToString());
+                Debug.Log($"[CleverTap] Setting default environment to: {settings.DefaultEnvionment}");
+
+                foreach (KeyValuePair<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> cred in environmentCredentials)
+                {
+                    string suffix = "_" + cred.Key.ToString();
+                    UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_ACCOUNT_ID" + suffix, cred.Value.CleverTapAccountId);
+                    UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_TOKEN" + suffix, cred.Value.CleverTapAccountToken);
+                    UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_REGION" + suffix, cred.Value.CleverTapAccountRegion);
+                    UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_PROXY_DOMAIN" + suffix, cred.Value.CleverTapProxyDomain);
+                    UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_SPIKY_PROXY_DOMAIN" + suffix, cred.Value.CleverTapSpikyProxyDomain);
+                    Debug.Log($"[CleverTap] Added environment: {cred.Key} with AccountID: {cred.Value.CleverTapAccountId}");
+                }
+            }
 
             manifestXml.Save(manifestFilePath);
         }
