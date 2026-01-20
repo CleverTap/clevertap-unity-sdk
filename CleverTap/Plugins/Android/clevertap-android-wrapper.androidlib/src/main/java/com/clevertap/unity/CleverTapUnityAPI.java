@@ -9,10 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
+import android.util.Log;
 
 import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.CleverTapInstanceConfig;
 
 public class CleverTapUnityAPI {
 
@@ -23,7 +26,7 @@ public class CleverTapUnityAPI {
      */
     public static void initialize(Context context) {
         CleverTapCustomTemplates.registerCustomTemplates(context);
-        setCleverTapApiInstance(CleverTapAPI.getDefaultInstance(context));
+        initializeCleverTapWithEnvironment(context);
     }
 
     /**
@@ -105,6 +108,100 @@ public class CleverTapUnityAPI {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Initializes CleverTap API with environment-specific configuration
+     * For debug builds: Reads environment from PlayerPrefs or manifest metadata
+     * For release builds: Always uses primary environment (no suffix)
+     */
+    private static void initializeCleverTapWithEnvironment(Context context) {
+        String envSuffix = "";
+        boolean isDebugBuild = false;
+        Log.d("CleverTap", "Initialize CleverTap With Environment.");
+
+
+        // Check if this is a debug/development build
+        try {
+            ApplicationInfo appInfo = context.getApplicationInfo();
+            isDebugBuild = (appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            Log.d("CleverTap", "Initialize CleverTap With Environment. isDebugBuild: " + isDebugBuild);
+        } catch (Exception e) {
+            Log.e("CleverTap", "Error checking debug build status: " + e.getMessage());
+        }
+
+        // Development builds: Read environment from PlayerPrefs
+        if (isDebugBuild) {
+            String environment = CleverTapUnityPlugin.getUnityPlayerPrefsString(context, "CleverTapEnvironment");
+            Log.d("CleverTap", " DEBUG build - Environment from PlayerPrefs: " + environment);
+
+            if (environment != null && !environment.isEmpty()) {
+                envSuffix = "_" + environment;
+                Log.d("CleverTap", "DEBUG build - Using environment from PlayerPrefs: " + environment);
+            } else {
+                Log.d("CleverTap", " else DEBUG build - Using environment from PlayerPrefs: " + environment);
+                // No PlayerPrefs set, check for default environment from manifest
+                try {
+                    ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
+                        context.getPackageName(), PackageManager.GET_META_DATA);
+                    Bundle metaData = ai.metaData;
+                    if (metaData != null) {
+                        String defaultEnv = metaData.getString("CLEVERTAP_DEFAULT_ENV");
+                        if (defaultEnv != null && !defaultEnv.isEmpty()) {
+                            envSuffix = "_" + defaultEnv;
+                            Log.d("CleverTap", "DEBUG build - Using default environment from manifest: " + defaultEnv);
+                        } else {
+                            Log.d("CleverTap", "DEBUG build - No environment set, using primary");
+                        }
+                    } else {
+                        Log.d("CleverTap", "DEBUG build - No environment set, using primary");
+                    }
+                } catch (Exception e) {
+                    Log.d("CleverTap", "DEBUG build - No environment set, using primary");
+                }
+            }
+        } else {
+            // Release builds: Always use primary environment (base keys)
+            Log.d("CleverTap", "RELEASE build - Using primary environment");
+        }
+
+        // Read credentials from manifest with environment suffix
+        try {
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
+                context.getPackageName(), PackageManager.GET_META_DATA);
+            Bundle metaData = ai.metaData;
+
+            if (metaData != null) {
+                String accountId = metaData.getString("CLEVERTAP_ACCOUNT_ID" + envSuffix);
+                String token = metaData.getString("CLEVERTAP_TOKEN" + envSuffix);
+                String region = metaData.getString("CLEVERTAP_REGION" + envSuffix);
+                String proxyDomain = metaData.getString("CLEVERTAP_PROXY_DOMAIN" + envSuffix);
+                String spikyProxyDomain = metaData.getString("CLEVERTAP_SPIKY_PROXY_DOMAIN" + envSuffix);
+
+                CleverTapInstanceConfig config;
+                if (region != null && !region.isEmpty()) {
+                    config = CleverTapInstanceConfig.createInstance(context, accountId, token, region);
+                } else {
+                    config = CleverTapInstanceConfig.createInstance(context, accountId, token);
+                    if (proxyDomain != null && !proxyDomain.isEmpty()) {
+                        config.setProxyDomain(proxyDomain);
+                    }
+                    if (spikyProxyDomain != null && !spikyProxyDomain.isEmpty()) {
+                        config.setSpikyProxyDomain(spikyProxyDomain);
+                    }
+                }
+
+                CleverTapAPI instance = CleverTapAPI.instanceWithConfig(context, config);
+                setCleverTapApiInstance(instance);
+                Log.d("CleverTap", "Initialized with environment suffix: " + envSuffix);
+            } else {
+                Log.w("CleverTap", "No meta-data found in AndroidManifest.xml, using default instance");
+                setCleverTapApiInstance(CleverTapAPI.getDefaultInstance(context));
+            }
+        } catch (Exception e) {
+            Log.e("CleverTap", "Error reading manifest meta-data: " + e.getMessage());
+            setCleverTapApiInstance(CleverTapAPI.getDefaultInstance(context));
         }
     }
 }
