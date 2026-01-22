@@ -178,6 +178,12 @@ public class CleverTapUnityAPI {
                 String region = metaData.getString("CLEVERTAP_REGION" + envSuffix);
                 String proxyDomain = metaData.getString("CLEVERTAP_PROXY_DOMAIN" + envSuffix);
                 String spikyProxyDomain = metaData.getString("CLEVERTAP_SPIKY_PROXY_DOMAIN" + envSuffix);
+                
+                if (accountId == null || accountId.isEmpty() || token == null || token.isEmpty()) {
+                    Log.w("CleverTap", "Missing accountId/token in manifest meta-data, using default instance");
+                    setCleverTapApiInstance(CleverTapAPI.getDefaultInstance(context));
+                    return;
+                }
 
                 CleverTapInstanceConfig config;
                 if (region != null && !region.isEmpty()) {

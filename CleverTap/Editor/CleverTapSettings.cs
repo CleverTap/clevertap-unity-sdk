@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace CleverTapSDK.Private
     public class CleverTapSettings : ScriptableObject
     {
         #region Project Settings
-        public CleverTapEnvironmentKey DefaultEnvionment = CleverTapEnvironmentKey.PROD;
+        public CleverTapEnvironmentKey DefaultEnvironment = CleverTapEnvironmentKey.PROD;
 
         public SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> Environments = new SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>();
         #endregion
@@ -55,7 +54,7 @@ namespace CleverTapSDK.Private
         public override string ToString()
         {
             return $"CleverTapSettings:\n" +
-                   $"CleverTap Default Environment : {DefaultEnvionment}\n" +
+                   $"CleverTap Default Environment : {DefaultEnvironment}\n" +
                    $"CleverTap Environments : {JsonUtility.ToJson(Environments)}\n" +
                    $"CleverTapDisableIDFV: {CleverTapDisableIDFV}\n" +
                    $"CleverTapIOSUseAutoIntegrate: {CleverTapIOSUseAutoIntegrate}\n" +

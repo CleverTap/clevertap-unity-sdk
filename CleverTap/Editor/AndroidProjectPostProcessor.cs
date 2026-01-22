@@ -47,17 +47,23 @@ namespace CleverTapSDK.Private
                 return;
             }
 
-            Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environmentCredentials = settings.Environments.ToDictionary();
-
-            if (environmentCredentials == null || environmentCredentials.Count == 0)
+            if(settings.Environments == null || settings.Environments.Items == null)
             {
                 Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
                 return;
             }
 
-            if (!environmentCredentials.TryGetValue(settings.DefaultEnvionment, out CleverTapEnvironmentCredential environmentCredential))
+            Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environmentCredentials = settings.Environments.ToDictionary();
+
+            if (environmentCredentials.Count == 0)
             {
-                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvionment}");
+                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                return;
+            }
+
+            if (!environmentCredentials.TryGetValue(settings.DefaultEnvironment, out CleverTapEnvironmentCredential environmentCredential))
+            {
+                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
                 return;
             }
 
@@ -98,8 +104,8 @@ namespace CleverTapSDK.Private
             if (isDevelopmentBuild)
             {
                 Debug.Log($"[CleverTap] Development Build - Writing {environmentCredentials.Count} additional environment(s) to AndroidManifest.xml");
-                UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_DEFAULT_ENV", settings.DefaultEnvionment.ToString());
-                Debug.Log($"[CleverTap] Setting default environment to: {settings.DefaultEnvionment}");
+                UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_DEFAULT_ENV", settings.DefaultEnvironment.ToString());
+                Debug.Log($"[CleverTap] Setting default environment to: {settings.DefaultEnvironment}");
 
                 foreach (KeyValuePair<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> cred in environmentCredentials)
                 {

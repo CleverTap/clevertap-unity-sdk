@@ -319,16 +319,21 @@ namespace CTExample
                 throw new BuildFailedException("[CTExample] CleverTapSettings is null. Cannot configure push impressions.");
             }
 
-            Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environments = settings.Environments.ToDictionary();
-
-            if (environments == null || environments.Count == 0)
+            if (settings.Environments == null || settings.Environments.Items == null)
             {
                 throw new BuildFailedException("[CTExample] CleverTapSettings - Environments are not configured.");
             }
 
-            if(!environments.TryGetValue(settings.DefaultEnvionment, out CleverTapEnvironmentCredential environmentValue))
+            Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environments = settings.Environments.ToDictionary();
+
+            if (environments.Count == 0)
             {
-                throw new BuildFailedException($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvionment}");
+                throw new BuildFailedException("[CTExample] CleverTapSettings - Environments are not configured.");
+            }
+
+            if (!environments.TryGetValue(settings.DefaultEnvironment, out CleverTapEnvironmentCredential environmentValue))
+            {
+                throw new BuildFailedException($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
             }
 
             string plistPath = Path.Combine(path, InfoPropertyList);

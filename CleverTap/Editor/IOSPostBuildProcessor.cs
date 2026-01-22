@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS && UNITY_EDITOR
+﻿#if !UNITY_IOS && UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using CleverTapSDK.Utilities;
@@ -120,6 +120,12 @@ namespace CleverTapSDK.Private
 
             PlistElementDict rootDict = plist.root;
 
+            if (settings.Environments == null || settings.Environments.Items == null)
+            {
+                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                return;
+            }
+
             Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environments = settings.Environments.ToDictionary();
 
             if (environments == null || environments.Count == 0)
@@ -128,9 +134,9 @@ namespace CleverTapSDK.Private
                 return;
             }
 
-            if (!environments.TryGetValue(settings.DefaultEnvionment, out CleverTapEnvironmentCredential environmentValue))
+            if (!environments.TryGetValue(settings.DefaultEnvironment, out CleverTapEnvironmentCredential environmentValue))
             {
-                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvionment}");
+                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
                 return;
             }
 
@@ -174,27 +180,27 @@ namespace CleverTapSDK.Private
             if (isDevelopmentBuild)
             {
                 Debug.Log($"[CleverTap] Development Build - Writing {environments.Count} additional environment(s) to Info.plist");
-                rootDict.SetString("CleverTapDefaultEnv", settings.DefaultEnvionment.ToString());
+                rootDict.SetString("CleverTapDefaultEnv", settings.DefaultEnvironment.ToString());
 
                 foreach (KeyValuePair<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> env in environments)
                 {
                     string suffix = "_" + env.Key.ToString();
-                    
+
                     if (!string.IsNullOrWhiteSpace(env.Value.CleverTapAccountId))
                         rootDict.SetString("CleverTapAccountID" + suffix, env.Value.CleverTapAccountId);
-                    
+
                     if (!string.IsNullOrWhiteSpace(env.Value.CleverTapAccountToken))
                         rootDict.SetString("CleverTapToken" + suffix, env.Value.CleverTapAccountToken);
-                    
+
                     if (!string.IsNullOrWhiteSpace(env.Value.CleverTapAccountRegion))
                         rootDict.SetString("CleverTapRegion" + suffix, env.Value.CleverTapAccountRegion);
-                    
+
                     if (!string.IsNullOrWhiteSpace(env.Value.CleverTapProxyDomain))
                         rootDict.SetString("CleverTapProxyDomain" + suffix, env.Value.CleverTapProxyDomain);
-                    
+
                     if (!string.IsNullOrWhiteSpace(env.Value.CleverTapSpikyProxyDomain))
                         rootDict.SetString("CleverTapSpikyProxyDomain" + suffix, env.Value.CleverTapSpikyProxyDomain);
-                    
+
                     Debug.Log($"[CleverTap] Added environment: {env.Key} with AccountID: {env.Value.CleverTapAccountId}");
                 }
             }

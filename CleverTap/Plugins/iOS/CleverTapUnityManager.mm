@@ -158,11 +158,10 @@ static BOOL shouldDisableBuffers = YES;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *value = [defaults stringForKey:key];
     
-    NSLog(@"CleverTap: Looking for key '%@' in NSUserDefaults. Found: %@", 
-          key, value ? [NSString stringWithFormat:@"'%@'", value] : @"(null)");
-    
     // Optional: Log all PlayerPrefs keys for debugging
     #if DEBUG
+    NSLog(@"CleverTap: Looking for key '%@' in NSUserDefaults. Found: %@", key, value ? [NSString stringWithFormat:@"'%@'", value] : @"(null)");
+
     NSDictionary *allDefaults = [defaults dictionaryRepresentation];
     NSSet *playerPrefsKeys = [allDefaults keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
         // Filter for likely Unity keys if needed
