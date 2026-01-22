@@ -3,6 +3,7 @@ using CleverTapSDK.Constants;
 using CleverTapSDK.Utilities;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CleverTapSDK {
     public static class CleverTap {
@@ -609,6 +610,24 @@ namespace CleverTapSDK {
         public static void SyncCustomTemplates(bool isProduction) =>
             cleverTapCustomInApps.SyncCustomTemplates(isProduction);
 
+        #endregion
+
+        #region Methods - Multi-Environment Support
+        /// <summary>
+        /// Stores the selected CleverTap environment key in PlayerPrefs for debug builds,
+        /// allowing the app to persist and reuse the environment configuration during development.
+        /// </summary>
+        /// <param name="environmentKey">
+        /// The CleverTap environment key to be selected and stored for the current debug session.
+        /// </param>
+        public static void SelectCleverTapEnvironmentCredential(CleverTapEnvironmentKey environmentKey)
+        {
+            if (Debug.isDebugBuild)
+            {
+                PlayerPrefs.SetString("CleverTapEnvironment", $"{environmentKey}");
+                PlayerPrefs.Save();
+            }
+        }
         #endregion
     }
 }

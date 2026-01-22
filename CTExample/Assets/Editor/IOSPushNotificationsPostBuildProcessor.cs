@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CleverTapSDK.Private;
+using CleverTapSDK.Utilities;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Callbacks;
@@ -318,6 +319,23 @@ namespace CTExample
                 throw new BuildFailedException("[CTExample] CleverTapSettings is null. Cannot configure push impressions.");
             }
 
+            if (settings.Environments == null || settings.Environments.Items == null)
+            {
+                throw new BuildFailedException("[CTExample] CleverTapSettings - Environments are not configured.");
+            }
+
+            Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> environments = settings.Environments.ToDictionary();
+
+            if (environments.Count == 0)
+            {
+                throw new BuildFailedException("[CTExample] CleverTapSettings - Environments are not configured.");
+            }
+
+            if (!environments.TryGetValue(settings.DefaultEnvironment, out CleverTapEnvironmentCredential environmentValue))
+            {
+                throw new BuildFailedException($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
+            }
+
             string plistPath = Path.Combine(path, InfoPropertyList);
             if (!File.Exists(plistPath))
             {
@@ -328,9 +346,9 @@ namespace CTExample
             plist.ReadFromString(File.ReadAllText(plistPath));
 
             PlistElementDict rootDict = plist.root;
-            if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountId))
+            if (!string.IsNullOrWhiteSpace(environmentValue.CleverTapAccountId))
             {
-                rootDict.SetString("CleverTapAccountID", settings.CleverTapAccountId);
+                rootDict.SetString("CleverTapAccountID", environmentValue.CleverTapAccountId);
             }
             else
             {
@@ -340,9 +358,9 @@ namespace CTExample
                     $"manually in the project Info.plist.");
             }
 
-            if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountToken))
+            if (!string.IsNullOrWhiteSpace(environmentValue.CleverTapAccountToken))
             {
-                rootDict.SetString("CleverTapToken", settings.CleverTapAccountToken);
+                rootDict.SetString("CleverTapToken", environmentValue.CleverTapAccountToken);
             }
             else
             {
@@ -352,17 +370,17 @@ namespace CTExample
                     $"manually in the project Info.plist.");
             }
 
-            if (!string.IsNullOrWhiteSpace(settings.CleverTapAccountRegion))
+            if (!string.IsNullOrWhiteSpace(environmentValue.CleverTapAccountRegion))
             {
-                rootDict.SetString("CleverTapRegion", settings.CleverTapAccountRegion);
+                rootDict.SetString("CleverTapRegion", environmentValue.CleverTapAccountRegion);
             }
-            if (!string.IsNullOrWhiteSpace(settings.CleverTapProxyDomain))
+            if (!string.IsNullOrWhiteSpace(environmentValue.CleverTapProxyDomain))
             {
-                rootDict.SetString("CleverTapProxyDomain", settings.CleverTapProxyDomain);
+                rootDict.SetString("CleverTapProxyDomain", environmentValue.CleverTapProxyDomain);
             }
-            if (!string.IsNullOrWhiteSpace(settings.CleverTapSpikyProxyDomain))
+            if (!string.IsNullOrWhiteSpace(environmentValue.CleverTapSpikyProxyDomain))
             {
-                rootDict.SetString("CleverTapSpikyProxyDomain", settings.CleverTapSpikyProxyDomain);
+                rootDict.SetString("CleverTapSpikyProxyDomain", environmentValue.CleverTapSpikyProxyDomain);
             }
             rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
 

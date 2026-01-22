@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using CleverTapSDK.Utilities;
 using UnityEngine;
 #if UNITY_WEBGL && !UNITY_EDITOR
 using System.Threading.Tasks;
@@ -22,9 +25,50 @@ namespace CTExample
         private static readonly object _lock = new object();
 #endif
 
-        public string CleverTapAccountId;
-        public string CleverTapAccountToken;
-        public string CleverTapAccountRegion;
+        private CleverTapEnvironmentKey? _defaultEnvironment = null;
+
+        public CleverTapEnvironmentKey DefaultEnvironment
+        {
+            get
+            {
+                if (_defaultEnvironment == null)
+                {
+                    _defaultEnvironment = CleverTapEnvironmentKey.PROD;
+
+                    if (Debug.isDebugBuild)
+                    {
+                        string envString = PlayerPrefs.GetString("CleverTapEnvironment", "PROD");
+
+                        if (Enum.TryParse<CleverTapEnvironmentKey>(envString, out CleverTapEnvironmentKey key))
+                        {
+                            _defaultEnvironment = key;
+                        }
+                    }
+                }
+
+                return _defaultEnvironment.Value;
+            }
+        }
+
+        private Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> _envCache;
+        private Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> EnvironmentsDict
+        {
+            get
+            {
+                if (_envCache == null && Environments != null)
+                {
+                    _envCache = Environments.ToDictionary();
+                }
+
+                return _envCache;
+            }
+        }
+
+        public SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> Environments = new SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>();
+        public string CleverTapAccountId => EnvironmentsDict?.TryGetValue(DefaultEnvironment, out var cred) == true ? cred.CleverTapAccountId : null;
+        public string CleverTapAccountToken => EnvironmentsDict?.TryGetValue(DefaultEnvironment, out var cred) == true ? cred.CleverTapAccountToken : null;
+        public string CleverTapAccountRegion => EnvironmentsDict?.TryGetValue(DefaultEnvironment, out var cred) == true ? cred.CleverTapAccountRegion : null;
+
 
 #if !(UNITY_WEBGL && !UNITY_EDITOR)
         public static CleverTapSettingsRuntime Instance
