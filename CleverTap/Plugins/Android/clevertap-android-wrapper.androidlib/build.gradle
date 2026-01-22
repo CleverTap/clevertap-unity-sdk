@@ -10,7 +10,7 @@ ext {
     compileSdkVersionVal = 36
     targetSdkVersionVal = compileSdkVersionVal
 
-    libraryVersion = "5.4.0"
+    libraryVersion = "5.5.0"
 }
 
 android {
@@ -55,7 +55,7 @@ android {
 dependencies {
     compileOnly fileTree('libs')
 
-    api 'com.clevertap.android:clevertap-android-sdk:7.7.0'
+    api 'com.clevertap.android:clevertap-android-sdk:7.7.1'
     implementation "androidx.core:core:1.13.0"
     implementation "com.google.firebase:firebase-messaging:24.0.0"
 }

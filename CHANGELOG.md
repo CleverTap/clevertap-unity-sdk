@@ -1,5 +1,13 @@
 Change Log
 ==========
+Version 5.5.0 *(22 January, 2026)*
+-------------------------------------------
+- BREAKING CHANGES - [Multi-Environment Settings](docs/multi-environment-crendential-support.md)
+- Updated x64 and x86 sqlite3.dll binaries and updated their .meta files - SQLite version has been updated to 3.51.1 (latest).
+- Updated to [CleverTap Android SDK v7.7.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.7.1)
+- Updated to [CleverTap iOS SDK v7.4.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.4.1)
+- Track app launch event processing state - Queue Custom Events
+
 Version 5.4.0 *(25 November, 2025)*
 -------------------------------------------
 - Improved JSON Handling: Platform string variables that contain JSON data are now correctly detected and returned as proper JSON objects instead of plain quoted strings.

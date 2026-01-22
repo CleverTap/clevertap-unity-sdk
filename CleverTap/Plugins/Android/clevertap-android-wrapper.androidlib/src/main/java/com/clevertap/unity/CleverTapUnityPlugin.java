@@ -164,6 +164,42 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    @Nullable
+    static synchronized String getUnityPlayerPrefsString(Context context, String key) {
+        if (context == null || key == null) {
+            return null;
+        }
+        
+        String packageName = context.getPackageName();
+        String[] possibleFiles = new String[] {
+            "unity." + packageName + ".v2.playerprefs",  // Most common for newer Unity
+            "com.unity3d.player.UnityPlayer",            // Another common pattern
+            "UnityPlayerPrefs",                          // Older Unity versions
+            packageName + ".v2.playerprefs",             // Alternative pattern
+            "PlayerPrefs",                               // Simple pattern
+            "unity.playerprefs"                          // Simple Unity pattern
+        };
+        
+        for (String prefFile : possibleFiles) {
+            try {
+                android.content.SharedPreferences prefs = context.getSharedPreferences(
+                    prefFile,
+                    Context.MODE_PRIVATE
+                );
+                String value = prefs.getString(key, null);
+                if (value != null) {
+                    Log.d(LOG_TAG, "Found key '" + key + "' = '" + value + "' in file: " + prefFile);
+                    return value;
+                }
+            } catch (Exception e) {
+                Log.d(LOG_TAG, "Failed to read from " + prefFile + ": " + e.getMessage());
+            }
+        }
+        
+        Log.d(LOG_TAG, "Key '" + key + "' not found in any PlayerPrefs file");
+        return null;
+    }
+
     private CleverTapUnityPlugin(final @NonNull CleverTapAPI cleverTapApi) {
         callbackHandler = CleverTapUnityCallbackHandler.getInstance();
         backgroundExecutor = new BackgroundExecutor();

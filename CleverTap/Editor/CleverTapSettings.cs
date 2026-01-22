@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using CleverTapSDK.Utilities;
 using UnityEngine;
 
 namespace CleverTapSDK.Private
@@ -7,30 +8,9 @@ namespace CleverTapSDK.Private
     public class CleverTapSettings : ScriptableObject
     {
         #region Project Settings
-        /// <summary>
-        /// CleverTap project Account Id (Project ID).
-        /// </summary>
-        public string CleverTapAccountId;
+        public CleverTapEnvironmentKey DefaultEnvironment = CleverTapEnvironmentKey.PROD;
 
-        /// <summary>
-        /// CleverTap project Account token (Project Token).
-        /// </summary>
-        public string CleverTapAccountToken;
-
-        /// <summary>
-        /// CleverTap Region Code.
-        /// </summary>
-        public string CleverTapAccountRegion;
-
-        /// <summary>
-        /// Custom Proxy Domain.
-        /// </summary>
-        public string CleverTapProxyDomain;
-
-        /// <summary>
-        /// Spiky Proxy Domain.
-        /// </summary>
-        public string CleverTapSpikyProxyDomain;
+        public SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential> Environments = new SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>();
         #endregion
 
         #region IOS Specific Settings
@@ -43,7 +23,7 @@ namespace CleverTapSDK.Private
         /// Boolean whether to use auto integrate on iOS.
         /// Default value is true.
         /// </summary>
-        public bool CleverTapIOSUseAutoIntegrate { get; set; } = true;
+        public bool CleverTapIOSUseAutoIntegrate = true;
 
         /// <summary>
         /// Boolean whether to set UNUserNotificationCenter delegate on iOS.
@@ -51,7 +31,7 @@ namespace CleverTapSDK.Private
         /// If set to false, you must implement the center delegate
         /// methods yourself and call the CleverTap methods.
         /// </summary>
-        public bool CleverTapIOSUseUNUserNotificationCenter { get; set; } = true;
+        public bool CleverTapIOSUseUNUserNotificationCenter = true;
 
         /// <summary>
         /// Boolean whether to present remote notifications while app is on foreground on iOS.
@@ -74,11 +54,8 @@ namespace CleverTapSDK.Private
         public override string ToString()
         {
             return $"CleverTapSettings:\n" +
-                   $"CleverTapAccountId: {CleverTapAccountId}\n" +
-                   $"CleverTapAccountToken: {CleverTapAccountToken}\n" +
-                   $"CleverTapAccountRegion: {CleverTapAccountRegion}\n" +
-                   $"CleverTapProxyDomain: {CleverTapProxyDomain}\n" +
-                   $"CleverTapSpikyProxyDomain: {CleverTapSpikyProxyDomain}\n" +
+                   $"CleverTap Default Environment : {DefaultEnvironment}\n" +
+                   $"CleverTap Environments : {JsonUtility.ToJson(Environments)}\n" +
                    $"CleverTapDisableIDFV: {CleverTapDisableIDFV}\n" +
                    $"CleverTapIOSUseAutoIntegrate: {CleverTapIOSUseAutoIntegrate}\n" +
                    $"CleverTapIOSUseUNUserNotificationCenter: {CleverTapIOSUseUNUserNotificationCenter}\n" +
