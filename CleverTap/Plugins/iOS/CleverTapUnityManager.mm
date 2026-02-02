@@ -1178,4 +1178,26 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
     [self.cleverTap syncCustomTemplates:isProduction];
 }
 
+- (NSString *)getVariants {
+        NSArray<NSDictionary<NSString *, id> *> *variants = [self.cleverTap variants];
+
+        if (!variants || variants.count == 0) {
+            return @"[]";
+        }
+
+        NSError *error = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:variants
+                                                           options:0
+                                                             error:&error];
+
+        if (error || !jsonData) {
+            return @"[]";
+        }
+
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData
+                                                      encoding:NSUTF8StringEncoding];
+
+        NSLog(@"Unity iOS - getVariants %@", jsonString);
+        return jsonString ?: @"[]";
+}
 @end

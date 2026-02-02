@@ -514,6 +514,23 @@ namespace CleverTapSDK.Android {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long>("getUserLastVisitTs");
         }
 
+        #region Vairants
+        internal override List<Dictionary<string, object>> GetVariants()
+        {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getVariants");
+            List<Dictionary<string, object>> returnValue = new List<Dictionary<string, object>>();
+            List<object> result = Json.Deserialize(jsonString) as List<object>;
+
+            for(int i = 0, count = result.Count; i < count; i++)
+            {
+                returnValue.Add(result[i] as Dictionary<string, object>);
+            }
+
+            return returnValue;
+        }
+        #endregion
+
+
         #region Feature Flags
 
         [Obsolete("Feature Flags are deprecated, use variables instead.")]

@@ -387,5 +387,9 @@ namespace CleverTapSDK.Common {
         }
 
         #endregion
+
+        internal virtual List<Dictionary<string, object>> GetVariants(){
+            return new List<Dictionary<string, object>>();
+        }
     }
 }
