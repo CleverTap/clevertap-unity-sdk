@@ -1,5 +1,11 @@
 Change Log
 ==========
+
+Version 5.5.1 *(02 February, 2026)*
+-------------------------------------------
+- Fix: IOSPostBuildProcessor excluded on iO, now included for a build. [#240](https://github.com/CleverTap/clevertap-unity-sdk/issues/240)
+- GetVariants method support added
+
 Version 5.5.0 *(22 January, 2026)*
 -------------------------------------------
 - BREAKING CHANGES - [Multi-Environment Settings](docs/multi-environment-crendential-support.md)
