@@ -1197,7 +1197,6 @@ NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData
                                                       encoding:NSUTF8StringEncoding];
 
-        NSLog(@"Unity iOS - getVariants %@", jsonString);
         return jsonString ?: @"[]";
 }
 @end

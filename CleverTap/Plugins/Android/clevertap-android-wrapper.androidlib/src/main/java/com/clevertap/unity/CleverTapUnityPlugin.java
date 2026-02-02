@@ -794,9 +794,12 @@ public class CleverTapUnityPlugin {
 
 
     public String getVariants() {
-        List<Map<String, Object>> variants = clevertap.variants();
-
         try {
+            List<Map<String, Object>> variants = clevertap.variants();
+            if (variants == null) {
+                return "[]";
+            }
+
             JSONArray array = new JSONArray();
             for (Map<String, Object> map : variants) {
                 JSONObject obj = new JSONObject();
@@ -806,9 +809,9 @@ public class CleverTapUnityPlugin {
                 array.put(obj);
             }
 
-            Log.d(LOG_TAG, "Unity Java - getVariants " + array.toString());
             return array.toString();
         } catch (Exception e) {
+            Log.e(LOG_TAG, "Unity Java - getVariants error", e);
             return "[]";
         }
     }
