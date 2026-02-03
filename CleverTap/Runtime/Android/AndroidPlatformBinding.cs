@@ -514,6 +514,42 @@ namespace CleverTapSDK.Android {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long>("getUserLastVisitTs");
         }
 
+        #region Vairants
+        internal override List<Dictionary<string, object>> GetVariants()
+        {    
+            List<Dictionary<string, object>> returnValue = new List<Dictionary<string, object>>();
+
+            try
+            {
+                string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getVariants");
+
+                if(string.IsNullOrEmpty(jsonString))
+                {
+                    return returnValue;
+                }
+
+                List<object> result = Json.Deserialize(jsonString) as List<object>;
+                
+                if (result == null)
+                {
+                    return returnValue;
+                }
+                
+                for(int i = 0, count = result.Count; i < count; i++)
+                {
+                    returnValue.Add(result[i] as Dictionary<string, object>);
+                }
+            }
+            catch(Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse variants JSON: {ex}.");
+            }
+
+            return returnValue;
+        }
+        #endregion
+
+
         #region Feature Flags
 
         [Obsolete("Feature Flags are deprecated, use variables instead.")]

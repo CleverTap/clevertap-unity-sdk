@@ -629,5 +629,11 @@ namespace CleverTapSDK {
             }
         }
         #endregion
+
+        /// <summary>
+        /// Returns information about the active variants for the current user.
+        ///</summary>
+        public static List<Dictionary<string, object>> GetVariants() =>
+            cleverTapBinding.GetVariants();
     }
 }
