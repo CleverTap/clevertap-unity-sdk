@@ -514,7 +514,7 @@ namespace CleverTapSDK.Android {
             return CleverTapAndroidJNI.CleverTapJNIInstance.Call<long>("getUserLastVisitTs");
         }
 
-        #region Vairants
+        #region Variants
         internal override List<Dictionary<string, object>> GetVariants()
         {    
             List<Dictionary<string, object>> returnValue = new List<Dictionary<string, object>>();
