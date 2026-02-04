@@ -196,6 +196,9 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 
 - (void)syncCustomTemplates:(BOOL)isProduction;
 
+#pragma mark - Variants
+
+- (NSString *)getVariants;
 @end
 
 NS_ASSUME_NONNULL_END

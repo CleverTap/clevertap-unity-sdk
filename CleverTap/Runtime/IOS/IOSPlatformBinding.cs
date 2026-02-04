@@ -593,6 +593,40 @@ namespace CleverTapSDK.IOS
         {
             return IOSDllImport.CleverTap_getUserLastVisitTs();
         }
+
+        internal override List<Dictionary<string, object>> GetVariants()
+        {    
+            List<Dictionary<string, object>> returnValue = new List<Dictionary<string, object>>();
+
+            try
+            {
+                string jsonString = IOSDllImport.CleverTap_getVariants();
+                CleverTapLogger.Log($"GetVariants JSON: {jsonString}.");
+                
+                if(string.IsNullOrEmpty(jsonString))
+                {
+                    return returnValue;
+                }
+
+                List<object> result = Json.Deserialize(jsonString) as List<object>;
+                
+                if (result == null)
+                {
+                    return returnValue;
+                }
+                
+                for(int i = 0, count = result.Count; i < count; i++)
+                {
+                    returnValue.Add(result[i] as Dictionary<string, object>);
+                }
+            }
+            catch(Exception ex)
+            {
+                CleverTapLogger.LogError($"Unable to parse variants JSON: {ex}.");
+            }
+
+            return returnValue;
+        }
     }
 }
 #endif

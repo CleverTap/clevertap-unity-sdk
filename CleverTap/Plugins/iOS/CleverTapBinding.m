@@ -762,3 +762,14 @@ void CleverTap_syncCustomTemplates(bool isProduction) {
     return [[CleverTapUnityManager sharedInstance]
             syncCustomTemplates:isProduction];
 }
+
+
+char* CleverTap_getVariants() {
+    NSString *variants = [[CleverTapUnityManager sharedInstance] getVariants];
+
+    if (!variants) {
+        return strdup("[]");
+    }
+
+    return strdup([variants UTF8String]);
+}

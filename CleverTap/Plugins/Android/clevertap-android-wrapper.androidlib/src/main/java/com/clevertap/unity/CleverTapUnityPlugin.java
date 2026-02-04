@@ -792,6 +792,30 @@ public class CleverTapUnityPlugin {
         }
     }
 
+
+    public String getVariants() {
+        try {
+            List<Map<String, Object>> variants = clevertap.variants();
+            if (variants == null) {
+                return "[]";
+            }
+
+            JSONArray array = new JSONArray();
+            for (Map<String, Object> map : variants) {
+                JSONObject obj = new JSONObject();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    obj.put(entry.getKey(), entry.getValue());
+                }
+                array.put(obj);
+            }
+
+            return array.toString();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Unity Java - getVariants error", e);
+            return "[]";
+        }
+    }
+
     // InApps
     public void fetchInApps(final int callbackId) {
         clevertap.fetchInApps(callbackHandler.getFetchInAppsCallback(callbackId));
