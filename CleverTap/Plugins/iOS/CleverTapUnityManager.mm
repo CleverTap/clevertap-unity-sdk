@@ -1011,26 +1011,71 @@ static BOOL shouldDisableBuffers = YES;
     return [var fileValue];
 }
 
+static NSString *const kCleverTapDatePrefix = @"ct_date_";
+
 NSDictionary *cleverTap_convertDateValues(NSDictionary *dictionary) {
-    if (dictionary == nil) {
-        return dictionary;
-    }
-    
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:dictionary];
-    for (id key in dictionary) {
-        id value = [dict objectForKey:key];
-        if ([value isKindOfClass:[NSString class]]) {
-            NSString *strVal = value;
-            NSRange range = [strVal rangeOfString:@"ct_date_"];
-            if(range.location != NSNotFound)
-            {
-                NSString *dateStr = [strVal substringWithRange:NSMakeRange(range.length, strVal.length - range.length)];
-                NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:[dateStr longLongValue]/1000];
-                dict[key] = date;
+    if (!dictionary) return nil;
+    // Recursively convert the whole dictionary
+    return cleverTap_convertObject(dictionary);
+}
+
+// Recursive helper: converts any object that might contain date‑prefixed strings
+static id cleverTap_convertObject(id object) {
+    if ([object isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dict = object;
+        NSMutableDictionary *mutableDict = [dict mutableCopy];
+        for (id key in dict) {
+            id value = dict[key];
+            id convertedValue = cleverTap_convertObject(value);
+            if (convertedValue != value) {
+                mutableDict[key] = convertedValue;
             }
         }
+        return mutableDict;
     }
-    return dict;
+    else if ([object isKindOfClass:[NSArray class]]) {
+        NSArray *array = object;
+        NSMutableArray *mutableArray = [array mutableCopy];
+        for (NSUInteger i = 0; i < array.count; i++) {
+            id item = array[i];
+            id convertedItem = cleverTap_convertObject(item);
+            if (convertedItem != item) {
+                mutableArray[i] = convertedItem;
+            }
+        }
+        return mutableArray;
+    }
+    else if ([object isKindOfClass:[NSString class]]) {
+        NSString *string = object;
+        NSRange prefixRange = [string rangeOfString:kCleverTapDatePrefix];
+        if (prefixRange.location != NSNotFound) {
+            // Find the contiguous digits immediately after the prefix
+            NSUInteger start = prefixRange.location + prefixRange.length;
+            NSRange digitRange = NSMakeRange(start, 0);
+            for (NSUInteger i = start; i < string.length; i++) {
+                unichar c = [string characterAtIndex:i];
+                if (c >= '0' && c <= '9') {
+                    digitRange.length++;
+                } else {
+                    break;
+                }
+            }
+            if (digitRange.length > 0) {
+                NSString *timestampStr = [string substringWithRange:digitRange];
+                long long milliseconds = [timestampStr longLongValue];
+                // Convert milliseconds to seconds for NSDate
+                NSTimeInterval seconds = milliseconds / 1000.0;
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
+                return date;
+            }
+        }
+        // No conversion – return the original string
+        return string;
+    }
+    else {
+        // All other types (NSNumber, NSNull, etc.) stay unchanged
+        return object;
+    }
 }
 
 #pragma mark - Client-side In-Apps

@@ -97,16 +97,39 @@ namespace CleverTapSDK.Utilities
 
         internal static Dictionary<string, object> ConvertDateObjects(this Dictionary<string, object> dictionary)
         {
-            Dictionary<string, object> converted = new Dictionary<string, object>(dictionary);
+            var result = new Dictionary<string, object>(dictionary.Count);
 
-            foreach (KeyValuePair<string, object> entry in dictionary)
+            foreach (var kvp in dictionary)
             {
-                if (entry.Value is DateTime)
-                {
-                    converted[entry.Key] = ((DateTime)entry.Value).GetCleverTapUnixTimestamp();
-                }
+                result[kvp.Key] = ConvertObject(kvp.Value);
             }
-            return converted;
+
+            return result;
+        }
+        private static object ConvertObject(object value)
+        {
+            switch (value)
+            {
+                case DateTime dt:
+                    return dt.GetCleverTapUnixTimestamp();
+
+                case Dictionary<string, object> dict:
+                    // Recursively convert each entry in the nested dictionary
+                    return dict.ConvertDateObjects();
+
+                case IEnumerable enumerable when !(value is string):
+                    // Handles collections (List<T>, arrays, etc.) - except strings (treated as atomic)
+                    var list = new List<object>();
+                    foreach (var item in enumerable)
+                    {
+                        list.Add(ConvertObject(item));
+                    }
+                    return list;
+
+                default:
+                    // All other types (int, string, bool, etc.) remain unchanged
+                    return value;
+            }
         }
 
         internal static string GetCleverTapUnixTimestamp(this DateTime dateTime)

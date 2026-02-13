@@ -47,7 +47,7 @@ namespace CleverTapSDK.Private
                 return;
             }
 
-            if(settings.Environments == null || settings.Environments.Items == null)
+            if (settings.Environments == null || settings.Environments.Items == null)
             {
                 Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
                 return;
@@ -76,6 +76,11 @@ namespace CleverTapSDK.Private
                 Debug.LogError("Failed to find manifest node in AndroidManifest.xml");
                 return;
             }
+
+#if UNITY_2021_3_OR_NEWER
+            RemovePackageAttribute(manifestNode, manifestXml, manifestFilePath);
+#endif
+
             if (manifestNode.Attributes["xmlns:android"] == null)
             {
                 var nsAttribute = manifestXml.CreateAttribute("xmlns:android");
@@ -145,6 +150,15 @@ namespace CleverTapSDK.Private
                 newElement.SetAttribute("name", ANDROID_XML_NS_URI, name);
                 newElement.SetAttribute("value", ANDROID_XML_NS_URI, value);
                 applicationNode.AppendChild(newElement);
+            }
+        }
+
+        private static void RemovePackageAttribute(XmlNode manifestNode, XmlDocument manifestXml, string manifestFilePath)
+        {
+            if (manifestNode != null && manifestNode.Attributes?["package"] != null)
+            {
+                manifestNode.Attributes.Remove(manifestNode.Attributes["package"]);
+                manifestXml.Save(manifestFilePath);
             }
         }
     }
