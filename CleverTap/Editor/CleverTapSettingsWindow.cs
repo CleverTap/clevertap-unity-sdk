@@ -24,7 +24,7 @@ namespace CleverTapSDK.Private
         {
             // Load or create the ScriptableObject
             settings = LoadCleverTapSettings();
-            
+
             if (settings != null)
             {
                 serializedSettings = new SerializedObject(settings);
@@ -40,7 +40,7 @@ namespace CleverTapSDK.Private
             }
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            
+
             GUILayout.Label(windowName, EditorStyles.boldLabel);
             EditorGUILayout.Space();
 
@@ -50,11 +50,28 @@ namespace CleverTapSDK.Private
             // Display all properties of the ScriptableObject
             SerializedProperty property = serializedSettings.GetIterator();
             property.NextVisible(true); // Skip the script property
-            
+
             while (property.NextVisible(false))
             {
-                EditorGUILayout.PropertyField(property, true);
+                // Special handling for boolean properties to prevent overlapping
+                if (property.propertyType == SerializedPropertyType.Boolean)
+                {
+                    EditorGUILayout.BeginHorizontal();
+
+                    // Label with fixed width to create space
+                    EditorGUILayout.LabelField(property.displayName, GUILayout.Width(300));
+
+                    // Checkbox with proper spacing
+                    property.boolValue = EditorGUILayout.Toggle(property.boolValue, GUILayout.Width(50));
+
+                    EditorGUILayout.EndHorizontal();
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(property, new GUIContent(property.displayName), true);
+                }
             }
+
 
             // Apply any changes
             if (serializedSettings.ApplyModifiedProperties())
@@ -65,7 +82,7 @@ namespace CleverTapSDK.Private
             EditorGUILayout.EndScrollView();
 
             EditorGUILayout.Space();
-            
+
             // Save button
             if (GUILayout.Button("Save Settings"))
             {
@@ -85,16 +102,16 @@ namespace CleverTapSDK.Private
                     Debug.Log("CleverTapSettings asset not found. Creating new asset.");
                     // Create a new instance if it doesn't exist
                     settings = CreateInstance<CleverTapSettings>();
-                    
+
                     // Initialize with default environment values
                     var defaultDict = new System.Collections.Generic.Dictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>();
                     foreach (CleverTapEnvironmentKey env in System.Enum.GetValues(typeof(CleverTapEnvironmentKey)))
                     {
                         defaultDict[env] = new CleverTapEnvironmentCredential();
                     }
-                    
+
                     settings.Environments = SerializableDictionary<CleverTapEnvironmentKey, CleverTapEnvironmentCredential>.FromDictionary(defaultDict);
-                    
+
                     AssetDatabase.CreateAsset(settings, CleverTapSettings.settingsPath);
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();

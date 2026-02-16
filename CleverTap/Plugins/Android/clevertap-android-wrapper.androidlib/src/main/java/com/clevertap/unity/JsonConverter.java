@@ -35,25 +35,74 @@ public class JsonConverter {
         if (jsonMap == null) {
             return null;
         }
+        convertDatesInObject(jsonMap);
+        return jsonMap;
+    }
 
-        for (String key : jsonMap.keySet()) {
-            Object value = jsonMap.get(key);
-            if (value instanceof String) {
-                String str = (String) value;
-                int index = str.indexOf(DATE_PREFIX);
-                if (index != -1) {
-                    try {
-                        String tsSubstring = str.substring(index + DATE_PREFIX.length());
-                        long ts = Long.parseLong(tsSubstring);
-                        Date date = new Date(ts);
-                        jsonMap.put(key, date);
-                    } catch (Exception e) {
-                        Log.e("CleverTap", "Failed to parse date: " + str, e);
+    // Recursive helper that works on any Object (Map, List, String, etc.)
+    @SuppressWarnings("unchecked")
+    private static void convertDatesInObject(Object obj) {
+        if (obj instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) obj;
+            // Iterate over a copy of the entry set to avoid ConcurrentModificationException
+            // if we replace a value with a Date object.
+            for (Map.Entry<String, Object> entry : new HashMap<>(map).entrySet()) {
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    String str = (String) value;
+                    int index = str.indexOf(DATE_PREFIX);
+                    if (index != -1) {
+                        // Extract only the numeric timestamp immediately after the prefix
+                        int start = index + DATE_PREFIX.length();
+                        // Find the end of the numeric part
+                        int end = start;
+                        while (end < str.length() && Character.isDigit(str.charAt(end))) {
+                            end++;
+                        }
+                        if (end > start) {
+                            try {
+                                long ts = Long.parseLong(str.substring(start, end));
+                                map.put(entry.getKey(), new Date(ts));
+                            } catch (NumberFormatException e) {
+                                Log.e("CleverTap", "Failed to parse date: " + str, e);
+                            }
+                        }
                     }
+                } else {
+                    // Recurse into nested structures
+                    convertDatesInObject(value);
+                }
+            }
+        } else if (obj instanceof List) {
+            List<?> list = (List<?>) obj;
+            for (int i = 0; i < list.size(); i++) {
+                Object item = list.get(i);
+                if (item instanceof String) {
+                    // Convert date strings inside the list
+                    String str = (String) item;
+                    int index = str.indexOf(DATE_PREFIX);
+                    if (index != -1) {
+                        int start = index + DATE_PREFIX.length();
+                        int end = start;
+                        while (end < str.length() && Character.isDigit(str.charAt(end))) {
+                            end++;
+                        }
+                        if (end > start) {
+                            try {
+                                long ts = Long.parseLong(str.substring(start, end));
+                                ((List<Object>) list).set(i, new Date(ts));
+                            } catch (NumberFormatException e) {
+                                Log.e("CleverTap", "Failed to parse date: " + str, e);
+                            }
+                        }
+                    }
+                } else {
+                    // Recurse into nested maps / lists
+                    convertDatesInObject(item);
                 }
             }
         }
-        return jsonMap;
+        // Other types (Integer, Boolean, etc.) – do nothing
     }
 
     public static Map<String, Object> fromJson(String json) {
