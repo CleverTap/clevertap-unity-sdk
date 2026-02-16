@@ -1047,10 +1047,9 @@ static id cleverTap_convertObject(id object) {
     }
     else if ([object isKindOfClass:[NSString class]]) {
         NSString *string = object;
-        NSRange prefixRange = [string rangeOfString:kCleverTapDatePrefix];
-        if (prefixRange.location != NSNotFound) {
-            // Find the contiguous digits immediately after the prefix
-            NSUInteger start = prefixRange.location + prefixRange.length;
+
+        if ([string hasPrefix:kCleverTapDatePrefix]) {
+            NSUInteger start = kCleverTapDatePrefix.length;
             NSRange digitRange = NSMakeRange(start, 0);
             for (NSUInteger i = start; i < string.length; i++) {
                 unichar c = [string characterAtIndex:i];
