@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 5.5.2 *(13 February, 2026)*
+-------------------------------------------
+- Fix: [#243](https://github.com/CleverTap/clevertap-unity-sdk/issues/243)
+- **Nested Objects Ingestion:** Adds support for ingestion of nested objects in both event and profile properties
+- Updated to [CleverTap Android SDK v7.8.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev7.8.0)
+- Updated to [CleverTap iOS SDK v7.5.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.5.0)
+
 Version 5.5.1 *(02 February, 2026)*
 -------------------------------------------
 - Fix: IOSPostBuildProcessor excluded on iOS, now included for a build. [#240](https://github.com/CleverTap/clevertap-unity-sdk/issues/240)
