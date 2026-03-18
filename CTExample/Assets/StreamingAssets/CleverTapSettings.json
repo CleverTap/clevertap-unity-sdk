@@ -1,0 +1,52 @@
+{
+    "DefaultEnvironment": 0,
+    "Environments": {
+        "Items": [
+            {
+                "Key": 0,
+                "Value": {
+                    "CleverTapAccountId": "449-RW6-794Z",
+                    "CleverTapAccountToken": "602-c44",
+                    "CleverTapAccountRegion": "eu1",
+                    "CleverTapProxyDomain": "",
+                    "CleverTapSpikyProxyDomain": ""
+                }
+            },
+            {
+                "Key": 1,
+                "Value": {
+                    "CleverTapAccountId": "449-RW6-794Z",
+                    "CleverTapAccountToken": "602-c44",
+                    "CleverTapAccountRegion": "eu1",
+                    "CleverTapProxyDomain": "",
+                    "CleverTapSpikyProxyDomain": ""
+                }
+            },
+            {
+                "Key": 2,
+                "Value": {
+                    "CleverTapAccountId": "449-RW6-794Z",
+                    "CleverTapAccountToken": "602-c44",
+                    "CleverTapAccountRegion": "eu1",
+                    "CleverTapProxyDomain": "",
+                    "CleverTapSpikyProxyDomain": ""
+                }
+            },
+            {
+                "Key": 3,
+                "Value": {
+                    "CleverTapAccountId": "449-RW6-794Z",
+                    "CleverTapAccountToken": "602-c44",
+                    "CleverTapAccountRegion": "eu1",
+                    "CleverTapProxyDomain": "",
+                    "CleverTapSpikyProxyDomain": ""
+                }
+            }
+        ]
+    },
+    "CleverTapDisableIDFV": false,
+    "CleverTapIOSUseAutoIntegrate": true,
+    "CleverTapIOSUseUNUserNotificationCenter": true,
+    "CleverTapIOSPresentNotificationOnForeground": false,
+    "CleverTapSettingsSaveToJSON": true
+}
