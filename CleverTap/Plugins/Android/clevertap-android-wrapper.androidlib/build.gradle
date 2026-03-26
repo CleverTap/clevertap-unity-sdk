@@ -23,10 +23,8 @@ android {
     } else {
         compileSdkVersion compileSdkVersionVal
     }
-    
-    if (project.hasProperty('unity.buildToolsVersion')) {
-        buildToolsVersion project.getProperty('unity.buildToolsVersion')
-    }
+
+    buildToolsVersion (project.findProperty('unity.buildToolsVersion') ?: '35.0.0')
 
     defaultConfig {
         if (project.android.hasProperty('minSdk')) {

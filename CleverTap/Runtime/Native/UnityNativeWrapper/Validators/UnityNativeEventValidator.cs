@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using CleverTapSDK.Utilities;
 using System.Linq;
+using System.Collections;
 
 namespace CleverTapSDK.Native {
     internal class UnityNativeEventValidator {
@@ -112,7 +113,7 @@ namespace CleverTapSDK.Native {
 
                 cleanObjectValue = "$D_" + dateTimeOffset.ToUnixTimeSeconds().ToString();
             }
-
+            
             if (isForProfile && cleanObjectValue is IEnumerable<string>)
             {
                 var cleanObjectValueArray = cleanObjectValue as IEnumerable<string>;

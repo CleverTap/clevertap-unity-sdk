@@ -84,7 +84,7 @@ if (Debug.isDebugBuild)
 ## 🔄 Migrating from Old CleverTap Settings to Multi-Environment Support
 
 ### ⚠️ Important Notice
-If you were using the old CleverTap settings system (single environment configuration), you need to re-enter your credentials in the new multi-environment settings format. The new system stores credentials differently to support multiple environments.
+If you were using the old CleverTap settings system (single environment configuration), you need to re-enter you/Users/nilesh/Office/clevertap-unity-sdk/docs/README_v2.4.2_and_older.mdr credentials in the new multi-environment settings format. The new system stores credentials differently to support multiple environments.
 
 ### 📋 Migration Steps
 

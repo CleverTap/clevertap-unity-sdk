@@ -1,3 +1,5 @@
 # ninja log v5
-0	114	1773816543485133287	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	2a31d41d86a3f24a
-115	222	1773816543591381744	/Users/nilesh/Office/clevertap-unity-sdk/CTExample/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2u105eh4/obj/armeabi-v7a/libswappywrapper.so	dc0714ded6922ba7
+0	139	1773819655047170063	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	2a31d41d86a3f24a
+139	263	1773819655168934359	/Users/nilesh/Office/clevertap-unity-sdk/CTExample/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2u105eh4/obj/armeabi-v7a/libswappywrapper.so	dc0714ded6922ba7
+1	126	1773914098186203873	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	2a31d41d86a3f24a
+126	242	1773914098300291140	/Users/nilesh/Office/clevertap-unity-sdk/CTExample/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2u105eh4/obj/armeabi-v7a/libswappywrapper.so	dc0714ded6922ba7
