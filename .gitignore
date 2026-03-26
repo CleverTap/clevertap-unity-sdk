@@ -99,3 +99,18 @@ Purchases.unitypackage
 Purchases-UnityIAP.unitypackage
 IntegrationTests/buildiOS/
 **.log
+
+# Firebase Unity SDK
+*/Assets/Firebase/
+
+# Firebase generated artifacts (EDM4U)
+*/Assets/GeneratedLocalRepo/
+
+# Android / iOS native libs
+*.aar
+*.jar
+*.so
+*.bundle
+*.dll
+*.pdb
+
