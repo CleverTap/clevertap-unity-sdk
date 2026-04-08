@@ -1,8 +1,8 @@
 {
   "MonoBehaviour": {
-    "Version": 4,
-    "EnableBurstCompilation": true,
-    "EnableOptimisations": true,
+    "Version": 5,
+    "EnableBurstCompilation": false,
+    "EnableOptimisations": false,
     "EnableSafetyChecks": false,
     "EnableDebugInAllBuilds": false,
     "DebugDataKind": 1,
@@ -12,6 +12,9 @@
     "CpuMinTargetX64": 0,
     "CpuMaxTargetX64": 0,
     "CpuTargetsArm64": 512,
-    "OptimizeFor": 0
+    "OptimizeFor": 0,
+    "FloatMode": 0,
+    "StackProtector": 0,
+    "StackProtectorBufferSize": 8
   }
 }

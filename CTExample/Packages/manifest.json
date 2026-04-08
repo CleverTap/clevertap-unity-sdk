@@ -9,6 +9,7 @@
     "com.unity.multiplayer.center": "1.0.0",
     "com.unity.test-framework": "1.6.0",
     "com.unity.timeline": "1.8.10",
+    "com.unity.toolchain.macos-arm64-linux-x86_64": "2.0.5",
     "com.unity.ugui": "2.0.0",
     "com.unity.visualscripting": "1.9.7",
     "com.yasirkula.ingamedebugconsole": "https://github.com/yasirkula/UnityIngameDebugConsole.git",
