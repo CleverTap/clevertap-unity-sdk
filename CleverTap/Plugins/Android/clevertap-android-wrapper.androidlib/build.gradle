@@ -10,7 +10,7 @@ ext {
     compileSdkVersionVal = 36
     targetSdkVersionVal = compileSdkVersionVal
 
-    libraryVersion = "5.5.2"
+    libraryVersion = "5.5.3"
 }
 
 android {
@@ -23,10 +23,8 @@ android {
     } else {
         compileSdkVersion compileSdkVersionVal
     }
-    
-    if (project.hasProperty('unity.buildToolsVersion')) {
-        buildToolsVersion project.getProperty('unity.buildToolsVersion')
-    }
+
+    buildToolsVersion (project.findProperty('unity.buildToolsVersion') ?: '35.0.0')
 
     defaultConfig {
         if (project.android.hasProperty('minSdk')) {
@@ -58,7 +56,7 @@ android {
 dependencies {
     compileOnly fileTree('libs')
 
-    api 'com.clevertap.android:clevertap-android-sdk:7.8.0'
+    api 'com.clevertap.android:clevertap-android-sdk:8.0.0'
     implementation "androidx.core:core:1.13.0"
     implementation "com.google.firebase:firebase-messaging:24.0.0"
 }
