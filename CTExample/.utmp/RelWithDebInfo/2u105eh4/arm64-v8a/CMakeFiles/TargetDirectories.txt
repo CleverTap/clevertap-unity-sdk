@@ -1,0 +1,5 @@
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/.utmp/RelWithDebInfo/2u105eh4/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/.utmp/RelWithDebInfo/2u105eh4/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/.utmp/RelWithDebInfo/2u105eh4/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/.utmp/RelWithDebInfo/2u105eh4/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/.utmp/RelWithDebInfo/2u105eh4/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir

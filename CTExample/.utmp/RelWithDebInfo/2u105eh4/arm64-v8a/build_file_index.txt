@@ -1,0 +1,2 @@
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/src/main/cpp/CMakeLists.txt
+/Users/nilesh/Office/clevertap-unity-sdk/CTExample/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/src/main/cpp/FramePacing/CMakeLists.txt

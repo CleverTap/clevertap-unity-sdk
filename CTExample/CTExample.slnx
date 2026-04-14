@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Project Path="CleverTap.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="CleverTap.Tests.Runtime.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="FirebaseMessagingActivityGenerator.csproj" />
+</Solution>

@@ -128,6 +128,21 @@ namespace CleverTapSDK.Native
             return GetCleverTapID();
         }
 
+        internal override void SetDebugLevel(int level)
+        {
+            // Matches documented debug levels:
+            // -1 : Disables all debugging
+            //  0 : Default, shows minimal SDK integration related logging (errors only)
+            //  2 : Shows debug output
+            //  3 : Shows verbose output (treated as debug)
+            if (level < 0)
+                CleverTapLogger.SetLogLevel(LogLevel.None);
+            else if (level == 0)
+                CleverTapLogger.SetLogLevel(LogLevel.Error);
+            else
+                CleverTapLogger.SetLogLevel(LogLevel.Debug);
+        }
+
         internal override void EnableDeviceNetworkInfoReporting(bool enabled)
         {
             _unityNativeEventManager.EnableDeviceNetworkInfoReporting(enabled);
