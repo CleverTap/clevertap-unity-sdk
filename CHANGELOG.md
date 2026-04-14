@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 5.5.3 *(14 April, 2026)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v8.0.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.0.0)
+- Updated to [CleverTap iOS SDK v7.5.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.5.1)
+- **Unity 6 Build Support:** Automated Android build fixes via `AndroidProjectPostProcessor` — injects namespace into generated `build.gradle` for AGP 8.x compatibility, strips duplicate Unity classes from androidlib JAR, and correctly compiles wrapper Java sources alongside `unityLibrary`.
+- Fix: `SetDebugLevel` was a no-op on desktop/editor builds. Now correctly routes to `CleverTapLogger` — use `-1` to disable all logs, `0` for errors only, `2` for debug.
+- Fix: `DllNotFoundException` for SQLite on Unity 2021 — corrected `.meta` file platform assignments to use `serializedVersion: 2` list format with proper OS targeting.
+
 Version 5.5.2 *(13 February, 2026)*
 -------------------------------------------
 - Fix: [#243](https://github.com/CleverTap/clevertap-unity-sdk/issues/243)
