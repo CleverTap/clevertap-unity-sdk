@@ -25,6 +25,7 @@ namespace CleverTapSDK.Native
         private int _enableNetworkInfoReporting = -1;
         private bool _isAppInboxInitialized = false;
         private bool _isAppLaunchEventProcessed = false;
+        private Dictionary<string, object> _pendingProfilePushAfterLaunch;
 
         private readonly UnityNativePlatformVariable _platformVariable;
         private readonly UnityNativePlatformCustomTemplates _platformCustomTemplates;
@@ -172,6 +173,13 @@ namespace CleverTapSDK.Native
             {
                 _isAppLaunchEventProcessed = true;
                 _eventQueueManager.OnEventProcessed -= OnAppLaunchProcessed;
+                
+                if (_pendingProfilePushAfterLaunch != null)
+                {
+                    var pending = _pendingProfilePushAfterLaunch;
+                    _pendingProfilePushAfterLaunch = null;
+                    ProfilePush(pending);
+                }
             }
         }
         #endregion
@@ -293,16 +301,30 @@ namespace CleverTapSDK.Native
                 SetResponseInterceptors();
 
                 NotifyUserProfileInitialized();
+                
+                if (profile != null)
+                {
+                    foreach (var key in profile.Keys)
+                    {
+                        if (IdentityKeys.Contains(key.ToLower()))
+                        {
+                            var val = profile[key]?.ToString();
+                            if (!string.IsNullOrEmpty(val))
+                                _preferenceManager.SetGUIDForIdentifier(_coreState.DeviceInfo.DeviceId, key, val);
+                        }
+                    }
+                    _pendingProfilePushAfterLaunch = profile;
+                }
 
                 RecordAppLaunch();
 
                 UpdateInboxStorageId(_coreState.DeviceInfo.DeviceId);
                 _callbackHandler.CleverTapInboxDidInitializeCallback(null);
 
-                if (profile != null)
-                {
-                    ProfilePush(profile);
-                }
+                // if (profile != null)
+                // {
+                //     ProfilePush(profile);
+                // }
             }
             catch (Exception e)
             {
