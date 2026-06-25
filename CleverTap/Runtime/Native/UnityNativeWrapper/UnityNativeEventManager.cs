@@ -320,11 +320,6 @@ namespace CleverTapSDK.Native
 
                 UpdateInboxStorageId(_coreState.DeviceInfo.DeviceId);
                 _callbackHandler.CleverTapInboxDidInitializeCallback(null);
-
-                // if (profile != null)
-                // {
-                //     ProfilePush(profile);
-                // }
             }
             catch (Exception e)
             {
