@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 5.5.4 *(June 2026)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v8.3.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.3.0)
+- Updated to [CleverTap iOS SDK v7.7.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.7.1)
+- **New:** `FetchInbox()` — triggers an on-demand App Inbox refresh from the server (limited to once every 5 minutes). Subscribe to `OnCleverTapFetchInboxCallback` to receive the success/failure result.
+- **New:** `Unmute()` (Android) — resumes SDK event tracking and network operations without waiting for the backend-set mute period to expire.
+- **Fix:** `OnUserLogin` — profile properties (email, name, etc.) passed when switching to a new user are no longer silently dropped. They are now reliably pushed after the App Launched server acknowledgement.
+- **Breaking Change:** Minimum supported Android API level is now 23, as required by CleverTap Android SDK v8.1.0+. Apps targeting API level below 23 cannot integrate this version.
+
 Version 5.5.3 *(14 April, 2026)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v8.0.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.0.0)
