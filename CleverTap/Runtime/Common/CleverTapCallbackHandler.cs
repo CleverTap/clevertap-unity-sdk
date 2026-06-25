@@ -255,6 +255,25 @@ namespace CleverTapSDK.Common {
             }
         }
 
+        private CleverTapCallbackWithMessageDelegate _OnCleverTapFetchInboxCallback;
+        public event CleverTapCallbackWithMessageDelegate OnCleverTapFetchInboxCallback
+        {
+            add
+            {
+                lock (CallbackLock)
+                {
+                    _OnCleverTapFetchInboxCallback += value;
+                }
+            }
+            remove
+            {
+                lock (CallbackLock)
+                {
+                    _OnCleverTapFetchInboxCallback -= value;
+                }
+            }
+        }
+
         private CleverTapCallbackDelegate _OnCleverTapInboxMessagesDidUpdateCallback;
         public event CleverTapCallbackDelegate OnCleverTapInboxMessagesDidUpdateCallback
         {
@@ -719,6 +738,11 @@ namespace CleverTapSDK.Common {
         public virtual void CleverTapInAppNotificationButtonTapped(string message) {
             CleverTapLogger.Log("unity received inapp notification button tapped: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
             _OnCleverTapInAppNotificationButtonTapped?.Invoke(message);
+        }
+
+        public virtual void CleverTapFetchInboxCallback(string message) {
+            CleverTapLogger.Log("unity received fetch inbox callback: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+            _OnCleverTapFetchInboxCallback?.Invoke(message);
         }
 
         // returns callback for InitializeInbox

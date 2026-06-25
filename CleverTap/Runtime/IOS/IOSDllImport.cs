@@ -164,6 +164,9 @@ namespace CleverTapSDK.IOS {
         internal static extern int CleverTap_initializeInbox();
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_fetchInbox();
+
+        [DllImport("__Internal")]
         internal static extern string CleverTap_getAllInboxMessages();
 
         [DllImport("__Internal")]

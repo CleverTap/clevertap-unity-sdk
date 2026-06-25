@@ -246,6 +246,13 @@
     };
 }
 
+- (void (^)(BOOL))fetchInboxBlock {
+    return ^(BOOL success) {
+        NSLog(@"Inbox fetched: %d", success);
+        [self callUnityObject:CleverTapUnityCallbackFetchInbox withMessage:[NSString stringWithFormat:@"%@", success ? @"true" : @"false"]];
+    };
+}
+
 - (void)messageButtonTappedWithCustomExtras:(NSDictionary *)customExtras {
     
     NSMutableDictionary *jsonDict = [NSMutableDictionary new];

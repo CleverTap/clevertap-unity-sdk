@@ -38,7 +38,8 @@ public enum CleverTapUnityCallback {
     CLEVERTAP_FILE_VARIABLE_READY("CleverTapVariableFileIsReady"),
     CLEVERTAP_CUSTOM_TEMPLATE_PRESENT("CleverTapCustomTemplatePresent", true),
     CLEVERTAP_CUSTOM_FUNCTION_PRESENT("CleverTapCustomFunctionPresent", true),
-    CLEVERTAP_CUSTOM_TEMPLATE_CLOSE("CleverTapCustomTemplateClose");
+    CLEVERTAP_CUSTOM_TEMPLATE_CLOSE("CleverTapCustomTemplateClose"),
+    CLEVERTAP_FETCH_INBOX("CleverTapFetchInboxCallback");
 
 
     @Nullable

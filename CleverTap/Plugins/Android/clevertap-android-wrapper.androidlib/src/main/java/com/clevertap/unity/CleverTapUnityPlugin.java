@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.FetchInboxCallback;
 import com.clevertap.android.sdk.UTMDetail;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import com.clevertap.android.sdk.events.EventDetail;
@@ -577,6 +578,16 @@ public class CleverTapUnityPlugin {
     //Notification Inbox
     public void initializeInbox() {
         clevertap.initializeInbox();
+    }
+
+    public void fetchInbox() {
+        clevertap.fetchInbox(success ->
+            CleverTapMessageSender.getInstance().send(CleverTapUnityCallback.CLEVERTAP_FETCH_INBOX, String.valueOf(success))
+        );
+    }
+
+    public void unmute() {
+        clevertap.unmute();
     }
 
     public int getInboxMessageCount() {
