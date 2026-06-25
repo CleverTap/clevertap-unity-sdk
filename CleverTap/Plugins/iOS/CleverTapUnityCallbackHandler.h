@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (CleverTapInboxUpdatedBlock)inboxUpdatedBlock;
 
+- (CleverTapInboxSuccessBlock)fetchInboxBlock;
+
 - (void)didReceiveRemoteNotification:(NSData *)data isOpen:(BOOL)isOpen;
 
 - (void)deepLinkCallback:(NSString *)url;
