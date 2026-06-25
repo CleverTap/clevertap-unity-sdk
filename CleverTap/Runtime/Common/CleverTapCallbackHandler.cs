@@ -263,6 +263,7 @@ namespace CleverTapSDK.Common {
                 lock (CallbackLock)
                 {
                     _OnCleverTapFetchInboxCallback += value;
+                    OnCallbackAdded(CleverTapFetchInboxCallback);
                 }
             }
             remove

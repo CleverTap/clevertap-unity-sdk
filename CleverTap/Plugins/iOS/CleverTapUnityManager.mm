@@ -519,7 +519,7 @@ static BOOL shouldDisableBuffers = YES;
 }
 
 - (void)fetchInbox {
-    [self.cleverTap fetchInbox:^(BOOL success) {
+    [self.cleverTap fetchInboxWithCallback:^(BOOL success) {
         void(^block)(BOOL success) = [[CleverTapUnityCallbackHandler sharedInstance] fetchInboxBlock];
         if (block) block(success);
     }];

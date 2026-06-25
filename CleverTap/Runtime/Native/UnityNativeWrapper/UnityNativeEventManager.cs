@@ -313,7 +313,7 @@ namespace CleverTapSDK.Native
                                 _preferenceManager.SetGUIDForIdentifier(_coreState.DeviceInfo.DeviceId, key, val);
                         }
                     }
-                    _pendingProfilePushAfterLaunch = profile;
+                    _pendingProfilePushAfterLaunch = new Dictionary<string, object>(profile);
                 }
 
                 RecordAppLaunch();
