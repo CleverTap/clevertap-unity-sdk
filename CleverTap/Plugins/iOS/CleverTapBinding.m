@@ -456,6 +456,10 @@ void CleverTap_initializeInbox() {
     [[CleverTapUnityManager sharedInstance] initializeInbox];
 }
 
+void CleverTap_fetchInbox() {
+    [[CleverTapUnityManager sharedInstance] fetchInbox];
+}
+
 void CleverTap_showAppInbox(const char* styleConfig) {
     NSMutableDictionary *styleConfigDict = clevertap_dictFromJsonString(styleConfig);
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];

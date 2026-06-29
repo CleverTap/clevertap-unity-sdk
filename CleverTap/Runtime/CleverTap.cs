@@ -86,6 +86,11 @@ namespace CleverTapSDK {
             remove => cleverTapCallbackHandler.OnCleverTapInAppNotificationButtonTapped -= value;
         }
 
+        public static event CleverTapCallbackWithMessageDelegate OnCleverTapFetchInboxCallback {
+            add => cleverTapCallbackHandler.OnCleverTapFetchInboxCallback += value;
+            remove => cleverTapCallbackHandler.OnCleverTapFetchInboxCallback -= value;
+        }
+
         public static event CleverTapCallbackDelegate OnCleverTapInboxDidInitializeCallback {
             add => cleverTapCallbackHandler.OnCleverTapInboxDidInitializeCallback += value;
             remove => cleverTapCallbackHandler.OnCleverTapInboxDidInitializeCallback -= value;
@@ -341,6 +346,9 @@ namespace CleverTapSDK {
         public static List<CleverTapInboxMessage> GetUnreadInboxMessagesParsed() =>
             cleverTapBinding.GetUnreadInboxMessagesParsed();
 
+        public static void FetchInbox() =>
+            cleverTapBinding.FetchInbox();
+
         public static void InitializeInbox() =>
             cleverTapBinding.InitializeInbox();
 
@@ -500,6 +508,9 @@ namespace CleverTapSDK {
 
         public static void SuspendInAppNotifications() =>
             cleverTapBinding.SuspendInAppNotifications();
+
+        public static void Unmute() =>
+            cleverTapBinding.Unmute();
 
         [Obsolete("This method is deprecated, use GetUserEventLogHistory() instead.")]
         public static JSONClass UserGetEventHistory() =>

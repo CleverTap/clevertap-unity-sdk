@@ -101,6 +101,7 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 #pragma mark - App Inbox
 
 - (void)initializeInbox;
+- (void)fetchInbox;
 - (void)showAppInbox:(NSDictionary *)styleConfig;
 - (void)dismissAppInbox;
 - (int)getInboxMessageUnreadCount;

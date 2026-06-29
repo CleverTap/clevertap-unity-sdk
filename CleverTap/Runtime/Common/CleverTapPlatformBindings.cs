@@ -185,6 +185,9 @@ namespace CleverTapSDK.Common {
             return new List<CleverTapInboxMessage>();
         }
 
+        internal virtual void FetchInbox() {
+        }
+
         internal virtual void InitializeInbox() {
         }
 
@@ -353,6 +356,9 @@ namespace CleverTapSDK.Common {
         }
 
         internal virtual void SuspendInAppNotifications() {
+        }
+
+        internal virtual void Unmute() {
         }
 
         [Obsolete]
