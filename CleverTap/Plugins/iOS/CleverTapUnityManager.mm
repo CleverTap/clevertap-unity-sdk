@@ -518,6 +518,13 @@ static BOOL shouldDisableBuffers = YES;
     }];
 }
 
+- (void)fetchInbox {
+    [self.cleverTap fetchInboxWithCallback:^(BOOL success) {
+        void(^block)(BOOL success) = [[CleverTapUnityCallbackHandler sharedInstance] fetchInboxBlock];
+        if (block) block(success);
+    }];
+}
+
 - (void)inboxMessagesDidUpdate {
     [self.cleverTap registerInboxUpdatedBlock:[[CleverTapUnityCallbackHandler sharedInstance] inboxUpdatedBlock]];
 }

@@ -60,6 +60,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_dismissAppInbox();
         }
 
+        internal override void FetchInbox() {
+            IOSDllImport.CleverTap_fetchInbox();
+        }
+
         internal override void EnableDeviceNetworkInfoReporting(bool enabled) {
             IOSDllImport.CleverTap_enableDeviceNetworkInfoReporting(enabled);
         }

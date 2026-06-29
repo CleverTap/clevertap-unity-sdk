@@ -74,6 +74,10 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("dismissAppInbox");
         }
 
+        internal override void FetchInbox() {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchInbox");
+        }
+
         internal override void EnableDeviceNetworkInfoReporting(bool value) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("enableDeviceNetworkInfoReporting", value);
         }
@@ -456,6 +460,10 @@ namespace CleverTapSDK.Android {
         */
         internal override void SuspendInAppNotifications() {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("suspendInAppNotifications");
+        }
+
+        internal override void Unmute() {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("unmute");
         }
 
         [Obsolete]
