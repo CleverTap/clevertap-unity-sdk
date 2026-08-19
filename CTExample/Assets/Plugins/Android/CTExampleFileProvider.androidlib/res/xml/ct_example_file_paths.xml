@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    root-path is intentional for this internal QA app.
+    CleverTap stores files via context.getDir("CleverTap.Files.", MODE_PRIVATE)
+    which creates app_CleverTap.Files. outside the standard files/ and cache/
+    directories — none of FileProvider's scoped path types cover it directly.
+-->
 <paths>
     <root-path name="root" path="/" />
 </paths>

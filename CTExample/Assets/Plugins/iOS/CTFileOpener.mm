@@ -21,7 +21,12 @@
     self.controller.delegate = self;
     BOOL previewed = [self.controller presentPreviewAnimated:YES];
     if (!previewed) {
-        [self.controller presentOpenInMenuFromRect:CGRectZero inView:UnityGetGLViewController().view animated:YES];
+        BOOL opened = [self.controller presentOpenInMenuFromRect:CGRectZero
+                                                         inView:UnityGetGLViewController().view
+                                                       animated:YES];
+        if (!opened) {
+            [UIPasteboard generalPasteboard].string = path;
+        }
     }
 }
 
