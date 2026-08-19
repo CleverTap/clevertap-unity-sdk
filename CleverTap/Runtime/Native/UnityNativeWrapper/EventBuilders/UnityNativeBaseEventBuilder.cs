@@ -17,12 +17,6 @@ namespace CleverTapSDK.Native {
         }
 
         internal Dictionary<string, object> BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
-           
-            if (_networkEngine.IsMuted()) {
-                CleverTapLogger.Log("Not building event. CleverTap is Muted.");
-                return null;
-            }
-                
             var eventData = new Dictionary<string, object>(eventDetails);
             switch (eventType) {
                 case UnityNativeEventType.ProfileEvent:

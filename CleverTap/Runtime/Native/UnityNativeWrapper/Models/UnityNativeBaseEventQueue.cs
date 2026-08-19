@@ -70,6 +70,13 @@ namespace CleverTapSDK.Native
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
         {
             var processedEvents = new List<UnityNativeEvent>();
+            if (networkEngine.IsMuted())
+            {
+                CleverTapLogger.Log($"{QueueName}: SDK is paused, deferring flush.");
+                OnEventsProcessed?.Invoke(processedEvents);
+                return processedEvents;
+            }
+
             if (isInFlushProcess)
             {
                 OnEventsProcessed?.Invoke(processedEvents);

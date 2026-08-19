@@ -482,6 +482,26 @@ namespace CleverTapSDK {
         public static void SetOffline(bool enabled) =>
             cleverTapBinding.SetOffline(enabled);
 
+        /// <summary>
+        /// Pauses all CleverTap network activity. Call during active gameplay to prevent
+        /// SDK network calls from causing frame stutters. Resume with <see cref="ResumeSDK"/>.
+        /// </summary>
+        public static void PauseSDK()
+        {
+            CleverTapLogger.Log("CleverTap: PauseSDK called — network activity paused.");
+            cleverTapBinding.SetOffline(true);
+        }
+
+        /// <summary>
+        /// Resumes CleverTap network activity after a <see cref="PauseSDK"/> call.
+        /// Queued events are flushed once resumed.
+        /// </summary>
+        public static void ResumeSDK()
+        {
+            CleverTapLogger.Log("CleverTap: ResumeSDK called — network activity resumed.");
+            cleverTapBinding.SetOffline(false);
+        }
+
         public static void SetOptOut(bool enabled) =>
             cleverTapBinding.SetOptOut(enabled);
 
