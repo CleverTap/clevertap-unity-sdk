@@ -92,7 +92,7 @@ namespace CTExample
             _CTOpenFile(filePath);
             Toast.Show($"Opening: {Path.GetFileName(filePath)}");
 #else
-            Application.OpenURL(new System.Uri(filePath).AbsoluteUri);
+            Application.OpenURL(new System.Uri(Path.GetFullPath(filePath)).AbsoluteUri);
             Toast.Show($"Opening: {Path.GetFileName(filePath)}");
 #endif
         }

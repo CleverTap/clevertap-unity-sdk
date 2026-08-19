@@ -431,6 +431,8 @@ namespace CleverTapSDK.Native
 
         internal void SetOffline(bool enabled)
         {
+            if (_networkEngine == null || _eventQueueManager == null)
+                return;
             _networkEngine.SetMute(enabled);
             if (!enabled)
                 _eventQueueManager.FlushQueues();
