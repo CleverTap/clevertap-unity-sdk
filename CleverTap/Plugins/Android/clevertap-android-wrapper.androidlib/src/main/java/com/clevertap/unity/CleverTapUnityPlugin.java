@@ -234,6 +234,14 @@ public class CleverTapUnityPlugin {
         CleverTapMessageSender.getInstance().flushBuffer(callback);
     }
 
+    public void setOffline(boolean value) {
+        try {
+            clevertap.setOffline(value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "setOffline error", t);
+        }
+    }
+
     public void setOptOut(boolean value) {
         try {
             clevertap.setOptOut(value);

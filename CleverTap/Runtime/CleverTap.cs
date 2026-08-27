@@ -14,6 +14,26 @@ namespace CleverTapSDK {
         private static CleverTapPlatformInApps cleverTapInApps = InAppsFactory.CleverTapInApps;
         private static CleverTapPlatformCustomTemplates cleverTapCustomInApps = CustomTemplatesFactory.CleverTapCustomTemplates;
 
+#if UNITY_EDITOR
+        // With Enter Play Mode Options → Reload Domain disabled, static fields survive
+        // across Play sessions but the GameObjects they reference are destroyed on Play stop.
+        // SubsystemRegistration fires before the first Awake each Play session, giving us
+        // a safe window to recreate everything in dependency order.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetDomainState()
+        {
+            VariableFactory.Reset();
+            CustomTemplatesFactory.Reset();
+            InAppsFactory.Reset();
+            BindingFactory.Reset();  // reads from Variable + CustomTemplates factories above
+            cleverTapBinding = BindingFactory.CleverTapBinding;
+            cleverTapCallbackHandler = cleverTapBinding.CallbackHandler;
+            cleverTapVariable = VariableFactory.CleverTapVariable;
+            cleverTapInApps = InAppsFactory.CleverTapInApps;
+            cleverTapCustomInApps = CustomTemplatesFactory.CleverTapCustomTemplates;
+        }
+#endif
+
         #region Constants - CleverTap Version
 
         public const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;

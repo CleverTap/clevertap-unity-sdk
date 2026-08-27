@@ -24,5 +24,12 @@ namespace CleverTapSDK.Common
             cleverTapVariable = new UnityNativePlatformVariable();
 #endif
         }
+
+#if UNITY_EDITOR
+        internal static void Reset()
+        {
+            cleverTapVariable = new UnityNativePlatformVariable();
+        }
+#endif
     }
 }
