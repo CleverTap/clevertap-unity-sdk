@@ -537,6 +537,10 @@ static BOOL shouldDisableBuffers = YES;
     }
 }
 
+- (void)dismissPipInApp {
+    [self.cleverTap dismissPipInApp];
+}
+
 - (void)dismissAppInbox {
     [self.cleverTap dismissAppInbox];
 }

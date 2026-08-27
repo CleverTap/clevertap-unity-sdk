@@ -428,6 +428,15 @@ namespace CleverTapSDK.Native
             }
             _coreState.DeviceInfo.EnableNetworkInfoReporting = enabled;
         }
+
+        internal void SetOffline(bool enabled)
+        {
+            if (_networkEngine == null || _eventQueueManager == null)
+                return;
+            _networkEngine.SetMute(enabled);
+            if (!enabled)
+                _eventQueueManager.FlushQueues();
+        }
         #endregion
 
         #region Record Events

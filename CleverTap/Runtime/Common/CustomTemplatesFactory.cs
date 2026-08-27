@@ -24,5 +24,12 @@ namespace CleverTapSDK.Common
             cleverTapCustomTemplates = new UnityNativePlatformCustomTemplates();
 #endif
         }
+
+#if UNITY_EDITOR
+        internal static void Reset()
+        {
+            cleverTapCustomTemplates = new UnityNativePlatformCustomTemplates();
+        }
+#endif
     }
 }

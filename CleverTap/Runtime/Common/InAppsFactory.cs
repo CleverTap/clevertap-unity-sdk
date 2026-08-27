@@ -21,5 +21,18 @@ namespace CleverTapSDK.Common {
             cleverTapInApps = new UnityNativePlatformInApps();
 #endif
         }
+
+#if UNITY_EDITOR
+        internal static void Reset()
+        {
+#if UNITY_ANDROID
+            cleverTapInApps = new AndroidPlatformInApps();
+#elif UNITY_IOS
+            cleverTapInApps = new IOSPlatformInApps();
+#else
+            cleverTapInApps = new UnityNativePlatformInApps();
+#endif
+        }
+#endif
     }
 }

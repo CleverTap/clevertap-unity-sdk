@@ -21,5 +21,12 @@ namespace CleverTapSDK.Common {
             cleverTapBinding = new UnityNativePlatformBinding();
             #endif
         }
+
+#if UNITY_EDITOR
+        internal static void Reset()
+        {
+            cleverTapBinding = new UnityNativePlatformBinding();
+        }
+#endif
     }
 }

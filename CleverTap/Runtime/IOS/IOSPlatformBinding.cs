@@ -56,6 +56,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_discardInAppNotifications();
         }
 
+        internal override void DismissPipInApp() {
+            IOSDllImport.CleverTap_dismissPipInApp();
+        }
+
         internal override void DismissAppInbox() {
             IOSDllImport.CleverTap_dismissAppInbox();
         }
