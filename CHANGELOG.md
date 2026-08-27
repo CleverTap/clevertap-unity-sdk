@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 5.5.5 *(Aug 2026)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v8.4.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.4.1)
+- Updated to [CleverTap iOS SDK v7.8.1](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.8.1)
+- **New:** `PauseSDK()` / `ResumeSDK()` — pause and resume all CleverTap event tracking and network operations. Events recorded while paused are buffered in the queue and flushed automatically on resume. Supported on Android, iOS, and Unity Native (Editor/PC/Mac/WebGL).
+- **New:** `DismissPipInApp()` — dismisses the currently visible Picture-in-Picture (PiP) in-app notification, freeing the display slot for the next queued in-app. No-op on Native/Editor.
+- **New (QA):** Tap-to-open factory variable files in the example app opens `.json` variable files directly from the device on Android and iOS. Desktop/Editor fallback uses `Application.OpenURL`.
+- **Fix:** [#253](https://github.com/CleverTap/clevertap-unity-sdk/issues/253) `SetOffline` had no effect on Android — the `setOffline` method was missing from the Java wrapper (`CleverTapUnityPlugin.java`), causing the JNI call to silently fail. The method is now implemented and correctly delegates to the native CleverTap Android SDK.
+- **Fix:** [#252](https://github.com/CleverTap/clevertap-unity-sdk/issues/252) Crash on second Play session in Unity Editor when **Domain Reload** is disabled — static factory fields (`BindingFactory`, `VariableFactory`, `CustomTemplatesFactory`, `InAppsFactory`) survived the domain but the GameObjects they referenced were destroyed. A `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` hook in `CleverTap.cs` now resets all factories in dependency order at the start of every Play session, preventing stale object references.
+
 Version 5.5.4 *(June 2026)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v8.3.0](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.3.0)

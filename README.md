@@ -76,6 +76,19 @@ WebGL specific setup is described in the [WebGL Instructions](/docs/Instructions
 
 - [See the CleverTap Unity Usage Documentation](/docs/Usage.md)
 
+## 🎮 Gaming #
+
+The SDK includes lifecycle controls designed for game loops:
+
+- **PauseSDK / ResumeSDK** — Temporarily halt data collection during performance-critical gameplay. Events recorded while paused are buffered in memory and flushed automatically on resume, so no data is lost. Call `PauseSDK()` when entering an active match or level and `ResumeSDK()` when the player returns to a menu, lobby, or any screen where engagement tracking is meaningful.
+
+```csharp
+void OnGameplayStart() => CleverTap.PauseSDK();
+void OnGameplayEnd()   => CleverTap.ResumeSDK(); // buffered events flush here
+```
+
+See [Usage Documentation](/docs/Usage.md#sdk-lifecycle-controls) for full details.
+
 ## 🆕 Changelog #
 
 Check out the CleverTap Unity plugin SDK [Change Log](/CHANGELOG.md) here.
