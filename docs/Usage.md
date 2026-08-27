@@ -155,6 +155,38 @@ private void CleverTapInAppNotificationDismissedCallback(string message)
 }
 ```
 
+## SDK Lifecycle Controls
+
+Use `PauseSDK` and `ResumeSDK` to temporarily halt CleverTap data collection. Events recorded while the SDK is paused are **buffered in memory** and flushed automatically the moment `ResumeSDK` is called — no events are lost.
+
+**Gaming use case:** Pause the SDK when entering an active gameplay loop where analytics overhead or incomplete mid-session events are undesirable. Resume when the player reaches a natural breakpoint — a menu screen, a lobby, an interstitial, or when the app returns to the foreground — so buffered events are sent together as a coherent batch.
+
+```csharp
+// Entering active gameplay — pause tracking
+void OnGameplayStart()
+{
+    CleverTap.PauseSDK();
+}
+
+// Returning to menu / lobby — resume and flush buffered events
+void OnGameplayEnd()
+{
+    CleverTap.ResumeSDK();
+}
+```
+
+#### Pause SDK
+
+```csharp
+CleverTap.PauseSDK();
+```
+
+#### Resume SDK
+
+```csharp
+CleverTap.ResumeSDK();
+```
+
 ## In-App Notification Controls
 
 #### Suspend In-App Notifications
@@ -173,6 +205,14 @@ CleverTap.DiscardInAppNotifications();
 
 ```csharp
 CleverTap.ResumeInAppNotifications();
+```
+
+#### Dismiss PiP In-App
+
+Programmatically dismisses a currently visible Picture-in-Picture (PiP) in-app notification.
+
+```csharp
+CleverTap.DismissPipInApp();
 ```
 
 ## App Inbox

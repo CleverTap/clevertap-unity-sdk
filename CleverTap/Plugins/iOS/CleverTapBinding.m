@@ -465,6 +465,10 @@ void CleverTap_showAppInbox(const char* styleConfig) {
     [[CleverTapUnityManager sharedInstance] showAppInbox: styleConfigDict];
 }
 
+void CleverTap_dismissPipInApp() {
+    [[CleverTapUnityManager sharedInstance] dismissPipInApp];
+}
+
 void CleverTap_dismissAppInbox() {
     [[CleverTapUnityManager sharedInstance] dismissAppInbox];
 }

@@ -143,6 +143,11 @@ namespace CleverTapSDK.Native
                 CleverTapLogger.SetLogLevel(LogLevel.Debug);
         }
 
+        internal override void SetOffline(bool enabled)
+        {
+            _unityNativeEventManager.SetOffline(enabled);
+        }
+
         internal override void EnableDeviceNetworkInfoReporting(bool enabled)
         {
             _unityNativeEventManager.EnableDeviceNetworkInfoReporting(enabled);

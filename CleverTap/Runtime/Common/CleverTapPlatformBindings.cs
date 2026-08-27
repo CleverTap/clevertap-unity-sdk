@@ -57,6 +57,9 @@ namespace CleverTapSDK.Common {
         internal virtual void DiscardInAppNotifications() {
         }
 
+        internal virtual void DismissPipInApp() {
+        }
+
         internal virtual void DismissAppInbox() {
         }
 

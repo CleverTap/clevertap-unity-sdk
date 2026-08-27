@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CleverTapSDK;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace CTExample
@@ -16,6 +17,9 @@ namespace CTExample
         public Button consoleButton;
         public GameObject console;
 
+        public Button pauseSDKButton;
+        public Button resumeSDKButton;
+
         void Start()
         {
 #if !(UNITY_IOS || UNITY_ANDROID) || UNITY_EDITOR
@@ -27,6 +31,8 @@ namespace CTExample
             messagesButton.onClick.AddListener(DidTapMessages);
             pushButton.onClick.AddListener(DidTapPush);
             consoleButton.onClick.AddListener(DidTapConsole);
+            pauseSDKButton.onClick.AddListener(DidTapPauseSDK);
+            resumeSDKButton.onClick.AddListener(DidTapResumeSDK);
 
             Restore();
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
@@ -56,6 +62,20 @@ namespace CTExample
             console.SetActive(!console.activeInHierarchy);
             var text = consoleButton.GetComponentInChildren<Text>();
             text.text = console.activeInHierarchy ? "Hide Console" : "Show Console";
+        }
+
+        public void DidTapPauseSDK()
+        {
+            CleverTap.PauseSDK();
+            Logger.Log("SDK Paused");
+            Toast.Show("SDK Paused");
+        }
+
+        public void DidTapResumeSDK()
+        {
+            CleverTap.ResumeSDK();
+            Logger.Log("SDK Resumed");
+            Toast.Show("SDK Resumed");
         }
     }
 }

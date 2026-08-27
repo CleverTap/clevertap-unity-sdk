@@ -234,6 +234,14 @@ public class CleverTapUnityPlugin {
         CleverTapMessageSender.getInstance().flushBuffer(callback);
     }
 
+    public void setOffline(boolean value) {
+        try {
+            clevertap.setOffline(value);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "setOffline error", t);
+        }
+    }
+
     public void setOptOut(boolean value) {
         try {
             clevertap.setOptOut(value);
@@ -428,6 +436,14 @@ public class CleverTapUnityPlugin {
             clevertap.discardInAppNotifications();
         } catch (Throwable t) {
             Log.e(LOG_TAG, "Unable to discardInAppNotification", t);
+        }
+    }
+
+    public void dismissPipInApp() {
+        try {
+            clevertap.dismissPipInApp();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "dismissPipInApp error", t);
         }
     }
 

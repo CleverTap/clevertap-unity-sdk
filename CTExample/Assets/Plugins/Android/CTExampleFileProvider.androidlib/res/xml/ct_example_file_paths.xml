@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    root-path restricted to data/ for this internal QA app.
+    CleverTap stores files via context.getDir("CleverTap.Files.", MODE_PRIVATE)
+    which creates app_CleverTap.Files. under /data/[user/0/]<package>/ —
+    outside the standard files/ and cache/ subtrees that scoped path types cover.
+    Restricting to data/ avoids exposing sdcard, /proc, /sys, etc.
+-->
+<paths>
+    <root-path name="app_data" path="data/" />
+</paths>

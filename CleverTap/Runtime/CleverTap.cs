@@ -14,6 +14,26 @@ namespace CleverTapSDK {
         private static CleverTapPlatformInApps cleverTapInApps = InAppsFactory.CleverTapInApps;
         private static CleverTapPlatformCustomTemplates cleverTapCustomInApps = CustomTemplatesFactory.CleverTapCustomTemplates;
 
+#if UNITY_EDITOR
+        // With Enter Play Mode Options → Reload Domain disabled, static fields survive
+        // across Play sessions but the GameObjects they reference are destroyed on Play stop.
+        // SubsystemRegistration fires before the first Awake each Play session, giving us
+        // a safe window to recreate everything in dependency order.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetDomainState()
+        {
+            VariableFactory.Reset();
+            CustomTemplatesFactory.Reset();
+            InAppsFactory.Reset();
+            BindingFactory.Reset();  // reads from Variable + CustomTemplates factories above
+            cleverTapBinding = BindingFactory.CleverTapBinding;
+            cleverTapCallbackHandler = cleverTapBinding.CallbackHandler;
+            cleverTapVariable = VariableFactory.CleverTapVariable;
+            cleverTapInApps = InAppsFactory.CleverTapInApps;
+            cleverTapCustomInApps = CustomTemplatesFactory.CleverTapCustomTemplates;
+        }
+#endif
+
         #region Constants - CleverTap Version
 
         public const string VERSION = CleverTapVersion.CLEVERTAP_SDK_VERSION;
@@ -217,6 +237,9 @@ namespace CleverTapSDK {
 
         public static void DiscardInAppNotifications() =>
             cleverTapBinding.DiscardInAppNotifications();
+
+        public static void DismissPipInApp() =>
+            cleverTapBinding.DismissPipInApp();
 
         public static void DismissAppInbox() =>
             cleverTapBinding.DismissAppInbox();
@@ -481,6 +504,26 @@ namespace CleverTapSDK {
 
         public static void SetOffline(bool enabled) =>
             cleverTapBinding.SetOffline(enabled);
+
+        /// <summary>
+        /// Pauses all CleverTap network activity. Call during active gameplay to prevent
+        /// SDK network calls from causing frame stutters. Resume with <see cref="ResumeSDK"/>.
+        /// </summary>
+        public static void PauseSDK()
+        {
+            CleverTapLogger.Log("CleverTap: PauseSDK called — network activity paused.");
+            cleverTapBinding.SetOffline(true);
+        }
+
+        /// <summary>
+        /// Resumes CleverTap network activity after a <see cref="PauseSDK"/> call.
+        /// Queued events are flushed once resumed.
+        /// </summary>
+        public static void ResumeSDK()
+        {
+            CleverTapLogger.Log("CleverTap: ResumeSDK called — network activity resumed.");
+            cleverTapBinding.SetOffline(false);
+        }
 
         public static void SetOptOut(bool enabled) =>
             cleverTapBinding.SetOptOut(enabled);

@@ -103,6 +103,7 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (void)initializeInbox;
 - (void)fetchInbox;
 - (void)showAppInbox:(NSDictionary *)styleConfig;
+- (void)dismissPipInApp;
 - (void)dismissAppInbox;
 - (int)getInboxMessageUnreadCount;
 - (int)getInboxMessageCount;
