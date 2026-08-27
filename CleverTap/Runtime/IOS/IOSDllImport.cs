@@ -152,6 +152,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_showAppInbox(string styleConfig);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_dismissPipInApp();
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_dismissAppInbox();
 
         [DllImport("__Internal")]

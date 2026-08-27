@@ -439,6 +439,14 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    public void dismissPipInApp() {
+        try {
+            clevertap.dismissPipInApp();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "dismissPipInApp error", t);
+        }
+    }
+
 
     public void resumeInAppNotifications() {
         try {

@@ -238,6 +238,9 @@ namespace CleverTapSDK {
         public static void DiscardInAppNotifications() =>
             cleverTapBinding.DiscardInAppNotifications();
 
+        public static void DismissPipInApp() =>
+            cleverTapBinding.DismissPipInApp();
+
         public static void DismissAppInbox() =>
             cleverTapBinding.DismissAppInbox();
 

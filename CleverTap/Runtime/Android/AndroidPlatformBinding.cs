@@ -70,6 +70,10 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("discardInAppNotifications");
         }
 
+        internal override void DismissPipInApp() {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("dismissPipInApp");
+        }
+
         internal override void DismissAppInbox() {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("dismissAppInbox");
         }
