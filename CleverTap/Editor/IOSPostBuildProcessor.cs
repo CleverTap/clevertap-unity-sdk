@@ -122,7 +122,7 @@ namespace CleverTapSDK.Private
 
             if (settings.Environments == null || settings.Environments.Items == null)
             {
-                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                Debug.LogError("[CleverTap] CleverTapSettings - Environments are not configured.");
                 return;
             }
 
@@ -130,13 +130,13 @@ namespace CleverTapSDK.Private
 
             if (environments == null || environments.Count == 0)
             {
-                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                Debug.LogError("[CleverTap] CleverTapSettings - Environments are not configured.");
                 return;
             }
 
             if (!environments.TryGetValue(settings.DefaultEnvironment, out CleverTapEnvironmentCredential environmentValue))
             {
-                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
+                Debug.LogError($"[CleverTap] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
                 return;
             }
 

@@ -8,6 +8,7 @@ Unreleased
 - **Fix:** String variables whose value is itself JSON were lost on both platforms. `AndroidVar` now falls back to the raw representation when the wrapper returns such a value unquoted, `IOSVar` keeps the last known good value when the native value is not a string, and both guard `Util.FillInValues` on the target actually being an `IDictionary` instead of overwriting a non-dictionary variable.
 - **Fix:** `AndroidVar` returned `defaultValue` only after attempting to deserialize; it now null-checks the JNI result up front, matching `IOSVar`.
 - **Fix:** String variable *defaults* were corrupted on iOS - `defineVar` stripped the outer quotes off the serialized JSON fragment instead of decoding it, leaving every inner quote escaped. It now JSON-decodes the fragment and falls back to the old behaviour only if that fails.
+- **Fix:** `CleverTapSettings` configuration errors raised by `AndroidProjectPostProcessor` and `IOSPostBuildProcessor` were logged with the example app's `[CTExample]` prefix instead of `[CleverTap]`.
 
 Version 5.5.5 *(Aug 2026)*
 -------------------------------------------
