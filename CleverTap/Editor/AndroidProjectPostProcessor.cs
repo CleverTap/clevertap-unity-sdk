@@ -112,6 +112,13 @@ namespace CleverTapSDK.Private
         {
             string content = File.ReadAllText(gradlePath);
 
+            // Unity 2021 and older need the generated project pushed onto a toolchain AGP 8.x
+            // accepts. Unity 2022/2023 must not get these rewrites: those editors bundle
+            // OpenJDK 11 so JavaVersion.VERSION_17 fails to compile, they do generate
+            // setupSymbols.gradle / keepUnitySymbols.gradle so dropping the apply lines breaks
+            // symbol packaging, and they already honour minSdk from Player Settings so
+            // overriding it silently discards the project's choice.
+#if !UNITY_2022_1_OR_NEWER
             // Remove Unity symbol script apply lines that may not exist in all environments
             content = Regex.Replace(content, @"apply from: 'setupSymbols\.gradle'\r?\n?", "");
             content = Regex.Replace(content, @"apply from: '\.\./shared/keepUnitySymbols\.gradle'\r?\n?", "");
@@ -119,13 +126,15 @@ namespace CleverTapSDK.Private
             // Java 17 required for AGP 8.x / latest Gradle
             content = content.Replace("JavaVersion.VERSION_11", "JavaVersion.VERSION_17");
 
+            content = Regex.Replace(content, @"\bminSdkVersion\s+\d+", "minSdkVersion 26");
+            content = Regex.Replace(content, @"\bminSdk\b\s+\d+", "minSdk 26");
+#endif
+
             // Enforce SDK versions regardless of what Unity set.
             // Match both old-style (compileSdkVersion 33) and new-style (compileSdk 33).
             // The \b word boundary ensures 'compileSdk' doesn't match inside 'compileSdkVersion'.
             content = Regex.Replace(content, @"\bcompileSdkVersion\s+\d+", "compileSdkVersion 36");
             content = Regex.Replace(content, @"\bcompileSdk\b\s+\d+", "compileSdk 36");
-            content = Regex.Replace(content, @"\bminSdkVersion\s+\d+", "minSdkVersion 26");
-            content = Regex.Replace(content, @"\bminSdk\b\s+\d+", "minSdk 26");
             content = Regex.Replace(content, @"\btargetSdkVersion\s+\d+", "targetSdkVersion 36");
             content = Regex.Replace(content, @"\btargetSdk\b\s+\d+", "targetSdk 36");
 

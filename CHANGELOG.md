@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Unreleased
+-------------------------------------------
+- **Fix:** Android builds on Unity 2022/2023 - `AndroidProjectPostProcessor` no longer rewrites the generated Gradle files onto a Unity 2021-era toolchain. Forcing `JavaVersion.VERSION_17` failed to compile against the OpenJDK 11 those editors bundle, stripping the `setupSymbols.gradle` / `keepUnitySymbols.gradle` apply lines broke symbol packaging, and forcing `minSdk 26` silently discarded the project's Player Settings value. Those three rewrites are now guarded behind `#if !UNITY_2022_1_OR_NEWER`; the `compileSdk`/`targetSdk` 36 bump still applies on every pre-Unity 6 editor.
+- **Fix:** `GetVariableValue` returned malformed JSON on Android for string variables containing a double quote, a backslash or a control character - the Java wrapper built the JSON string by concatenation instead of escaping. `CleverTapUnityPlugin.getVariableValue` now uses `JSONObject.quote`.
+
 Version 5.5.5 *(Aug 2026)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v8.4.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.4.1)
