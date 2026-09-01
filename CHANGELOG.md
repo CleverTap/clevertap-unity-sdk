@@ -5,6 +5,9 @@ Unreleased
 -------------------------------------------
 - **Fix:** Android builds on Unity 2022/2023 - `AndroidProjectPostProcessor` no longer rewrites the generated Gradle files onto a Unity 2021-era toolchain. Forcing `JavaVersion.VERSION_17` failed to compile against the OpenJDK 11 those editors bundle, stripping the `setupSymbols.gradle` / `keepUnitySymbols.gradle` apply lines broke symbol packaging, and forcing `minSdk 26` silently discarded the project's Player Settings value. Those three rewrites are now guarded behind `#if !UNITY_2022_1_OR_NEWER`; the `compileSdk`/`targetSdk` 36 bump still applies on every pre-Unity 6 editor.
 - **Fix:** `GetVariableValue` returned malformed JSON on Android for string variables containing a double quote, a backslash or a control character - the Java wrapper built the JSON string by concatenation instead of escaping. `CleverTapUnityPlugin.getVariableValue` now uses `JSONObject.quote`.
+- **Fix:** String variables whose value is itself JSON were lost on both platforms. `AndroidVar` now falls back to the raw representation when the wrapper returns such a value unquoted, `IOSVar` keeps the last known good value when the native value is not a string, and both guard `Util.FillInValues` on the target actually being an `IDictionary` instead of overwriting a non-dictionary variable.
+- **Fix:** `AndroidVar` returned `defaultValue` only after attempting to deserialize; it now null-checks the JNI result up front, matching `IOSVar`.
+- **Fix:** String variable *defaults* were corrupted on iOS - `defineVar` stripped the outer quotes off the serialized JSON fragment instead of decoding it, leaving every inner quote escaped. It now JSON-decodes the fragment and falls back to the old behaviour only if that fails.
 
 Version 5.5.5 *(Aug 2026)*
 -------------------------------------------
