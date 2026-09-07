@@ -423,6 +423,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_registerPush();
         }
 
+        internal override void SetPushTokenAsString(string pushTokenString){
+            IOSDllImport.CleverTap_setPushTokenAsString(pushTokenString);
+        }
+
         [Obsolete]
         internal override void ResetProductConfig() {
             IOSDllImport.CleverTap_resetProductConfig();
