@@ -195,7 +195,7 @@ void CleverTap_registerPush() {
 
 void CleverTap_setPushTokenAsString(const char* pushTokenString){
     [[CleverTapUnityManager sharedInstance] setPushTokenAsString:
-        [NSString stringWithUTF8String: pushTokenString]];
+        clevertap_stringToNSString(pushTokenString)];
 }
 
 void CleverTap_setApplicationIconBadgeNumber(int num) {
