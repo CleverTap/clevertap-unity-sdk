@@ -174,12 +174,10 @@ namespace CleverTapSDK.Native
             {
                 ResetAndStartTimer();
             }
-            else
-            {
-                lock (_queueLock) { hasMore = eventsQueue.Any(); }
-                if (hasMore) ResetAndStartTimer();
-                else StopTimer();
-            }
+            // Don't call StopTimer() here: a concurrent QueueEvent can add an event and
+            // start a timer between the lock release and StopTimer(), stranding that event.
+            // QueueEvent owns timer restarts; if the queue is empty any live timer fires
+            // a no-op flush, which is harmless.
 
             OnEventsProcessed?.Invoke(processedEvents);
             return processedEvents;
