@@ -30,6 +30,12 @@ namespace CleverTapSDK.Native
         private readonly UnityNativePlatformVariable _platformVariable;
         private readonly UnityNativePlatformCustomTemplates _platformCustomTemplates;
 
+        // new fields for object pooling
+        private UnityNativeRaisedEventBuilder _raisedEventBuilder;
+        private UnityNativeProfileEventBuilder _profileEventBuilder;
+        private UnityNativeNotificationEventsBuilder _notificationEventBuilder;
+        private UnityNativeEventBuilder _eventBuilder;
+
         internal UnityNativeEventManager(UnityNativeCallbackHandler callbackHandler)
             : this(callbackHandler, null) { }
 
@@ -56,6 +62,11 @@ namespace CleverTapSDK.Native
 
             _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
             _networkEngine = UnityNativeNetworkEngine.Create(_accountId);
+
+            _raisedEventBuilder = new UnityNativeRaisedEventBuilder(_eventValidator);
+            _profileEventBuilder = new UnityNativeProfileEventBuilder(_eventValidator);
+            _notificationEventBuilder = new UnityNativeNotificationEventsBuilder(_eventValidator);
+            _eventBuilder = new UnityNativeEventBuilder(_coreState, _networkEngine);
 
             _platformVariable?.Load(this, _callbackHandler, _coreState);
             _platformCustomTemplates?.Load(this);
@@ -297,6 +308,9 @@ namespace CleverTapSDK.Native
 
                 // Load discarded events for new user
                 _eventValidator = new UnityNativeEventValidator(LoadDiscardedEvents());
+                _raisedEventBuilder = new UnityNativeRaisedEventBuilder(_eventValidator);
+                _profileEventBuilder = new UnityNativeProfileEventBuilder(_eventValidator);
+                _notificationEventBuilder = new UnityNativeNotificationEventsBuilder(_eventValidator);
                 // Set interceptors for new user
                 SetResponseInterceptors();
 
@@ -366,7 +380,7 @@ namespace CleverTapSDK.Native
                 }
             }
 
-            var eventBuilderResult = new UnityNativeProfileEventBuilder(_eventValidator).BuildPushEvent(properties);
+            var eventBuilderResult = _profileEventBuilder.BuildPushEvent(properties);
             if (eventBuilderResult.EventResult.SystemFields == null || eventBuilderResult.EventResult.CustomFields == null)
             {
                 return null;
@@ -451,7 +465,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator).Build(eventName, properties);
+            var eventBuilderResult = _raisedEventBuilder.Build(eventName, properties);
             if (eventBuilderResult.EventResult == null)
                 return null;
             var eventDetails = eventBuilderResult.EventResult;
@@ -468,7 +482,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator).BuildChargedEvent(details, items);
+            var eventBuilderResult = _raisedEventBuilder.BuildChargedEvent(details, items);
             var eventDetails = eventBuilderResult.EventResult;
             return BuildEvent(UnityNativeEventType.RaisedEvent, eventDetails);
         }
@@ -501,7 +515,7 @@ namespace CleverTapSDK.Native
                 return;
             }
 
-            var eventBuilderResult = new UnityNativeRaisedEventBuilder(_eventValidator)
+            var eventBuilderResult = _raisedEventBuilder
                 .BuildFetchEvent(UnityNativeConstants.Event.WZRK_FETCH_TYPE_VARIABLES);
             if (eventBuilderResult.EventResult == null || eventBuilderResult.ValidationResults.Any(vr => !vr.IsSuccess))
             {
@@ -753,7 +767,7 @@ namespace CleverTapSDK.Native
 
         private UnityNativeEvent BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true)
         {
-            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine).BuildEvent(eventType, eventDetails);
+            var eventData = _eventBuilder.BuildEvent(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
             if (storeEvent)
@@ -765,7 +779,7 @@ namespace CleverTapSDK.Native
 
         private UnityNativeEvent BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails, bool storeEvent = true)
         {
-            var eventData = new UnityNativeEventBuilder(_coreState, _networkEngine).BuildEventWithAppFields(eventType, eventDetails);
+            var eventData = _eventBuilder.BuildEventWithAppFields(eventType, eventDetails);
             var eventDataJSONContent = Json.Serialize(eventData);
             var @event = new UnityNativeEvent(eventType, eventDataJSONContent);
             if (storeEvent)
@@ -794,7 +808,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationViewedEvent(properties);
+            var eventBuilderResult = _notificationEventBuilder.BuildNotificationViewedEvent(properties);
 
             if (eventBuilderResult.EventResult == null)
                 return null;
@@ -814,7 +828,7 @@ namespace CleverTapSDK.Native
                 return null;
             }
 
-            var eventBuilderResult = new UnityNativeNotificationEventsBuilder(_eventValidator).BuildNotificationClickedEvent(properties);
+            var eventBuilderResult = _notificationEventBuilder.BuildNotificationClickedEvent(properties);
 
             if (eventBuilderResult.EventResult == null)
                 return null;

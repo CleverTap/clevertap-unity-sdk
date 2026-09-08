@@ -27,7 +27,8 @@ namespace CleverTapSDK.Native
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
         private Coroutine timerCoroutine;
-
+        private readonly object _queueLock = new object();
+        private Dictionary<string, object> _cachedAppFields;
         internal event EventsProcessed OnEventsProcessed;
 
         internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
@@ -41,13 +42,16 @@ namespace CleverTapSDK.Native
 
         internal virtual void QueueEvent(UnityNativeEvent newEvent)
         {
-            if (!eventsQueue.TryPeek(out List<UnityNativeEvent> currentList) || currentList.Count == queueLimit)
+            lock (_queueLock)
             {
-                currentList = new List<UnityNativeEvent>();
-                eventsQueue.Enqueue(currentList);
-            }
+                if (!eventsQueue.TryPeek(out List<UnityNativeEvent> currentList) || currentList.Count == queueLimit)
+                {
+                    currentList = new List<UnityNativeEvent>();
+                    eventsQueue.Enqueue(currentList);
+                }
 
-            currentList.Add(newEvent);
+                currentList.Add(newEvent);
+            }
             ResetAndStartTimer();
         }
 
@@ -87,11 +91,13 @@ namespace CleverTapSDK.Native
 
             bool willRetry = false;
             List<UnityNativeEvent> events = new List<UnityNativeEvent>();
-            while (eventsQueue.Count > 0 && !willRetry)
+            int queueCount;
+            lock (_queueLock) { queueCount = eventsQueue.Count; }
+            while (queueCount > 0 && !willRetry)
             {
                 try
                 {
-                    events = eventsQueue.Peek();
+                    lock (_queueLock) { events = eventsQueue.Peek(); }
                     var metaEvent = Json.Serialize(BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
@@ -112,7 +118,7 @@ namespace CleverTapSDK.Native
                         // Process and Dequeue the events on success
                         processedEvents.AddRange(events);
                         retryCount = 0;
-                        eventsQueue.Dequeue();
+                        lock (_queueLock) { eventsQueue.Dequeue(); queueCount = eventsQueue.Count; }
                     }
                     else
                     {
@@ -139,7 +145,8 @@ namespace CleverTapSDK.Native
                         CleverTapLogger.Log($"ShouldRetryOnException returned false. Dropping {events.Count} events from: {QueueName}.");
                         processedEvents.AddRange(events);
                         retryCount = 0;
-                        eventsQueue.Dequeue();
+                        isInFlushProcess = false;
+                        lock (_queueLock) { eventsQueue.Dequeue(); queueCount = eventsQueue.Count; }
                     }
 
                     OnEventsProcessed?.Invoke(processedEvents);
@@ -148,7 +155,9 @@ namespace CleverTapSDK.Native
             }
 
             isInFlushProcess = false;
-            if (eventsQueue.Any())
+            bool hasMore;
+            lock (_queueLock) { hasMore = eventsQueue.Any(); }
+            if (hasMore)
             {
                 ResetAndStartTimer();
             }
@@ -277,7 +286,7 @@ namespace CleverTapSDK.Native
             {
                 { UnityNativeConstants.EventMeta.GUID, deviceInfo.DeviceId },
                 { UnityNativeConstants.EventMeta.TYPE, UnityNativeConstants.EventMeta.TYPE_NAME },
-                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, UnityNativeEventBuilder.BuildAppFields(deviceInfo) },
+                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, _cachedAppFields ??= UnityNativeEventBuilder.BuildAppFields(deviceInfo) },
                 { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },

@@ -9,6 +9,7 @@ namespace CleverTapSDK.Native {
         private UnityNativeDeviceInfo _deviceInfo;
         private UnityNativeSessionManager _sessionManager;
         private UnityNativeNetworkEngine _networkEngine;
+        private Dictionary<string, object> _cachedAppFields;
         
         internal UnityNativeEventBuilder(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine) {
             _deviceInfo = coreState.DeviceInfo;
@@ -17,7 +18,8 @@ namespace CleverTapSDK.Native {
         }
 
         internal Dictionary<string, object> BuildEvent(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
-            var eventData = new Dictionary<string, object>(eventDetails);
+            //var eventData = new Dictionary<string, object>(eventDetails);
+            var eventData = eventDetails;
             switch (eventType) {
                 case UnityNativeEventType.ProfileEvent:
                     eventData.Add(UnityNativeConstants.Event.EVENT_TYPE, UnityNativeConstants.Event.EVENT_TYPE_PROFILE);
@@ -53,8 +55,9 @@ namespace CleverTapSDK.Native {
 
         internal Dictionary<string, object> BuildEventWithAppFields(UnityNativeEventType eventType, Dictionary<string, object> eventDetails) {
             var eventData = BuildEvent(eventType, eventDetails);
-            eventData.Add(UnityNativeConstants.Event.EVENT_DATA, BuildAppFields(_deviceInfo));
-
+            //eventData.Add(UnityNativeConstants.Event.EVENT_DATA, BuildAppFields(_deviceInfo));
+            _cachedAppFields ??= BuildAppFields(_deviceInfo);
+            eventData.Add(UnityNativeConstants.Event.EVENT_DATA, _cachedAppFields);
             return eventData;
         }
 
