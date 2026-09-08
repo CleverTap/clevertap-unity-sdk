@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEngine;
+using CleverTapSDK;
 
 namespace CleverTapSDK.Private
 {
@@ -207,6 +208,12 @@ namespace CleverTapSDK.Private
 
             rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
             rootDict.SetBoolean("CleverTapPresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
+
+            if (settings.EncryptionLevel != CleverTapEncryptionLevel.None)
+            {
+                rootDict.SetString("CleverTapEncryptionLevel",
+                    ((int)settings.EncryptionLevel).ToString());
+            }
 
             // Write to file
             File.WriteAllText(plistPath, plist.WriteToString());

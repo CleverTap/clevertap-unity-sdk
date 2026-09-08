@@ -7,6 +7,7 @@ using System.Xml;
 using UnityEditor;
 using UnityEditor.Android;
 using UnityEngine;
+using CleverTapSDK;
 using CleverTapSDK.Utilities;
 
 namespace CleverTapSDK.Private
@@ -287,6 +288,12 @@ namespace CleverTapSDK.Private
             UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_PROXY_DOMAIN", environmentCredential.CleverTapProxyDomain);
             UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager, "CLEVERTAP_SPIKY_PROXY_DOMAIN", environmentCredential.CleverTapSpikyProxyDomain);
 
+            if (settings.EncryptionLevel != CleverTapEncryptionLevel.None)
+            {
+                UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager,
+                    "CLEVERTAP_ENCRYPTION_LEVEL", ((int)settings.EncryptionLevel).ToString());
+            }           
+            
             if (isDevelopmentBuild)
             {
                 Debug.Log($"[CleverTap] Development Build - Writing {environmentCredentials.Count} additional environment(s) to AndroidManifest.xml");
