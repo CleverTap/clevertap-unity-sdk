@@ -154,6 +154,7 @@ namespace CleverTapSDK.Native
                         CleverTapLogger.Log($"ShouldRetryOnException returned false. Dropping {events.Count} events from: {QueueName}.");
                         processedEvents.AddRange(events);
                         retryCount = 0;
+                        bool hasMoreAfterDrop;
                         lock (_queueLock)
                         {
                             var head = eventsQueue.Peek();
@@ -161,6 +162,11 @@ namespace CleverTapSDK.Native
                             if (head.Count == 0) eventsQueue.Dequeue();
                             queueCount = eventsQueue.Count;
                             isInFlushProcess = false;
+                            hasMoreAfterDrop = eventsQueue.Any();
+                        }
+                        if (hasMoreAfterDrop)
+                        {
+                            ResetAndStartTimer();
                         }
                     }
 
