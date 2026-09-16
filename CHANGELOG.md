@@ -15,7 +15,7 @@ Version 5.5.6 *(Sep 2026)*
 - **Fix:** `AndroidVar.Value` and `IOSVar.Value` no longer crash when a dictionary variable is defined with a null default — `FillInValues` is skipped safely when the local value is null.
 - **Fix:** String variable values with inner quotes or backslashes were serialized incorrectly on Android — the Java wrapper now uses `JSONObject.quote()` instead of manual string concatenation.
 - **Fix:** Log prefix corrected from `[CTExample]` to `[CleverTap]` in `AndroidProjectPostProcessor` and `IOSPostBuildProcessor`.
-- **Breaking Change (documentation):** Minimum supported Android API level is 26. The `AndroidProjectPostProcessor` has enforced `minSdk 26` in all generated Gradle files since Android SDK 8.x was integrated. The v5.5.4 entry stating API 23 reflected only the native SDK's requirement; the Unity plugin's build system has required API 26 since then.
+- **Documentation correction:** The effective minimum Android API level for Unity projects using this plugin is 26, not 23. The `AndroidProjectPostProcessor` has always enforced `minSdk 26` in generated Gradle files (since Android SDK 8.x was integrated). The v5.5.4 entry stating API 23 reflected only the CleverTap Android SDK's own requirement; the Unity-generated Gradle configuration has enforced API 26 since that integration. No behaviour changed in this release.
 
 Version 5.5.5 *(Aug 2026)*
 -------------------------------------------

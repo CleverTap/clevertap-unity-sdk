@@ -27,6 +27,7 @@ namespace CleverTapSDK.Native
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
         private Coroutine timerCoroutine;
+        private int _timerGeneration;
         private readonly object _queueLock = new object();
         private Dictionary<string, object> _cachedAppFields;
         private bool _cachedNetworkReporting;
@@ -69,7 +70,9 @@ namespace CleverTapSDK.Native
         protected virtual void OnTimerTick()
         {
             OnEventTimerTick?.Invoke();
-            StopTimer();
+            // StopTimer is intentionally NOT called here; TimerCoroutine calls it
+            // after a generation check to prevent cancelling a newer timer that
+            // ResetAndStartTimer() may have started during a synchronous flush.
         }
 
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
@@ -262,13 +265,22 @@ namespace CleverTapSDK.Native
         private void RestartTimer(float duration)
         {
             StopTimer();
-            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
+            _timerGeneration++;
+            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration, _timerGeneration));
         }
 
-        private IEnumerator TimerCoroutine(float duration)
+        private IEnumerator TimerCoroutine(float duration, int generation)
         {
             yield return new WaitForSeconds(duration);
             OnTimerTick();
+            // Only stop the timer when this coroutine is still the current one.
+            // If ResetAndStartTimer() was called during a synchronous flush inside
+            // OnTimerTick, _timerGeneration has already incremented and stopping here
+            // would cancel the replacement timer, stranding any queued events.
+            if (_timerGeneration == generation)
+            {
+                StopTimer();
+            }
         }
 
         protected virtual void StopTimer()
