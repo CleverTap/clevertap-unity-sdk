@@ -36,8 +36,20 @@ namespace CleverTapSDK.IOS {
 
                 object newValue = Json.Deserialize(jsonRepresentation);
 
-                if (newValue is IDictionary) {
-                    Util.FillInValues(newValue, value);
+                if (typeof(T) == typeof(string)) {
+                    // getVariableValue always returns a JSON fragment, so a string variable
+                    // comes back quoted and deserializes to the raw string. Anything else means
+                    // the native value was not a string — keep the last known good value.
+                    if (newValue is string stringValue) {
+                        value = (T)(object)stringValue;
+                    }
+                } else if (newValue == null) {
+                    value = defaultValue;
+                } else if (newValue is IDictionary) {
+                    if (value is IDictionary) {
+                        Util.FillInValues(newValue, value);
+                    }
+                    // value is null (null dict default) — FillInValues requires a non-null target
                 } else {
                     value = (T)Convert.ChangeType(newValue, typeof(T));
                 }

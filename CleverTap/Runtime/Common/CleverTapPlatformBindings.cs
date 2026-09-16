@@ -307,6 +307,9 @@ namespace CleverTapSDK.Common {
         internal virtual void RegisterPush() {
         }
 
+        internal virtual void SetPushTokenAsString(string pushTokenString) {
+        }
+
         [Obsolete]
         internal virtual void ResetProductConfig() {
         }

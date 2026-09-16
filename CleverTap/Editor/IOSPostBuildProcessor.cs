@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEngine;
+using CleverTapSDK;
 
 namespace CleverTapSDK.Private
 {
@@ -122,7 +123,7 @@ namespace CleverTapSDK.Private
 
             if (settings.Environments == null || settings.Environments.Items == null)
             {
-                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                Debug.LogError("[CleverTap] CleverTapSettings - Environments are not configured.");
                 return;
             }
 
@@ -130,13 +131,13 @@ namespace CleverTapSDK.Private
 
             if (environments == null || environments.Count == 0)
             {
-                Debug.LogError("[CTExample] CleverTapSettings - Environments are not configured.");
+                Debug.LogError("[CleverTap] CleverTapSettings - Environments are not configured.");
                 return;
             }
 
             if (!environments.TryGetValue(settings.DefaultEnvironment, out CleverTapEnvironmentCredential environmentValue))
             {
-                Debug.LogError($"[CTExample] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
+                Debug.LogError($"[CleverTap] CleverTapSettings - Environment is null or not configured for {settings.DefaultEnvironment}");
                 return;
             }
 
@@ -207,6 +208,12 @@ namespace CleverTapSDK.Private
 
             rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
             rootDict.SetBoolean("CleverTapPresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
+
+            if (settings.EncryptionLevel != CleverTapEncryptionLevel.None)
+            {
+                rootDict.SetString("CleverTapEncryptionLevel",
+                    ((int)settings.EncryptionLevel).ToString());
+            }
 
             // Write to file
             File.WriteAllText(plistPath, plist.WriteToString());

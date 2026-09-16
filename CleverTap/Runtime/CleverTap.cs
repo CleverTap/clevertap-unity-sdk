@@ -480,6 +480,9 @@ namespace CleverTapSDK {
         public static void RegisterPush() =>
             cleverTapBinding.RegisterPush();
 
+        public static void SetPushTokenAsString(string pushTokenString) =>
+            cleverTapBinding.SetPushTokenAsString(pushTokenString);
+
         [Obsolete("Product config is deprecated, use variables instead.")]
         public static void ResetProductConfig() =>
             cleverTapBinding.ResetProductConfig();

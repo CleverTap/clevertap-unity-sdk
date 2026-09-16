@@ -27,7 +27,10 @@ namespace CleverTapSDK.Native
         protected UnityNativeCoreState coreState;
         protected UnityNativeNetworkEngine networkEngine;
         private Coroutine timerCoroutine;
-
+        private int _timerGeneration;
+        private readonly object _queueLock = new object();
+        private Dictionary<string, object> _cachedAppFields;
+        private bool _cachedNetworkReporting;
         internal event EventsProcessed OnEventsProcessed;
 
         internal UnityNativeBaseEventQueue(UnityNativeCoreState coreState, UnityNativeNetworkEngine networkEngine, int queueLimit = 49, int defaultTimerInterval = 1)
@@ -41,13 +44,16 @@ namespace CleverTapSDK.Native
 
         internal virtual void QueueEvent(UnityNativeEvent newEvent)
         {
-            if (!eventsQueue.TryPeek(out List<UnityNativeEvent> currentList) || currentList.Count == queueLimit)
+            lock (_queueLock)
             {
-                currentList = new List<UnityNativeEvent>();
-                eventsQueue.Enqueue(currentList);
-            }
+                if (!eventsQueue.TryPeek(out List<UnityNativeEvent> currentList) || currentList.Count == queueLimit)
+                {
+                    currentList = new List<UnityNativeEvent>();
+                    eventsQueue.Enqueue(currentList);
+                }
 
-            currentList.Add(newEvent);
+                currentList.Add(newEvent);
+            }
             ResetAndStartTimer();
         }
 
@@ -64,7 +70,9 @@ namespace CleverTapSDK.Native
         protected virtual void OnTimerTick()
         {
             OnEventTimerTick?.Invoke();
-            StopTimer();
+            // StopTimer is intentionally NOT called here; TimerCoroutine calls it
+            // after a generation check to prevent cancelling a newer timer that
+            // ResetAndStartTimer() may have started during a synchronous flush.
         }
 
         protected async Task<List<UnityNativeEvent>> FlushEventsCore(Func<UnityNativeRequest, Task<UnityNativeResponse>> executeRequest)
@@ -77,21 +85,25 @@ namespace CleverTapSDK.Native
                 return processedEvents;
             }
 
-            if (isInFlushProcess)
+            lock (_queueLock)
             {
-                OnEventsProcessed?.Invoke(processedEvents);
-                return processedEvents;
+                if (isInFlushProcess)
+                {
+                    OnEventsProcessed?.Invoke(processedEvents);
+                    return processedEvents;
+                }
+                isInFlushProcess = true;
             }
-
-            isInFlushProcess = true;
 
             bool willRetry = false;
             List<UnityNativeEvent> events = new List<UnityNativeEvent>();
-            while (eventsQueue.Count > 0 && !willRetry)
+            int queueCount;
+            lock (_queueLock) { queueCount = eventsQueue.Count; }
+            while (queueCount > 0 && !willRetry)
             {
                 try
                 {
-                    events = eventsQueue.Peek();
+                    lock (_queueLock) { events = new List<UnityNativeEvent>(eventsQueue.Peek()); }
                     var metaEvent = Json.Serialize(BuildMeta());
                     var allEventsJson = new List<string> { metaEvent };
                     allEventsJson.AddRange(events.Select(e => e.JsonContent));
@@ -112,7 +124,13 @@ namespace CleverTapSDK.Native
                         // Process and Dequeue the events on success
                         processedEvents.AddRange(events);
                         retryCount = 0;
-                        eventsQueue.Dequeue();
+                        lock (_queueLock)
+                        {
+                            var head = eventsQueue.Peek();
+                            head.RemoveRange(0, events.Count);
+                            if (head.Count == 0) eventsQueue.Dequeue();
+                            queueCount = eventsQueue.Count;
+                        }
                     }
                     else
                     {
@@ -139,7 +157,20 @@ namespace CleverTapSDK.Native
                         CleverTapLogger.Log($"ShouldRetryOnException returned false. Dropping {events.Count} events from: {QueueName}.");
                         processedEvents.AddRange(events);
                         retryCount = 0;
-                        eventsQueue.Dequeue();
+                        bool hasMoreAfterDrop;
+                        lock (_queueLock)
+                        {
+                            var head = eventsQueue.Peek();
+                            head.RemoveRange(0, events.Count);
+                            if (head.Count == 0) eventsQueue.Dequeue();
+                            queueCount = eventsQueue.Count;
+                            isInFlushProcess = false;
+                            hasMoreAfterDrop = eventsQueue.Any();
+                        }
+                        if (hasMoreAfterDrop)
+                        {
+                            ResetAndStartTimer();
+                        }
                     }
 
                     OnEventsProcessed?.Invoke(processedEvents);
@@ -147,15 +178,20 @@ namespace CleverTapSDK.Native
                 }
             }
 
-            isInFlushProcess = false;
-            if (eventsQueue.Any())
+            bool hasMore;
+            lock (_queueLock)
+            {
+                isInFlushProcess = false;
+                hasMore = eventsQueue.Any();
+            }
+            if (hasMore)
             {
                 ResetAndStartTimer();
             }
-            else
-            {
-                StopTimer();
-            }
+            // Don't call StopTimer() here: a concurrent QueueEvent can add an event and
+            // start a timer between the lock release and StopTimer(), stranding that event.
+            // QueueEvent owns timer restarts; if the queue is empty any live timer fires
+            // a no-op flush, which is harmless.
 
             OnEventsProcessed?.Invoke(processedEvents);
             return processedEvents;
@@ -208,7 +244,7 @@ namespace CleverTapSDK.Native
         protected void OnEventsError()
         {
             retryCount++;
-            isInFlushProcess = false;
+            lock (_queueLock) { isInFlushProcess = false; }
             ResetAndStartTimer();
         }
 
@@ -229,13 +265,22 @@ namespace CleverTapSDK.Native
         private void RestartTimer(float duration)
         {
             StopTimer();
-            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration));
+            _timerGeneration++;
+            timerCoroutine = MonoHelper.Instance.StartCoroutine(TimerCoroutine(duration, _timerGeneration));
         }
 
-        private IEnumerator TimerCoroutine(float duration)
+        private IEnumerator TimerCoroutine(float duration, int generation)
         {
             yield return new WaitForSeconds(duration);
             OnTimerTick();
+            // Only stop the timer when this coroutine is still the current one.
+            // If ResetAndStartTimer() was called during a synchronous flush inside
+            // OnTimerTick, _timerGeneration has already incremented and stopping here
+            // would cancel the replacement timer, stranding any queued events.
+            if (_timerGeneration == generation)
+            {
+                StopTimer();
+            }
         }
 
         protected virtual void StopTimer()
@@ -268,6 +313,16 @@ namespace CleverTapSDK.Native
             return queryParameters;
         }
 
+        private Dictionary<string, object> GetCachedAppFields(UnityNativeDeviceInfo deviceInfo)
+        {
+            if (_cachedAppFields == null || _cachedNetworkReporting != deviceInfo.EnableNetworkInfoReporting)
+            {
+                _cachedNetworkReporting = deviceInfo.EnableNetworkInfoReporting;
+                _cachedAppFields = UnityNativeEventBuilder.BuildAppFields(deviceInfo);
+            }
+            return _cachedAppFields;
+        }
+
         internal Dictionary<string, object> BuildMeta()
         {
             var deviceInfo = coreState.DeviceInfo;
@@ -277,7 +332,7 @@ namespace CleverTapSDK.Native
             {
                 { UnityNativeConstants.EventMeta.GUID, deviceInfo.DeviceId },
                 { UnityNativeConstants.EventMeta.TYPE, UnityNativeConstants.EventMeta.TYPE_NAME },
-                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, UnityNativeEventBuilder.BuildAppFields(deviceInfo) },
+                { UnityNativeConstants.EventMeta.APPLICATION_FIELDS, GetCachedAppFields(deviceInfo) },
                 { UnityNativeConstants.EventMeta.ACCOUNT_ID, accountInfo.AccountId },
                 { UnityNativeConstants.EventMeta.ACCOUNT_TOKEN, accountInfo.AccountToken },
                 { UnityNativeConstants.EventMeta.FIRST_REQUEST_IN_SESSION, coreState.SessionManager.IsFirstSession() },

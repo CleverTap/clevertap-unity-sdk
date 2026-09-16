@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using CleverTapSDK;
 using CleverTapSDK.Utilities;
 using UnityEngine;
 
@@ -40,6 +41,10 @@ namespace CleverTapSDK.Private
         /// UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound.
         /// </summary>
         public bool CleverTapIOSPresentNotificationOnForeground;
+        #endregion
+
+        #region Encryption Settings
+        public CleverTapEncryptionLevel EncryptionLevel = CleverTapEncryptionLevel.None;
         #endregion
 
         #region Other Settings

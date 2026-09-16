@@ -101,6 +101,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_registerPush();
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_setPushTokenAsString(string pushTokenString);
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_setApplicationIconBadgeNumber(int num);
 
         [DllImport("__Internal")]
