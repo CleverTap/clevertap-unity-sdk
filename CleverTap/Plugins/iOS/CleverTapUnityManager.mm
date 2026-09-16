@@ -963,7 +963,22 @@ static BOOL shouldDisableBuffers = YES;
     }
     else if ([kind isEqualToString:@"string"])
     {
-        NSString *value = [defaultValue substringWithRange:NSMakeRange(1, [defaultValue length] - 2)];
+        // The C# layer passes the default as a serialized JSON fragment, so it must be
+        // JSON-decoded. Only stripping the surrounding quotes leaves inner quotes
+        // escaped, which corrupts defaults that contain quotes or backslashes.
+        id decoded = [NSJSONSerialization JSONObjectWithData:data
+                                                    options:NSJSONReadingAllowFragments
+                                                      error:&error];
+        NSString *value;
+        if (decoded == nil || decoded == [NSNull null]) {
+            // Json.Serialize(null) produces the fragment "null"; treat as no default.
+            value = nil;
+        } else if ([decoded isKindOfClass:[NSString class]]) {
+            value = decoded;
+        } else {
+            // Non-string JSON result — fall back to raw strip.
+            value = [defaultValue substringWithRange:NSMakeRange(1, [defaultValue length] - 2)];
+        }
         var = [self.cleverTap defineVar:name withString:value];
     }
     else

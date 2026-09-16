@@ -756,7 +756,9 @@ public class CleverTapUnityPlugin {
             if (parsedJson != null)
                 return parsedJson;
 
-            return "\"" + stringValue + "\"";
+            // JSONObject.quote escapes quotes, backslashes and control characters;
+            // string concatenation does not and yields invalid JSON for such values.
+            return JSONObject.quote(stringValue);
         } else {
             return value.toString();
         }

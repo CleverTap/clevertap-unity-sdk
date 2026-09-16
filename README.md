@@ -18,6 +18,32 @@ For more information check out our [website](https://clevertap.com/ "CleverTap")
 
 To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
+## 📋 Prerequisites
+
+| Requirement | Minimum |
+|-------------|---------|
+| Unity Editor | 2021.3 LTS |
+| Android API level | 26 |
+| Android compile / target SDK | 36 |
+| iOS deployment target | 9.0 |
+
+### ⚠️ Android — Java 17 Required
+
+CleverTap Android SDK 8.x uses AGP (Android Gradle Plugin) 8.x, which requires **Java 17**. Unity ships with a bundled JDK 11 that will cause the Android build to fail.
+
+**You must configure an external JDK 17 before building for Android:**
+
+1. Install JDK 17
+2. In Unity: **Preferences → External Tools → Android → JDK** — uncheck *Unity's Built-in JDK* and set the path to your JDK 17 installation
+
+The `AndroidProjectPostProcessor` automatically patches the generated Gradle files to use `JavaVersion.VERSION_17` for all pre-Unity-6 editors (Unity 2021, 2022, 2023), but the **build toolchain itself must be invoked with Java 17** — the patch alone is not sufficient if Unity still uses JDK 11 to run Gradle.
+
+### iOS — CocoaPods Required
+
+iOS builds require [CocoaPods](https://cocoapods.org/) to resolve the CleverTap iOS SDK dependency. Run `pod repo update` after upgrading the iOS SDK version.
+
+---
+
 ## 🛠 Installation and Setup #
 
 You can install the CleverTap Unity SDK using the `.unitypackage` Unity package or as a local package through Unity Package Manager (UPM).

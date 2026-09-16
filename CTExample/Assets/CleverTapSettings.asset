@@ -47,4 +47,5 @@ MonoBehaviour:
   CleverTapIOSUseAutoIntegrate: 1
   CleverTapIOSUseUNUserNotificationCenter: 1
   CleverTapIOSPresentNotificationOnForeground: 0
+  EncryptionLevel: 0
   CleverTapSettingsSaveToJSON: 1
