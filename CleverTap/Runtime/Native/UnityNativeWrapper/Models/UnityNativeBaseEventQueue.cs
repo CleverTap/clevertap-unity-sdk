@@ -82,13 +82,15 @@ namespace CleverTapSDK.Native
                 return processedEvents;
             }
 
-            if (isInFlushProcess)
+            lock (_queueLock)
             {
-                OnEventsProcessed?.Invoke(processedEvents);
-                return processedEvents;
+                if (isInFlushProcess)
+                {
+                    OnEventsProcessed?.Invoke(processedEvents);
+                    return processedEvents;
+                }
+                isInFlushProcess = true;
             }
-
-            isInFlushProcess = true;
 
             bool willRetry = false;
             List<UnityNativeEvent> events = new List<UnityNativeEvent>();
@@ -158,8 +160,8 @@ namespace CleverTapSDK.Native
                             head.RemoveRange(0, events.Count);
                             if (head.Count == 0) eventsQueue.Dequeue();
                             queueCount = eventsQueue.Count;
+                            isInFlushProcess = false;
                         }
-                        isInFlushProcess = false;
                     }
 
                     OnEventsProcessed?.Invoke(processedEvents);
@@ -167,9 +169,12 @@ namespace CleverTapSDK.Native
                 }
             }
 
-            isInFlushProcess = false;
             bool hasMore;
-            lock (_queueLock) { hasMore = eventsQueue.Any(); }
+            lock (_queueLock)
+            {
+                isInFlushProcess = false;
+                hasMore = eventsQueue.Any();
+            }
             if (hasMore)
             {
                 ResetAndStartTimer();
@@ -230,7 +235,7 @@ namespace CleverTapSDK.Native
         protected void OnEventsError()
         {
             retryCount++;
-            isInFlushProcess = false;
+            lock (_queueLock) { isInFlushProcess = false; }
             ResetAndStartTimer();
         }
 
