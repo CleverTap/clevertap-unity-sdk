@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+Version 5.5.6 *(Sep 2026)*
+-------------------------------------------
+- Updated to [CleverTap iOS SDK v7.8.2](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.8.2)
+- **New:** `SetPushTokenAsString(string)` — exposes the iOS APNs token setter through the full Unity call chain, allowing developers to pass a push token string directly without converting to `NSData` first.
+- **New:** `CleverTapEncryptionLevel` setting in CleverTap Settings — configure PII field encryption level at build time (`None`, `Medium`, `High`). Written to `AndroidManifest.xml` (`CLEVERTAP_ENCRYPTION_LEVEL`) and iOS `Info.plist` (`CleverTapEncryptionLevel`) automatically during post-build. No runtime API changes needed.
+- **Fix:** Native (Editor/PC/Mac/WebGL) event queue thread safety — all `eventsQueue` mutations are now protected by a dedicated lock. The in-flight batch is snapshotted before `await` so concurrent `QueueEvent` calls during network dispatch are never silently dropped or double-sent. Flush ownership (`isInFlushProcess`) check-and-set is now atomic, closing the race between timer-triggered and `SetOffline`-triggered flushes. The `StopTimer` race that could strand queued events is eliminated; `QueueEvent` now owns all timer restarts.
+- **Fix:** Native event queue — app fields (`USE_IP`, `NETWORK_TYPE`, `CONNECTED_TO_WIFI`) were cached indefinitely; they are now invalidated and rebuilt whenever `EnableNetworkInfoReporting` changes, preventing stale privacy-sensitive fields after disabling network reporting.
+- **Fix:** Native event queue — after `OnUserLogin` switches to a new profile, the validator-dependent event builders (`RaisedEvent`, `Profile`, `Notification`) are now rebuilt immediately with the new validator, preventing events from being validated against the previous user's discard list.
+- **Fix:** Native event queue — `isInFlushProcess` was not reset on the exception drop path, permanently blocking all future flushes after any unretryable exception.
+- **Fix:** String variable defaults containing quotes or backslashes were corrupted on iOS — `defineVar:withString:` now uses `NSJSONSerialization` to decode the default value instead of raw substring stripping. A null default (`"null"` fragment) is now handled explicitly rather than producing garbage output.
+- **Fix:** String variables on Android whose server value itself parses as valid JSON were deserialized to the wrong type. The raw JSON representation is now preserved in that case.
+- **Fix:** `AndroidVar.Value` and `IOSVar.Value` no longer crash when a dictionary variable is defined with a null default — `FillInValues` is skipped safely when the local value is null.
+- **Fix:** String variable values with inner quotes or backslashes were serialized incorrectly on Android — the Java wrapper now uses `JSONObject.quote()` instead of manual string concatenation.
+- **Fix:** Log prefix corrected from `[CTExample]` to `[CleverTap]` in `AndroidProjectPostProcessor` and `IOSPostBuildProcessor`.
+
 Version 5.5.5 *(Aug 2026)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v8.4.1](https://github.com/CleverTap/clevertap-android-sdk/releases/tag/corev8.4.1)

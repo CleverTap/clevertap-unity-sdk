@@ -1,5 +1,24 @@
 ## 👨‍💻 Android Specific Instructions:
 
+### Prerequisites — Java 17
+
+CleverTap Android SDK 8.x uses **AGP (Android Gradle Plugin) 8.x**, which requires **Java 17**. Unity ships with a bundled JDK 11 by default. Building for Android with JDK 11 will fail with errors such as:
+
+```
+Unsupported class file major version 61
+```
+
+**Steps to configure JDK 17:**
+
+1. Download and install JDK 17
+2. In Unity: **Preferences → External Tools → Android → JDK**
+   - Uncheck **Unity's Built-in JDK**
+   - Set the path to your JDK 17 installation
+
+> **Note for Unity 2022 and 2023:** The JDK 17 requirement applies to these versions too — Unity 2022 and 2023 still generate `JavaVersion.VERSION_11` in the Gradle output by default, and the `AndroidProjectPostProcessor` patches this to `VERSION_17` automatically. However, Gradle must be *invoked* with Java 17, so configuring the external JDK in Unity Preferences is still required.
+
+
+
 1. Go to **File** > **Build Settings** > **Android** > **Player Settings** > **Publishing Settings** > **Build**. Enable _.gradle templates_ and _custom AndroidManifest_. EDM4U populates the _Custom Main Gradle Template_ and _Gradle Properties Template_ with the required Android dependencies.
 
 ![Android Build Settings](/docs/images/android_settings.png  "Android Build Settings")
