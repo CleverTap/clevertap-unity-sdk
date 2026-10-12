@@ -611,7 +611,7 @@ public class CleverTapUnityPlugin {
     }
 
     public int getInboxMessageUnreadCount() {
-        return clevertap.getInboxMessageCount();
+        return clevertap.getInboxMessageUnreadCount();
     }
 
     public void showAppInbox(final String jsonString) {

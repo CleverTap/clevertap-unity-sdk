@@ -20,6 +20,7 @@ namespace CTExample
         public Button pauseSDKButton;
         public Button resumeSDKButton;
         public Button testGameEventsButton;
+        public Button testSubscriptionEventsButton;
 
         void Start()
         {
@@ -35,6 +36,7 @@ namespace CTExample
             pauseSDKButton.onClick.AddListener(DidTapPauseSDK);
             resumeSDKButton.onClick.AddListener(DidTapResumeSDK);
             testGameEventsButton.onClick.AddListener(DidTapTestGameEvents);
+            testSubscriptionEventsButton.onClick.AddListener(CallSubscriptionEvents);
 
             Restore();
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
@@ -100,6 +102,50 @@ namespace CTExample
             CleverTapGameEvents.RecordErrorEvent(
                 CleverTapGameEvents.ErrorSeverity.Low,
                 "Inventory failed to load");
+        }
+
+        // Bind via the button's OnClick list in the Inspector (SDKPanel > CallSubscriptionEvents).
+        public void CallSubscriptionEvents()
+        {
+            Logger.Log("[GameEvents] Firing 8 subscription lifecycle events...");
+
+            const string product = "com.clevertap.premium_monthly";
+            var monthly = CleverTapGameEvents.SubscriptionPeriod.Monthly;
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.TrialStarted, product, period: monthly);
+            Logger.Log("[GameEvents] Subscription fired: status=TrialStarted period=Monthly");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.PaidConversion, product, 4.99f, "USD", monthly);
+            Logger.Log("[GameEvents] Subscription fired: status=PaidConversion price=4.99 currency=USD");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.Renewed, product, 4.99f, "USD", monthly);
+            Logger.Log("[GameEvents] Subscription fired: status=Renewed price=4.99 currency=USD");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.BillingFailed, product);
+            Logger.Log("[GameEvents] Subscription fired: status=BillingFailed");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.Cancelled, product);
+            Logger.Log("[GameEvents] Subscription fired: status=Cancelled");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.Expired, product);
+            Logger.Log("[GameEvents] Subscription fired: status=Expired");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.Restored, product, period: monthly);
+            Logger.Log("[GameEvents] Subscription fired: status=Restored period=Monthly");
+
+            CleverTapGameEvents.RecordSubscriptionEvent(
+                CleverTapGameEvents.SubscriptionStatus.Refunded, product, 4.99f, "USD");
+            Logger.Log("[GameEvents] Subscription fired: status=Refunded price=4.99 currency=USD");
+
+            Logger.Log("[GameEvents] All 8 subscription events sent.");
+            Toast.Show("Subscription events sent");
         }
     }
 }

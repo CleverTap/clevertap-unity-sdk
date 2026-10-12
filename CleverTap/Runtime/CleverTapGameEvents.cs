@@ -9,7 +9,13 @@ namespace CleverTapSDK
         public enum AdEvent       { Shown, Clicked, Skipped, RewardGranted }
         public enum AdFormat      { Banner, Interstitial, RewardedVideo, OfferWall, Playable }
         public enum ErrorSeverity { Low, Medium, High, Critical }
-    
+        public enum SubscriptionStatus
+        {
+            TrialStarted, PaidConversion, Renewed, Cancelled,
+            BillingFailed, Expired, Restored, Refunded
+        }
+        public enum SubscriptionPeriod { Weekly, Monthly, Yearly }
+
         public static void RecordResourceEvent(
         ResourceFlow flow,
         string currency,
@@ -82,7 +88,25 @@ namespace CleverTapSDK
                 { "description", description }
             };
             CleverTap.RecordEvent("GameEvent_Error", props);
-        }   
+        }
+
+        public static void RecordSubscriptionEvent(
+        SubscriptionStatus status,
+        string productId,
+        float? price = null,
+        string currency = null,
+        SubscriptionPeriod? period = null)
+        {
+            var props = new Dictionary<string, object>
+            {
+                { "status",     status.ToString() },
+                { "product_id", productId }
+            };
+            if (price.HasValue)                 props["price"]    = price.Value;
+            if (!string.IsNullOrEmpty(currency)) props["currency"] = currency;
+            if (period.HasValue)                props["period"]   = period.Value.ToString();
+            CleverTap.RecordEvent("GameEvent_Subscription", props);
+        }
     }
 }
  
