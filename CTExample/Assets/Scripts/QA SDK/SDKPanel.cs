@@ -19,6 +19,7 @@ namespace CTExample
 
         public Button pauseSDKButton;
         public Button resumeSDKButton;
+        public Button testGameEventsButton;
 
         void Start()
         {
@@ -33,6 +34,7 @@ namespace CTExample
             consoleButton.onClick.AddListener(DidTapConsole);
             pauseSDKButton.onClick.AddListener(DidTapPauseSDK);
             resumeSDKButton.onClick.AddListener(DidTapResumeSDK);
+            testGameEventsButton.onClick.AddListener(DidTapTestGameEvents);
 
             Restore();
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
@@ -76,6 +78,28 @@ namespace CTExample
             CleverTap.ResumeSDK();
             Logger.Log("SDK Resumed");
             Toast.Show("SDK Resumed");
+        }
+
+        public void DidTapTestGameEvents()
+        {
+            CleverTapGameEvents.RecordResourceEvent(
+                CleverTapGameEvents.ResourceFlow.Earned,
+                "Gems", 100f, "DailyReward", "LoginBonus");
+
+            CleverTapGameEvents.RecordLevelEvent(
+                CleverTapGameEvents.LevelStatus.Completed,
+                "World1", "Level3", score: 4200);
+
+            CleverTapGameEvents.RecordGameEvent("Chest:Opened:Rare", 1f);
+
+            CleverTapGameEvents.RecordAdEvent(
+                CleverTapGameEvents.AdEvent.RewardGranted,
+                CleverTapGameEvents.AdFormat.RewardedVideo,
+                "PostLevel");
+
+            CleverTapGameEvents.RecordErrorEvent(
+                CleverTapGameEvents.ErrorSeverity.Low,
+                "Inventory failed to load");
         }
     }
 }
