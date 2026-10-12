@@ -20,5 +20,7 @@
         "Android"
     ],
     "repoUrl": "https://github.com/CleverTap/clevertap-unity-sdk",
-    "dependencies": {}
+    "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
+    }
 }
