@@ -1,4 +1,5 @@
-﻿using CleverTapSDK;
+﻿using System.Collections.Generic;
+using CleverTapSDK;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,7 @@ namespace CTExample
         public Button resumeSDKButton;
         public Button testGameEventsButton;
         public Button testSubscriptionEventsButton;
+        public Button testSetLocaleButton;
 
         void Start()
         {
@@ -37,6 +39,7 @@ namespace CTExample
             resumeSDKButton.onClick.AddListener(DidTapResumeSDK);
             testGameEventsButton.onClick.AddListener(DidTapTestGameEvents);
             testSubscriptionEventsButton.onClick.AddListener(CallSubscriptionEvents);
+            testSetLocaleButton.onClick.AddListener(CallSetLocale);
 
             Restore();
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
@@ -104,7 +107,6 @@ namespace CTExample
                 "Inventory failed to load");
         }
 
-        // Bind via the button's OnClick list in the Inspector (SDKPanel > CallSubscriptionEvents).
         public void CallSubscriptionEvents()
         {
             Logger.Log("[GameEvents] Firing 8 subscription lifecycle events...");
@@ -146,6 +148,20 @@ namespace CTExample
 
             Logger.Log("[GameEvents] All 8 subscription events sent.");
             Toast.Show("Subscription events sent");
+        }
+
+        private bool _useFrenchLocale = true;
+        
+        public void CallSetLocale()
+        {
+            string locale = _useFrenchLocale ? "fr_FR" : "en_US";
+            _useFrenchLocale = !_useFrenchLocale;
+
+            CleverTap.SetLocale(locale);
+            CleverTap.RecordEvent("Locale Test", new Dictionary<string, object> { { "locale_set", locale } });
+
+            Logger.Log($"[Locale] SetLocale({locale}) called, 'Locale Test' event recorded");
+            Toast.Show($"Locale set to {locale}");
         }
     }
 }

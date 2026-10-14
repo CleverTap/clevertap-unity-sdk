@@ -179,6 +179,16 @@ static BOOL shouldDisableBuffers = YES;
     [self.cleverTap setOffline:enabled];
 }
 
+#pragma mark - Locale API
+
+- (void)setLocale:(NSString *)locale {
+    if (locale.length == 0) {
+        NSLog(@"[CleverTap] Empty locale provided for setLocale, not setting it");
+        return;
+    }
+    [self.cleverTap setLocale:[NSLocale localeWithLocaleIdentifier:locale]];
+}
+
 #pragma mark - Opt-out API
 
 - (void)setOptOut:(BOOL)enabled{

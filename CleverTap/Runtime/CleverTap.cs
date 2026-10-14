@@ -528,6 +528,12 @@ namespace CleverTapSDK {
             cleverTapBinding.SetOffline(false);
         }
 
+        /// <summary>
+        /// Overrides the device locale reported to CleverTap, e.g. "fr_FR". No-op on standalone and Editor builds.
+        /// </summary>
+        public static void SetLocale(string locale) =>
+            cleverTapBinding.SetLocale(locale);
+
         public static void SetOptOut(bool enabled) =>
             cleverTapBinding.SetOptOut(enabled);
 

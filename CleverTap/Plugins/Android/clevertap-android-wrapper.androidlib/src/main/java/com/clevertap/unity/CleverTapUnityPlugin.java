@@ -242,6 +242,14 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    public void setLocale(String locale) {
+        try {
+            clevertap.setLocale(locale);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "setLocale error", t);
+        }
+    }
+
     public void setOptOut(boolean value) {
         try {
             clevertap.setOptOut(value);
