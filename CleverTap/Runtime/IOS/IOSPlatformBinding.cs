@@ -468,6 +468,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_setOffline(enabled);
         }
 
+        internal override void SetLocale(string locale) {
+            IOSDllImport.CleverTap_setLocale(locale);
+        }
+
         internal override void SetOptOut(bool enabled) {
             IOSDllImport.CleverTap_setOptOut(enabled);
         }

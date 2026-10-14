@@ -337,6 +337,9 @@ namespace CleverTapSDK.Common {
         internal virtual void SetOffline(bool enabled) {
         }
 
+        internal virtual void SetLocale(string locale) {
+        }
+
         internal virtual void SetOptOut(bool enabled) {
         }
 

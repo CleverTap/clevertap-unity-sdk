@@ -445,6 +445,11 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("setOffline", value);
         }
 
+        internal override void SetLocale(string locale) {
+            // JNI infers a null arg as Object, which wouldn't match setLocale(String); native ignores "".
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("setLocale", locale ?? "");
+        }
+
         internal override void SetOptOut(bool value) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("setOptOut", value);
         }

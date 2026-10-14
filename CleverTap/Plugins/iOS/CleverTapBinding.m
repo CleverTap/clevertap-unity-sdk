@@ -210,6 +210,12 @@ void CleverTap_setOffline(const BOOL enabled) {
 }
 
 
+#pragma mark - Locale API
+
+void CleverTap_setLocale(const char* locale) {
+    [[CleverTapUnityManager sharedInstance] setLocale:clevertap_stringToNSString(locale)];
+}
+
 #pragma mark - Opt-out API
 
 void CleverTap_setOptOut(const BOOL enabled) {
