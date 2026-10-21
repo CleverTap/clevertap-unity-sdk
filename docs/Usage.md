@@ -384,11 +384,11 @@ CleverTap.RecordDisplayUnitViewedEventForID(unitID);
 CleverTap.RecordDisplayUnitClickedEventForID(unitID);
 ```
 
-Display unit views count toward Native Display frequency caps. Call `RecordDisplayUnitViewedEventForID` once per real impression, not every time the view is rebound or scrolled back into view.
+Display unit views count toward Native Display frequency caps, so record one view each time the unit becomes visible to the user, including when they scroll away and back to it. Don't record extra views while it stays on screen, for example when your UI refreshes or rebinds it.
 
 #### Record Viewed / Clicked for a Single Element (e.g. a Carousel Slide)
 
-Use these when a unit has several items and you want each one attributed separately. Get the item's attribution with `GetDisplayUnitContentMetaData` and pass it back:
+Use these when a unit has several items and you want each one attributed separately. Get the item's attribution with `GetDisplayUnitContentMetaData` and pass it back. The properties are required, because they tell CleverTap which item the event is for:
 
 ```csharp
 Dictionary<string, object> slideMeta = CleverTap.GetDisplayUnitContentMetaData(unitID, slideIndex);

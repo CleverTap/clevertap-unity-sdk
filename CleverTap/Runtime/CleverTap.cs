@@ -464,18 +464,20 @@ namespace CleverTapSDK {
 
         /// <summary>
         /// Records a view of a single element (e.g. one carousel slide) of a Native Display unit.
-        /// Pass the result of <see cref="GetDisplayUnitContentMetaData"/> as <paramref name="properties"/>.
-        /// No-op on standalone and Editor builds.
+        /// <paramref name="properties"/> identifies which element was viewed: pass the result of
+        /// <see cref="GetDisplayUnitContentMetaData"/> for that element. Without it, events for different elements of the
+        /// same unit can't be told apart. No-op on standalone and Editor builds.
         /// </summary>
-        public static void RecordDisplayUnitElementViewedEventForID(string unitID, Dictionary<string, object> properties = null) =>
+        public static void RecordDisplayUnitElementViewedEventForID(string unitID, Dictionary<string, object> properties) =>
             cleverTapBinding.RecordDisplayUnitElementViewedEventForID(unitID, properties);
 
         /// <summary>
         /// Records a click on a single element (e.g. one carousel slide) of a Native Display unit.
-        /// Pass the result of <see cref="GetDisplayUnitContentMetaData"/> as <paramref name="properties"/>.
-        /// No-op on standalone and Editor builds.
+        /// <paramref name="properties"/> identifies which element was clicked: pass the result of
+        /// <see cref="GetDisplayUnitContentMetaData"/> for that element. Without it, events for different elements of the
+        /// same unit can't be told apart. No-op on standalone and Editor builds.
         /// </summary>
-        public static void RecordDisplayUnitElementClickedEventForID(string unitID, Dictionary<string, object> properties = null) =>
+        public static void RecordDisplayUnitElementClickedEventForID(string unitID, Dictionary<string, object> properties) =>
             cleverTapBinding.RecordDisplayUnitElementClickedEventForID(unitID, properties);
 
         /// <summary>

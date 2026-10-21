@@ -69,6 +69,6 @@ namespace CleverTapSDK.Private
         }
 
         public static readonly string settingsPath = Path.Combine("Assets", "CleverTapSettings.asset");
-        internal static readonly string jsonPath = Path.Combine(Application.streamingAssetsPath, "CleverTapSettings.json");
+        public static readonly string jsonPath = Path.Combine(Application.streamingAssetsPath, "CleverTapSettings.json");
     }
 }
