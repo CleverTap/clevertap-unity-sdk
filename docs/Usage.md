@@ -137,6 +137,8 @@ CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
 
 `CleverTapGameEvents` provides typed helpers for common gameplay events. Each one wraps `CleverTap.RecordEvent` with a fixed event name and property set, so events are consistent across games and group together in the CleverTap dashboard (all event names start with `GameEvent_`). Optional parameters are left out of the event when not passed.
 
+> **Note:** These are custom events, not CleverTap system events. They work like any event you record yourself with `CleverTap.RecordEvent`. They show up with your other custom events in the dashboard and count toward your custom event limit. CleverTap doesn't treat them specially: for example, a subscription event doesn't record revenue the way a Charged event does. You can use them in segments, campaigns and reports like any other event.
+
 #### Record a Resource Event
 
 Currency or items earned or spent. Sent as `GameEvent_Resource` with properties `flow`, `currency`, `amount`, `category`, `item`.
