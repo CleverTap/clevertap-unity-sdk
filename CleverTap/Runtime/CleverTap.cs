@@ -462,6 +462,36 @@ namespace CleverTapSDK {
         public static void RecordDisplayUnitViewedEventForID(string unitID) =>
             cleverTapBinding.RecordDisplayUnitViewedEventForID(unitID);
 
+        /// <summary>
+        /// Records a view of a single element (e.g. one carousel slide) of a Native Display unit.
+        /// Pass the result of <see cref="GetDisplayUnitContentMetaData"/> as <paramref name="properties"/>.
+        /// No-op on standalone and Editor builds.
+        /// </summary>
+        public static void RecordDisplayUnitElementViewedEventForID(string unitID, Dictionary<string, object> properties = null) =>
+            cleverTapBinding.RecordDisplayUnitElementViewedEventForID(unitID, properties);
+
+        /// <summary>
+        /// Records a click on a single element (e.g. one carousel slide) of a Native Display unit.
+        /// Pass the result of <see cref="GetDisplayUnitContentMetaData"/> as <paramref name="properties"/>.
+        /// No-op on standalone and Editor builds.
+        /// </summary>
+        public static void RecordDisplayUnitElementClickedEventForID(string unitID, Dictionary<string, object> properties = null) =>
+            cleverTapBinding.RecordDisplayUnitElementClickedEventForID(unitID, properties);
+
+        /// <summary>
+        /// Returns the wzrk_* attribution for one content item of a Native Display unit, to pass to the
+        /// element viewed/clicked APIs. Empty for an unknown unit, an invalid index, or on standalone and Editor builds.
+        /// </summary>
+        public static Dictionary<string, object> GetDisplayUnitContentMetaData(string unitID, int contentIndex) =>
+            cleverTapBinding.GetDisplayUnitContentMetaData(unitID, contentIndex);
+
+        /// <summary>
+        /// Requests fresh Native Display frequency-cap rules mid-session. Rules arrive on a later response.
+        /// No-op on standalone and Editor builds.
+        /// </summary>
+        public static void FetchNativeDisplayMeta() =>
+            cleverTapBinding.FetchNativeDisplayMeta();
+
         public static void RecordEvent(string eventName) =>
             cleverTapBinding.RecordEvent(eventName);
 
@@ -527,6 +557,12 @@ namespace CleverTapSDK {
             CleverTapLogger.Log("CleverTap: ResumeSDK called — network activity resumed.");
             cleverTapBinding.SetOffline(false);
         }
+
+        /// <summary>
+        /// Overrides the device locale reported to CleverTap, e.g. "fr_FR". No-op on standalone and Editor builds.
+        /// </summary>
+        public static void SetLocale(string locale) =>
+            cleverTapBinding.SetLocale(locale);
 
         public static void SetOptOut(bool enabled) =>
             cleverTapBinding.SetOptOut(enabled);

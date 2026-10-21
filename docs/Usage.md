@@ -65,6 +65,16 @@ CleverTap.OnUserLogin(newProps);
 CleverTap.SetLocation(34.147785, -118.144516);
 ```
 
+#### Set Locale
+
+By default CleverTap reports the device's OS locale, which campaigns use to choose the message language. If your game has its own language setting, override it with the player's choice so campaigns follow the in-game language instead of the phone's. Use the `language_COUNTRY` format. Call it at startup with the saved choice and again whenever the player changes language.
+
+```csharp
+CleverTap.SetLocale("fr_FR");
+```
+
+Empty strings are ignored. No-op on standalone and Editor builds.
+
 ## User Events
 
 #### Record an event  
@@ -121,6 +131,69 @@ var items = new List<Dictionary<string, object>> {
 };
 
 CleverTap.RecordChargedEventWithDetailsAndItems(chargeDetails, items);
+```
+
+## Game Events
+
+`CleverTapGameEvents` provides typed helpers for common gameplay events. Each one wraps `CleverTap.RecordEvent` with a fixed event name and property set, so events are consistent across games and group together in the CleverTap dashboard (all event names start with `GameEvent_`). Optional parameters are left out of the event when not passed.
+
+#### Record a Resource Event
+
+Currency or items earned or spent. Sent as `GameEvent_Resource` with properties `flow`, `currency`, `amount`, `category`, `item`.
+
+```csharp
+CleverTapGameEvents.RecordResourceEvent(CleverTapGameEvents.ResourceFlow.Earned, "Gems", 100f, "DailyReward", "LoginBonus");
+CleverTapGameEvents.RecordResourceEvent(CleverTapGameEvents.ResourceFlow.Spent, "Coins", 250f, "Shop", "SpeedBoost");
+```
+
+#### Record a Level Event
+
+Level progress: `Started`, `Completed` or `Failed`. Sent as `GameEvent_Level` with `status`, `world` and optional `level`, `stage`, `score`.
+
+```csharp
+CleverTapGameEvents.RecordLevelEvent(CleverTapGameEvents.LevelStatus.Started, "World1", "Level3");
+CleverTapGameEvents.RecordLevelEvent(CleverTapGameEvents.LevelStatus.Completed, "World1", "Level3", score: 4200);
+```
+
+#### Record a Custom Game Event
+
+Any other gameplay moment, with an optional numeric value. Sent as `GameEvent_Design` with `event` and optional `value`. A `Category:Action:Detail` naming style keeps these easy to filter.
+
+```csharp
+CleverTapGameEvents.RecordGameEvent("Chest:Opened:Rare", 1f);
+```
+
+#### Record an Ad Event
+
+Ad interactions: `Shown`, `Clicked`, `Skipped`, `RewardGranted`. Sent as `GameEvent_Ad` with `action` and optional `format` (`Banner`, `Interstitial`, `RewardedVideo`, `OfferWall`, `Playable`) and `placement`.
+
+```csharp
+CleverTapGameEvents.RecordAdEvent(CleverTapGameEvents.AdEvent.RewardGranted, CleverTapGameEvents.AdFormat.RewardedVideo, "PostLevel");
+```
+
+#### Record an Error Event
+
+In-game errors, with severity `Low`, `Medium`, `High` or `Critical`. Sent as `GameEvent_Error` with `severity` and `description`.
+
+```csharp
+CleverTapGameEvents.RecordErrorEvent(CleverTapGameEvents.ErrorSeverity.Low, "Inventory failed to load");
+```
+
+#### Record a Subscription Event
+
+Subscription lifecycle changes: `TrialStarted`, `PaidConversion`, `Renewed`, `Cancelled`, `BillingFailed`, `Expired`, `Restored`, `Refunded`. Sent as `GameEvent_Subscription` with `status`, `product_id` and optional `price`, `currency`, `period` (`Weekly`, `Monthly`, `Yearly`).
+
+The SDK does not listen to the App Store or Google Play itself. Call this from your own store / IAP callbacks when the subscription state changes.
+
+```csharp
+CleverTapGameEvents.RecordSubscriptionEvent(
+    CleverTapGameEvents.SubscriptionStatus.PaidConversion,
+    "com.mygame.premium_monthly",
+    price: 4.99f,
+    currency: "USD",
+    period: CleverTapGameEvents.SubscriptionPeriod.Monthly);
+
+CleverTapGameEvents.RecordSubscriptionEvent(CleverTapGameEvents.SubscriptionStatus.Cancelled, "com.mygame.premium_monthly");
 ```
 
 ## In-App Notifications
@@ -284,6 +357,57 @@ CleverTapInboxMessage message = CleverTap.GetInboxMessageForIdParsed(id);
 ```csharp
 CleverTap.DeleteInboxMessageForID(id);
 ```
+
+## Native Display
+
+#### Listen for Display Units
+
+```csharp
+CleverTap.OnCleverTapNativeDisplayUnitsUpdated += (string message) => {
+    JSONArray units = CleverTap.GetAllDisplayUnits();
+};
+```
+
+#### Get Display Units
+
+```csharp
+JSONArray units = CleverTap.GetAllDisplayUnits();
+JSONClass unit = CleverTap.GetDisplayUnitForID(unitID);
+```
+
+#### Record Display Unit Viewed / Clicked
+
+```csharp
+CleverTap.RecordDisplayUnitViewedEventForID(unitID);
+CleverTap.RecordDisplayUnitClickedEventForID(unitID);
+```
+
+Display unit views count toward Native Display frequency caps. Call `RecordDisplayUnitViewedEventForID` once per real impression, not every time the view is rebound or scrolled back into view.
+
+#### Record Viewed / Clicked for a Single Element (e.g. a Carousel Slide)
+
+Use these when a unit has several items and you want each one attributed separately. Get the item's attribution with `GetDisplayUnitContentMetaData` and pass it back:
+
+```csharp
+Dictionary<string, object> slideMeta = CleverTap.GetDisplayUnitContentMetaData(unitID, slideIndex);
+
+CleverTap.RecordDisplayUnitElementViewedEventForID(unitID, slideMeta);   // slide came on screen
+CleverTap.RecordDisplayUnitElementClickedEventForID(unitID, slideMeta);  // slide tapped
+```
+
+`GetDisplayUnitContentMetaData` returns an empty dictionary for an unknown unit or an invalid index.
+
+#### Refresh Frequency Cap Rules
+
+Cap rules are delivered on app launch. To request fresh rules mid-session:
+
+```csharp
+CleverTap.FetchNativeDisplayMeta();
+```
+
+The new rules arrive on a later response from CleverTap.
+
+On standalone and Editor builds, the record and fetch APIs have no effect, and the getters return empty values: `GetAllDisplayUnits()` returns an empty `JSONArray`, `GetDisplayUnitForID()` an empty `JSONClass`, and `GetDisplayUnitContentMetaData()` an empty dictionary.
 
 ## Enable Debugging
 

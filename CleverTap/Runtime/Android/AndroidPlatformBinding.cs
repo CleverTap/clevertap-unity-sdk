@@ -168,6 +168,25 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("pushDisplayUnitViewedEventForID", unitID);
         }
 
+        internal override void RecordDisplayUnitElementViewedEventForID(string unitID, Dictionary<string, object> properties) {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("pushDisplayUnitElementViewedEventForID",
+                unitID ?? "", Json.Serialize(properties?.ConvertDateObjects()));
+        }
+
+        internal override void RecordDisplayUnitElementClickedEventForID(string unitID, Dictionary<string, object> properties) {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("pushDisplayUnitElementClickedEventForID",
+                unitID ?? "", Json.Serialize(properties?.ConvertDateObjects()));
+        }
+
+        internal override Dictionary<string, object> GetDisplayUnitContentMetaData(string unitID, int contentIndex) {
+            string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getDisplayUnitContentMetaData", unitID ?? "", contentIndex);
+            return Json.Deserialize(jsonString ?? "{}") as Dictionary<string, object> ?? new Dictionary<string, object>();
+        }
+
+        internal override void FetchNativeDisplayMeta() {
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("fetchNativeDisplayMeta");
+        }
+
         internal override JSONArray GetAllInboxMessages()
         {
             string jsonString = CleverTapAndroidJNI.CleverTapJNIInstance.Call<string>("getAllInboxMessages");
@@ -443,6 +462,11 @@ namespace CleverTapSDK.Android {
 
         internal override void SetOffline(bool value) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("setOffline", value);
+        }
+
+        internal override void SetLocale(string locale) {
+            // JNI infers a null arg as Object, which wouldn't match setLocale(String); native ignores "".
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("setLocale", locale ?? "");
         }
 
         internal override void SetOptOut(bool value) {

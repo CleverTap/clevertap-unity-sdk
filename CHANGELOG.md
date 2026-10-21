@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+Version 5.6.0 *(Oct 2026)*
+-------------------------------------------
+- Updated to [CleverTap Android SDK v8.5.0](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTCORECHANGELOG.md)
+- Updated to [CleverTap iOS SDK v7.9.0](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.9.0)
+- **New:** `CleverTapGameEvents` — typed gameplay event helpers that wrap `RecordEvent`: `RecordResourceEvent`, `RecordLevelEvent`, `RecordGameEvent`, `RecordAdEvent` and `RecordErrorEvent`, sent as `GameEvent_Resource`, `GameEvent_Level`, `GameEvent_Design`, `GameEvent_Ad` and `GameEvent_Error`.
+- **New:** `CleverTapGameEvents.RecordSubscriptionEvent()` — typed subscription lifecycle events (`TrialStarted`, `PaidConversion`, `Renewed`, `Cancelled`, `BillingFailed`, `Expired`, `Restored`, `Refunded`) with optional price, currency and period, sent as `GameEvent_Subscription`. Call it from your own store/IAP callbacks.
+- **New:** `SetLocale(string)` — overrides the locale CleverTap reports for the user (e.g. `"fr_FR"`), so campaigns follow an in-game language choice instead of the device language. No-op on standalone and Editor builds.
+- **New:** `RecordDisplayUnitElementViewedEventForID()`, `RecordDisplayUnitElementClickedEventForID()` and `GetDisplayUnitContentMetaData()` — per-element (e.g. carousel slide) view and click attribution for Native Display units. On standalone and Editor builds the record APIs have no effect and `GetDisplayUnitContentMetaData()` returns an empty dictionary.
+- **New:** `FetchNativeDisplayMeta()` — requests fresh Native Display frequency-cap rules mid-session. No-op on standalone and Editor builds.
+- **Behaviour change:** `RecordDisplayUnitViewedEventForID()` now counts toward Native Display frequency caps (from the native SDKs). Call it once per real impression, not on every rebind or scroll.
+- **Behaviour change:** The App-Launch In-App can now wait up to 3 seconds for personalized (recommendations) content before it is shown, so only one In-App is displayed (from the native SDKs).
+- **New:** Added a `CleverTap.Editor` assembly definition, so projects that organise their code in assembly definitions can reference CleverTap's Editor scripts (e.g. `CleverTapSettings`). Also declared the package's dependency on the built-in `com.unity.modules.unitywebrequest` module ([#259](https://github.com/CleverTap/clevertap-unity-sdk/pull/259), thanks [@gustavopsantos](https://github.com/gustavopsantos)).
+- **Fix:** `GetInboxMessageUnreadCount()` returned the total inbox message count on Android instead of the unread count.
+
 Version 5.5.6 *(Sep 2026)*
 -------------------------------------------
 - Updated to [CleverTap iOS SDK v7.8.2](https://github.com/CleverTap/clevertap-ios-sdk/releases/tag/7.8.2)
