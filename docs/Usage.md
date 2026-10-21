@@ -334,7 +334,7 @@ CleverTap.FetchNativeDisplayMeta();
 
 The new rules arrive on a later response from CleverTap.
 
-All Native Display APIs are no-ops on standalone and Editor builds.
+On standalone and Editor builds, the record and fetch APIs have no effect, and the getters return empty values: `GetAllDisplayUnits()` returns an empty `JSONArray`, `GetDisplayUnitForID()` an empty `JSONClass`, and `GetDisplayUnitContentMetaData()` an empty dictionary.
 
 ## Enable Debugging
 
