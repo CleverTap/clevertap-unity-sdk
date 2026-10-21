@@ -124,6 +124,10 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (NSDictionary *)getDisplayUnitForID:(NSString *)unitID;
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
+- (void)recordDisplayUnitElementViewedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties;
+- (void)recordDisplayUnitElementClickedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties;
+- (NSDictionary *)getDisplayUnitContentMetaData:(NSString *)unitID contentIndex:(int)contentIndex;
+- (void)fetchNativeDisplayMeta;
 
 #pragma mark - Product Config
 

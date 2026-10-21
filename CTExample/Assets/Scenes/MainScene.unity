@@ -288,7 +288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114440545205759142, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Text
-      value: Test Game Events
+      value: Test Subscription Events
       objectReference: {fileID: 0}
     - target: {fileID: 224412516315191226, guid: 52731d94d62b5413e8e41c622d1de0f6, type: 3}
       propertyPath: m_Pivot.x

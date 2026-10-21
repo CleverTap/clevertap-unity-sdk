@@ -991,6 +991,49 @@ public class CleverTapUnityPlugin {
         clevertap.pushDisplayUnitClickedEventForID(unitId);
     }
 
+    public void pushDisplayUnitElementViewedEventForID(String unitId, String propertiesJson) {
+        try {
+            clevertap.pushDisplayUnitElementViewedEventForID(unitId, toHashMap(propertiesJson));
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "pushDisplayUnitElementViewedEventForID error", t);
+        }
+    }
+
+    public void pushDisplayUnitElementClickedEventForID(String unitId, String propertiesJson) {
+        try {
+            clevertap.pushDisplayUnitElementClickedEventForID(unitId, toHashMap(propertiesJson));
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "pushDisplayUnitElementClickedEventForID error", t);
+        }
+    }
+
+    public String getDisplayUnitContentMetaData(String unitId, int contentIndex) {
+        try {
+            CleverTapDisplayUnit displayUnit = clevertap.getDisplayUnitForId(unitId);
+            if (displayUnit == null) {
+                return "{}";
+            }
+            String json = JsonConverter.toJson(displayUnit.getMetaDataForContent(contentIndex));
+            return json != null ? json : "{}";
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "getDisplayUnitContentMetaData error", t);
+            return "{}";
+        }
+    }
+
+    public void fetchNativeDisplayMeta() {
+        try {
+            clevertap.fetchNativeDisplayMeta();
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "fetchNativeDisplayMeta error", t);
+        }
+    }
+
+    private static HashMap<String, Object> toHashMap(String json) {
+        Map<String, Object> map = JsonConverter.fromJsonWithConvertedDateValues(json);
+        return map != null ? new HashMap<>(map) : new HashMap<>();
+    }
+
     //Feature Flags
     @Deprecated
     public Boolean getFeatureFlag(String key, Boolean defaultValue) {

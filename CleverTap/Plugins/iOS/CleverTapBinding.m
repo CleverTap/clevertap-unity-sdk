@@ -565,6 +565,30 @@ void CleverTap_recordDisplayUnitClickedEventForID(const char* unitID) {
     [[CleverTapUnityManager sharedInstance] recordDisplayUnitClickedEventForID:clevertap_stringToNSString(unitID)];
 }
 
+void CleverTap_recordDisplayUnitElementViewedEventForID(const char* unitID, const char* properties) {
+    [[CleverTapUnityManager sharedInstance] recordDisplayUnitElementViewedEventForID:clevertap_stringToNSString(unitID)
+                                                                additionalProperties:clevertap_dictFromJsonString(properties)];
+}
+
+void CleverTap_recordDisplayUnitElementClickedEventForID(const char* unitID, const char* properties) {
+    [[CleverTapUnityManager sharedInstance] recordDisplayUnitElementClickedEventForID:clevertap_stringToNSString(unitID)
+                                                                 additionalProperties:clevertap_dictFromJsonString(properties)];
+}
+
+char* CleverTap_getDisplayUnitContentMetaData(const char* unitID, int contentIndex) {
+    NSDictionary *ret = [[CleverTapUnityManager sharedInstance] getDisplayUnitContentMetaData:clevertap_stringToNSString(unitID)
+                                                                                 contentIndex:contentIndex];
+    NSString *jsonString = clevertap_toJsonString(ret);
+    if (jsonString == nil) {
+        return NULL;
+    }
+    return clevertap_cStringCopy([jsonString UTF8String]);
+}
+
+void CleverTap_fetchNativeDisplayMeta() {
+    [[CleverTapUnityManager sharedInstance] fetchNativeDisplayMeta];
+}
+
 
 #pragma mark - Product Config
 

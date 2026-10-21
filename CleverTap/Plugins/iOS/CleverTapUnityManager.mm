@@ -727,6 +727,28 @@ static BOOL shouldDisableBuffers = YES;
     [self.cleverTap recordDisplayUnitClickedEventForID:unitID];
 }
 
+- (void)recordDisplayUnitElementViewedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties {
+    [self.cleverTap recordDisplayUnitElementViewedEventForID:unitID
+                                        additionalProperties:cleverTap_convertDateValues(properties)];
+}
+
+- (void)recordDisplayUnitElementClickedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties {
+    [self.cleverTap recordDisplayUnitElementClickedEventForID:unitID
+                                         additionalProperties:cleverTap_convertDateValues(properties)];
+}
+
+- (NSDictionary *)getDisplayUnitContentMetaData:(NSString *)unitID contentIndex:(int)contentIndex {
+    CleverTapDisplayUnit *unit = [self.cleverTap getDisplayUnitForID:unitID];
+    if (!unit) {
+        return @{};
+    }
+    return [unit metaDataForContentAtIndex:contentIndex];
+}
+
+- (void)fetchNativeDisplayMeta {
+    [self.cleverTap fetchNativeDisplayMeta];
+}
+
 
 #pragma mark - Product Config
 

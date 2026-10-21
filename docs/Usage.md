@@ -285,6 +285,57 @@ CleverTapInboxMessage message = CleverTap.GetInboxMessageForIdParsed(id);
 CleverTap.DeleteInboxMessageForID(id);
 ```
 
+## Native Display
+
+#### Listen for Display Units
+
+```csharp
+CleverTap.OnCleverTapNativeDisplayUnitsUpdated += (string message) => {
+    JSONArray units = CleverTap.GetAllDisplayUnits();
+};
+```
+
+#### Get Display Units
+
+```csharp
+JSONArray units = CleverTap.GetAllDisplayUnits();
+JSONClass unit = CleverTap.GetDisplayUnitForID(unitID);
+```
+
+#### Record Display Unit Viewed / Clicked
+
+```csharp
+CleverTap.RecordDisplayUnitViewedEventForID(unitID);
+CleverTap.RecordDisplayUnitClickedEventForID(unitID);
+```
+
+Display unit views count toward Native Display frequency caps. Call `RecordDisplayUnitViewedEventForID` once per real impression, not every time the view is rebound or scrolled back into view.
+
+#### Record Viewed / Clicked for a Single Element (e.g. a Carousel Slide)
+
+Use these when a unit has several items and you want each one attributed separately. Get the item's attribution with `GetDisplayUnitContentMetaData` and pass it back:
+
+```csharp
+Dictionary<string, object> slideMeta = CleverTap.GetDisplayUnitContentMetaData(unitID, slideIndex);
+
+CleverTap.RecordDisplayUnitElementViewedEventForID(unitID, slideMeta);   // slide came on screen
+CleverTap.RecordDisplayUnitElementClickedEventForID(unitID, slideMeta);  // slide tapped
+```
+
+`GetDisplayUnitContentMetaData` returns an empty dictionary for an unknown unit or an invalid index.
+
+#### Refresh Frequency Cap Rules
+
+Cap rules are delivered on app launch. To request fresh rules mid-session:
+
+```csharp
+CleverTap.FetchNativeDisplayMeta();
+```
+
+The new rules arrive on a later response from CleverTap.
+
+All Native Display APIs are no-ops on standalone and Editor builds.
+
 ## Enable Debugging
 
 #### Set Debug Level

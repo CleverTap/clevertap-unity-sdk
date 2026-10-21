@@ -215,6 +215,18 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_recordDisplayUnitClickedEventForID(string unitID);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_recordDisplayUnitElementViewedEventForID(string unitID, string properties);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_recordDisplayUnitElementClickedEventForID(string unitID, string properties);
+
+        [DllImport("__Internal")]
+        internal static extern string CleverTap_getDisplayUnitContentMetaData(string unitID, int contentIndex);
+
+        [DllImport("__Internal")]
+        internal static extern void CleverTap_fetchNativeDisplayMeta();
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_fetchProductConfig();
 
         [DllImport("__Internal")]
