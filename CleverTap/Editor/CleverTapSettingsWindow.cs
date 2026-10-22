@@ -6,7 +6,7 @@ namespace CleverTapSDK.Private
 {
     public class CleverTapSettingsWindow : EditorWindow
     {
-        internal const string ITEM_NAME = "Assets/CleverTap Settings";
+        public const string ITEM_NAME = "Assets/CleverTap Settings";
         private static readonly string windowName = "CleverTap Settings";
 
         private CleverTapSettings settings;

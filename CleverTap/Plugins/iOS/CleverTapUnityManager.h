@@ -37,6 +37,7 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 
 #pragma mark - Opt-out API
 
+- (void)setLocale:(NSString *)locale;
 - (void)setOptOut:(BOOL)enabled;
 - (void)setOptOut:(BOOL)enabled allowSystemEvents:(BOOL)allowSystemEvents;
 - (void)enableDeviceNetworkInfoReporting:(BOOL)enabled;
@@ -123,6 +124,10 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (NSDictionary *)getDisplayUnitForID:(NSString *)unitID;
 - (void)recordDisplayUnitViewedEventForID:(NSString *)unitID;
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID;
+- (void)recordDisplayUnitElementViewedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties;
+- (void)recordDisplayUnitElementClickedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties;
+- (NSDictionary *)getDisplayUnitContentMetaData:(NSString *)unitID contentIndex:(int)contentIndex;
+- (void)fetchNativeDisplayMeta;
 
 #pragma mark - Product Config
 

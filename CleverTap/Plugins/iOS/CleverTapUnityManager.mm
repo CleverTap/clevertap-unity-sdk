@@ -179,6 +179,16 @@ static BOOL shouldDisableBuffers = YES;
     [self.cleverTap setOffline:enabled];
 }
 
+#pragma mark - Locale API
+
+- (void)setLocale:(NSString *)locale {
+    if (locale.length == 0) {
+        NSLog(@"[CleverTap] Empty locale provided for setLocale, not setting it");
+        return;
+    }
+    [self.cleverTap setLocale:[NSLocale localeWithLocaleIdentifier:locale]];
+}
+
 #pragma mark - Opt-out API
 
 - (void)setOptOut:(BOOL)enabled{
@@ -715,6 +725,28 @@ static BOOL shouldDisableBuffers = YES;
 
 - (void)recordDisplayUnitClickedEventForID:(NSString *)unitID {
     [self.cleverTap recordDisplayUnitClickedEventForID:unitID];
+}
+
+- (void)recordDisplayUnitElementViewedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties {
+    [self.cleverTap recordDisplayUnitElementViewedEventForID:unitID
+                                        additionalProperties:cleverTap_convertDateValues(properties)];
+}
+
+- (void)recordDisplayUnitElementClickedEventForID:(NSString *)unitID additionalProperties:(NSDictionary *)properties {
+    [self.cleverTap recordDisplayUnitElementClickedEventForID:unitID
+                                         additionalProperties:cleverTap_convertDateValues(properties)];
+}
+
+- (NSDictionary *)getDisplayUnitContentMetaData:(NSString *)unitID contentIndex:(int)contentIndex {
+    CleverTapDisplayUnit *unit = [self.cleverTap getDisplayUnitForID:unitID];
+    if (!unit) {
+        return @{};
+    }
+    return [unit metaDataForContentAtIndex:contentIndex];
+}
+
+- (void)fetchNativeDisplayMeta {
+    [self.cleverTap fetchNativeDisplayMeta];
 }
 
 

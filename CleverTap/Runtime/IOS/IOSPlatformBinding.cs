@@ -398,6 +398,23 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_recordDisplayUnitViewedEventForID(unitID);
         }
 
+        internal override void RecordDisplayUnitElementViewedEventForID(string unitID, Dictionary<string, object> properties) {
+            IOSDllImport.CleverTap_recordDisplayUnitElementViewedEventForID(unitID, Json.Serialize(properties?.ConvertDateObjects()));
+        }
+
+        internal override void RecordDisplayUnitElementClickedEventForID(string unitID, Dictionary<string, object> properties) {
+            IOSDllImport.CleverTap_recordDisplayUnitElementClickedEventForID(unitID, Json.Serialize(properties?.ConvertDateObjects()));
+        }
+
+        internal override Dictionary<string, object> GetDisplayUnitContentMetaData(string unitID, int contentIndex) {
+            string jsonString = IOSDllImport.CleverTap_getDisplayUnitContentMetaData(unitID, contentIndex);
+            return Json.Deserialize(jsonString ?? "{}") as Dictionary<string, object> ?? new Dictionary<string, object>();
+        }
+
+        internal override void FetchNativeDisplayMeta() {
+            IOSDllImport.CleverTap_fetchNativeDisplayMeta();
+        }
+
         internal override void RecordEvent(string eventName) {
             IOSDllImport.CleverTap_recordEvent(eventName, null);
         }
@@ -466,6 +483,10 @@ namespace CleverTapSDK.IOS
 
         internal override void SetOffline(bool enabled) {
             IOSDllImport.CleverTap_setOffline(enabled);
+        }
+
+        internal override void SetLocale(string locale) {
+            IOSDllImport.CleverTap_setLocale(locale);
         }
 
         internal override void SetOptOut(bool enabled) {

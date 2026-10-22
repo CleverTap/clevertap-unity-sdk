@@ -289,6 +289,19 @@ namespace CleverTapSDK.Common {
         internal virtual void RecordDisplayUnitViewedEventForID(string unitID) {
         }
 
+        internal virtual void RecordDisplayUnitElementViewedEventForID(string unitID, Dictionary<string, object> properties) {
+        }
+
+        internal virtual void RecordDisplayUnitElementClickedEventForID(string unitID, Dictionary<string, object> properties) {
+        }
+
+        internal virtual Dictionary<string, object> GetDisplayUnitContentMetaData(string unitID, int contentIndex) {
+            return new Dictionary<string, object>();
+        }
+
+        internal virtual void FetchNativeDisplayMeta() {
+        }
+
         internal virtual void RecordEvent(string eventName) {
         }
 
@@ -335,6 +348,9 @@ namespace CleverTapSDK.Common {
         }
 
         internal virtual void SetOffline(bool enabled) {
+        }
+
+        internal virtual void SetLocale(string locale) {
         }
 
         internal virtual void SetOptOut(bool enabled) {
