@@ -51,6 +51,11 @@
     NSLog(@"Setting CleverTap instance: %@", instance);
     self.cleverTap = instance;
     [self.cleverTap setLibrary:@"Unity"];
+    // Unity SDK version as major * 10000 + minor * 100 + patch, written to Info.plist at build time
+    id unitySdkVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CleverTapUnitySDKVersion"];
+    if ([unitySdkVersion isKindOfClass:[NSNumber class]] && [unitySdkVersion intValue] > 0) {
+        [self.cleverTap setCustomSdkVersion:@"Unity" version:[unitySdkVersion intValue]];
+    }
     self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
     [self.callbackHandler attachInstance:self.cleverTap];
     if (platformDidInit && shouldDisableBuffers) {

@@ -19,12 +19,19 @@ import com.clevertap.android.sdk.CleverTapInstanceConfig;
 
 public class CleverTapUnityAPI {
 
+    private static final String LIBRARY_NAME = "Unity";
+    private static final String UNITY_SDK_VERSION_KEY = "CLEVERTAP_UNITY_SDK_VERSION";
+
+    // Unity SDK version as major * 10000 + minor * 100 + patch, written to the manifest at build time
+    private static int unitySdkVersion = 0;
+
     /**
      * Initializes the CleverTap SDK for Unity. It is recommended to call this method
      * in {@link android.app.Application#onCreate()} or extend
      * {@link CleverTapUnityApplication} to ensure proper initialization.
      */
     public static void initialize(Context context) {
+        unitySdkVersion = readUnitySdkVersion(context);
         CleverTapCustomTemplates.registerCustomTemplates(context);
         initializeCleverTapWithEnvironment(context);
     }
@@ -34,10 +41,26 @@ public class CleverTapUnityAPI {
      */
     public static synchronized void setCleverTapApiInstance(CleverTapAPI cleverTapApi) {
         if (cleverTapApi != null) {
-            cleverTapApi.setLibrary("Unity");
+            cleverTapApi.setLibrary(LIBRARY_NAME);
+            if (unitySdkVersion > 0) {
+                cleverTapApi.setCustomSdkVersion(LIBRARY_NAME, unitySdkVersion);
+            }
             CleverTapUnityPlugin.setCleverTapApiInstance(cleverTapApi);
             CleverTapUnityCallbackHandler.getInstance().attachToApiInstance(cleverTapApi);
         }
+    }
+
+    private static int readUnitySdkVersion(Context context) {
+        try {
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
+                context.getPackageName(), PackageManager.GET_META_DATA);
+            if (ai.metaData != null) {
+                return ai.metaData.getInt(UNITY_SDK_VERSION_KEY, 0);
+            }
+        } catch (Exception e) {
+            Log.e("CleverTap", "Error reading " + UNITY_SDK_VERSION_KEY + ": " + e.getMessage());
+        }
+        return 0;
     }
 
     /**
