@@ -1,7 +1,10 @@
 package com.clevertap.unity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.location.Location;
+import android.service.notification.StatusBarNotification;
 import android.os.Build.VERSION_CODES;
 import android.text.TextUtils;
 import android.util.Log;
@@ -75,6 +78,33 @@ public class CleverTapUnityPlugin {
         }
 
         return instance;
+    }
+
+    public static void getActiveNotificationCount(Context context, int callbackId) {
+        int count = 0;
+        try {
+            NotificationManager notificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                for (StatusBarNotification notification : notificationManager.getActiveNotifications()) {
+                    // A group summary stands for the notifications under it, so don't count it twice
+                    if ((notification.getNotification().flags & Notification.FLAG_GROUP_SUMMARY) == 0) {
+                        count++;
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "getActiveNotificationCount error", t);
+        }
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("callbackId", callbackId);
+            json.put("count", count);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "getActiveNotificationCount json error", e);
+        }
+        CleverTapMessageSender.getInstance().send(CleverTapUnityCallback.CLEVERTAP_ACTIVE_NOTIFICATION_COUNT, json.toString());
     }
 
     public static void createNotificationChannel(Context context, String channelId, String channelName, String channelDescription, int importance, boolean showBadge) {

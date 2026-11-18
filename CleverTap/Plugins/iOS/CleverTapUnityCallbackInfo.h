@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, CleverTapUnityCallback) {
     CleverTapUnityCallbackOneTimeVariablesChanged = 28,
     CleverTapUnityCallbackOneTimeVariablesChangedAndNoDownloadsPending = 29,
     CleverTapUnityCallbackFetchInbox = 30,
+    CleverTapUnityCallbackActiveNotificationCount = 31,
 };
 
 @interface CleverTapUnityCallbackInfo : NSObject <NSCopying>

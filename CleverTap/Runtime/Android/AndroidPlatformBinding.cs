@@ -21,6 +21,10 @@ namespace CleverTapSDK.Android {
             CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }
 
+        internal override void GetActiveNotificationCount(int callbackId) {
+            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("getActiveNotificationCount", CleverTapAndroidJNI.ApplicationContext, callbackId);
+        }
+
         internal override void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) {
             CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("createNotificationChannel", CleverTapAndroidJNI.ApplicationContext, channelId, channelName, channelDescription, importance, showBadge);
         }

@@ -170,6 +170,10 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 - (NSString *)getVariableValue:(NSString *)name;
 - (NSString *)getFileVariableValue:(NSString *)name;
 
+#pragma mark - Notification Count
+
+- (void)getActiveNotificationCount:(int)callbackId;
+
 #pragma mark - Client-side In-Apps
 
 - (void)fetchInApps:(int)callbackId;

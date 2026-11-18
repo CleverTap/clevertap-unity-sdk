@@ -25,6 +25,7 @@ namespace CTExample
         public Button testSubscriptionEventsButton;
         public Button testSetLocaleButton;
         public Button testCustomIdLoginButton;
+        public Button testNotificationCountButton;
 
         void Start()
         {
@@ -45,6 +46,10 @@ namespace CTExample
             if (testCustomIdLoginButton != null)
             {
                 testCustomIdLoginButton.onClick.AddListener(CallLoginWithCustomCleverTapId);
+            }
+            if (testNotificationCountButton != null)
+            {
+                testNotificationCountButton.onClick.AddListener(CallGetActiveNotificationCount);
             }
 
             Restore();
@@ -185,11 +190,24 @@ namespace CTExample
 
         private IEnumerator LogCleverTapIdAfterLogin(string expectedId)
         {
-            // The profile switch is async, so wait before reading the ID back
+            // The profile switch is async, so wait before reading the ID back.
+            // GetCleverTapID() returns empty on Android (the ID arrives in OnCleverTapInitCleverTapIdCallback),
+            // so read it with ProfileGetCleverTapID(). The native SDK stores a custom ID with a "__h" prefix.
             yield return new WaitForSeconds(2f);
-            string currentId = CleverTap.GetCleverTapID();
-            Logger.Log($"[CustomId] GetCleverTapID() = {currentId} (expected {expectedId})");
-            Toast.Show(currentId == expectedId ? $"CleverTap ID is {currentId}" : $"CleverTap ID is {currentId}, not {expectedId}");
+            string currentId = CleverTap.ProfileGetCleverTapID() ?? "";
+            bool matches = currentId == expectedId || currentId == "__h" + expectedId;
+            Logger.Log($"[CustomId] ProfileGetCleverTapID() = {currentId} (expected {expectedId} or __h{expectedId})");
+            Toast.Show(matches ? $"CleverTap ID is {currentId}" : $"CleverTap ID is {currentId}, not {expectedId}");
+        }
+
+        // Send a few pushes and leave them in the tray, then tap; dismiss some and tap again
+        public void CallGetActiveNotificationCount()
+        {
+            CleverTap.GetActiveNotificationCount(count =>
+            {
+                Logger.Log($"[NotificationCount] {count} notification(s) in the tray");
+                Toast.Show($"{count} notification(s) in the tray");
+            });
         }
     }
 }

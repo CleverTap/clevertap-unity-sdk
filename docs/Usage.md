@@ -69,7 +69,7 @@ newProps.Add("Identity", "player_123");
 CleverTap.OnUserLogin(newProps, "player_123");
 ```
 
-The setting is applied at build time (`CLEVERTAP_USE_CUSTOM_ID` in the AndroidManifest.xml, `CleverTapUseCustomId` in the iOS Info.plist). Without it, the native SDKs ignore the ID and CleverTap keeps creating its own. There is no way to change the CleverTap ID except at login. On standalone and Editor builds the ID is ignored and a normal login is done.
+The setting is applied at build time (`CLEVERTAP_USE_CUSTOM_ID` in the AndroidManifest.xml, `CleverTapUseCustomId` in the iOS Info.plist). Without it, the native SDKs ignore the ID and CleverTap keeps creating its own. There is no way to change the CleverTap ID except at login. The SDK stores a custom ID with a `__h` prefix, so reading it back (for example with `ProfileGetCleverTapID()`) returns `__hplayer_123` for `player_123`. On standalone and Editor builds the ID is ignored and a normal login is done.
 
 #### Set Location to User Profile
 
@@ -440,6 +440,19 @@ CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your 
 ```
 
 The last argument, `showBadge`, controls the app icon badge on Android: when it is `true`, the launcher shows a badge on the app icon while a notification from that channel is unread. Android has no API for the app to set a badge number. A push can carry its own count instead: the Android SDK reads `wzrk_bc` (badge count) and `wzrk_bi` (badge icon type) from the push payload and applies them to the notification. Whether the launcher shows a number or only a dot depends on the device. `SetApplicationIconBadgeNumber` only works on iOS.
+
+#### Get the number of notifications in the tray
+
+Use this to build your own badge, for example an unread indicator in your game's UI, or an app icon badge on Android with a launcher badge library of your choice. It returns how many of your app's notifications are currently shown in the notification tray (Android) or Notification Center (iOS). Notifications the user has opened or dismissed are not counted.
+
+```csharp
+CleverTap.GetActiveNotificationCount(count => {
+    Debug.Log($"{count} notification(s) in the tray");
+    // e.g. update your badge here
+});
+```
+
+The result arrives in the callback. On Android, group summary notifications are not counted. On standalone and Editor builds the count is always 0. Call it again whenever you need a fresh value, for example when the app comes back to the foreground.
 
 #### Delete Notification Channel
 

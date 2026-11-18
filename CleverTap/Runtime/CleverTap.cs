@@ -551,6 +551,16 @@ namespace CleverTapSDK {
         public static void SetApplicationIconBadgeNumber(int num) =>
             cleverTapBinding.SetApplicationIconBadgeNumber(num);
 
+        /// <summary>
+        /// Gets the number of this app's notifications currently shown in the notification tray / Notification Center,
+        /// e.g. to show your own app icon badge or in-game unread indicator. The result arrives in the callback.
+        /// Android: notifications still showing in the tray (group summaries not counted).
+        /// iOS: notifications delivered and still shown in Notification Center.
+        /// Standalone and Editor builds always return 0.
+        /// </summary>
+        public static void GetActiveNotificationCount(Action<int> callback) =>
+            cleverTapBinding.GetActiveNotificationCount(callback);
+
         public static void SetDebugLevel(int level) =>
             cleverTapBinding.SetDebugLevel(level);
 

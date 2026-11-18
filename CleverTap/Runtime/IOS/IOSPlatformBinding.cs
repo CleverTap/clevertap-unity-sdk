@@ -477,6 +477,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_setApplicationIconBadgeNumber(num);
         }
 
+        internal override void GetActiveNotificationCount(int callbackId) {
+            IOSDllImport.CleverTap_getActiveNotificationCount(callbackId);
+        }
+
         internal override void SetDebugLevel(int level) {
             IOSDllImport.CleverTap_setDebugLevel(level);
         }

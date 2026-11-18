@@ -715,6 +715,12 @@ void CleverTap_fetchVariables(int callbackId) {
     [[CleverTapUnityManager sharedInstance] fetchVariables:callbackId];
 }
 
+#pragma mark - Notification Count
+
+void CleverTap_getActiveNotificationCount(int callbackId) {
+    [[CleverTapUnityManager sharedInstance] getActiveNotificationCount:callbackId];
+}
+
 #pragma mark - Client-side In-Apps
 
 void CleverTap_fetchInApps(int callbackId) {

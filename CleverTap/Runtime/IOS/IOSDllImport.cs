@@ -319,6 +319,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_fetchInApps(int callbackId);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_getActiveNotificationCount(int callbackId);
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_clearInAppResources(bool expiredOnly);
 
         #endregion
