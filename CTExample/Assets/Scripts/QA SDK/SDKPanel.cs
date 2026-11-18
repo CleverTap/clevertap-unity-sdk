@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using CleverTapSDK;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ namespace CTExample
         public Button testGameEventsButton;
         public Button testSubscriptionEventsButton;
         public Button testSetLocaleButton;
+        public Button testCustomIdLoginButton;
 
         void Start()
         {
@@ -40,6 +42,10 @@ namespace CTExample
             testGameEventsButton.onClick.AddListener(DidTapTestGameEvents);
             testSubscriptionEventsButton.onClick.AddListener(CallSubscriptionEvents);
             testSetLocaleButton.onClick.AddListener(CallSetLocale);
+            if (testCustomIdLoginButton != null)
+            {
+                testCustomIdLoginButton.onClick.AddListener(CallLoginWithCustomCleverTapId);
+            }
 
             Restore();
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
@@ -162,6 +168,28 @@ namespace CTExample
 
             Logger.Log($"[Locale] SetLocale({locale}) called, 'Locale Test' event recorded");
             Toast.Show($"Locale set to {locale}");
+        }
+
+        // Needs "Use Custom Clever Tap Id" on in CleverTap Settings, otherwise the native SDKs ignore the ID
+        public void CallLoginWithCustomCleverTapId()
+        {
+            string cleverTapId = "player_" + System.Guid.NewGuid().ToString("N").Substring(0, 8);
+            var profile = new Dictionary<string, object> { { "Identity", cleverTapId } };
+
+            CleverTap.OnUserLogin(profile, cleverTapId);
+
+            Logger.Log($"[CustomId] OnUserLogin with CleverTap ID {cleverTapId} called");
+            Toast.Show($"Logging in as {cleverTapId}");
+            StartCoroutine(LogCleverTapIdAfterLogin(cleverTapId));
+        }
+
+        private IEnumerator LogCleverTapIdAfterLogin(string expectedId)
+        {
+            // The profile switch is async, so wait before reading the ID back
+            yield return new WaitForSeconds(2f);
+            string currentId = CleverTap.GetCleverTapID();
+            Logger.Log($"[CustomId] GetCleverTapID() = {currentId} (expected {expectedId})");
+            Toast.Show(currentId == expectedId ? $"CleverTap ID is {currentId}" : $"CleverTap ID is {currentId}, not {expectedId}");
         }
     }
 }

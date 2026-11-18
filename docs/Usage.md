@@ -59,6 +59,18 @@ newProps.Add("Identity", "123456");
 CleverTap.OnUserLogin(newProps);
 ```
 
+#### Log in with your own CleverTap ID
+
+By default CleverTap creates its own ID for each user profile. To use your own ID instead (for example your player account ID), turn on **Use Custom Clever Tap Id** in **Assets → CleverTap Settings**, rebuild the app, and pass the ID when the user logs in:
+
+```csharp
+Dictionary<string, object> newProps = new Dictionary<string, object>();
+newProps.Add("Identity", "player_123");
+CleverTap.OnUserLogin(newProps, "player_123");
+```
+
+The setting is applied at build time (`CLEVERTAP_USE_CUSTOM_ID` in the AndroidManifest.xml, `CleverTapUseCustomId` in the iOS Info.plist). Without it, the native SDKs ignore the ID and CleverTap keeps creating its own. There is no way to change the CleverTap ID except at login. On standalone and Editor builds the ID is ignored and a normal login is done.
+
 #### Set Location to User Profile
 
 ```csharp

@@ -399,6 +399,22 @@ namespace CleverTapSDK {
         public static void OnUserLogin(Dictionary<string, object> properties) =>
             cleverTapBinding.OnUserLogin(properties);
 
+        /// <summary>
+        /// Logs the user in and sets your own CleverTap ID for their profile, e.g. your player account ID.
+        /// Requires "Use Custom Clever Tap Id" in CleverTap Settings; without it the native SDKs ignore the ID.
+        /// On standalone and Editor builds the ID is ignored and a normal login is done.
+        /// </summary>
+        public static void OnUserLogin(Dictionary<string, string> properties, string cleverTapID) =>
+            cleverTapBinding.OnUserLogin(properties, cleverTapID);
+
+        /// <summary>
+        /// Logs the user in and sets your own CleverTap ID for their profile, e.g. your player account ID.
+        /// Requires "Use Custom Clever Tap Id" in CleverTap Settings; without it the native SDKs ignore the ID.
+        /// On standalone and Editor builds the ID is ignored and a normal login is done.
+        /// </summary>
+        public static void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) =>
+            cleverTapBinding.OnUserLogin(properties, cleverTapID);
+
         public static void ProfileAddMultiValueForKey(string key, string val) =>
             cleverTapBinding.ProfileAddMultiValueForKey(key, val);
 

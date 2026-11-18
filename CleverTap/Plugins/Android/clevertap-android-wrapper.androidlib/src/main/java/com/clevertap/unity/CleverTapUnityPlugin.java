@@ -310,6 +310,15 @@ public class CleverTapUnityPlugin {
         }
     }
 
+    public void onUserLogin(final String jsonString, final String cleverTapID) {
+        try {
+            Map<String, Object> profile = JsonConverter.fromJsonWithConvertedDateValues(jsonString);
+            clevertap.onUserLogin(profile, cleverTapID);
+        } catch (Throwable t) {
+            Log.e(LOG_TAG, "onUserLogin with cleverTapID error", t);
+        }
+    }
+
     public void profilePush(final String jsonString) {
         try {
             Map<String, Object> profile = JsonConverter.fromJsonWithConvertedDateValues(jsonString);

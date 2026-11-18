@@ -308,6 +308,11 @@ namespace CleverTapSDK.Android {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("onUserLogin", Json.Serialize(properties.ConvertDateObjects()));
         }
 
+        internal override void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) {
+            // A null string arg makes Unity's JNI look for an Object parameter and miss onUserLogin(String, String)
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("onUserLogin", Json.Serialize(properties.ConvertDateObjects()), cleverTapID ?? "");
+        }
+
         internal override void ProfileAddMultiValueForKey(string key, string val) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("profileAddMultiValueForKey", key, val);
         }

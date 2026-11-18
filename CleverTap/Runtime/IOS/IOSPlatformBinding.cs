@@ -315,6 +315,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_onUserLogin(Json.Serialize(properties.ConvertDateObjects()));
         }
 
+        internal override void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) {
+            IOSDllImport.CleverTap_onUserLoginWithCleverTapID(Json.Serialize(properties.ConvertDateObjects()), cleverTapID);
+        }
+
         internal override void ProfileAddMultiValueForKey(string key, string val) {
             IOSDllImport.CleverTap_profileAddMultiValueForKey(key, val);
         }

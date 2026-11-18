@@ -23,6 +23,9 @@ namespace CleverTapSDK.IOS {
         internal static extern void CleverTap_onUserLogin(string properties);
 
         [DllImport("__Internal")]
+        internal static extern void CleverTap_onUserLoginWithCleverTapID(string properties, string cleverTapID);
+
+        [DllImport("__Internal")]
         internal static extern void CleverTap_profilePush(string properties);
 
         [DllImport("__Internal")]

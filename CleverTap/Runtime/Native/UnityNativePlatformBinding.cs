@@ -53,6 +53,13 @@ namespace CleverTapSDK.Native
             _unityNativeEventManager.OnUserLogin(properties);
         }
 
+        internal override void OnUserLogin(Dictionary<string, object> properties, string cleverTapID)
+        {
+            UnityEngine.Debug.LogWarning("A custom CleverTap ID is not supported on Unity Native." +
+                " Using OnUserLogin without the CleverTap ID instead.");
+            _unityNativeEventManager.OnUserLogin(properties);
+        }
+
         internal override void ProfilePush(Dictionary<string, object> properties)
         {
             _unityNativeEventManager.ProfilePush(properties);

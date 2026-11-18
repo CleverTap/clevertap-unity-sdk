@@ -208,6 +208,7 @@ namespace CleverTapSDK.Private
 
             rootDict.SetBoolean("CleverTapDisableIDFV", settings.CleverTapDisableIDFV);
             rootDict.SetBoolean("CleverTapPresentNotificationForeground", settings.CleverTapIOSPresentNotificationOnForeground);
+            rootDict.SetBoolean("CleverTapUseCustomId", settings.UseCustomCleverTapId);
 
             if (settings.EncryptionLevel != CleverTapEncryptionLevel.None)
             {

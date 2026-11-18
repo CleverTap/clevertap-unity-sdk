@@ -221,6 +221,14 @@ namespace CleverTapSDK.Common {
         internal virtual void OnUserLogin(Dictionary<string, object> properties) {
         }
 
+        internal virtual void OnUserLogin(Dictionary<string, string> properties, string cleverTapID) {
+            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+            OnUserLogin(propsObjectValue, cleverTapID);
+        }
+
+        internal virtual void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) {
+        }
+
         internal virtual void ProfileAddMultiValueForKey(string key, string val) {
         }
 

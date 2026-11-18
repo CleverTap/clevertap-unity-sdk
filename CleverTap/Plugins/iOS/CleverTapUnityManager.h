@@ -45,6 +45,7 @@ typedef void (*UserEventLogCallback) (const char *, const char *);
 #pragma mark - User Profile
 
 - (void)onUserLogin:(NSDictionary *)properties;
+- (void)onUserLogin:(NSDictionary *)properties withCleverTapID:(NSString *)cleverTapID;
 - (void)profilePush:(NSDictionary *)properties;
 - (void)profileRemoveValueForKey:(NSString *)key;
 - (void)profileSetMultiValues:(NSArray<NSString *> *)values forKey:(NSString*)key;

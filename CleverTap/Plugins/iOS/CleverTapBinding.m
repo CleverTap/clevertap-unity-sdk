@@ -238,6 +238,11 @@ void CleverTap_onUserLogin(const char* properties) {
     [[CleverTapUnityManager sharedInstance] onUserLogin:profileProperties];
 }
 
+void CleverTap_onUserLoginWithCleverTapID(const char* properties, const char* cleverTapID) {
+    NSMutableDictionary *profileProperties = clevertap_dictFromJsonString(properties);
+    [[CleverTapUnityManager sharedInstance] onUserLogin:profileProperties withCleverTapID:clevertap_stringToNSString(cleverTapID)];
+}
+
 void CleverTap_profilePush(const char* properties) {
     NSMutableDictionary *profileProperties = clevertap_dictFromJsonString(properties);
     [[CleverTapUnityManager sharedInstance] profilePush:profileProperties];

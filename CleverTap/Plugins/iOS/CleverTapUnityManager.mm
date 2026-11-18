@@ -211,6 +211,11 @@ static BOOL shouldDisableBuffers = YES;
     [self.cleverTap onUserLogin:attributes];
 }
 
+- (void)onUserLogin:(NSDictionary *)properties withCleverTapID:(NSString *)cleverTapID {
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [self.cleverTap onUserLogin:attributes withCleverTapID:cleverTapID];
+}
+
 - (void)profilePush:(NSDictionary *)properties {
     NSDictionary *attributes = cleverTap_convertDateValues(properties);
     [self.cleverTap profilePush:attributes];
