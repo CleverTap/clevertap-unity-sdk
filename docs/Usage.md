@@ -439,6 +439,8 @@ CleverTap.SetDebugLevel(CLEVERTAP_DEBUG_LEVEL);
 CleverTap.CreateNotificationChannel("YourChannelId", "Your Channel Name", "Your Channel Description", 5, true);
 ```
 
+The last argument, `showBadge`, controls the app icon badge on Android: when it is `true`, the launcher shows a badge on the app icon while a notification from that channel is unread. Android has no API for the app to set a badge number. A push can carry its own count instead: the Android SDK reads `wzrk_bc` (badge count) and `wzrk_bi` (badge icon type) from the push payload and applies them to the notification. Whether the launcher shows a number or only a dot depends on the device. `SetApplicationIconBadgeNumber` only works on iOS.
+
 #### Delete Notification Channel
 
 ```csharp

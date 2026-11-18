@@ -544,6 +544,10 @@ namespace CleverTapSDK {
         public static JSONClass SessionGetUTMDetails() =>
             cleverTapBinding.SessionGetUTMDetails();
 
+        /// <summary>
+        /// Sets the app icon badge number. iOS only. Android has no API for this: the badge comes from channels
+        /// created with showBadge = true (see CreateNotificationChannel), and a push can set its own count with wzrk_bc.
+        /// </summary>
         public static void SetApplicationIconBadgeNumber(int num) =>
             cleverTapBinding.SetApplicationIconBadgeNumber(num);
 
