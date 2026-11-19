@@ -399,6 +399,22 @@ namespace CleverTapSDK {
         public static void OnUserLogin(Dictionary<string, object> properties) =>
             cleverTapBinding.OnUserLogin(properties);
 
+        /// <summary>
+        /// Logs the user in and sets your own CleverTap ID for their profile, e.g. your player account ID.
+        /// Requires "Use Custom Clever Tap Id" in CleverTap Settings; without it the native SDKs ignore the ID.
+        /// On standalone and Editor builds the ID is ignored and a normal login is done.
+        /// </summary>
+        public static void OnUserLogin(Dictionary<string, string> properties, string cleverTapID) =>
+            cleverTapBinding.OnUserLogin(properties, cleverTapID);
+
+        /// <summary>
+        /// Logs the user in and sets your own CleverTap ID for their profile, e.g. your player account ID.
+        /// Requires "Use Custom Clever Tap Id" in CleverTap Settings; without it the native SDKs ignore the ID.
+        /// On standalone and Editor builds the ID is ignored and a normal login is done.
+        /// </summary>
+        public static void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) =>
+            cleverTapBinding.OnUserLogin(properties, cleverTapID);
+
         public static void ProfileAddMultiValueForKey(string key, string val) =>
             cleverTapBinding.ProfileAddMultiValueForKey(key, val);
 
@@ -528,8 +544,22 @@ namespace CleverTapSDK {
         public static JSONClass SessionGetUTMDetails() =>
             cleverTapBinding.SessionGetUTMDetails();
 
+        /// <summary>
+        /// Sets the app icon badge number. iOS only. Android has no API for this: the badge comes from channels
+        /// created with showBadge = true (see CreateNotificationChannel), and a push can set its own count with wzrk_bc.
+        /// </summary>
         public static void SetApplicationIconBadgeNumber(int num) =>
             cleverTapBinding.SetApplicationIconBadgeNumber(num);
+
+        /// <summary>
+        /// Gets the number of this app's notifications currently shown in the notification tray / Notification Center,
+        /// e.g. to show your own app icon badge or in-game unread indicator. The result arrives in the callback.
+        /// Android: notifications still showing in the tray (group summaries not counted).
+        /// iOS: notifications delivered and still shown in Notification Center.
+        /// Standalone and Editor builds always return 0.
+        /// </summary>
+        public static void GetActiveNotificationCount(Action<int> callback) =>
+            cleverTapBinding.GetActiveNotificationCount(callback);
 
         public static void SetDebugLevel(int level) =>
             cleverTapBinding.SetDebugLevel(level);

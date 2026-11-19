@@ -292,7 +292,15 @@ namespace CleverTapSDK.Private
             {
                 UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager,
                     "CLEVERTAP_ENCRYPTION_LEVEL", ((int)settings.EncryptionLevel).ToString());
-            }           
+            }
+
+            // An empty value removes the key, so turning the setting off also cleans up earlier builds
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager,
+                "CLEVERTAP_USE_CUSTOM_ID", settings.UseCustomCleverTapId ? "1" : null);
+
+            // Read by CleverTapUnityAPI and registered with the native SDK through setCustomSdkVersion
+            UpdateMetaDataNode(manifestXml, applicationNode, namespaceManager,
+                "CLEVERTAP_UNITY_SDK_VERSION", CleverTapSDK.Constants.CleverTapVersion.CLEVERTAP_SDK_REVISION.ToString());
             
             if (isDevelopmentBuild)
             {

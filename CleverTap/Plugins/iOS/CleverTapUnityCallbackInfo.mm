@@ -94,7 +94,9 @@
             @(CleverTapUnityCallbackOneTimeVariablesChangedAndNoDownloadsPending):
                 [[CleverTapUnityCallbackInfo alloc] initWithName:@"OneTimeCleverTapVariablesChangedAndNoDownloadsPending" bufferable:NO],
             @(CleverTapUnityCallbackFetchInbox):
-                [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapFetchInboxCallback" bufferable:NO]
+                [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapFetchInboxCallback" bufferable:NO],
+            @(CleverTapUnityCallbackActiveNotificationCount):
+                [[CleverTapUnityCallbackInfo alloc] initWithName:@"CleverTapActiveNotificationCountReceived" bufferable:NO]
         };
     });
     return callbacks;

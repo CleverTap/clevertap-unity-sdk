@@ -21,6 +21,10 @@ namespace CleverTapSDK.Android {
             CleverTapLogger.Log("Start: CleverTap binding for Android.");
         }
 
+        internal override void GetActiveNotificationCount(int callbackId) {
+            CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("getActiveNotificationCount", CleverTapAndroidJNI.ApplicationContext, callbackId);
+        }
+
         internal override void CreateNotificationChannel(string channelId, string channelName, string channelDescription, int importance, bool showBadge) {
             CleverTapAndroidJNI.CleverTapJNIStatic.CallStatic("createNotificationChannel", CleverTapAndroidJNI.ApplicationContext, channelId, channelName, channelDescription, importance, showBadge);
         }
@@ -306,6 +310,11 @@ namespace CleverTapSDK.Android {
 
         internal override void OnUserLogin(Dictionary<string, object> properties) {
             CleverTapAndroidJNI.CleverTapJNIInstance.Call("onUserLogin", Json.Serialize(properties.ConvertDateObjects()));
+        }
+
+        internal override void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) {
+            // A null string arg makes Unity's JNI look for an Object parameter and miss onUserLogin(String, String)
+            CleverTapAndroidJNI.CleverTapJNIInstance.Call("onUserLogin", Json.Serialize(properties.ConvertDateObjects()), cleverTapID ?? "");
         }
 
         internal override void ProfileAddMultiValueForKey(string key, string val) {

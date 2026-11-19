@@ -3,6 +3,7 @@
 #import "CleverTapUnityCallbackInfo.h"
 #import "CleverTapMessageSender.h"
 #import <CleverTapSDK/CleverTap.h>
+#import <UserNotifications/UserNotifications.h>
 #import <CleverTapSDK/CleverTap+Inbox.h>
 #import <CleverTapSDK/CleverTapSyncDelegate.h>
 #import <CleverTapSDK/CleverTap+DisplayUnit.h>
@@ -50,6 +51,11 @@
     NSLog(@"Setting CleverTap instance: %@", instance);
     self.cleverTap = instance;
     [self.cleverTap setLibrary:@"Unity"];
+    // Unity SDK version as major * 10000 + minor * 100 + patch, written to Info.plist at build time
+    id unitySdkVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CleverTapUnitySDKVersion"];
+    if ([unitySdkVersion isKindOfClass:[NSNumber class]] && [unitySdkVersion intValue] > 0) {
+        [self.cleverTap setCustomSdkVersion:@"Unity" version:[unitySdkVersion intValue]];
+    }
     self.callbackHandler = [CleverTapUnityCallbackHandler sharedInstance];
     [self.callbackHandler attachInstance:self.cleverTap];
     if (platformDidInit && shouldDisableBuffers) {
@@ -209,6 +215,11 @@ static BOOL shouldDisableBuffers = YES;
 - (void)onUserLogin:(NSDictionary *)properties {
     NSDictionary *attributes = cleverTap_convertDateValues(properties);
     [self.cleverTap onUserLogin:attributes];
+}
+
+- (void)onUserLogin:(NSDictionary *)properties withCleverTapID:(NSString *)cleverTapID {
+    NSDictionary *attributes = cleverTap_convertDateValues(properties);
+    [self.cleverTap onUserLogin:attributes withCleverTapID:cleverTapID];
 }
 
 - (void)profilePush:(NSDictionary *)properties {
@@ -1134,6 +1145,23 @@ static id cleverTap_convertObject(id object) {
         // All other types (NSNumber, NSNull, etc.) stay unchanged
         return object;
     }
+}
+
+#pragma mark - Notification Count
+
+- (void)getActiveNotificationCount:(int)callbackId {
+    [[UNUserNotificationCenter currentNotificationCenter] getDeliveredNotificationsWithCompletionHandler:^(NSArray<UNNotification *> *notifications) {
+        NSDictionary *response = @{
+            @"callbackId": @(callbackId),
+            @"count": @(notifications.count)
+        };
+        NSData *data = [NSJSONSerialization dataWithJSONObject:response options:0 error:nil];
+        NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        // The completion handler runs on a background queue
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[CleverTapMessageSender sharedInstance] send:CleverTapUnityCallbackActiveNotificationCount withMessage:json];
+        });
+    }];
 }
 
 #pragma mark - Client-side In-Apps

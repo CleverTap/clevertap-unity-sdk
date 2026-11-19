@@ -39,7 +39,8 @@ public enum CleverTapUnityCallback {
     CLEVERTAP_CUSTOM_TEMPLATE_PRESENT("CleverTapCustomTemplatePresent", true),
     CLEVERTAP_CUSTOM_FUNCTION_PRESENT("CleverTapCustomFunctionPresent", true),
     CLEVERTAP_CUSTOM_TEMPLATE_CLOSE("CleverTapCustomTemplateClose"),
-    CLEVERTAP_FETCH_INBOX("CleverTapFetchInboxCallback");
+    CLEVERTAP_FETCH_INBOX("CleverTapFetchInboxCallback"),
+    CLEVERTAP_ACTIVE_NOTIFICATION_COUNT("CleverTapActiveNotificationCountReceived");
 
 
     @Nullable

@@ -49,6 +49,14 @@ namespace CleverTapSDK.Private
 
         #region Other Settings
         /// <summary>
+        /// Boolean whether to use your own CleverTap ID, passed in CleverTap.OnUserLogin(properties, cleverTapID).
+        /// Default value is false.
+        /// Writes CLEVERTAP_USE_CUSTOM_ID to the AndroidManifest.xml and CleverTapUseCustomId to the iOS Info.plist.
+        /// When false, the native SDKs ignore the CleverTap ID passed to OnUserLogin.
+        /// </summary>
+        public bool UseCustomCleverTapId;
+
+        /// <summary>
         /// Boolean whether the CleverTap settings should be saved to the streaming assets as JSON.
         /// Default value is false.
         /// Set this to true if you need to use the CleverTapSettings runtime.
@@ -65,6 +73,7 @@ namespace CleverTapSDK.Private
                    $"CleverTapIOSUseAutoIntegrate: {CleverTapIOSUseAutoIntegrate}\n" +
                    $"CleverTapIOSUseUNUserNotificationCenter: {CleverTapIOSUseUNUserNotificationCenter}\n" +
                    $"CleverTapIOSPresentNotificationOnForeground: {CleverTapIOSPresentNotificationOnForeground}\n" +
+                   $"UseCustomCleverTapId: {UseCustomCleverTapId}\n" +
                    $"CleverTapSettingsSaveToJSON: {CleverTapSettingsSaveToJSON}";
         }
 

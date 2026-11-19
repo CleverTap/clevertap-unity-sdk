@@ -315,6 +315,10 @@ namespace CleverTapSDK.IOS
             IOSDllImport.CleverTap_onUserLogin(Json.Serialize(properties.ConvertDateObjects()));
         }
 
+        internal override void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) {
+            IOSDllImport.CleverTap_onUserLoginWithCleverTapID(Json.Serialize(properties.ConvertDateObjects()), cleverTapID);
+        }
+
         internal override void ProfileAddMultiValueForKey(string key, string val) {
             IOSDllImport.CleverTap_profileAddMultiValueForKey(key, val);
         }
@@ -471,6 +475,10 @@ namespace CleverTapSDK.IOS
 
         internal override void SetApplicationIconBadgeNumber(int num) {
             IOSDllImport.CleverTap_setApplicationIconBadgeNumber(num);
+        }
+
+        internal override void GetActiveNotificationCount(int callbackId) {
+            IOSDllImport.CleverTap_getActiveNotificationCount(callbackId);
         }
 
         internal override void SetDebugLevel(int level) {

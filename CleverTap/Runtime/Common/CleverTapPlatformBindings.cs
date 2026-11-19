@@ -221,6 +221,14 @@ namespace CleverTapSDK.Common {
         internal virtual void OnUserLogin(Dictionary<string, object> properties) {
         }
 
+        internal virtual void OnUserLogin(Dictionary<string, string> properties, string cleverTapID) {
+            Dictionary<string, object> propsObjectValue = properties.ToDictionary(kv => kv.Key, kv => (object)kv.Value);
+            OnUserLogin(propsObjectValue, cleverTapID);
+        }
+
+        internal virtual void OnUserLogin(Dictionary<string, object> properties, string cleverTapID) {
+        }
+
         internal virtual void ProfileAddMultiValueForKey(string key, string val) {
         }
 
@@ -339,6 +347,32 @@ namespace CleverTapSDK.Common {
         }
 
         internal virtual void SetApplicationIconBadgeNumber(int num) {
+        }
+
+        private readonly IDictionary<int, Action<int>> activeNotificationCountCallbacks = new Dictionary<int, Action<int>>();
+        private readonly CleverTapCounter activeNotificationCountIdCounter = new CleverTapCounter();
+
+        internal virtual void GetActiveNotificationCount(Action<int> callback) {
+            if (callback == null) {
+                return;
+            }
+            var callbackId = activeNotificationCountIdCounter.GetNextAndIncreaseCounter();
+            if (!activeNotificationCountCallbacks.ContainsKey(callbackId)) {
+                activeNotificationCountCallbacks.Add(callbackId, callback);
+                GetActiveNotificationCount(callbackId);
+            }
+        }
+
+        // Standalone and Editor builds have no notification tray
+        internal virtual void GetActiveNotificationCount(int callbackId) {
+            ActiveNotificationCountReceived(callbackId, 0);
+        }
+
+        internal virtual void ActiveNotificationCountReceived(int callbackId, int count) {
+            if (activeNotificationCountCallbacks.TryGetValue(callbackId, out var callback)) {
+                activeNotificationCountCallbacks.Remove(callbackId);
+                callback.Invoke(count);
+            }
         }
 
         internal virtual void SetDebugLevel(int level) {

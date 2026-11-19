@@ -886,6 +886,20 @@ namespace CleverTapSDK.Common {
 
         #endregion
 
+        #region Default - Notification Count Callbacks
+
+        public virtual void CleverTapActiveNotificationCountReceived(string message) {
+            CleverTapLogger.Log("unity received active notification count: " + (!String.IsNullOrEmpty(message) ? message : "NULL"));
+            try {
+                JSONClass json = (JSONClass)JSON.Parse(message);
+                BindingFactory.CleverTapBinding.ActiveNotificationCountReceived(json["callbackId"].AsInt, json["count"].AsInt);
+            } catch {
+                CleverTapLogger.LogError("unable to parse json");
+            }
+        }
+
+        #endregion
+
         #region Default - Custom Templates Callbacks
         public virtual void CleverTapCustomTemplatePresent(string templateName)
         {

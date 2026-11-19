@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using CleverTapSDK;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,8 @@ namespace CTExample
         public Button testGameEventsButton;
         public Button testSubscriptionEventsButton;
         public Button testSetLocaleButton;
+        public Button testCustomIdLoginButton;
+        public Button testNotificationCountButton;
 
         void Start()
         {
@@ -40,6 +43,14 @@ namespace CTExample
             testGameEventsButton.onClick.AddListener(DidTapTestGameEvents);
             testSubscriptionEventsButton.onClick.AddListener(CallSubscriptionEvents);
             testSetLocaleButton.onClick.AddListener(CallSetLocale);
+            if (testCustomIdLoginButton != null)
+            {
+                testCustomIdLoginButton.onClick.AddListener(CallLoginWithCustomCleverTapId);
+            }
+            if (testNotificationCountButton != null)
+            {
+                testNotificationCountButton.onClick.AddListener(CallGetActiveNotificationCount);
+            }
 
             Restore();
             RefreshContentHelper.RefreshContentFitters((RectTransform)transform);
@@ -162,6 +173,42 @@ namespace CTExample
 
             Logger.Log($"[Locale] SetLocale({locale}) called, 'Locale Test' event recorded");
             Toast.Show($"Locale set to {locale}");
+        }
+
+        // Needs "Use Custom Clever Tap Id" on in CleverTap Settings, otherwise the native SDKs ignore the ID
+        public void CallLoginWithCustomCleverTapId()
+        {
+            string cleverTapId = "player_" + System.Guid.NewGuid().ToString("N").Substring(0, 8);
+            var profile = new Dictionary<string, object> { { "Identity", cleverTapId } };
+
+            CleverTap.OnUserLogin(profile, cleverTapId);
+
+            Logger.Log($"[CustomId] OnUserLogin with CleverTap ID {cleverTapId} called");
+            Toast.Show($"Logging in as {cleverTapId}");
+            StartCoroutine(LogCleverTapIdAfterLogin(cleverTapId));
+        }
+
+        private IEnumerator LogCleverTapIdAfterLogin(string expectedId)
+        {
+            // The profile switch is async, so wait before reading the ID back.
+            // GetCleverTapID() returns empty on Android (the ID arrives in OnCleverTapInitCleverTapIdCallback),
+            // so read it with ProfileGetCleverTapID(). The native SDKs store a custom ID with a prefix:
+            // "__h" on Android, "-h" on iOS.
+            yield return new WaitForSeconds(2f);
+            string currentId = CleverTap.ProfileGetCleverTapID() ?? "";
+            bool matches = currentId == expectedId || currentId == "__h" + expectedId || currentId == "-h" + expectedId;
+            Logger.Log($"[CustomId] ProfileGetCleverTapID() = {currentId} (expected __h{expectedId} on Android or -h{expectedId} on iOS)");
+            Toast.Show(matches ? $"CleverTap ID is {currentId}" : $"CleverTap ID is {currentId}, not {expectedId}");
+        }
+
+        // Send a few pushes and leave them in the tray, then tap; dismiss some and tap again
+        public void CallGetActiveNotificationCount()
+        {
+            CleverTap.GetActiveNotificationCount(count =>
+            {
+                Logger.Log($"[NotificationCount] {count} notification(s) in the tray");
+                Toast.Show($"{count} notification(s) in the tray");
+            });
         }
     }
 }
