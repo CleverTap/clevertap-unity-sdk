@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Unreleased
+-------------------------------------------
+- **New:** `OnUserLogin(properties, cleverTapID)` — log a user in with your own CleverTap ID (e.g. your player account ID). Turn on **Use Custom Clever Tap Id** in CleverTap Settings; it writes `CLEVERTAP_USE_CUSTOM_ID` to the AndroidManifest.xml and `CleverTapUseCustomId` to the iOS Info.plist at build time. Without the setting, the native SDKs ignore the ID. On standalone and Editor builds the ID is ignored and a normal login is done.
+- **Docs:** `SetApplicationIconBadgeNumber()` is iOS only. On Android, the app icon badge is turned on per channel with the `showBadge` argument of `CreateNotificationChannel()`, and a push can set its own count with the `wzrk_bc` payload key.
+
 Version 5.6.0 *(Oct 2026)*
 -------------------------------------------
 - Updated to [CleverTap Android SDK v8.5.0](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTCORECHANGELOG.md)

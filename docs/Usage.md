@@ -69,7 +69,7 @@ newProps.Add("Identity", "player_123");
 CleverTap.OnUserLogin(newProps, "player_123");
 ```
 
-The setting is applied at build time (`CLEVERTAP_USE_CUSTOM_ID` in the AndroidManifest.xml, `CleverTapUseCustomId` in the iOS Info.plist). Without it, the native SDKs ignore the ID and CleverTap keeps creating its own. There is no way to change the CleverTap ID except at login. The SDK stores a custom ID with a `__h` prefix, so reading it back (for example with `ProfileGetCleverTapID()`) returns `__hplayer_123` for `player_123`. On standalone and Editor builds the ID is ignored and a normal login is done.
+The setting is applied at build time (`CLEVERTAP_USE_CUSTOM_ID` in the AndroidManifest.xml, `CleverTapUseCustomId` in the iOS Info.plist). Without it, the native SDKs ignore the ID and CleverTap keeps creating its own. There is no way to change the CleverTap ID except at login. The SDK stores a custom ID with a prefix that depends on the platform: `__h` on Android and `-h` on iOS. So reading it back (for example with `ProfileGetCleverTapID()`) returns `__hplayer_123` on Android and `-hplayer_123` on iOS for `player_123`. On standalone and Editor builds the ID is ignored and a normal login is done.
 
 #### Set Location to User Profile
 

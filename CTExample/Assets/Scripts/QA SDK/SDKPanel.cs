@@ -192,11 +192,12 @@ namespace CTExample
         {
             // The profile switch is async, so wait before reading the ID back.
             // GetCleverTapID() returns empty on Android (the ID arrives in OnCleverTapInitCleverTapIdCallback),
-            // so read it with ProfileGetCleverTapID(). The native SDK stores a custom ID with a "__h" prefix.
+            // so read it with ProfileGetCleverTapID(). The native SDKs store a custom ID with a prefix:
+            // "__h" on Android, "-h" on iOS.
             yield return new WaitForSeconds(2f);
             string currentId = CleverTap.ProfileGetCleverTapID() ?? "";
-            bool matches = currentId == expectedId || currentId == "__h" + expectedId;
-            Logger.Log($"[CustomId] ProfileGetCleverTapID() = {currentId} (expected {expectedId} or __h{expectedId})");
+            bool matches = currentId == expectedId || currentId == "__h" + expectedId || currentId == "-h" + expectedId;
+            Logger.Log($"[CustomId] ProfileGetCleverTapID() = {currentId} (expected __h{expectedId} on Android or -h{expectedId} on iOS)");
             Toast.Show(matches ? $"CleverTap ID is {currentId}" : $"CleverTap ID is {currentId}, not {expectedId}");
         }
 
